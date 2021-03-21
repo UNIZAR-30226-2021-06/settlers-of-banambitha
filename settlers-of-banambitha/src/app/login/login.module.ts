@@ -6,6 +6,7 @@ import { RegisterComponent } from './components/register/register.component';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { AngularMaterialModule } from './login-material.module';
+import {FormsModule} from '@angular/forms';
 
 
 
@@ -16,7 +17,8 @@ import { AngularMaterialModule } from './login-material.module';
     CommonModule,
     LoginRoutingModule,
     FlexLayoutModule,
-    AngularMaterialModule
+    AngularMaterialModule,
+    FormsModule
   ],
   exports: [
     SigninComponent, 
