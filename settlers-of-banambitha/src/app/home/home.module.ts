@@ -5,6 +5,8 @@ import { SocialBarComponent } from './social-bar/social-bar.component';
 import { FirstComponent } from './first/first.component';
 import { SecongComponent } from './secong/secong.component';
 
+/*Prueba merge en rama*/
+
 @NgModule({
   declarations: [NavBarComponent, SocialBarComponent, FirstComponent, SecongComponent],
   imports: [CommonModule],
