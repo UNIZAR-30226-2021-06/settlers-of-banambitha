@@ -13,11 +13,16 @@ import { ShopComponent } from './shop/shop.component';
 import { SettingsComponent } from './settings/settings.component';
 import { ProfileComponent } from './profile/profile.component';
 import { RulesComponent } from './rules/rules.component';
+import { NavBarComponent } from './nav-bar/nav-bar.component';
+import { SocialBarComponent } from './social-bar/social-bar.component';
+import { FirstComponent } from './first/first.component';
+import { SecongComponent } from './secong/secong.component';
 
 
+/*Prueba merge en rama*/
 
 @NgModule({
-  declarations: [PlayComponent, PlayerCardComponent, ShopComponent, SettingsComponent, ProfileComponent, RulesComponent],
+  declarations: [NavBarComponent, SocialBarComponent, FirstComponent, SecongComponent, PlayComponent, PlayerCardComponent, ShopComponent, SettingsComponent, ProfileComponent, RulesComponent],
   imports: [
     CommonModule, 
     MatCardModule, 
@@ -28,7 +33,7 @@ import { RulesComponent } from './rules/rules.component';
     MatDividerModule,
   ],
   exports: [
-    PlayComponent
+    NavBarComponent, SocialBarComponent,  FirstComponent, SecongComponent,PlayComponent
   ]
 })
 export class HomeModule { }

@@ -10,6 +10,7 @@
           "style": "sass"
         }
       },
+      
       "root": "",
       "sourceRoot": "src",
       "prefix": "app",
