@@ -8,7 +8,7 @@ import {MatChipsModule} from '@angular/material/chips';
 import {MatButtonModule} from '@angular/material/button'; 
 import {MatSelectModule} from '@angular/material/select'; 
 import {MatDividerModule} from '@angular/material/divider'; 
-import {FlexModule} from '@angular/flex-layout';
+import {FlexLayoutModule} from '@angular/flex-layout';
 import { ShopComponent } from './shop/shop.component';
 import { SettingsComponent } from './settings/settings.component';
 import { ProfileComponent } from './profile/profile.component';
@@ -31,6 +31,7 @@ import { SecongComponent } from './secong/secong.component';
     MatButtonModule,
     MatSelectModule,
     MatDividerModule,
+    FlexLayoutModule
   ],
   exports: [
     NavBarComponent, SocialBarComponent,  FirstComponent, SecongComponent,PlayComponent

@@ -11,7 +11,7 @@ export class PlayerCardComponent implements OnInit {
   @Input() playerELO: bigint
   @Input() playerNumber: number
   number_icons = ["looks_one", "looks_two", "looks_3", "looks_4"]
-  player_color = ["red", "blue", "green", "grey"]
+  player_color = ["white", "white", "white", "white"]
 
   isActive = false 
 
