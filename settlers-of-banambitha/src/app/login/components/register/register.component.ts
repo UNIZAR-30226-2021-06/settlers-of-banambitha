@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { MatDialog,MAT_DIALOG_DATA } from '@angular/material/dialog';
+
 
 @Component({
   selector: 'app-register',
@@ -8,7 +10,7 @@ import { NgForm } from '@angular/forms';
 })
 export class RegisterComponent implements OnInit {
 
-  constructor() { }
+  constructor(public dialog: MatDialog) { }
 
   ngOnInit(): void {
   }
@@ -19,4 +21,20 @@ export class RegisterComponent implements OnInit {
     console.log(f.valid);  // false
   }
 
+  openDialog() {
+    this.dialog.open(DialogData, {
+      data: {
+        animal: 'panda'
+      }
+    });
+  }
+
+}
+
+@Component({
+  selector: 'dialog-data',
+  templateUrl: 'dialog-data.html',
+})
+export class DialogData {
+  constructor(@Inject(MAT_DIALOG_DATA) public data: DialogData) {}
 }

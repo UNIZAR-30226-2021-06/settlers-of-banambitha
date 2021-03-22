@@ -3,8 +3,13 @@
         <div class="main-wrapper" fxLayout="row" fxLayoutAlign="center center">
             <mat-card class="box">
               <mat-card-header>
-                <mat-card-title>Register<p></p>
+                <mat-card-title>Register   
+                  <button mat-icon-button (click)="openDialog()">
+                    <mat-icon>info</mat-icon>
+                  </button> 
+                  <p></p>
                 </mat-card-title>
+                
               </mat-card-header>
               
               <form class="example-form" #f="ngForm" (ngSubmit)="onSubmit(f)">
@@ -13,11 +18,12 @@
                     <mat-label>Enter your username</mat-label>
                     <input matInput
                            name="username"
-                           ngModel required 
+                           ngModel 
+                           required
+                           pattern="^(?=.*[0-9]*)(?=.*[a-z]*)(?=.*[A-Z]*)(?=.*[-_]*).{5,32}$" 
                            #username="ngModel"
                           placeholder="Username">
                   </mat-form-field>
-                  
                   <mat-form-field appearance="fill" class="example-full-width">
                     <mat-label>Enter your email</mat-label>
                     <input  matInput 
@@ -25,6 +31,7 @@
                             name="email" 
                             ngModel 
                             email required 
+                            pattern="^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$"
                             #email="ngModel" 
                             placeholder="someone@example.com">
                   </mat-form-field>
@@ -35,6 +42,7 @@
                             name="password"
                             ngModel
                             required
+                            pattern="^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,32}$"
                             #password="ngModel">
                             
                     <button mat-icon-button matSuffix (click)="hide = !hide" 
@@ -47,8 +55,7 @@
                   <button mat-stroked-button color="accent" [disabled]="f.invalid"  class="btn-block">
                     Register  <mat-icon>app_registration</mat-icon>
                   </button>
-                </div>    
-                
+                </div>      
               </form>
             </mat-card>
           </div>

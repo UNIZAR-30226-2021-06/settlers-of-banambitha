@@ -17,6 +17,7 @@
                     name="email" 
                     ngModel 
                     email required 
+                    pattern="^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$"
                     #email="ngModel" 
                     placeholder="someone@example.com">
           </mat-form-field>
@@ -26,7 +27,8 @@
             <input  matInput [type]="hide ? 'password' : 'text'" 
                     name="password" 
                     ngModel 
-                    required 
+                    required
+                    pattern="^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,32}$" 
                     #password="ngModel">
             <button mat-icon-button matSuffix (click)="hide = !hide" 
             [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
