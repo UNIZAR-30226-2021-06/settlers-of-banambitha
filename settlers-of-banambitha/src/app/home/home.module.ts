@@ -15,14 +15,11 @@ import { ProfileComponent } from './profile/profile.component';
 import { RulesComponent } from './rules/rules.component';
 import { NavBarComponent } from './nav-bar/nav-bar.component';
 import { SocialBarComponent } from './social-bar/social-bar.component';
-import { FirstComponent } from './first/first.component';
-import { SecongComponent } from './secong/secong.component';
+import { HomeRoutingModule } from './home-routing.module';
 
-
-/*Prueba merge en rama*/
 
 @NgModule({
-  declarations: [NavBarComponent, SocialBarComponent, FirstComponent, SecongComponent, PlayComponent, PlayerCardComponent, ShopComponent, SettingsComponent, ProfileComponent, RulesComponent],
+  declarations: [NavBarComponent, SocialBarComponent, PlayComponent, PlayerCardComponent, ShopComponent, SettingsComponent, ProfileComponent, RulesComponent],
   imports: [
     CommonModule, 
     MatCardModule, 
@@ -31,10 +28,11 @@ import { SecongComponent } from './secong/secong.component';
     MatButtonModule,
     MatSelectModule,
     MatDividerModule,
-    FlexLayoutModule
+    FlexLayoutModule,
+    HomeRoutingModule
   ],
   exports: [
-    NavBarComponent, SocialBarComponent,  FirstComponent, SecongComponent,PlayComponent
+    NavBarComponent, SocialBarComponent,PlayComponent, ShopComponent, ProfileComponent, RulesComponent
   ]
 })
 export class HomeModule { }

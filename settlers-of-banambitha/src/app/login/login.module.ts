@@ -7,9 +7,6 @@ import { ResetPasswordComponent } from './components/reset-password/reset-passwo
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { AngularMaterialModule } from './login-material.module';
 
-
-
-
 @NgModule({
   declarations: [SigninComponent, RegisterComponent, ResetPasswordComponent],
   imports: [
