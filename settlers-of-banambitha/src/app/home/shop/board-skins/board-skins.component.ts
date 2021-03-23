@@ -12,6 +12,15 @@ export class BoardSkinsComponent implements OnInit {
   isActive1: boolean = false
   isActive2: boolean = false
 
+  imageNames: { [src: string]: string} = {
+    'Hardware' : "hardware_shop_image",
+    'Espacial' : "espacial_shop_image",
+  }
+
+  getRandomInt() {
+    return Math.floor(Math.random() * 1000000);
+  }
+
   ngOnInit(): void {
   }
 

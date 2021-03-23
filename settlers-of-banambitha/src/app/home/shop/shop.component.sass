@@ -6,7 +6,9 @@ html
     background-color: map-get($palette, mainDark)
     height: 100%
     color: #FFFFFF
-    overflow: hidden
+
+mat-tab-group
+    color: map-get($palette, secondDark)
 
 mat-tab
     display: flex
@@ -15,6 +17,7 @@ mat-tab
     justify-content: center
     align-items: center
     padding: 3%
+    background-color: map-get($palette, mainDark)
 
 .center
     display: flex
@@ -23,5 +26,5 @@ mat-tab
     height: 100vh
 
 ::ng-deep .mat-tab-group.mat-primary .mat-ink-bar, .mat-tab-nav-bar.mat-primary .mat-ink-bar
-    background-color: map-get($palette, mainRed)
+    background-color: map-get($palette, mainYellow)
 
