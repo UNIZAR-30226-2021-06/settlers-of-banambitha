@@ -8,17 +8,28 @@
         </mat-card-title>
       </mat-card-header>
   
-      <form class="example-form">
+      <form class="example-form" #f="ngForm" (ngSubmit)="onSubmit(f)">
         <mat-card-content>
           <mat-form-field appearance="fill" class="example-full-width">
             <mat-label>Enter your email</mat-label>
-            <input matInput type="email" name="email" 
-                  ngModel email placeholder="someone@example.com">
+            <input  matInput 
+                    type="email" 
+                    name="email" 
+                    ngModel 
+                    email required 
+                    pattern="^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$"
+                    #email="ngModel" 
+                    placeholder="someone@example.com">
           </mat-form-field>
   
           <mat-form-field appearance="fill" class="example-full-width">
             <mat-label>Enter your password</mat-label>
-            <input matInput [type]="hide ? 'password' : 'text'">
+            <input  matInput [type]="hide ? 'password' : 'text'" 
+                    name="password" 
+                    ngModel 
+                    required
+                    pattern="^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,32}$" 
+                    #password="ngModel">
             <button mat-icon-button matSuffix (click)="hide = !hide" 
             [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
             <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
@@ -29,13 +40,17 @@
             Forgot password?
             </a>
         </mat-card-content>
-        <button mat-stroked-button color="accent"  class="btn-block">Sign-in</button>
+        <div class="boton">
+          <button mat-stroked-button color="accent" [disabled]="f.invalid"  class="btn-block">
+            Sign in  <mat-icon>login</mat-icon>
+          </button>
+        </div>    
       </form>
-      <p></p>
-        <a class="nav-link"
-        [routerLink]="['/register']" routerLinkActive="active">
-          Create a new account
-        </a>
+      <br/>
+      <a class="nav-link"
+      [routerLink]="['/register']" routerLinkActive="active">
+        Create a new account
+      </a>
         
     </mat-card>
   </div>
