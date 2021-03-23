@@ -17,12 +17,15 @@ import { NavBarComponent } from './nav-bar/nav-bar.component';
 import { SocialBarComponent } from './social-bar/social-bar.component';
 import { FirstComponent } from './first/first.component';
 import { SecongComponent } from './secong/secong.component';
+import {MatTabsModule} from '@angular/material/tabs';
+import { ProfilePicturesComponent } from './shop/profile-pictures/profile-pictures.component';
+import { BoardSkinsComponent } from './shop/board-skins/board-skins.component'; 
 
 
 /*Prueba merge en rama*/
 
 @NgModule({
-  declarations: [NavBarComponent, SocialBarComponent, FirstComponent, SecongComponent, PlayComponent, PlayerCardComponent, ShopComponent, SettingsComponent, ProfileComponent, RulesComponent],
+  declarations: [NavBarComponent, SocialBarComponent, FirstComponent, SecongComponent, PlayComponent, PlayerCardComponent, ShopComponent, SettingsComponent, ProfileComponent, RulesComponent, ProfilePicturesComponent, BoardSkinsComponent],
   imports: [
     CommonModule, 
     MatCardModule, 
@@ -31,10 +34,11 @@ import { SecongComponent } from './secong/secong.component';
     MatButtonModule,
     MatSelectModule,
     MatDividerModule,
-    FlexLayoutModule
+    FlexLayoutModule, 
+    MatTabsModule
   ],
   exports: [
-    NavBarComponent, SocialBarComponent,  FirstComponent, SecongComponent,PlayComponent
+    NavBarComponent, SocialBarComponent,  FirstComponent, SecongComponent,PlayComponent, ShopComponent
   ]
 })
 export class HomeModule { }

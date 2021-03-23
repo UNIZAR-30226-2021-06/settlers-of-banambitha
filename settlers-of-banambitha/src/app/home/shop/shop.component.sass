@@ -1,0 +1,27 @@
+@import '../../../styles'
+
+html
+    padding: 0
+    margin: 0
+    background-color: map-get($palette, mainDark)
+    height: 100%
+    color: #FFFFFF
+    overflow: hidden
+
+mat-tab
+    display: flex
+    box-sizing: border-box
+    height: 100vh
+    justify-content: center
+    align-items: center
+    padding: 3%
+
+.center
+    display: flex
+    justify-content: center
+    align-items: center
+    height: 100vh
+
+::ng-deep .mat-tab-group.mat-primary .mat-ink-bar, .mat-tab-nav-bar.mat-primary .mat-ink-bar
+    background-color: map-get($palette, mainRed)
+
