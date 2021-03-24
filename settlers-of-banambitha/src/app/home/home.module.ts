@@ -25,11 +25,12 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatListModule} from '@angular/material/list';
 import {MatIconModule} from '@angular/material/icon';
 import { TerrainComponent } from './rules/terrain/terrain.component';
+import { ResourcesComponent } from './rules/resources/resources.component';
 
 /*Prueba merge en rama*/
 
 @NgModule({
-  declarations: [NavBarComponent, SocialBarComponent, FirstComponent, SecongComponent, PlayComponent, PlayerCardComponent, ShopComponent, SettingsComponent, ProfileComponent, RulesComponent, ProfilePicturesComponent, BoardSkinsComponent, TerrainComponent],
+  declarations: [NavBarComponent, SocialBarComponent, FirstComponent, SecongComponent, PlayComponent, PlayerCardComponent, ShopComponent, SettingsComponent, ProfileComponent, RulesComponent, ProfilePicturesComponent, BoardSkinsComponent, TerrainComponent, ResourcesComponent],
   imports: [
     CommonModule, 
     MatCardModule, 
