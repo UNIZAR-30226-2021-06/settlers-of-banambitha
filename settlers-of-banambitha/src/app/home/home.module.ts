@@ -20,12 +20,16 @@ import { SecongComponent } from './secong/secong.component';
 import {MatTabsModule} from '@angular/material/tabs';
 import { ProfilePicturesComponent } from './shop/profile-pictures/profile-pictures.component';
 import { BoardSkinsComponent } from './shop/board-skins/board-skins.component'; 
-
+import {MatSidenavModule} from '@angular/material/sidenav';
+import {MatToolbarModule} from '@angular/material/toolbar'; 
+import {MatListModule} from '@angular/material/list';
+import {MatIconModule} from '@angular/material/icon';
+import { TerrainComponent } from './rules/terrain/terrain.component';
 
 /*Prueba merge en rama*/
 
 @NgModule({
-  declarations: [NavBarComponent, SocialBarComponent, FirstComponent, SecongComponent, PlayComponent, PlayerCardComponent, ShopComponent, SettingsComponent, ProfileComponent, RulesComponent, ProfilePicturesComponent, BoardSkinsComponent],
+  declarations: [NavBarComponent, SocialBarComponent, FirstComponent, SecongComponent, PlayComponent, PlayerCardComponent, ShopComponent, SettingsComponent, ProfileComponent, RulesComponent, ProfilePicturesComponent, BoardSkinsComponent, TerrainComponent],
   imports: [
     CommonModule, 
     MatCardModule, 
@@ -35,10 +39,14 @@ import { BoardSkinsComponent } from './shop/board-skins/board-skins.component';
     MatSelectModule,
     MatDividerModule,
     FlexLayoutModule, 
-    MatTabsModule
+    MatTabsModule,
+    MatSidenavModule,
+    MatToolbarModule,
+    MatListModule,
+    MatIconModule
   ],
   exports: [
-    NavBarComponent, SocialBarComponent,  FirstComponent, SecongComponent,PlayComponent, ShopComponent
+    NavBarComponent, SocialBarComponent,  FirstComponent, SecongComponent,PlayComponent, ShopComponent, RulesComponent
   ]
 })
 export class HomeModule { }

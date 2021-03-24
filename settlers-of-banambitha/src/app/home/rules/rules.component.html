@@ -1,1 +1,82 @@
-<p>rules works!</p>
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav  #drawer class="sidenav" fixedInViewport
+      [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+      [mode]="(isHandset$ | async) ? 'over' : 'side'"
+      [opened]="(isHandset$ | async) === false">
+    <mat-toolbar>Menu</mat-toolbar>
+    <mat-nav-list>
+      <a mat-list-item (click)="terrain = true; 
+                                resources = false;
+                                trade = false;
+                                development = false;
+                                building = false">
+                        Terrain types
+        </a>
+      <a mat-list-item (click)="terrain = false; 
+                                resources = true;
+                                trade = false;
+                                development = false;
+                                building = false">
+                        Resources
+        </a>
+      <a mat-list-item (click)="terrain = false; 
+                                resources = false;
+                                trade = true;
+                                development = false;
+                                building = false">
+                        Trade
+        </a>
+      <a mat-list-item (click)="terrain = false; 
+                                resources = false;
+                                trade = false;
+                                development = true;
+                                building = false">
+                        Development card
+        </a>
+      <a mat-list-item (click)="terrain = false; 
+                                resources = false;
+                                trade = false;
+                                development = false;
+                                building = true">
+                        Building
+        </a>
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <mat-toolbar class="toolbar">
+      <button
+        type="button"
+        aria-label="Toggle sidenav"
+        mat-icon-button
+        (click)="drawer.toggle()"
+        *ngIf="isHandset$ | async">
+        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+      </button>
+      <span>GAME RULES</span>
+    </mat-toolbar>
+    
+    <div *ngIf="terrain==true">
+        <rules-terrain></rules-terrain>
+    </div>
+
+    <div *ngIf="resources==true">
+        <p>prueba resources</p>
+    </div>
+
+    <div *ngIf="trade==true">
+        <p>prueba trade</p>
+    </div>
+
+    <div *ngIf="development==true">
+        <p>prueba development</p>
+    </div>
+
+    <div *ngIf="building==true">
+        <p>prueba building</p>
+    </div>
+
+
+
+  </mat-sidenav-content>
+</mat-sidenav-container>
+
