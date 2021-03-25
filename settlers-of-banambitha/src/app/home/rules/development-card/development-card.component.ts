@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'rules-terrain',
-  templateUrl: './terrain.component.html',
+  selector: 'rules-development-card',
+  templateUrl: './development-card.component.html',
   styleUrls: ['../rules.component.sass']
 })
-export class TerrainComponent implements OnInit {
+export class DevelopmentCardComponent implements OnInit {
 
   constructor() { }
 

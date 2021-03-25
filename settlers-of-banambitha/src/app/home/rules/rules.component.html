@@ -5,40 +5,29 @@
       [opened]="(isHandset$ | async) === false">
     <mat-toolbar>Menu</mat-toolbar>
     <mat-nav-list>
-      <a mat-list-item (click)="terrain = true; 
+      <a mat-list-item (click)="overview = true; 
                                 resources = false;
-                                trade = false;
                                 development = false;
-                                building = false">
-                        Terrain types
+                                actions = false">
+                        Aspectos básicos
         </a>
-      <a mat-list-item (click)="terrain = false; 
+      <a mat-list-item (click)="overview = false; 
                                 resources = true;
-                                trade = false;
                                 development = false;
-                                building = false">
-                        Resources
+                                actions = false">
+                        Figuras y recursos 
         </a>
-      <a mat-list-item (click)="terrain = false; 
+      <a mat-list-item (click)="overview = false; 
                                 resources = false;
-                                trade = true;
-                                development = false;
-                                building = false">
-                        Trade
-        </a>
-      <a mat-list-item (click)="terrain = false; 
-                                resources = false;
-                                trade = false;
                                 development = true;
-                                building = false">
-                        Development card
+                                actions = false">
+                       Cartas de desarrollo
         </a>
-      <a mat-list-item (click)="terrain = false; 
+      <a mat-list-item (click)="overview = false; 
                                 resources = false;
-                                trade = false;
                                 development = false;
-                                building = true">
-                        Building
+                                actions = true">
+                        Acciones
         </a>
     </mat-nav-list>
   </mat-sidenav>
@@ -52,10 +41,10 @@
         *ngIf="isHandset$ | async">
         <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
       </button>
-      <span>GAME RULES</span>
+      <span>Reglas e instrucciones</span>
     </mat-toolbar>
     
-    <div *ngIf="terrain==true">
+    <div *ngIf="overview==true">
         <rules-terrain></rules-terrain>
     </div>
 
@@ -63,16 +52,12 @@
        <rules-resources></rules-resources>
     </div>
 
-    <div *ngIf="trade==true">
-        <p>prueba trade</p>
-    </div>
-
     <div *ngIf="development==true">
-        <p>prueba development</p>
+       <rules-development-card></rules-development-card>
     </div>
 
-    <div *ngIf="building==true">
-        <p>prueba building</p>
+    <div *ngIf="actions==true">
+        <rules-actions></rules-actions>
     </div>
     
 

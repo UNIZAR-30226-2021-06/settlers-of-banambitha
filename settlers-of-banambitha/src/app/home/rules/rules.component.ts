@@ -21,10 +21,10 @@ export class RulesComponent implements OnInit {
       shareReplay()
     );
 
-    terrain=true
+    overview=true
     resources=false
     trade=false
     development=false
-    building=false
+    actions=false
 
 }

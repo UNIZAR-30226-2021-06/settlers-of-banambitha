@@ -26,11 +26,13 @@ import {MatListModule} from '@angular/material/list';
 import {MatIconModule} from '@angular/material/icon';
 import { TerrainComponent } from './rules/terrain/terrain.component';
 import { ResourcesComponent } from './rules/resources/resources.component';
+import { DevelopmentCardComponent } from './rules/development-card/development-card.component';
+import { ActionsComponent } from './rules/actions/actions.component';
 
 /*Prueba merge en rama*/
 
 @NgModule({
-  declarations: [NavBarComponent, SocialBarComponent, FirstComponent, SecongComponent, PlayComponent, PlayerCardComponent, ShopComponent, SettingsComponent, ProfileComponent, RulesComponent, ProfilePicturesComponent, BoardSkinsComponent, TerrainComponent, ResourcesComponent],
+  declarations: [NavBarComponent, SocialBarComponent, FirstComponent, SecongComponent, PlayComponent, PlayerCardComponent, ShopComponent, SettingsComponent, ProfileComponent, RulesComponent, ProfilePicturesComponent, BoardSkinsComponent, TerrainComponent, ResourcesComponent, DevelopmentCardComponent, ActionsComponent],
   imports: [
     CommonModule, 
     MatCardModule, 
