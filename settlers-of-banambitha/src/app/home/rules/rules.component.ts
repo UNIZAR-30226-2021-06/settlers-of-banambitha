@@ -26,5 +26,6 @@ export class RulesComponent implements OnInit {
     trade=false
     development=false
     actions=false
+    ingame = false
 
 }

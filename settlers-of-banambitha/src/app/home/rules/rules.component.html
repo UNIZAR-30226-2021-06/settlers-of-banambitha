@@ -8,27 +8,38 @@
       <a mat-list-item (click)="overview = true; 
                                 resources = false;
                                 development = false;
-                                actions = false">
+                                actions = false;
+                                ingame = false">
                         Aspectos básicos
-        </a>
+      </a>
       <a mat-list-item (click)="overview = false; 
                                 resources = true;
                                 development = false;
-                                actions = false">
+                                actions = false;
+                                ingame = false">
                         Figuras y recursos 
-        </a>
+      </a>
       <a mat-list-item (click)="overview = false; 
                                 resources = false;
                                 development = true;
-                                actions = false">
+                                actions = false;
+                                ingame = false">
                        Cartas de desarrollo
-        </a>
+      </a>
       <a mat-list-item (click)="overview = false; 
                                 resources = false;
                                 development = false;
-                                actions = true">
+                                actions = true;
+                                ingame = false">
                         Acciones
-        </a>
+      </a>
+      <a mat-list-item (click)="overview = false; 
+                                resources = false;
+                                development = false;
+                                actions = false;
+                                ingame = true">
+                       Fases del juego
+    </a>
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>
@@ -60,8 +71,9 @@
         <rules-actions></rules-actions>
     </div>
     
-
-
+    <div *ngIf="ingame==true">
+      <rules-ingame></rules-ingame>
+  </div>
   </mat-sidenav-content>
 </mat-sidenav-container>
 
