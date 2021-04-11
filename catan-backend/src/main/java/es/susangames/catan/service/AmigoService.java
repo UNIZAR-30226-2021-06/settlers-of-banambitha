@@ -1,5 +1,7 @@
 package es.susangames.catan.service;
 
+import java.util.ArrayList;
+
 import java.util.List;
 
 import org.javatuples.Pair;
@@ -42,17 +44,35 @@ public class AmigoService {
 	
 	public List<Amigo> listaAmigos(String usuarioId) {
 		
-		return amigoRepo.listaAmigos(usuarioId);
+		List<Amigo> amigos = new ArrayList<Amigo>();
+		
+		for(String amigo : amigoRepo.listaAmigos(usuarioId)) {
+			String [] parameters = amigo.split(",", 2);
+			amigos.add(new Amigo(parameters[0],parameters[1]));
+		}
+		
+		return amigos;
 	}
 	
 	public List<PeticionAmistad> listaPendientesRecibidas(String usuarioId) {
 		
-		return amigoRepo.listaPendientesRecibidas(usuarioId);
+		List<PeticionAmistad> pendientesRecibidas = new ArrayList<PeticionAmistad>();
+		
+		for(String peticion : amigoRepo.listaPendientesRecibidas(usuarioId)) {
+			String [] parameters = peticion.split(",", 2);
+			pendientesRecibidas.add(new PeticionAmistad(parameters[0],parameters[1]));
+		}
+		return pendientesRecibidas;
 	}
 	
 	public List<PeticionAmistad> listaPendientesEnviadas(String usuarioId) {
 		
-		return amigoRepo.listaPendientesEnviadas(usuarioId);
+		List<PeticionAmistad> pendientesEnviadas = new ArrayList<PeticionAmistad>();
+		
+		for(String peticion :amigoRepo.listaPendientesEnviadas(usuarioId)) {
+			String [] parameters = peticion.split(",", 2);
+			pendientesEnviadas.add(new PeticionAmistad(parameters[0],parameters[1]));
+		}
+		return pendientesEnviadas;
 	}
-	
 }

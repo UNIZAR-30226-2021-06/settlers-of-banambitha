@@ -24,6 +24,32 @@ public class UsuarioResourcee {
 		this.usuarioService = usuarioService;
 	}
 	
+	
+	/* ******************************************************
+	 * Maps: 	Add a new user @Post
+	 * 
+	 * Expects: -User in body
+	 * 			-Mapped point: 	/usuario/add
+	 * 			-Format: 
+	 * 				{
+	 * 					"nombre" 	 : <nombre>,
+	 * 					"email" 	 : <email>,
+	 * 					"contrasenya": <contrasenya>
+	 * 				}
+	 * 			-Los parámetros restantes no son necesarios
+	 * 
+	 * Returns: -JSON Message
+	 * 			-Format:
+	 * 				{
+	 * 					"nombre" 	 : <nombre>,
+	 * 					"email" 	 : <email>,
+	 * 					"contrasenya": <contrasenya>
+	 *	 				"saldo"		 : 0,
+	 *				    "idioma"	 : "Español",
+	 *				    "avatar"	 : "Original",
+	 *				    "apariencia" : "Clasica"
+	 *				}
+	****************************************************** */
 	@PostMapping("/add")
 	public ResponseEntity<Usuario> newUsuario(@RequestBody Usuario usuario) {
 		
@@ -32,6 +58,26 @@ public class UsuarioResourcee {
 		return new ResponseEntity<>(newUsuario, HttpStatus.CREATED);
 	}
 	
+	
+	/* ******************************************************
+	 * Maps: 	Get a user by Id @get
+	 * 
+	 * Expects: -Parameter in url
+	 * 			-Mapped point: 	/usuario/find
+	 * 			-Format: 		/usuario/find/{usuarioId}
+	 * 				
+	 * Returns: -JSON Message
+	 * 			-Format:
+	 * 				{
+	 * 					"nombre" 	 : <nombre>,
+	 * 					"email" 	 : <email>,
+	 * 					"contrasenya": <contrasenya>
+	 *	 				"saldo"		 : <saldo>,
+	 *				    "idioma"	 : <idioma>,
+	 *				    "avatar"	 : <avatar>,
+	 *				    "apariencia" : <apariencia>
+	 *				}
+	****************************************************** */
 	@GetMapping("/find/{usuarioId}")
 	public ResponseEntity<Usuario> findUsuario(@PathVariable("usuarioId") String usuarioId){
 		Usuario usuario = usuarioService.findUsuario(usuarioId);
@@ -39,12 +85,58 @@ public class UsuarioResourcee {
 		return new ResponseEntity<>(usuario, HttpStatus.OK);
 	}
 	
+	
+	/* ******************************************************
+	 * Maps: 	Get all users @get
+	 * 
+	 * Expects: -Nothing
+	 * 			-Mapped point: 	/usuario/all
+	 * 				
+	 * Returns: -JSON Message
+	 * 			-Format:
+	 * 				[
+	 * 					{
+	 * 						"nombre" 	 : <nombre>,
+	 * 						"email" 	 : <email>,
+	 * 						"contrasenya": <contrasenya>
+	 *	 					"saldo"		 : <saldo>,
+	 *				    	"idioma"	 : <idioma>,
+	 *				    	"avatar"	 : <avatar>,
+	 *				    	"apariencia" : <apariencia>
+	 *					}
+	 *				]
+	****************************************************** */
 	@GetMapping("/all")
 	public ResponseEntity<List<Usuario>> findAllUsers() {
 		List<Usuario> usuarios = usuarioService.findAllUsuarios();
 		return new ResponseEntity<>(usuarios, HttpStatus.OK);
 	}
 	
+	/* ******************************************************
+	 * Maps: 	Validate a user using Id and password @get
+	 * 
+	 * Expects: -User in body
+	 * 			-Mapped point: 	/usuario/validate
+	 * 			-Format: 
+	 * 				{
+	 * 					"nombre" 	 : <nombre>,
+	 * 					"contrasenya": <contrasenya>
+	 * 				}
+	 * 			-Los parámetros restantes no son necesarios		
+	 * 		
+	 * Returns: -JSON Message
+	 * 			-Format:
+	 * 				{
+	 * 					"nombre" 	 : <nombre>,
+	 * 					"email" 	 : <email>,
+	 * 					"contrasenya": <contrasenya>
+	 *	 				"saldo"		 : <saldo>,
+	 *				    "idioma"	 : <idioma>,
+	 *				    "avatar"	 : <avatar>,
+	 *				    "apariencia" : <apariencia>
+	 *				}
+	 *			-On failure all fields are null
+	****************************************************** */
 	@GetMapping("/validate")
 	public ResponseEntity<Usuario> validateUsuario(@RequestBody Usuario usuario) {
 

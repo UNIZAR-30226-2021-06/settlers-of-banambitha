@@ -18,6 +18,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 	public static final String TOPIC_BUSQUEDA 		= "/busqueda";
 	public static final String TOPIC_PARTIDA_ACT 	= "/partida-act";
 	public static final String TOPIC_PARTIDA_CHAT 	= "/partida-chat";
+	public static final String TOPIC_PARTIDA_COM 	= "/partida-com";
 	
 	@Override
 	public void configureMessageBroker(MessageBrokerRegistry config) {

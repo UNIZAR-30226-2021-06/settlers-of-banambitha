@@ -84,7 +84,7 @@ public class ChatController{
 	 * 			-Format:
 	 * 				{
 	 * 					"from"	: <remitente>,
-	 * 					"body"	: <cuerpo>
+	 * 					"body"	: <cuerpo>,
 	 * 					"time"	: <marca de tiempo H:M>
 	 *				}
 	****************************************************** */
@@ -95,7 +95,7 @@ public class ChatController{
 		JSONObject obj = new JSONObject(mensaje);
 		
 		String remitente = obj.getString("from");
-		String partida = obj.getString("game");
+		int partida = obj.getInt("game");
 		String cuerpo = obj.getString("body");
 		
 		Timestamp timestamp = new Timestamp(System.currentTimeMillis());

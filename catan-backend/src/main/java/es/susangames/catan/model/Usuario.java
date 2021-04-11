@@ -2,9 +2,12 @@ package es.susangames.catan.model;
 
 import java.io.Serializable;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 
 @Entity
@@ -22,23 +25,35 @@ public class Usuario implements Serializable {
 	@Column(nullable = false, updatable = true)
 	private String contrasenya;
 	
-	@Column(columnDefinition = "int4 default 0", nullable = false, updatable = true)
+	@Column(columnDefinition = "int4 default 0 CHECK (saldo >= 0)", nullable = false, updatable = true)
 	private Integer saldo;
 	
-	@Column(columnDefinition = "varchar(100) default 'Original'", nullable = false, updatable = true)
+	@Column(columnDefinition = "varchar(10) default 'Español' CHECK (idioma IN ('Español','English'))", nullable = false, updatable = true)
+	private String idioma;
+	
+	@Column(columnDefinition = "varchar(100) default 'Original'", nullable = false, updatable = false, insertable = false)
 	private String avatar;
 	
-	@Column(columnDefinition = "varchar(100) default 'Clasica'", nullable = false, updatable = true)
+	@Column(columnDefinition = "varchar(100) default 'Clasica'", nullable = false, updatable = false, insertable = false)
 	private String apariencia;
+	
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "avatar")
+	private Producto Avatar;
+	
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "apariencia")
+	private Producto Apariencia;
 	
 	
 	public Usuario() {}
 
-	public Usuario(String nombre, String email, String contrasenya, Integer saldo, String avatar, String apariencia) {
+	public Usuario(String nombre, String email, String contrasenya, Integer saldo, String idioma, String avatar, String apariencia) {
 		this.nombre = nombre;
 		this.email = email;
 		this.contrasenya = contrasenya;
 		this.saldo = saldo;
+		this.idioma = idioma;
 		this.avatar = avatar;
 		this.apariencia = apariencia;
 	}
@@ -73,6 +88,14 @@ public class Usuario implements Serializable {
 	
 	public void setSaldo(Integer saldo) {
 		this.saldo = saldo;
+	}
+	
+	public String getIdioma() {
+		return idioma;
+	}
+	
+	public void setIdioma(String idioma) {
+		this.idioma = idioma;
 	}
 	
 	public String getAvatar() {

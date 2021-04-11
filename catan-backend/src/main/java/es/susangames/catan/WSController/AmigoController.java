@@ -44,7 +44,7 @@ public class AmigoController {
 	 * 			-Broadcast point:	/peticion/<el que acepta la peticion>
 	 * 			-Format:
 	 * 				{
-	 * 					"type"	: "REQUEST"
+	 * 					"type"	: "REQUEST",
 	 * 					"from"	: <el que hace la peticion>,
 	 * 					"time"	: <marca de tiempo H:M>
 	 *				}
@@ -90,7 +90,7 @@ public class AmigoController {
 	 * 			-Broadcast point:	/peticion/<el que hizo la peticion>
 	 * 			-Format:
 	 * 				{
-	 * 					"type"	: "ACCEPT"
+	 * 					"type"	: "ACCEPT",
 	 * 					"from"	: <el que acepta la peticion>,
 	 * 					"time"	: <marca de tiempo H:M>
 	 *				}
@@ -114,7 +114,7 @@ public class AmigoController {
 		String H_M = String.format("%d:%02d",Hours,Mins); 
 		
 		JSONObject nuevoMensaje = new JSONObject();
-		nuevoMensaje.put("type",ACCEPT);
+		nuevoMensaje.put("type", ACCEPT);
 		nuevoMensaje.put("from", remitente);
 		nuevoMensaje.put("time", H_M);
 		
@@ -138,7 +138,7 @@ public class AmigoController {
 	 * 			-Broadcast point:	/peticion/<el que hizo la peticion>
 	 * 			-Format:
 	 * 				{
-	 * 					"type"	: "DECLINE"
+	 * 					"type"	: "DECLINE",
 	 * 					"from"	: <el que rechaza la peticion>,
 	 * 					"time"	: <marca de tiempo H:M>
 	 *				}
@@ -162,7 +162,7 @@ public class AmigoController {
 		String H_M = String.format("%d:%02d",Hours,Mins); 
 		
 		JSONObject nuevoMensaje = new JSONObject();
-		nuevoMensaje.put("type",DECLINE);
+		nuevoMensaje.put("type", DECLINE);
 		nuevoMensaje.put("from", remitente);
 		nuevoMensaje.put("time", H_M);
 		

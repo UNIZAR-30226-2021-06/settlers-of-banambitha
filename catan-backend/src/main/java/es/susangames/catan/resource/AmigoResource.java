@@ -24,6 +24,23 @@ public class AmigoResource {
 		this.amigoService = amigoService;
 	}
 	
+	
+	/* ******************************************************
+	 * Maps: 	Friends List @Get
+	 * 
+	 * Expects: -Parameter in url
+	 * 			-Mapped point: 	/amigo/list
+	 * 			-Format: 		/amigo/list/{usuarioId}
+	 * 
+	 * Returns: -JSON Message
+	 * 			-Format:
+	 * 				[
+	 * 					{
+	 * 						"usuario1_id"	: <usuarioId>,
+	 * 						"usuario2_id"	: <id_amigo>
+	 *					}
+	 *				]
+	****************************************************** */
 	@GetMapping("/list/{usuarioId}")
 	public ResponseEntity<List<Amigo>> findAllAmigos(@PathVariable("usuarioId") String usuarioId) {
 		
@@ -33,6 +50,23 @@ public class AmigoResource {
 		
 	}
 	
+	
+	/* ******************************************************
+	 * Maps: 	Pending Received Friend Request List @Get
+	 * 
+	 * Expects: -Parameter in url
+	 * 			-Mapped point: 	/amigo/pending-r
+	 * 			-Format: 		/amigo/pending-r/{usuarioId}
+	 * 
+	 * Returns: -JSON Message
+	 * 			-Format:
+	 * 				[
+	 * 					{
+	 * 						"usuario1_id"	: <invitante_id>,
+	 * 						"usuario2_id"	: <usuarioId>
+	 *					}
+	 *				]
+	****************************************************** */
 	@GetMapping("/pending-r/{usuarioId}")
 	public ResponseEntity<List<PeticionAmistad>> findSolicitudesPendientesRecibidas(@PathVariable("usuarioId") String usuarioId) {
 		
@@ -41,6 +75,23 @@ public class AmigoResource {
 		return new ResponseEntity<>(listaPendientes, HttpStatus.OK);
 	}
 	
+	
+	/* ******************************************************
+	 * Maps: 	Pending Sent Friend Request List @Get
+	 * 
+	 * Expects: -Parameter in url
+	 * 			-Mapped point: 	/amigo/pending-s
+	 * 			-Format: 		/amigo/pending-s/{usuarioId}
+	 * 
+	 * Returns: -JSON Message
+	 * 			-Format:
+	 * 				[
+	 * 					{
+	 * 						"usuario1_id"	: <usuarioId>,
+	 * 						"usuario2_id"	: <invitado_id>
+	 *					}
+	 *				]
+	****************************************************** */
 	@GetMapping("/pending-s/{usuarioId}")
 	public ResponseEntity<List<PeticionAmistad>> findSolicitudesPendientesEnviadas(@PathVariable("usuarioId") String usuarioId) {
 		
