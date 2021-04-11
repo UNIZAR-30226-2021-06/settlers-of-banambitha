@@ -38,9 +38,9 @@ public class PeticionAmistad implements Serializable {
 	public PeticionAmistad() {
 	}
 
-	public PeticionAmistad(String from, String to) {
-		this.usuario1_id = from;
-		this.usuario2_id = to;
+	public PeticionAmistad(String usuario1_id, String usuario2_id) {
+		this.usuario1_id = usuario1_id;
+		this.usuario2_id = usuario2_id;
 	}
 
 	public String getFrom() {
