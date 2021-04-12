@@ -2,11 +2,45 @@
 @import 'https://fonts.googleapis.com/icon?family=Material+Icons'
 
 
-$palette: ( mainDark: #414147f1 ,secondDark:#665d64 ,mainRed:  #965d62, mainOrange: #c7956d,mainYellow: #f2d974)
+$palette: ( mainDark: #414147f1 ,secondDark:#665d64 ,mainRed:  #965d62,  darkerRed: #704549,mainOrange: #c7956d,mainYellow: #f2d974)
 $font-weights: ("regular": 400, "medium": 500, "bold": 700)
+
+@font-face 
+    src: url("./assets/fonts/celtg.TTF") format("truetype")
+    font-family: "Celtg"
+
+@font-face 
+    src: url("./assets/fonts/celtichd.TTF") format("truetype")
+    font-family: "Celtichd"
+
+@font-face 
+    src: url("./assets/fonts/dung.TTF") format("truetype")
+    font-family: "Dung"
+
+@font-face 
+    src: url("./assets/fonts/livingstone.ttf") format("truetype")
+    font-family: "Livingstone"
+
+@font-face 
+    src: url("./assets/fonts/sherwood.ttf") format("truetype")
+    font-family: "Sherwood"
 
 .main-background
     background-color: map-get($palette, mainDark)    
+
+
+::-webkit-scrollbar 
+  width: 12px             
+
+::-webkit-scrollbar-track 
+  background: map-get($palette, mainDark )        
+
+
+::-webkit-scrollbar-thumb 
+  background-color: map-get($palette, mainYellow )  
+  border-radius: 20px       
+  border: 3px solid map-get($palette, mainDark )    
+
 
 html, body
     height: 100%

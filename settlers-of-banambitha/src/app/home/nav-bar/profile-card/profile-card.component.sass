@@ -1,0 +1,65 @@
+@import '../../../../styles'
+
+.card 
+    border-left: solid map-get($palette, darkerRed)
+    position: relative
+    height: 100%
+    align-items: center
+    padding: 0px 12px
+
+.user-image
+    position: absolute
+    height: 100%
+    float: left
+    padding: 0 20px
+
+.hexText
+  position: absolute
+  color: map-get($palette, mainRed )
+  
+.elo-container
+   position: absolute
+   bottom: 0px
+   height: 100%
+   padding: 0
+   text-align: center
+   color: white
+
+.centered
+  position: absolute
+  top: 50%
+  left: 50%
+  transform: translate(-50%, -50%)
+
+.profile-elo
+    height: 100%
+
+.name-coins
+    float: right
+    display: flex
+    height: 100%
+    width: 50%
+    justify-content: center
+    align-content: center
+    flex-direction: column
+
+.name
+    font-size: large
+    font-family: "Livingstone"
+    text-align: right
+    color: map-get($palette, mainYellow )
+
+.coins
+    position: relative
+    display: table
+    font-size: large
+    text-align: right
+    color: map-get($palette, mainYellow )
+
+.space
+    height: 0.5em
+
+.gem-image
+    position: absolute
+    height: 100%
+    transform: translate(50%, -50%)

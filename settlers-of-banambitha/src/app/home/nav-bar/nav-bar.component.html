@@ -1,9 +1,14 @@
 <div class="header">
-  <a class="logo">Settlers of Banambitha</a>
-  <div class="header-left">
-    <a routerLink="/play" routerLinkActive="active" >Jugar</a>
-    <a routerLink="/shop" routerLinkActive="active" >Tienda</a>
-    <a routerLink="/profile" routerLinkActive="active">Perfil</a>
-    <a routerLink="/rules" routerLinkActive="active">Instrucciones</a>
+  <div class="logo-menu">
+    <img class = "logo" src="../../../assets/images/catan-logo.png">
+    <div class="header-left">
+      <div><a routerLink="/play" routerLinkActive="active" >Jugar</a></div>
+      <div><a routerLink="/shop" routerLinkActive="active" >Tienda</a></div>
+      <div><a routerLink="/profile" routerLinkActive="active">Perfil</a></div>
+      <div><a routerLink="/rules" routerLinkActive="active">Instrucciones</a></div>
+    </div>
+  </div>
+  <div class= "profile-card">
+    <app-profile-card playerELO="999" playerName="world_champion" playerCoins="999"></app-profile-card>
   </div>
 </div>

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {FriendCardComponent} from './friend-card/friend-card.component';
 
 @Component({
   selector: 'app-social-bar',
@@ -7,9 +8,19 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SocialBarComponent implements OnInit {
 
-  constructor() { }
+  public friends: string[];
+ 
+  constructor() { 
 
+    this.friends = [
+      "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O"
+    ]
+
+  }
+  
   ngOnInit(): void {
+
+    
   }
 
 }

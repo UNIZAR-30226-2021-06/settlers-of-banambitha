@@ -16,10 +16,13 @@ import { RulesComponent } from './rules/rules.component';
 import { NavBarComponent } from './nav-bar/nav-bar.component';
 import { SocialBarComponent } from './social-bar/social-bar.component';
 import { HomeRoutingModule } from './home-routing.module';
+import { ProfileCardComponent } from './nav-bar/profile-card/profile-card.component';
+import { FriendBrowserComponent } from './social-bar/friend-browser/friend-browser.component';
+import { FriendCardComponent } from './social-bar/friend-card/friend-card.component';
 
 
 @NgModule({
-  declarations: [NavBarComponent, SocialBarComponent, PlayComponent, PlayerCardComponent, ShopComponent, SettingsComponent, ProfileComponent, RulesComponent],
+  declarations: [NavBarComponent, SocialBarComponent, PlayComponent, PlayerCardComponent, ShopComponent, SettingsComponent, ProfileComponent, RulesComponent, ProfileCardComponent, FriendBrowserComponent, FriendCardComponent],
   imports: [
     CommonModule, 
     MatCardModule, 
