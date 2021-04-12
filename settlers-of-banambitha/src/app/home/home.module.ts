@@ -19,10 +19,24 @@ import { HomeRoutingModule } from './home-routing.module';
 import { ProfileCardComponent } from './nav-bar/profile-card/profile-card.component';
 import { FriendBrowserComponent } from './social-bar/friend-browser/friend-browser.component';
 import { FriendCardComponent } from './social-bar/friend-card/friend-card.component';
+import { FirstComponent } from './first/first.component';
+import { SecongComponent } from './secong/secong.component';
+import {MatTabsModule} from '@angular/material/tabs';
+import { ProfilePicturesComponent } from './shop/profile-pictures/profile-pictures.component';
+import { BoardSkinsComponent } from './shop/board-skins/board-skins.component'; 
+import {MatSidenavModule} from '@angular/material/sidenav';
+import {MatToolbarModule} from '@angular/material/toolbar'; 
+import {MatListModule} from '@angular/material/list';
+import {MatIconModule} from '@angular/material/icon';
+import { TerrainComponent } from './rules/terrain/terrain.component';
+import { ResourcesComponent } from './rules/resources/resources.component';
+import { DevelopmentCardComponent } from './rules/development-card/development-card.component';
+import { ActionsComponent } from './rules/actions/actions.component';
+import { IngameComponent } from './rules/ingame/ingame.component';
 
 
 @NgModule({
-  declarations: [NavBarComponent, SocialBarComponent, PlayComponent, PlayerCardComponent, ShopComponent, SettingsComponent, ProfileComponent, RulesComponent, ProfileCardComponent, FriendBrowserComponent, FriendCardComponent],
+  declarations: [NavBarComponent, SocialBarComponent, PlayComponent, PlayerCardComponent, ShopComponent, SettingsComponent, ProfileComponent, RulesComponent, ProfilePicturesComponent, BoardSkinsComponent, TerrainComponent, ResourcesComponent, DevelopmentCardComponent, ActionsComponent, IngameComponent, ProfileCardComponent, FriendBrowserComponent, FriendCardComponent],
   imports: [
     CommonModule, 
     MatCardModule, 
@@ -31,11 +45,16 @@ import { FriendCardComponent } from './social-bar/friend-card/friend-card.compon
     MatButtonModule,
     MatSelectModule,
     MatDividerModule,
-    FlexLayoutModule,
-    HomeRoutingModule
+    HomeRoutingModule,
+    FlexLayoutModule, 
+    MatTabsModule,
+    MatSidenavModule,
+    MatToolbarModule,
+    MatListModule,
+    MatIconModule
   ],
   exports: [
-    NavBarComponent, SocialBarComponent,PlayComponent, ShopComponent, ProfileComponent, RulesComponent
+    NavBarComponent, SocialBarComponent, PlayComponent, ShopComponent, ProfileComponent ,RulesComponent
   ]
 })
 export class HomeModule { }

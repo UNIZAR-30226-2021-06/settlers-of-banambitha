@@ -1,0 +1,23 @@
+<html>
+
+<div class="content">
+    <div fxLayout="row wrap" fxLayoutGap="16px grid">
+        <div fxFlex="20%" fxFlex.xs="100%" fxFlex.sm="33%" *ngFor="let name of imageNames; let num = index">
+            <mat-card class="mat-elevation-z4">
+                <mat-card-title>
+                    <mat-card-title>{{name}}</mat-card-title>
+                </mat-card-title>
+                <mat-divider></mat-divider>
+                <img mat-card-image class="user-image" src='{{ "../../../../assets/images/shop/user/user_profile_image_" + num + ".png"}}'>
+                <mat-card-content>
+                    <img mat-card-image class="icon" src="../../../../assets/images/icons/gold_icon.png"> {{getRandomInt()}}
+                </mat-card-content>
+                <mat-card-actions>
+                    <button mat-raised-button>Comprar ahora</button>
+                </mat-card-actions>
+            </mat-card>
+        </div>
+    </div>
+</div>
+
+</html>
