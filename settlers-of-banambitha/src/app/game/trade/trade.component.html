@@ -1,0 +1,61 @@
+<h1 mat-dialog-title class="cards-info-title">Comercie con sus rivales:</h1>
+
+<div mat-dialog-content fxLayout="column" fxLayoutAlign="center stretch" >
+  <mat-form-field appearance="fill">
+    <mat-label>Selecciona un jugador</mat-label>
+    <mat-select>
+      <mat-option *ngFor="let player of players" [value]="player.value">
+        {{player.viewValue}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <p>------------------------------------------------------------------------------</p>
+
+  <p> Material ofrecido </p>
+  <mat-form-field appearance="fill">
+    <mat-label>Selecciona un material</mat-label>
+    <mat-select [(ngModel)]="offerMaterial" name="player">
+      <mat-option *ngFor="let player of players" [value]="player.value">
+        {{player.viewValue}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+   
+
+  
+  <p> Cantidad de {{offerMaterial}} </p>
+  <mat-slider
+  thumbLabel
+  [displayWith]="formatLabel"
+  tickInterval="1000"
+  min="1"
+  max="100000"></mat-slider>
+
+  <p>------------------------------------------------------------------------------</p>
+  <p> Material solicitado </p>
+  <mat-form-field appearance="fill">
+    <mat-label>Selecciona un material</mat-label>
+    <mat-select>
+      <mat-option *ngFor="let player of players" [value]="player.value">
+        {{player.viewValue}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  
+  <p> Cantidad de  </p>
+  <mat-slider
+  thumbLabel
+  [displayWith]="formatLabel"
+  tickInterval="1000"
+  min="1"
+  max="100000"></mat-slider>
+
+  <div class="boton" fxLayout="column" fxLayoutAlign="center stretch">
+    <button mat-stroked-button color="accent"   class="btn-block" >
+      <p class="nombre"> Enviar  </p>
+    </button>
+
+</div>
+
+

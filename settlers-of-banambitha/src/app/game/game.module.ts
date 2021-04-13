@@ -12,13 +12,24 @@ import { BoardComponent } from './board/board.component';
 import { ChatComponent } from './chat/chat.component';
 import { StatsComponent } from './stats/stats.component';
 import { PlayerInfoComponent } from './player-info/player-info.component';
+import { TradeComponent } from './trade/trade.component';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import {MatSliderModule} from '@angular/material/slider';
+import { FormsModule } from '@angular/forms';
 
 
 
 
 
 @NgModule({
-  declarations: [GameplayComponent, BoardComponent, ChatComponent, StatsComponent, PlayerInfoComponent],
+  declarations: [
+    GameplayComponent, 
+    BoardComponent, 
+    ChatComponent, 
+    StatsComponent, 
+    PlayerInfoComponent,
+    TradeComponent],
   imports: [
     CommonModule,
     BrowserModule,
@@ -27,7 +38,11 @@ import { PlayerInfoComponent } from './player-info/player-info.component';
     FlexLayoutModule,
     MatIconModule,
     MatTableModule,
-    MatListModule
+    MatListModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    MatSliderModule,
+    FormsModule
   ],
   exports: [GameplayComponent]
 })

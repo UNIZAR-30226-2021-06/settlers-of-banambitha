@@ -1,3 +1,5 @@
+@import '../../../styles'
+    
 .info_0
     margin: 20px
     padding: 20px
@@ -12,21 +14,21 @@
 
 
 .info_2
-    background-color: #965d62
+    background-color: map-get($palette,mainRed )
     margin: 20px
     padding: 20px
     border-radius: 12px
 
 
 .info_3
-    background-color: #c7956d
+    background-color: map-get($palette,mainOrange )
     margin: 20px
     padding: 20px
     border-radius: 12px
 
 
 .info_4
-    background-color: #f2d974
+    background-color: map-get($palette,mainYellow )
     margin: 20px
     padding: 20px
     border-radius: 12px
@@ -40,17 +42,27 @@
     border-radius: 12px
     text-align: center
   
+.nombre_menus
+    font-size:  15px
+    color: white
+    font-weight: bold
+    font-family: Fantasy
+    border-radius: 12px
+    text-align: center
     
 .resources
     margin: 20px
     
 .cards
-    margin: 20px
+    margin-top: 40px
+    margin-left: 20px
+    margin-right: 20px
+    
     border-radius: 12px
-    background-color: #965d62
+    background-color: map-get($palette,mainRed)
   
 .cards-info
-    font-size:  9px
+    font-size:  20px
     font-family: Fantasy
     color: white
 
@@ -62,3 +74,40 @@
 .settings-button
     background-color: lightblue
     border: none
+
+.cards-info-title
+    font-size:  35px
+    font-family: Fantasy
+    color: white
+    text-align: center
+
+.button_trade
+    background-color: map-get($palette,mainRed )
+    border-radius: 12px
+    margin-top: 10px
+    margin-left: 20px
+    margin-right: 20px
+    margin-bottom: 10px
+    
+.button_settings
+    background-color: map-get($palette,mainRed )
+    border-radius: 12px
+    margin-top: 10px
+    margin-left: 20px
+    margin-right: 20px
+
+
+.button_cards
+    background-color: map-get($palette,mainRed )
+    border-radius: 12px
+    margin-top: 10px
+    margin-left: 20px
+    margin-right: 20px
+    margin-bottom: 10px
+
+::ng-deep.mat-dialog-container
+    background-color: map-get($palette,mainRed ) 
+    padding: 20px !important
+    border-radius: 15px !important
+
+    
