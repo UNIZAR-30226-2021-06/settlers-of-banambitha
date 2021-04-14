@@ -11,12 +11,13 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BoardComponent } from './board/board.component';
 import { ChatComponent } from './chat/chat.component';
 import { StatsComponent } from './stats/stats.component';
-import { PlayerInfoComponent } from './player-info/player-info.component';
-import { TradeComponent } from './trade/trade.component';
+import { PlayerInfoComponent, InternalTradeDialog, ExternalTradeDialog } from './player-info/player-info.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import {MatSliderModule} from '@angular/material/slider';
 import { FormsModule } from '@angular/forms';
+import { MatDialogModule } from '@angular/material/dialog';
+import { AppComponent } from '../app.component';
 
 
 
@@ -29,7 +30,8 @@ import { FormsModule } from '@angular/forms';
     ChatComponent, 
     StatsComponent, 
     PlayerInfoComponent,
-    TradeComponent],
+    InternalTradeDialog,
+    ExternalTradeDialog],
   imports: [
     CommonModule,
     BrowserModule,
@@ -42,8 +44,11 @@ import { FormsModule } from '@angular/forms';
     MatFormFieldModule,
     MatSelectModule,
     MatSliderModule,
-    FormsModule
+    FormsModule,
+    MatDialogModule
   ],
-  exports: [GameplayComponent]
+  exports: [GameplayComponent],
+  entryComponents: [InternalTradeDialog,ExternalTradeDialog],
+  bootstrap: [AppComponent]
 })
 export class GameModule { }
