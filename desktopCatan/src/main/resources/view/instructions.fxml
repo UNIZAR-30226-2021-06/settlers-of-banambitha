@@ -1,11 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="950.0" prefWidth="1600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Label text="Pantalla de instruccions" textFill="WHITE" />
+      <VBox layoutX="-16.0" layoutY="96.0" prefHeight="950.0" prefWidth="213.0" style="-fx-background-color: #665d64;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="1387.0" AnchorPane.topAnchor="0.0" />
+      <AnchorPane layoutX="-23.0" layoutY="2.0" prefHeight="85.0" prefWidth="1600.0" style="-fx-background-color: #965d62;" AnchorPane.bottomAnchor="860.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <Text layoutX="55.0" layoutY="55.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Menu">
+               <font>
+                  <Font name="System Bold Italic" size="31.0" />
+               </font>
+            </Text>
+            <Text layoutX="234.0" layoutY="55.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Reglas e instrucciones">
+               <font>
+                  <Font name="System Bold Italic" size="31.0" />
+               </font>
+            </Text>
+         </children>
+      </AnchorPane>
    </children>
-</StackPane>
+</AnchorPane>
