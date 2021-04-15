@@ -1,6 +1,7 @@
 package es.susangames.catan.controllers;
 
 import es.susangames.catan.App;
+import es.susangames.catan.controllers.Instructions;
 import es.susangames.catan.service.LangService;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -42,6 +43,8 @@ public class MainMenu {
     private Button activeButton; 
 
     private ToggleButton lang;
+
+    private Instructions ins;
 
 
     /**

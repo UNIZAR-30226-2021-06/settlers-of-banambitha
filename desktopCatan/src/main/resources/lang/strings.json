@@ -17,5 +17,26 @@
     "lobby_instructions": {
         "eng": "Instructions",
         "esp": "Instrucciones"
+    },
+
+    "instructions_menu": {
+        "eng": "Menu",
+        "esp": "Menú"
+    },
+
+    "instructions_rules_instructions": {
+        "eng": "Rules and instructions",
+        "esp": "Reglas e instrucciones"
+    },
+
+    "instructions_basics": {
+        "eng": "Basics",
+        "esp": "Aspectos básicos"
+    },
+
+    "instructions_figures": {
+        "eng": "Figures and resources",
+        "esp": "Figuras y recursos"
     }
+
 }
