@@ -16,7 +16,7 @@ public class ControladorJuego {
 	}
 	
 	public JSONObject generarTablero () {
-		
+		return null;	
 	}
 	
 	/*
@@ -55,6 +55,8 @@ public class ControladorJuego {
 	
 	public JSONObject JSONmessage ( JSONObject j ) {
 		
+		return null;
+		/*
 		Integer id_jugador = j.getInt("player");
 		Jugadores jug = j[id_jugador-1];
 		
@@ -82,6 +84,7 @@ public class ControladorJuego {
 		default:
 			// No existe la accion solicitada.
 		}
+		*/
 	}
 	
 }
