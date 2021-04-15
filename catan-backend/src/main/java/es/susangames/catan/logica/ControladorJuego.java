@@ -1,5 +1,6 @@
 package es.susangames.catan.logica;
 
+import org.json.JSONObject;
 
 // Acciones del juego
 public class ControladorJuego {
@@ -12,6 +13,10 @@ public class ControladorJuego {
 		this.num_jugadores = num_jugadores;
 		j = new Jugadores[num_jugadores];
 		tablero = new Tablero();
+	}
+	
+	public JSONObject generarTablero () {
+		
 	}
 	
 	/*
@@ -46,6 +51,37 @@ public class ControladorJuego {
 	 * */
 	public void guardarTablero () {
 		
+	}
+	
+	public JSONObject JSONmessage ( JSONObject j ) {
+		
+		Integer id_jugador = j.getInt("player");
+		Jugadores jug = j[id_jugador-1];
+		
+		JSONObject move = j.getJSONObject("move");
+		
+		switch ( move.getString("name") ) {
+		case "construir poblado":
+			
+			if ( jug.puedeConstruirPueblo() ) {
+				
+			}
+			break;
+		case "mejorar poblado":
+			break;
+		case "crear carretera":
+			break;
+		case "mover ladron":
+			break;
+		case "finalizar turno":
+			break;
+		case "comerciar":
+			break;
+		case "comerciar con puerto":
+			break;
+		default:
+			// No existe la accion solicitada.
+		}
 	}
 	
 }

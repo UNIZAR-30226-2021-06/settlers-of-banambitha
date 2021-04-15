@@ -1,10 +1,14 @@
 package es.susangames.catan.logica;
 
+import java.util.List;
+
 public class Aristas {
 	private CoordenadasAristas coord;
 	
 	private Boolean tieneCarretera;
 	private Jugadores propietario;
+	
+	private List<Integer> jugadoresQuePuedenConstruir;
 	
 	private TipoPuerto puerto;
 	
