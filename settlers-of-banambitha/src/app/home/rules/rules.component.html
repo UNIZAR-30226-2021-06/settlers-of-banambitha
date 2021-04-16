@@ -1,0 +1,81 @@
+<body>
+  <mat-sidenav-container class="sidenav-container">
+    <mat-sidenav  #drawer class="sidenav" fixedInViewport
+        [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+        [mode]="(isHandset$ | async) ? 'over' : 'side'"
+        [opened]="(isHandset$ | async) === false">
+      <mat-toolbar>Menu</mat-toolbar>
+      <mat-nav-list>
+        <a mat-list-item (click)="overview = true; 
+                                  resources = false;
+                                  development = false;
+                                  actions = false;
+                                  ingame = false">
+                          Aspectos básicos
+        </a>
+        <a mat-list-item (click)="overview = false; 
+                                  resources = true;
+                                  development = false;
+                                  actions = false;
+                                  ingame = false">
+                          Figuras y recursos 
+        </a>
+        <a mat-list-item (click)="overview = false; 
+                                  resources = false;
+                                  development = true;
+                                  actions = false;
+                                  ingame = false">
+                        Cartas de desarrollo
+        </a>
+        <a mat-list-item (click)="overview = false; 
+                                  resources = false;
+                                  development = false;
+                                  actions = true;
+                                  ingame = false">
+                          Acciones
+        </a>
+        <a mat-list-item (click)="overview = false; 
+                                  resources = false;
+                                  development = false;
+                                  actions = false;
+                                  ingame = true">
+                        Fases del juego
+      </a>
+      </mat-nav-list>
+    </mat-sidenav>
+    <mat-sidenav-content>
+      <mat-toolbar class="toolbar">
+        <button
+          type="button"
+          aria-label="Toggle sidenav"
+          mat-icon-button
+          (click)="drawer.toggle()"
+          *ngIf="isHandset$ | async">
+          <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+        </button>
+        <span>Reglas e instrucciones</span>
+      </mat-toolbar>
+      
+      <div *ngIf="overview==true">
+          <rules-terrain></rules-terrain>
+      </div>
+
+      <div *ngIf="resources==true">
+        <rules-resources></rules-resources>
+      </div>
+
+      <div *ngIf="development==true">
+        <rules-development-card></rules-development-card>
+      </div>
+
+      <div *ngIf="actions==true">
+          <rules-actions></rules-actions>
+      </div>
+      
+      <div *ngIf="ingame==true">
+        <rules-ingame></rules-ingame>
+    </div>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+
+<body>
