@@ -37,16 +37,16 @@ public class Instructions {
     
 
     @FXML
-    public void initialize() {
+    public void initialize() throws IOException {
         menuText.setText((LangService.getMapping("instructions_menu")));
         rulesInstructions.setText((LangService.getMapping("instructions_rules_instructions")));
         buttonBasics.setText((LangService.getMapping("instructions_basics")));
         buttonFigures.setText((LangService.getMapping("instructions_figures")));
+        anchorContent.getChildren().clear();
+        anchorContent.getChildren().add(FXMLLoader.load(getClass().getResource("/view/basics.fxml")));
     } 
     
-    public void updateText() {
-        initialize();
-    } 
+    
 
 
     public void loadBasics(ActionEvent event) throws IOException {
