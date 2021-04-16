@@ -19,8 +19,6 @@ import { HomeRoutingModule } from './home-routing.module';
 import { ProfileCardComponent } from './nav-bar/profile-card/profile-card.component';
 import { FriendBrowserComponent } from './social-bar/friend-browser/friend-browser.component';
 import { FriendCardComponent } from './social-bar/friend-card/friend-card.component';
-import { FirstComponent } from './first/first.component';
-import { SecongComponent } from './secong/secong.component';
 import {MatTabsModule} from '@angular/material/tabs';
 import { ProfilePicturesComponent } from './shop/profile-pictures/profile-pictures.component';
 import { BoardSkinsComponent } from './shop/board-skins/board-skins.component'; 
@@ -33,10 +31,15 @@ import { ResourcesComponent } from './rules/resources/resources.component';
 import { DevelopmentCardComponent } from './rules/development-card/development-card.component';
 import { ActionsComponent } from './rules/actions/actions.component';
 import { IngameComponent } from './rules/ingame/ingame.component';
+import { MainHomeComponent } from './main-home/main-home.component';
 
 
 @NgModule({
-  declarations: [NavBarComponent, SocialBarComponent, PlayComponent, PlayerCardComponent, ShopComponent, SettingsComponent, ProfileComponent, RulesComponent, ProfilePicturesComponent, BoardSkinsComponent, TerrainComponent, ResourcesComponent, DevelopmentCardComponent, ActionsComponent, IngameComponent, ProfileCardComponent, FriendBrowserComponent, FriendCardComponent],
+  declarations: [NavBarComponent, SocialBarComponent, PlayComponent,
+    PlayerCardComponent, ShopComponent, SettingsComponent, ProfileComponent,
+    RulesComponent, ProfilePicturesComponent, BoardSkinsComponent, TerrainComponent,
+    ResourcesComponent, DevelopmentCardComponent, ActionsComponent, IngameComponent,
+    ProfileCardComponent, FriendBrowserComponent, FriendCardComponent, MainHomeComponent],
   imports: [
     CommonModule, 
     MatCardModule, 

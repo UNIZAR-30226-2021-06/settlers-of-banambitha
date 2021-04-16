@@ -6,18 +6,22 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HomeModule } from './home/home.module';
 import { LoginModule } from './login/login.module';
+import { ServiceModule } from './service/service.module';
+
 
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule, 
     HomeModule,
-    LoginModule
+    LoginModule,
+    ServiceModule
+
 ],
   providers: [],
   bootstrap: [AppComponent]

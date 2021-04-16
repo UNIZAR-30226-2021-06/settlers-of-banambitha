@@ -4,11 +4,9 @@ import { Routes, RouterModule } from '@angular/router';
 import { SigninComponent } from './components/signin/signin.component';
 import { RegisterComponent } from './components/register/register.component';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
+import { MainLoginComponent } from './components/main-login/main-login.component';
 
 const routes: Routes = [
-  {path: 'signin', component: SigninComponent },
-  {path: 'register', component: RegisterComponent},
-  {path: 'reset-password', component: ResetPasswordComponent}
 ];
 
 @NgModule({

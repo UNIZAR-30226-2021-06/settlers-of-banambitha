@@ -1,12 +1,35 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HomeModule } from './home/home.module';
-import { FirstComponent } from './home/first/first.component';
-import { SecongComponent } from './home/secong/secong.component';
+import { MainHomeComponent } from './home/main-home/main-home.component';
+import { PlayComponent } from './home/play/play.component';
+import { ProfileComponent } from './home/profile/profile.component';
+import { RulesComponent } from './home/rules/rules.component';
+import { ShopComponent } from './home/shop/shop.component';
+import { MainLoginComponent } from './login/components/main-login/main-login.component';
+import { RegisterComponent } from './login/components/register/register.component';
+import { ResetPasswordComponent } from './login/components/reset-password/reset-password.component';
+import { SigninComponent } from './login/components/signin/signin.component';
 
-const routes: Routes = [
-  { path: 'first-component', component: FirstComponent },
-  { path: 'second-component', component: SecongComponent },
+const routes: Routes = [ 
+
+  {path: 'login', component: MainLoginComponent, 
+   children: [
+    {path: 'signin', component: SigninComponent },
+    {path: 'register', component: RegisterComponent},
+    {path: 'reset-password', component: ResetPasswordComponent}
+   ]
+  },
+
+  {path: 'home', component: MainHomeComponent,
+   children: [
+    {path: 'play', component: PlayComponent },
+    {path: 'profile', component: ProfileComponent},
+    {path: 'rules', component: RulesComponent},
+    {path: 'shop', component: ShopComponent}
+    ]
+   }
+
 ];
 
 @NgModule({
@@ -14,3 +37,5 @@ const routes: Routes = [
   exports: [RouterModule]
 })
 export class AppRoutingModule { }
+
+

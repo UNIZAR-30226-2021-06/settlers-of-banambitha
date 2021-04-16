@@ -7,9 +7,10 @@ import { ResetPasswordComponent } from './components/reset-password/reset-passwo
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { AngularMaterialModule } from './login-material.module';
 import {FormsModule} from '@angular/forms';
+import { MainLoginComponent } from './components/main-login/main-login.component';
 
 @NgModule({
-  declarations: [SigninComponent, RegisterComponent, ResetPasswordComponent],
+  declarations: [SigninComponent, RegisterComponent, ResetPasswordComponent, MainLoginComponent],
   imports: [
     CommonModule,
     LoginRoutingModule,
