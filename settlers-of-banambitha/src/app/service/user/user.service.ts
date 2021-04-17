@@ -18,42 +18,42 @@ export class UserService {
   private readonly validae = this.baseUrl + "/validate"
 
   //Atributos relacionados con el usuario
-  private username: String
-  private mail: String
-  private idioma: String
-  private avatar: String
-  private apariencia: String
-  private saldo: Number
-  private validUser: boolean = false
+  private static username: String
+  private static mail: String
+  private static idioma: String
+  private static avatar: String
+  private static apariencia: String
+  private static saldo: Number
+  private static validUser: boolean = false
 
   constructor(private http: HttpClient) {}
 
   //Getters
-  public getUsername(): String {
+  public static getUsername(): String {
     return this.username;
   }
 
-  public getMail(): String {
+  public static getMail(): String {
     return this.mail;
   }
 
-  public getIdioma(): String {
+  public static getIdioma(): String {
     return this.idioma;
   }
 
-  public getAvatar(): String {
+  public static getAvatar(): String {
     return this.avatar;
   }
 
-  public getApariencia(): String {
+  public static getApariencia(): String {
     return this.apariencia;
   }
 
-  public getSaldo(): Number {
+  public static getSaldo(): Number {
     return this.saldo;
   }
 
-  logedUsed(): Boolean {
+  public static logedUser(): Boolean {
     return this.validUser
   }
 
@@ -71,12 +71,12 @@ export class UserService {
       "contrasenya" : pass
     }
     let response = await this.http.post(this.baseUrl + "/add", msg ).toPromise()
-    this.username = response["nombre"]
-    this.apariencia = response["apariencia"]
-    this.saldo = response["saldo"]
-    this.mail = response["mail"]
-    this.avatar = response["avatar"]
-    this.validUser = true
+    UserService.username = response["nombre"]
+    UserService.apariencia = response["apariencia"]
+    UserService.saldo = response["saldo"]
+    UserService.mail = response["mail"]
+    UserService.avatar = response["avatar"]
+    UserService.validUser = true
   }
 
 
@@ -87,13 +87,20 @@ export class UserService {
    */
   async findUser(name: String){
     let found: boolean = false
+    let response: Object
     try {
-      let response = await this.http.get(this.baseUrl + "/find/" + name).toPromise()
+      response = await this.http.get(this.baseUrl + "/find/" + name).toPromise()
       found = true
     } catch(e){}
     if (found){
       throw new Error("El nombre de usuario ya existe")
+    }else{
+      return response
     }
+  }
+
+  findUserObservable(name: String){
+    return this.http.get(this.baseUrl + "/find/" + name)
   }
 
 
@@ -110,11 +117,10 @@ export class UserService {
       "contrasenya" : pass
     }
     let response = await this.http.post(this.baseUrl + "/validate", msg ).toPromise()
-    this.username = response["nombre"]
-    this.apariencia = response["apariencia"]
-    this.saldo = response["saldo"]
-    this.mail = response["mail"]
-    this.avatar = response["avatar"]
-    this.validUser = true
+    UserService.apariencia = response["apariencia"]
+    UserService.saldo = response["saldo"]
+    UserService.mail = response["mail"]
+    UserService.avatar = response["avatar"]
+    UserService.validUser = true
   }
 }

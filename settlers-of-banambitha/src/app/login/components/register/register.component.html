@@ -2,7 +2,7 @@
 
 <body>
     <div class="main-wrapper" fxLayout="row" fxLayoutAlign="center center">
-        <mat-card class="box">
+        <mat-card class="box mat-elevation-z10">
             <mat-card-header>
                 <mat-card-title>Register
                     <button mat-icon-button (click)="openDialog()">
@@ -13,11 +13,17 @@
 
             </mat-card-header>
 
-            <form class="example-form" #f="ngForm" (ngSubmit)="onSubmit(f)">
+            <form #f="ngForm" (ngSubmit)="onSubmit(f)" *ngIf="usernameForm.get('username') as usernameControl">
                 <mat-card-content>
-                    <mat-form-field appearance="fill" class="example-full-width">
+                    <mat-form-field appearance="fill" class="example-full-width" [formGroup]="usernameForm">
                         <mat-label>Enter your username</mat-label>
-                        <input matInput name="username" ngModel required pattern="^(?=.*[0-9]*)(?=.*[a-z]*)(?=.*[A-Z]*)(?=.*[-_]*).{5,32}$" #username="ngModel" placeholder="Username">
+                        <input matInput placeholder="Username" name="username" formControlName="username" matInput>
+                        <mat-error *ngIf="usernameControl.hasError('required')">
+                            Username is required
+                        </mat-error>
+                        <mat-error *ngIf="usernameControl.hasError('invalidAsync')">
+                            This username is already in use
+                        </mat-error>
                     </mat-form-field>
 
                     <mat-form-field appearance="fill" class="example-full-width">
@@ -35,11 +41,14 @@
                     </mat-form-field>
                 </mat-card-content>
                 <div class="boton">
-                    <button mat-stroked-button color="accent" [disabled]="f.invalid" class="btn-block">
+                    <button mat-stroked-button color="accent" [disabled]="f.invalid || usernameForm.invalid" class="btn-block">
                     Register  <mat-icon>app_registration</mat-icon>
                   </button>
                 </div>
             </form>
+            <div style="margin-left: 10px;">
+                <mat-spinner diameter="40"></mat-spinner>
+            </div>
         </mat-card>
     </div>
 </body>

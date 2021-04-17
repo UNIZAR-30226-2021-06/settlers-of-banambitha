@@ -14,6 +14,7 @@ export class AppComponent {
   constructor(private router: Router, public UserService: UserService){}
 
   ngOnInit(){
+    /* 
     let that = this
     this.router.events.subscribe(event =>{
       if (event instanceof NavigationStart) {
@@ -30,6 +31,7 @@ export class AppComponent {
         console.log("mi error pillado")
       }
     })()
+    */
 
   }
 
