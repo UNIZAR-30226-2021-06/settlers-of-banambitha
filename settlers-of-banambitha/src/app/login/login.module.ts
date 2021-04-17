@@ -6,8 +6,9 @@ import { RegisterComponent } from './components/register/register.component';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { AngularMaterialModule } from './login-material.module';
-import {FormsModule} from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { MainLoginComponent } from './components/main-login/main-login.component';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
   declarations: [SigninComponent, RegisterComponent, ResetPasswordComponent, MainLoginComponent],
@@ -16,7 +17,8 @@ import { MainLoginComponent } from './components/main-login/main-login.component
     LoginRoutingModule,
     FlexLayoutModule,
     AngularMaterialModule,
-    FormsModule
+    FormsModule,
+    MatDialogModule
   ],
   exports: [
     SigninComponent, 

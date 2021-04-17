@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
@@ -64,13 +64,15 @@ export class UserService {
    * @param mail mail del usuario
    * @param pass contraseña del usuario
    */
-  async register(name: String, mail: String, pass: String){
+  public async register(name: String, mail: String, pass: String){
+    const options = {withCredentials: true, 'access-control-allow-origin': "http://localhost:4200/", 'Content-Type': 'application/json'}
+    let myHeaders = new HttpHeaders().set('Content-Type','application/json');
     let msg = {
-      "nombre" : name,
-      "mail" : mail,
-      "contrasenya" : pass
+      nombre : name,
+      email : mail,
+      contrasenya : pass
     }
-    let response = await this.http.post(this.baseUrl + "/add", msg ).toPromise()
+    let response = await this.http.post<any>(this.baseUrl + "/add", JSON.stringify(msg), { 'headers': myHeaders }).toPromise()
     UserService.username = response["nombre"]
     UserService.apariencia = response["apariencia"]
     UserService.saldo = response["saldo"]
@@ -85,7 +87,7 @@ export class UserService {
    * contrario no hace nada.  
    * @param name 
    */
-  async findUser(name: String){
+  public async findUser(name: String){
     let found: boolean = false
     let response: Object
     try {
@@ -99,7 +101,7 @@ export class UserService {
     }
   }
 
-  findUserObservable(name: String){
+  public findUserObservable(name: String){
     return this.http.get(this.baseUrl + "/find/" + name)
   }
 

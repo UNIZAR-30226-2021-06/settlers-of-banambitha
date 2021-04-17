@@ -3,6 +3,7 @@ import { AbstractControl, AsyncValidatorFn, FormControl, FormGroup, ValidationEr
 import { Validators } from '@angular/forms';
 import { NgForm } from '@angular/forms';
 import { MatDialog,MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { UserService } from 'src/app/service/user/user.service';
@@ -26,20 +27,20 @@ class usernameValidator {
 })
 export class RegisterComponent implements OnInit {
 
-  public errorMsg: String 
+  public loading: Boolean = false
   usernameForm: FormGroup
   usernameSyncValidators = [
     Validators.required,
     Validators.pattern("^(?=.*[0-9]*)(?=.*[a-z]*)(?=.*[A-Z]*)(?=.*[-_]*).{5,32}$")
   ]
 
-  constructor(public dialog: MatDialog, private UserService: UserService) { }
+  constructor(public dialog: MatDialog, private userService: UserService, private router: Router) { }
 
   ngOnInit(): void {
     this.usernameForm = new FormGroup({
       username: new FormControl('',
         this.usernameSyncValidators,
-        usernameValidator.createValidator(this.UserService)
+        usernameValidator.createValidator(this.userService)
       )
     })
   }
@@ -47,8 +48,19 @@ export class RegisterComponent implements OnInit {
   hide = true;
   onSubmit(f: NgForm) {
     console.log(f.value);  
-    console.log(this.usernameForm.value["username"])
-    console.log(f.valid);  
+    console.log(this.usernameForm.value["username"]);
+    ( async => {
+      try{
+        this.loading = true
+        this.userService.register(this.usernameForm.value["username"],
+                                  f.value["email"], f.value["password"])
+        this.router.navigate(['/home']) 
+        this.loading = false
+      }catch (e){
+        this.dialog.open(DialogRegistered)
+      }
+    })()
+
   }
 
   openDialog() {
@@ -64,3 +76,10 @@ export class RegisterComponent implements OnInit {
 export class DialogData {
   constructor(@Inject(MAT_DIALOG_DATA) public data: DialogData) {}
 }
+
+@Component({
+  selector: 'dialog-registered',
+  templateUrl: 'dialog-registered.html',
+})
+
+export class DialogRegistered { }
