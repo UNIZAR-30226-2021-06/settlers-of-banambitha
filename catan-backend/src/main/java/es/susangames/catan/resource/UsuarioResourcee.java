@@ -54,7 +54,6 @@ public class UsuarioResourcee {
 	public ResponseEntity<Usuario> newUsuario(@RequestBody Usuario usuario) {
 		
 		Usuario newUsuario = usuarioService.newUsuario(usuario);
-		
 		return new ResponseEntity<>(newUsuario, HttpStatus.CREATED);
 	}
 	
@@ -137,7 +136,7 @@ public class UsuarioResourcee {
 	 *				}
 	 *			-On failure all fields are null
 	****************************************************** */
-	@GetMapping("/validate")
+	@PostMapping("/validate")
 	public ResponseEntity<Usuario> validateUsuario(@RequestBody Usuario usuario) {
 
 		boolean valid = usuarioService.validarUsuario(usuario);

@@ -21,8 +21,16 @@ export class AppComponent {
       }
     })
 
-    console.log("Obtén cosas")
-    this.UserService.getAllUsers().then(r => { console.log(r)});
+    console.log("Obtén cosas");
+    (async () => {
+      try {
+        await this.UserService.findUser("anye")
+      } catch (e){
+        console.log(e) 
+        console.log("mi error pillado")
+      }
+    })()
+
   }
 
 

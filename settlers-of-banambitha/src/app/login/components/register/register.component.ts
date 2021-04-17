@@ -1,4 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
+import { Validators } from '@angular/forms';
 import { NgForm } from '@angular/forms';
 import { MatDialog,MAT_DIALOG_DATA } from '@angular/material/dialog';
 
@@ -10,6 +12,8 @@ import { MatDialog,MAT_DIALOG_DATA } from '@angular/material/dialog';
 })
 export class RegisterComponent implements OnInit {
 
+  public errorMsg: String 
+
   constructor(public dialog: MatDialog) { }
 
   ngOnInit(): void {
@@ -17,16 +21,12 @@ export class RegisterComponent implements OnInit {
 
   hide = true;
   onSubmit(f: NgForm) {
-    console.log(f.value);  // { first: '', last: '' }
-    console.log(f.valid);  // false
+    console.log(f.value);  
+    console.log(f.valid);  
   }
 
   openDialog() {
-    this.dialog.open(DialogData, {
-      data: {
-        animal: 'panda'
-      }
-    });
+    this.dialog.open(DialogData);
   }
 
 }
