@@ -16,4 +16,19 @@ public enum ColorJugador {
 	public Boolean mismoColor(ColorJugador j) {
 		return this.color == j.numeroColor();
 	}
+	
+	public String getStringColor () {
+		switch (color) {
+		case 0:
+			return "Azul";
+		case 1:
+			return "Rojo";
+		case 2:
+			return "Amarillo";
+		case 3:
+			return "Verde";
+		default:
+			return "Null";
+		}
+	}
 }

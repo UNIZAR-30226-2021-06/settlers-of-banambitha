@@ -5,33 +5,39 @@ import java.util.List;
 public class Aristas {
 	private CoordenadasAristas coord;
 	
-	private Boolean tieneCarretera;
+	private int id;
+	
+	private Boolean tieneCamino;
 	private Jugadores propietario;
 	
-	private List<Integer> jugadoresQuePuedenConstruir;
+	private Boolean puedeConstruirJugador[];
 	
 	private TipoPuerto puerto;
 	
-	Aristas(CoordenadasAristas coord) {
+	Aristas(CoordenadasAristas coord, int id) {
 		this.coord = coord;
-		this.tieneCarretera = false;
+		this.tieneCamino = false;
 		this.propietario = null;
 		this.puerto = TipoPuerto.Nada;
+		this.id = id;
+		this.puedeConstruirJugador = new Boolean[] {false, false, false, false};
 	}
 	
-	Aristas(CoordenadasAristas coord, TipoPuerto puerto, Jugadores propietario) {
+	Aristas(CoordenadasAristas coord, TipoPuerto puerto, Jugadores propietario, int id) {
 		this.coord = coord;
 		this.puerto = puerto;
-		this.tieneCarretera = true;
+		this.tieneCamino = true;
 		this.propietario = propietario;
+		this.id = id;
+		this.puedeConstruirJugador = new Boolean[] {false, false, false, false};
 	}
 	
 	public CoordenadasAristas getCoordenadasAristas () {
 		return this.coord;
 	}
 	
-	public Boolean tieneCarretera () {
-		return this.tieneCarretera;
+	public Boolean tieneCamino () {
+		return this.tieneCamino;
 	}
 	
 	public Jugadores getPropietario () {
@@ -39,8 +45,15 @@ public class Aristas {
 	}
 	
 	public void setCarretera (Jugadores j) {
-		this.propietario = j;
-		this.tieneCarretera = true;
+		if ( !tieneCamino() && puedeConstruirJugador[j.getColor().numeroColor()]) {
+			this.propietario = j;
+			this.tieneCamino = true;
+			// Ninguno podrá ya construir un camino --> Todo a false.
+			puedeConstruirJugador[0] = false;
+			puedeConstruirJugador[1] = false;
+			puedeConstruirJugador[2] = false;
+			puedeConstruirJugador[3] = false;
+		}
 	}
 	
 	public void setPuerto (int tipoPuerto) {
@@ -64,5 +77,27 @@ public class Aristas {
 	
 	public TipoPuerto getPuerto () {
 		return this.puerto;
+	}
+	
+	/*
+	 * Actualiza la aristas como posible lugar donde el jugador j puede construir un camino.
+	 * */
+	public void posibleCarreteraDeJugador (Jugadores j) {
+		puedeConstruirJugador[j.getColor().numeroColor()] = true;
+	}
+	
+	public String getAsentamientoJugador () {
+		if ( tieneCamino() ) {
+			return "Camino" + propietario.getColor().getStringColor();
+		}
+		return "Nada";
+	}
+	
+	public Coordenadas getCoordenadasVertice1 () {
+		return new Coordenadas (this.coord.getX(),this.coord.getY());
+	}
+	
+	public Coordenadas getCoordenadasVertice2 () {
+		return new Coordenadas (this.coord.getFin_x(),this.coord.getFin_y());
 	}
 }

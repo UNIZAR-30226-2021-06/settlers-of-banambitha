@@ -2,6 +2,10 @@ package es.susangames.catan.logica;
 
 
 import java.util.Map;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -28,7 +32,13 @@ public class Tablero {
 	private Integer vector_puertos[] = {1,2,3,4,5,0,0,0,0,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
 			-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
 	
-	Tablero () {
+	private Jugadores j[];
+	private int num_jugadores;
+	
+	Tablero (Integer num_jugadores) {
+		this.num_jugadores = num_jugadores;
+		j = new Jugadores[num_jugadores];
+		
 		hexagonos = new HashMap<Integer,Hexagonos>();
 		
 		List<TipoTerreno> list_terrenos = Arrays.asList(this.vector_terrenos);
@@ -84,7 +94,7 @@ public class Tablero {
 		// Total de 9 puertos.
 		// 5 de ellos son espec�ficos.
 		// pueden tener puertos los hexagonos: 0(3),1(2),2(3),3(2),6(2),7(3),11(3),12(2),15(3),16(2),17(2),18(3).
-		Collection<Aristas> aristasExteriores = hexagonos.get(0).getAristasExteriores();
+		Collection<Aristas> aristasExteriores = Hexagonos.getAristasExteriores();
 		Object a[] = aristasExteriores.toArray();
 		Aristas aux;
 		for (int i = 0; i < a.length; ++i) {
@@ -104,11 +114,6 @@ public class Tablero {
 		}
 	}
 	
-	public void construirAsentamiento (Integer idHexagono, Coordenadas c, Jugadores j) {
-		if (hexagonos.get(idHexagono).sePuedeConstruirAsentamiento(c,j)) {
-			
-		}
-	}
 	
 	public void mostrarHexagonos () {
 		Vertices v[];
@@ -124,8 +129,118 @@ public class Tablero {
 						"),( " + a[j].getCoordenadasAristas().getFin_x() + ", " + a[j].getCoordenadasAristas().getFin_y() + ")]");
 			}
 		}
-		System.out.println("Numero de vertices: " + hexagonos.get(0).num_vertices());
-		System.out.println("Numero de aristas: " + hexagonos.get(0).num_aristas());
-		System.out.println("Numero de puertos: " + hexagonos.get(0).num_puertos());
+		System.out.println("Numero de vertices: " + Hexagonos.num_vertices());
+		System.out.println("Numero de aristas: " + Hexagonos.num_aristas());
+		System.out.println("Numero de puertos: " + Hexagonos.num_puertos());
 	}
+	
+	public JSONArray tiposHexagonosToJSONArray () {
+		JSONArray jsArray = new JSONArray ();
+		
+		for (Hexagonos h : hexagonos.values()) {
+			jsArray.put(h.getTipo_terreno().toString());
+		}
+		
+		return jsArray;
+	}
+	
+	public JSONArray valorHexagonosToJSONArray () {
+		JSONArray jsArray = new JSONArray ();
+		
+		for (Hexagonos h : hexagonos.values()) {
+			jsArray.put(h.getValor());
+		}
+		
+		return jsArray;
+	}
+	
+	public JSONObject generarTablero () {
+		JSONObject jsObject = new JSONObject();
+		// Generar respuesta.
+		return jsObject;
+	}
+	
+	/*
+	 * Genera un n�mero aleatorio n del 1 al 6. Simula la acci�n de lanzar un dado.
+	 * 
+	 * @return Devuelve n, siendo n un entero 1 <= n <= 6.
+	 * */
+	public int generarNumero () {
+		return (int) Math.floor( Math.random()*5 + 1 );
+	}
+	
+	/*
+	 * Carga un tablero ubicado en la base de datos.
+	 * */
+	public void cargarTablero () {
+		
+	}
+	
+	public void construirAsentamiento (Integer idHexagono, Coordenadas c, Jugadores j) {
+		// Comprobar si el jugador puede construir el asentamiento.
+		if (j.puedeConstruirPueblo()) {
+			construirAsentamiento(idHexagono,c, j);
+		}
+	}
+	
+	public void comerciar(Jugadores j) {
+		
+	}
+	
+	/*
+	 * Guarda un tablero en la base de datos.
+	 * */
+	public void guardarTablero () {
+		
+	}
+	
+	public JSONObject JSONmessage ( JSONObject jsObject ) {
+		
+		Integer id_jugador = jsObject.getInt("player");
+		Jugadores jug = this.j[id_jugador - 1];
+		
+		JSONObject move = jsObject.getJSONObject("move");
+		
+		switch ( move.getString("name") ) {
+		case "construir poblado":
+			if ( jug.puedeConstruirPueblo() ) {
+				int id_vertice = move.getInt("param");
+				Vertices v = Hexagonos.getVerticePorId(id_vertice);
+				
+				jug.construirAsentamiento();
+			}
+			break;
+		case "mejorar poblado":
+			if ( jug.puedeConstruirCiudad() ) {
+				int id_vertice = move.getInt("param");
+				Vertices v = Hexagonos.getVerticePorId(id_vertice);
+				if ( v.getPropietario().equals(jug) )
+					jug.mejorarAsentamiento();
+			}
+			break;
+		case "crear carretera":
+			if ( jug.puedeConstruirCarretera() )
+			break;
+		case "mover ladron":
+			break;
+		case "finalizar turno":
+			break;
+		case "comerciar":
+			break;
+		case "comerciar con puerto":
+			break;
+		case "primer asentamiento":
+			break;
+		case "primer camino":
+			break;
+		default:
+			// No existe la accion solicitada.
+		}
+		
+		// RESPUESTA GENERAL.
+		JSONObject respuesta = new JSONObject ();
+		
+		return respuesta;
+	}
+	
 }

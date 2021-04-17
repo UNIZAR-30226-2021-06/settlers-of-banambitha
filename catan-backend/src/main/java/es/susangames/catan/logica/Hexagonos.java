@@ -1,8 +1,10 @@
 package es.susangames.catan.logica;
 
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -23,7 +25,11 @@ public class Hexagonos {
 	 * Vertices de todos los hexagonos creados.
 	 * */
 	private static Map<Coordenadas, Vertices> vertices = new HashMap<Coordenadas, Vertices>();
+	private static Map<Integer, Vertices> verticesPorID = new HashMap<Integer, Vertices>();
+	private static int next_id_vertice = 0;
 	private static Map<CoordenadasAristas, Aristas> aristas = new HashMap<CoordenadasAristas, Aristas>();
+	private static Map<Integer, Aristas> aristasPorID = new HashMap<Integer, Aristas>();
+	private static int next_id_arista = 0;
 	private static Map<CoordenadasAristas, Aristas> puertos = new HashMap<CoordenadasAristas, Aristas>();
 	
 	Hexagonos (Coordenadas c, TipoTerreno tipo_terreno, int valor) {
@@ -52,32 +58,51 @@ public class Hexagonos {
 			aux = calcularVertice(i);
 			
 			// El vertice con Coordenadas aux ya ha sido creado.
-			v[i] = new Vertices(aux);
 			if (!vertices.containsKey(aux)) {
+				v[i] = new Vertices(aux,next_id_vertice);
 				vertices.put(aux, v[i]);
+				verticesPorID.put(next_id_vertice, v[i]);
+				next_id_vertice++;
+			} else {
+				v[i] = vertices.get(aux);
 			}
 			
 			if ( i == 0 ) {v1 = aux; aux2 = aux;}
 			else if ( i == (NUM_VERTICES_ARISTAS - 1) ) {
 				auxCoordAristas = new CoordenadasAristas(aux.getX(), aux.getY(),aux2.getX(), aux2.getY());
-				a[i-1] = new Aristas(auxCoordAristas);
 				if (!aristas.containsKey(auxCoordAristas)) {
+					a[i-1] = new Aristas(auxCoordAristas, next_id_arista);
 					aristas.put(auxCoordAristas, a[i-1]);
 					puertos.put(auxCoordAristas, a[i-1]);
-				} else puertos.remove(auxCoordAristas);
+					aristasPorID.put(next_id_arista, a[i-1]);
+					next_id_arista++;
+				} else {
+					a[i-1] = aristas.get(auxCoordAristas);
+					puertos.remove(auxCoordAristas);
+				}
 				auxCoordAristas = new CoordenadasAristas(aux.getX(), aux.getY(),v1.getX(), v1.getY());
-				a[i] = new Aristas(auxCoordAristas);
 				if (!aristas.containsKey(auxCoordAristas)) {
+					a[i] = new Aristas(auxCoordAristas,next_id_arista);
 					aristas.put(auxCoordAristas, a[i]);
-					puertos.put(auxCoordAristas, a[i-1]);
-				} else puertos.remove(auxCoordAristas);
+					puertos.put(auxCoordAristas, a[i]);
+					aristasPorID.put(next_id_arista, a[i]);
+					next_id_arista++;
+				} else {
+					a[i] = aristas.get(auxCoordAristas);
+					puertos.remove(auxCoordAristas);
+				}
 			} else {
 				auxCoordAristas = new CoordenadasAristas(aux.getX(), aux.getY(),aux2.getX(), aux2.getY());
-				a[i-1] = new Aristas(auxCoordAristas);
 				if (!aristas.containsKey(auxCoordAristas)) {
+					a[i-1] = new Aristas(auxCoordAristas,next_id_arista);
 					aristas.put(auxCoordAristas, a[i-1]);
 					puertos.put(auxCoordAristas, a[i-1]);
-				} else puertos.remove(auxCoordAristas);
+					aristasPorID.put(next_id_arista, a[i-1]);
+					next_id_arista++;
+				} else {
+					a[i-1] = aristas.get(auxCoordAristas);
+					puertos.remove(auxCoordAristas);
+				}
 				aux2 = aux;
 			}
 		}
@@ -218,7 +243,7 @@ public class Hexagonos {
 		Coordenadas coordAux;		
 		Vertices v_adyacentes[] = new Vertices[3];
 		int ind = 0;
-		if (j.puedeConstruirPueblo()) {
+		if (j.puedeConstruirPueblo() && !v.tieneAsentamiento()) {
 			if (vertices.containsKey(v.getCoordenadas())) {
 				Aristas a[] = aristasDelVertice(v);
 				for (int i = 0; i < a.length; ++i) {
@@ -236,12 +261,12 @@ public class Hexagonos {
 				// Para cada una de las carreteras hay que mirar si hay una carretera aliada,
 				// si la hay, hay que comprobar que el vertice adyacente esta vacio.
 				
-				if (a[0].tieneCarretera() && a[0].getPropietario().equals(j)) {
+				if (a[0].tieneCamino() && a[0].getPropietario().equals(j)) {
 					if (!v_adyacentes[0].tieneAsentamiento()) {
 						v_adyacentes[0].construirAsentamiento(j);
 						j.construirAsentamiento();
 					}
-				} else if (a[1].tieneCarretera() && a[1].getPropietario().equals(j)) {
+				} else if (a[1].tieneCamino() && a[1].getPropietario().equals(j)) {
 					if (!v_adyacentes[1].tieneAsentamiento()) {
 						v_adyacentes[1].construirAsentamiento(j);
 						j.construirAsentamiento();
@@ -252,12 +277,98 @@ public class Hexagonos {
 						j.construirAsentamiento();
 					}
 				}
+				
+				Aristas posiblesCarreteras[] = aristasDelVertice(v);
+				
+				for (int i = 0 ; i < posiblesCarreteras.length; ++i) {
+					posiblesCarreteras[i].posibleCarreteraDeJugador(j);
+				}
 			}
 		}
 	}
 	
 	public void construirCarretera (Aristas a, Jugadores j) {
+		Boolean sePuedeConstruir = false;
+		Vertices v1 = vertices.get(a.getCoordenadasVertice1());
+		Vertices v2 = vertices.get(a.getCoordenadasVertice2());
 		
+		Aristas aristasAdyacentesAv1[];
+		Aristas aristasAdyacentesAv2[];
+		
+		if (j.puedeConstruirCarretera() && !a.tieneCamino()) {
+			// Buscar asentamiento del jugador j en uno de los vertices.
+			
+			if (v1.tieneAsentamiento()) {
+				if (v1.getPropietario().equals(j))
+					sePuedeConstruir = true;
+			} else {
+				// Se comprueba que las aristas adyacentes tengan al menos un camino del jugador.
+				aristasAdyacentesAv1 = aristasDelVertice(v1);
+				for (int i = 0; i < aristasAdyacentesAv1.length && !sePuedeConstruir; ++i ) {
+					if (aristasAdyacentesAv1[i].getPropietario().equals(j))
+						sePuedeConstruir = true;
+				}
+			}
+			
+			if (!sePuedeConstruir) {
+				if (v2.tieneAsentamiento()) {
+					if (v2.getPropietario().equals(j) ) {
+						sePuedeConstruir = true;
+					}
+				} else {
+					// Se comprueba que las aristas adyacentes tengan al menos un camino del jugador.
+					aristasAdyacentesAv2 = aristasDelVertice(v2);
+					for (int i = 0; i < aristasAdyacentesAv2.length && !sePuedeConstruir; ++i ) {
+						if (aristasAdyacentesAv2[i].getPropietario().equals(j))
+							sePuedeConstruir = true;
+					}
+				}
+			}
+		}
+		
+		if (sePuedeConstruir) {
+			// Construir camino.
+			a.setCarretera(j);
+			
+			// Posibles nuevo caminos.
+			aristasAdyacentesAv1 = aristasDelVertice(v1);
+			for (int i = 0; i < aristasAdyacentesAv1.length; ++i ) {
+				if (!aristasAdyacentesAv1[i].tieneCamino())
+					aristasAdyacentesAv1[i].posibleCarreteraDeJugador(j);
+			}
+			
+			aristasAdyacentesAv2 = aristasDelVertice(v2);
+			for (int i = 0; i < aristasAdyacentesAv1.length; ++i ) {
+				if (!aristasAdyacentesAv2[i].tieneCamino())
+					aristasAdyacentesAv2[i].posibleCarreteraDeJugador(j);
+			}
+			
+			// Actualizar posibles asentamientos.
+			// Comprobar que v1 y v2 estan vacios.
+				// comprobar que al menos uno de los vertices adyacentes a v1 y v2 tiene un 
+				// asentamiento del jugador j.
+			Boolean puedeConstruirseAsentamiento = false;
+			if (!v1.tieneAsentamiento()) {
+				Vertices v1Adyacentes[] = getVerticesAdyacentes(v1);
+				for (int i = 0; i < v1Adyacentes.length; ++i) {
+					puedeConstruirseAsentamiento |= v1Adyacentes[i].tieneAsentamiento() 
+							&& v1Adyacentes[i].getPropietario().equals(j);
+				}
+				
+				if (puedeConstruirseAsentamiento) v1.posibleAsentamientoDeJugador(j);
+			}
+			
+			puedeConstruirseAsentamiento = false;
+			if (!v2.tieneAsentamiento()) {
+				Vertices v2Adyacentes[] = getVerticesAdyacentes(v2);
+				for (int i = 0; i < v2Adyacentes.length; ++i) {
+					puedeConstruirseAsentamiento |= v2Adyacentes[i].tieneAsentamiento() 
+							&& v2Adyacentes[i].getPropietario().equals(j);
+				}
+				
+				if (puedeConstruirseAsentamiento) v2.posibleAsentamientoDeJugador(j);
+			}
+		}
 	}
 	
 	//
@@ -270,5 +381,78 @@ public class Hexagonos {
 				}
 			}
 		}
+	}
+	
+	
+	public TipoTerreno getTipo_terreno() {
+		return tipo_terreno;
+	}
+
+	public void setTipo_terreno(TipoTerreno tipo_terreno) {
+		this.tipo_terreno = tipo_terreno;
+	}
+
+	/*
+	public JSONArray listAsentamientoToJSON () {}
+	
+	public JSONArray posibleAsentamientoToJSON () {}
+	
+	public JSONArray listCaminoToJSON () {}
+	
+	public JSONArray posibleCaminoToJSON () {}*/
+	
+	public static Vertices getVerticePorId (int id) {
+		return verticesPorID.get(id);
+	}
+	
+	public static Aristas getAristaPorId (int id) {
+		return aristasPorID.get(id);
+	}
+	
+	public Vertices[] getVerticesAdyacentes (int id) {
+		CoordenadasAristas coordAristas;
+		Coordenadas coordAux;
+		Vertices v_adyacentes[] = new Vertices[3];
+		int ind = 0;
+		
+		Vertices vAux = getVerticePorId (id);		
+		Aristas aristasAdyacentes[] = aristasDelVertice (vAux);
+		
+		for (int i = 0; i < aristasAdyacentes.length; ++i) {
+			coordAristas = aristasAdyacentes[i].getCoordenadasAristas();
+			coordAux = new Coordenadas(coordAristas.getX() , coordAristas.getY());
+			if (!vAux.getCoordenadas().equals(coordAux)) {
+				v_adyacentes[ind] = vertices.get(coordAux); ind++;
+			}
+			coordAux = new Coordenadas(coordAristas.getFin_x() , coordAristas.getFin_y());
+			if (!vAux.getCoordenadas().equals(coordAux)) {
+				v_adyacentes[ind] = vertices.get(coordAux); ind++;
+			}
+		}
+		
+		return v_adyacentes;
+	}
+	
+	public Vertices[] getVerticesAdyacentes (Vertices vertice) {
+		CoordenadasAristas coordAristas;
+		Coordenadas coordAux;
+		Vertices v_adyacentes[] = new Vertices[3];
+		int ind = 0;
+		
+		Aristas aristasAdyacentes[] = aristasDelVertice (vertice);
+		
+		for (int i = 0; i < aristasAdyacentes.length; ++i) {
+			coordAristas = aristasAdyacentes[i].getCoordenadasAristas();
+			coordAux = new Coordenadas(coordAristas.getX() , coordAristas.getY());
+			if (!vertice.getCoordenadas().equals(coordAux)) {
+				v_adyacentes[ind] = vertices.get(coordAux); ind++;
+			}
+			coordAux = new Coordenadas(coordAristas.getFin_x() , coordAristas.getFin_y());
+			if (!vertice.getCoordenadas().equals(coordAux)) {
+				v_adyacentes[ind] = vertices.get(coordAux); ind++;
+			}
+		}
+		
+		return v_adyacentes;
 	}
 }

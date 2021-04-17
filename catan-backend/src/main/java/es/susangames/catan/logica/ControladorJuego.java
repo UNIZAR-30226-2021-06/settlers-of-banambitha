@@ -62,14 +62,19 @@ public class ControladorJuego {
 		
 		switch ( move.getString("name") ) {
 		case "construir poblado":
-			
 			if ( jug.puedeConstruirPueblo() ) {
-				
+				move.getJSONArray("param");
+				int id_vertice;
+				jug.construirAsentamiento();
 			}
 			break;
 		case "mejorar poblado":
+			if ( jug.puedeConstruirCiudad() ) {
+				jug.mejorarAsentamiento();
+			}
 			break;
 		case "crear carretera":
+			if ( jug.puedeConstruirCarretera() )
 			break;
 		case "mover ladron":
 			break;
@@ -82,6 +87,11 @@ public class ControladorJuego {
 		default:
 			// No existe la accion solicitada.
 		}
+		
+		// RESPUESTA GENERAL.
+		JSONObject respuesta = new JSONObject ();
+		
+		return respuesta;
 	}
 	
 }

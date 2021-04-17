@@ -16,4 +16,17 @@ public enum TipoAsentamiento {
 	public Boolean esCiudad () {
 		return this.tipo == 2;
 	}
+	
+	public String getStringAsentamiento () {
+		switch (tipo) {
+		case 0:
+			return "Nada";
+		case 1:
+			return "Pueblo";
+		case 2:
+			return "Ciudad";
+		default:
+			return "Null";
+		}
+	}
 }

@@ -3,17 +3,25 @@ package es.susangames.catan.logica;
 public class Vertices {
 	private Coordenadas coord;
 	
+	private int id;
+	
 	private TipoAsentamiento asentamiento;
 	private Jugadores propietario;
 	
-	Vertices (Coordenadas c, TipoAsentamiento asentamiento) {
+	private Boolean puedeConstruirJugador[]; 
+	
+	Vertices (Coordenadas c, TipoAsentamiento asentamiento, int id) {
 		this.coord = c;
 		this.asentamiento = asentamiento;
+		this.id = id;
+		this.puedeConstruirJugador = new Boolean[] {false, false, false, false};
 	}
 	
-	Vertices (Coordenadas c) {
+	Vertices (Coordenadas c, int id) {
 		this.coord = c;
 		this.asentamiento = TipoAsentamiento.Nada;
+		this.id = id;
+		this.puedeConstruirJugador = new Boolean[] {false, false, false, false};
 	}
 	
 	public Coordenadas getCoordenadas () {
@@ -35,8 +43,15 @@ public class Vertices {
 	}
 	
 	public void construirAsentamiento (Jugadores j) {
-		this.asentamiento = TipoAsentamiento.Pueblo;
-		this.propietario = j;
+		if (!asentamiento.tieneAsentamiento() && puedeConstruirJugador[j.getColor().numeroColor()]) {
+			this.asentamiento = TipoAsentamiento.Pueblo;
+			this.propietario = j;
+			// Ninguno podrá ya construir un asentamiento --> Todo a false.
+			puedeConstruirJugador[0] = false;
+			puedeConstruirJugador[1] = false;
+			puedeConstruirJugador[2] = false;
+			puedeConstruirJugador[3] = false;
+		}
 	}
 	
 	public void mejorarAsentamiento () {
@@ -47,8 +62,14 @@ public class Vertices {
 		return propietario;
 	}
 
-	public void setPropietario(Jugadores propietario) {
-		this.propietario = propietario;
+	public String getAsentamientoJugador () {
+		return asentamiento.getStringAsentamiento() + propietario.getColor().getStringColor();
 	}
-
+	
+	/*
+	 * Actualiza la vertice como posible lugar donde el jugador j puede construir un asentamiento.
+	 * */
+	public void posibleAsentamientoDeJugador (Jugadores j) {
+		puedeConstruirJugador[j.getColor().numeroColor()] = true;
+	}
 }
