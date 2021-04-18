@@ -65,7 +65,6 @@ export class UserService {
    * @param pass contraseña del usuario
    */
   public async register(name: String, mail: String, pass: String){
-    const options = {withCredentials: true, 'access-control-allow-origin': "http://localhost:4200/", 'Content-Type': 'application/json'}
     let myHeaders = new HttpHeaders().set('Content-Type','application/json');
     let msg = {
       nombre : name,
@@ -79,6 +78,7 @@ export class UserService {
     UserService.mail = response["mail"]
     UserService.avatar = response["avatar"]
     UserService.validUser = true
+    return response
   }
 
 
@@ -113,12 +113,13 @@ export class UserService {
    * @param name 
    * @param pass 
    */
-  async validatePromise(name: String, pass: String){
+  public async validate(name: String, pass: String){
+    let myHeaders = new HttpHeaders().set('Content-Type','application/json');
     let msg = {
       "nombre" : name,
       "contrasenya" : pass
     }
-    let response = await this.http.post(this.baseUrl + "/validate", msg ).toPromise()
+    let response = await this.http.post(this.baseUrl + "/validate", JSON.stringify(msg), { 'headers': myHeaders }).toPromise()
     UserService.apariencia = response["apariencia"]
     UserService.saldo = response["saldo"]
     UserService.mail = response["mail"]

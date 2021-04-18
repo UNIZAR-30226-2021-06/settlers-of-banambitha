@@ -47,17 +47,16 @@ export class RegisterComponent implements OnInit {
 
   hide = true;
   onSubmit(f: NgForm) {
-    console.log(f.value);  
-    console.log(this.usernameForm.value["username"]);
-    ( async => {
+    ( async () => {
       try{
         this.loading = true
-        this.userService.register(this.usernameForm.value["username"],
+        await this.userService.register(this.usernameForm.value["username"],
                                   f.value["email"], f.value["password"])
         this.router.navigate(['/home']) 
-        this.loading = false
       }catch (e){
         this.dialog.open(DialogRegistered)
+      } finally{
+        this.loading = false
       }
     })()
 

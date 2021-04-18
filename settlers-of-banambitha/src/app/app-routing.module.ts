@@ -13,6 +13,8 @@ import { SigninComponent } from './login/components/signin/signin.component';
 
 const routes: Routes = [ 
 
+  {path:'',redirectTo:'login/signin', pathMatch: 'full' },
+  {path:'login',redirectTo:'login/signin', pathMatch: 'full' },
   {path: 'login', component: MainLoginComponent, 
    children: [
     {path: 'signin', component: SigninComponent },
