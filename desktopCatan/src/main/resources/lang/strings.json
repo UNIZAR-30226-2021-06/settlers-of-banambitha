@@ -10,8 +10,8 @@
     },
 
     "lobby_options": {
-        "eng": "Options",
-        "esp": "Opciones"
+        "eng": "Profile",
+        "esp": "Perfil"
     },
 
     "lobby_instructions": {
@@ -67,7 +67,52 @@
     "instructions_figures_info_paragraph4": {
         "eng": "Available soon",
         "esp": "Al principio de la partida, el ladrón se coloca en el desierto. Sólo se mueve cuando al tirar los dados sale el “7” o cuando un jugador juega una carta de caballero. Mientras  el ladrón esté en un hexágono de terreno, anula la producción de materias primas de  ese hexágono. Todos los jugadores que tengan poblados y/o ciudades adyacentes no recibirán ninguna materia prima de este terreno mientras el ladrón se encuentre en el"
+    },
+
+
+    "play_button" : {
+        "eng":"Play",
+        "esp": "Jugar"
+    },
+
+    "play_skin_space": {
+        "eng":"Space",
+        "esp": "Espacial"
+    },
+
+    "play_skin_computer": {
+        "eng":"Computers",
+        "esp": "Informatico"
+    },
+
+    "play_game_public": {
+        "eng":"Public",
+        "esp": "Publica"
+    },
+
+    "play_game_private": {
+        "eng":"Private",
+        "esp": "Privada"
+    },
+
+    "shop_buy": {
+        "eng":"Buy now!",
+        "esp": "Comprar ahora!"
+    },
+
+    "shop_user_skins": {
+        "eng":"User skins",
+        "esp": "Aspectos de usuario"
+    },
+
+    "shop_game_aspects": {
+        "eng":"Game aspects",
+        "esp": "Aspectos de juego"
     }
+
+    
+    
+
 
 
 }

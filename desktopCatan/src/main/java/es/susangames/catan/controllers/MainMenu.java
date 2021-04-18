@@ -14,6 +14,19 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.text.*;
+import com.jfoenix.controls.JFXListView;
+import javafx.scene.shape.Circle;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.ImagePattern;
+import com.jfoenix.controls.JFXListView;
+import javafx.fxml.FXML;
+import javafx.scene.shape.Circle;
+
+
+
 
 /**
  * Controlador de la ventana principal del lobby
@@ -46,6 +59,24 @@ public class MainMenu {
 
     private Instructions ins;
 
+    @FXML
+    private JFXListView<AnchorPane> playerList;
+
+    @FXML
+    private Circle userImg;
+
+    @FXML
+    private ImageView goldImage;
+
+    private Image goldImg;
+    private Image userImage;
+
+
+    public MainMenu() {
+        goldImg = new Image("/img/gold_icon.png");
+        userImage = new Image("/img/users/user_profile_image_2.png");
+    }
+
 
     /**
      * Método que actualiza los strings de esta pantalla.
@@ -54,10 +85,10 @@ public class MainMenu {
      * (recargar la pantalla es otra opción).
      */
     private void updateStrings(){
-        btnPlay.setText(LangService.getMapping("lobby_play"));
+       /* btnPlay.setText(LangService.getMapping("lobby_play"));
         btnShop.setText(LangService.getMapping("lobby_shop"));
         btnOpt.setText(LangService.getMapping("lobby_options"));
-        btnInst.setText(LangService.getMapping("lobby_instructions"));
+        btnInst.setText(LangService.getMapping("lobby_instructions"));*/
     }
 
 
@@ -75,9 +106,9 @@ public class MainMenu {
         try {
             Pane scene = FXMLLoader.load(App.class.getResource(fxml));
             mainMenuBP.setCenter(scene);
-            activeButton.setDisable(false);
-            activeButton = clicked;
-            activeButton.setDisable(true);
+            //activeButton.setDisable(false);
+            //activeButton = clicked;
+            //activeButton.setDisable(true);
 
         } catch (Exception e){
             e.printStackTrace();
@@ -96,9 +127,32 @@ public class MainMenu {
         mainMenuBP.setLeft(null);
         mainMenuBP.setStyle("-fx-background-color: #534e52");
 
+        goldImage.setImage(goldImg);
+        userImg.setFill(new ImagePattern(userImage));
+
+
+        AnchorPane anchorPane = new AnchorPane();
+        anchorPane.setPrefSize(5, 500);
+        anchorPane.setStyle("-fx-background-color: blue");
+
+        AnchorPane anchorPane2 = new AnchorPane();
+        anchorPane2.setPrefSize(5, 500);
+        anchorPane2.setStyle("-fx-background-color: green");
+
+        AnchorPane anchorPane3 = new AnchorPane();
+        anchorPane3.setPrefSize(5, 500);
+        anchorPane3.setStyle("-fx-background-color: green");
+       
+       
+        
+        playerList.getItems().add(anchorPane);
+        playerList.getItems().add(anchorPane2);
+        playerList.getItems().add(anchorPane3);
+       
+        
         //Barra de navegación
 
-        btnPlay = new Button(LangService.getMapping("lobby_play")); 
+        /*btnPlay = new Button(LangService.getMapping("lobby_play")); 
         btnPlay.setMaxWidth(Double.MAX_VALUE);
         btnPlay.setOnAction( f -> {
             loadScene("/view/play.fxml", btnPlay);
@@ -154,11 +208,11 @@ public class MainMenu {
         socialSP.setEffect(dp);
 
         mainMenuBP.setRight(socialSP); 
-        BorderPane.setMargin(socialSP, new Insets(0));
+        BorderPane.setMargin(socialSP, new Insets(0));*/
 
         //Activar ventana de jugar
-        activeButton = btnPlay;
-        loadScene("/view/play.fxml", btnPlay);
+        //activeButton = btnPlay;
+        loadScene("/view/instructions.fxml", btnPlay);
 
 
         //Aux
@@ -166,7 +220,7 @@ public class MainMenu {
         //Botón de prueba para mostrar el cambio de idioma.
         //TODO: este botón deberá eliminarse cuando se haya
         //  implemetado la pantalla de opciones
-        lang = new ToggleButton("Español"); 
+        /*lang = new ToggleButton("Español"); 
         lang.setOnAction(e ->{
             if ( lang.isSelected() ){
                 lang.setText("English"); 
@@ -178,6 +232,6 @@ public class MainMenu {
                 updateStrings();
             }
         });
-        navbar.getChildren().add(lang); 
+        navbar.getChildren().add(lang); */
     }
 }
