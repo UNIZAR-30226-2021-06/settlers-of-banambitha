@@ -22,11 +22,18 @@ import javafx.scene.paint.Color;
 import javafx.scene.input.MouseEvent;
 
 import javafx.event.EventHandler;
+import com.jfoenix.controls.JFXTextArea;
+import javafx.scene.control.TextField;
+import javafx.stage.Stage;
+import javafx.stage.Popup;
+import javafx.scene.Node;
+
+
 
 
 public class Gameplay {
  
-    private static double start_X_position = 780.0;
+    private static double start_X_position = 700.0;
     private static double start_Y_position = 110.0;
     private static double horizontal_right_gap = 115;
     private static double horizontal_left_gap = 60;
@@ -39,6 +46,18 @@ public class Gameplay {
     @FXML
     private AnchorPane mainAnchor;
 
+    @FXML
+    private JFXTextArea chatContent;
+
+    @FXML
+    private TextField chatInput;
+
+    @FXML
+    private Button cards;
+
+    private Popup popupCards;
+
+
     public Gameplay() {
         hexagons = new Polygon[37];
         roads = new ToggleButton[57];
@@ -49,8 +68,17 @@ public class Gameplay {
         imgFor = new Image("/img/forest.png"); 
         imgHil = new Image("/img/hills.jpeg"); 
 
+     
+
     }
     
+
+    @FXML
+    void send_msg(ActionEvent event) {
+        chatContent.appendText("User: " + chatInput.getText().toString() + "\n"); 
+        chatInput.clear();    
+
+    }
 
     private Polygon createHexagon(Integer numHexag) {
         Polygon pol = new Polygon();
@@ -94,6 +122,8 @@ public class Gameplay {
 
         return pol;
     }
+
+   
 
 
     private void fillHexagon(Polygon pol, Integer i) {
@@ -226,6 +256,7 @@ public class Gameplay {
         } 
     }
 
+    // Click sobre una carretera
     private void onClickSettlement(Circle circle) {
         circle.setFill(Color.WHITE);
         circle.setOnMouseClicked(
@@ -237,8 +268,34 @@ public class Gameplay {
     }
 
 
+    private void cardsPopUp() {
+        AnchorPane anchorPane = new AnchorPane();
+        anchorPane.setPrefSize(500, 500);
+        anchorPane.setStyle("-fx-background-color:  #965d62; -fx-background-radius: 12px" );
+        popupCards = new Popup();
+        popupCards.getContent().add(anchorPane);
+        popupCards.setAutoHide(true);
+  
+       
+        cards.setOnAction((ActionEvent event) -> {
+            
+            if (!popupCards.isShowing()) {
+                System.out.println("hola");
+                Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+                popupCards.show(stage);
+            }
+            
+         });
+    
+
+    }
+
     @FXML
     public void initialize() throws IOException {
+        chatContent.setEditable(false);
+        chatContent.setMouseTransparent(true);
+        chatContent.setFocusTraversable(false);    
+        cardsPopUp();
        
         for(Integer i =0; i < hexagons.length; i++) {
             Polygon pol = createHexagon(i);
@@ -260,6 +317,8 @@ public class Gameplay {
             hexagons[i] = pol;
         }
     } 
+
+    
 
 }
 

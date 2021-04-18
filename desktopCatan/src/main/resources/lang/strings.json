@@ -108,6 +108,11 @@
     "shop_game_aspects": {
         "eng":"Game aspects",
         "esp": "Aspectos de juego"
+    },
+
+    "friends_invite": {
+        "eng": "Invite",
+        "esp": "Invitar"
     }
 
     

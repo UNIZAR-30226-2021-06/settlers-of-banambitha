@@ -24,6 +24,7 @@ import javafx.scene.paint.ImagePattern;
 import com.jfoenix.controls.JFXListView;
 import javafx.fxml.FXML;
 import javafx.scene.shape.Circle;
+import javafx.scene.paint.Color;
 
 
 
@@ -45,19 +46,18 @@ public class MainMenu {
 
     private HBox navbar; 
 
+    @FXML
     private Button btnPlay; 
 
+    @FXML
     private Button btnShop; 
 
+    @FXML
     private Button btnOpt; 
 
+    @FXML
     private Button btnInst; 
 
-    private Button activeButton; 
-
-    private ToggleButton lang;
-
-    private Instructions ins;
 
     @FXML
     private JFXListView<AnchorPane> playerList;
@@ -68,13 +68,29 @@ public class MainMenu {
     @FXML
     private ImageView goldImage;
 
+    @FXML
+    private Text numberCoins;
+
+    @FXML
+    private Text numberELO;
+
+    @FXML
+    private Text userName;
+
+    @FXML
+    private ImageView catanLogo;
+
+
     private Image goldImg;
     private Image userImage;
+    private Image catanLog;
 
 
     public MainMenu() {
         goldImg = new Image("/img/gold_icon.png");
         userImage = new Image("/img/users/user_profile_image_2.png");
+        catanLog = new Image("/img/catan-logo.png");
+
     }
 
 
@@ -85,10 +101,10 @@ public class MainMenu {
      * (recargar la pantalla es otra opción).
      */
     private void updateStrings(){
-       /* btnPlay.setText(LangService.getMapping("lobby_play"));
+        btnPlay.setText(LangService.getMapping("lobby_play"));
         btnShop.setText(LangService.getMapping("lobby_shop"));
         btnOpt.setText(LangService.getMapping("lobby_options"));
-        btnInst.setText(LangService.getMapping("lobby_instructions"));*/
+        btnInst.setText(LangService.getMapping("lobby_instructions"));
     }
 
 
@@ -106,13 +122,51 @@ public class MainMenu {
         try {
             Pane scene = FXMLLoader.load(App.class.getResource(fxml));
             mainMenuBP.setCenter(scene);
-            //activeButton.setDisable(false);
-            //activeButton = clicked;
-            //activeButton.setDisable(true);
 
         } catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+
+    private void loadFriend(String username, String imgURL) {
+        AnchorPane anchorPane = new AnchorPane();
+        anchorPane.setPrefSize(5, 150);
+        anchorPane.setStyle("-fx-background-color: #965d62");
+
+        // Image usuario
+        Circle circle = new Circle();
+        circle.setCenterX(10.0f);
+        circle.setCenterY(10.0f);
+        circle.setRadius(45.0f);
+        circle.setLayoutX(anchorPane.getLayoutX() + 45);
+        circle.setLayoutY(anchorPane.getLayoutY() + 45);
+        Image imgSkin = new Image(imgURL);
+        circle.setFill(new ImagePattern(imgSkin));
+        anchorPane.getChildren().add(circle);
+
+        // Nombre usuario
+        Text tName = new Text(10, 10, username);
+        tName.setFont(new Font(15));
+        tName.setLayoutX(anchorPane.getLayoutX() + 85 );
+        tName.setLayoutY(anchorPane.getLayoutY() + 15);
+        tName.setFill(Color.WHITE);
+        anchorPane.getChildren().add(tName);
+
+        // Boton invitar partida
+        Button buyButton = new Button();
+        buyButton.setPrefSize(80,15);
+        buyButton.setLayoutX(anchorPane.getLayoutX() + 120);
+        buyButton.setLayoutY(anchorPane.getLayoutY() + 65);
+        buyButton.setStyle("-fx-background-color: #c7956d; -fx-background-radius: 12px");
+        buyButton.setText((LangService.getMapping("friends_invite")));
+        DropShadow shadow = new DropShadow();
+        buyButton.setEffect(shadow);
+        anchorPane.getChildren().add(buyButton);
+
+
+
+        playerList.getItems().add(anchorPane);
     }
 
     /**
@@ -120,6 +174,8 @@ public class MainMenu {
      */
     @FXML
     public void initialize(){
+        updateStrings();
+        playerList.getStylesheets().add("/css/shop.css"); 
 
         mainMenuBP.prefHeightProperty().bind(mainMenu.heightProperty());
         mainMenuBP.prefWidthProperty().bind(mainMenu.widthProperty());
@@ -131,107 +187,43 @@ public class MainMenu {
         userImg.setFill(new ImagePattern(userImage));
 
 
-        AnchorPane anchorPane = new AnchorPane();
-        anchorPane.setPrefSize(5, 500);
-        anchorPane.setStyle("-fx-background-color: blue");
+        //TODO: Cargar amigos. (Ejemplo de prueba)
+        loadFriend("Bigotes", "/img/users/user_profile_image_5.png");
+        loadFriend("Laura", "/img/users/user_profile_image_6.png");
+        loadFriend("David", "/img/users/user_profile_image_7.png");
+        loadFriend("Developer", "/img/users/user_profile_image_8.png");
+        loadFriend("Agente secreto", "/img/users/user_profile_image_9.png");
+        loadFriend("World_champion", "/img/users/user_profile_image_10.png");
 
-        AnchorPane anchorPane2 = new AnchorPane();
-        anchorPane2.setPrefSize(5, 500);
-        anchorPane2.setStyle("-fx-background-color: green");
 
-        AnchorPane anchorPane3 = new AnchorPane();
-        anchorPane3.setPrefSize(5, 500);
-        anchorPane3.setStyle("-fx-background-color: green");
-       
-       
-        
-        playerList.getItems().add(anchorPane);
-        playerList.getItems().add(anchorPane2);
-        playerList.getItems().add(anchorPane3);
+
+        // TODO: Conectar con backend. Sirve como ejemplo
+        userName.setText("Dave");
+        numberCoins.setText("761231");
+        numberELO.setText("835");
+        catanLogo.setImage(catanLog);
+
        
         
         //Barra de navegación
-
-        /*btnPlay = new Button(LangService.getMapping("lobby_play")); 
-        btnPlay.setMaxWidth(Double.MAX_VALUE);
         btnPlay.setOnAction( f -> {
             loadScene("/view/play.fxml", btnPlay);
         });
 
-        btnShop = new Button(LangService.getMapping("lobby_shop")); 
-        btnShop.setMaxWidth(Double.MAX_VALUE);
+
         btnShop.setOnAction( f -> {
             loadScene("/view/shop.fxml", btnShop);
         });
 
-        btnOpt = new Button(LangService.getMapping("lobby_options")); 
-        btnOpt.setMaxWidth(Double.MAX_VALUE);
         btnOpt.setOnAction( f -> {
             loadScene("/view/options.fxml", btnOpt);
         });
 
-        btnInst = new Button(LangService.getMapping("lobby_instructions"));
-        btnInst.setMaxWidth(Double.MAX_VALUE);
         btnInst.setOnAction( f -> {
             loadScene("/view/instructions.fxml", btnInst);
         });
 
-        HBox navbar = new HBox(); 
-        navbar.setSpacing(10);
-        navbar.setPadding(new Insets(15, 22, 15, 50));
-        navbar.getChildren().add(btnPlay); 
-        navbar.getChildren().add(btnShop); 
-        navbar.getChildren().add(btnOpt); 
-        navbar.getChildren().add(btnInst); 
-        navbar.setId("navbar");
-        navbar.getStylesheets().add("/css/navbar.css"); 
-
-        StackPane sp = new StackPane(navbar);
-        sp.setEffect(new DropShadow());
-        mainMenuBP.setTop(sp);
-        BorderPane.setMargin(sp, new Insets(0));
-
-        //Social
-        ListView<String> social = new ListView<String>(); 
-        social.getItems().add("Carlos");
-        social.getItems().add("Jaime");
-        social.getItems().add("Fabián");
-        social.getItems().add("Anyiel");
-        social.getItems().add("Fernando");
-        social.getItems().add("Victor");
-        social.setId("social");
-        social.getStylesheets().add("/css/social.css");
-
-        StackPane socialSP = new StackPane(social);
-        DropShadow dp = new DropShadow();
-        dp.setOffsetY(10);
-        socialSP.setEffect(dp);
-
-        mainMenuBP.setRight(socialSP); 
-        BorderPane.setMargin(socialSP, new Insets(0));*/
-
-        //Activar ventana de jugar
-        //activeButton = btnPlay;
-        loadScene("/view/instructions.fxml", btnPlay);
-
-
-        //Aux
-
-        //Botón de prueba para mostrar el cambio de idioma.
-        //TODO: este botón deberá eliminarse cuando se haya
-        //  implemetado la pantalla de opciones
-        /*lang = new ToggleButton("Español"); 
-        lang.setOnAction(e ->{
-            if ( lang.isSelected() ){
-                lang.setText("English"); 
-                LangService.changeLanguage(LangService.ENG);
-                updateStrings();
-            }else{
-                lang.setText("Español"); 
-                LangService.changeLanguage(LangService.ESP);
-                updateStrings();
-            }
-        });
-        navbar.getChildren().add(lang); */
+        loadScene("/view/play.fxml", btnPlay);
     }
+
 }
