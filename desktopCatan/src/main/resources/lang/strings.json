@@ -113,6 +113,52 @@
     "friends_invite": {
         "eng": "Invite",
         "esp": "Invitar"
+    },
+
+    "gameplay_cards" : {
+        "eng": "Available cards",
+        "esp": "Cartas disponibles"  
+    },
+
+    "knight_card": {
+        "eng": "Knight: ",
+        "esp": "Caballero: "
+    },
+
+    "road_cons_card": {
+        "eng": "Road construction: ",
+        "esp": "Construcción   carreteras: "
+    },
+
+    "discovery_card": {
+        "eng": "Discovery: ",
+        "esp": "Descrubrimiento: "
+    },
+
+    "victory_points" : {
+        "eng": "Victory points: ",
+        "esp": "Puntos de victoria: "
+    },
+
+
+    "internal_trade" : {
+        "eng": "Internal trade",
+        "esp": "Comercio interior"
+    },
+
+    "external_trade": {
+        "eng": "Maritime trade",
+        "esp": "Comercio maritimo"
+    },
+
+    "next_turn": {
+        "eng": "Pass turn",
+        "esp": "Pasar turno"
+    },
+
+    "settings": {
+        "eng": "Settings",
+        "esp": "Ajustes"
     }
 
     

@@ -72,7 +72,6 @@ public class Play {
         typeGameSelector = new ChoiceBox<>();
     }
     
-
     @FXML
     public void initialize() throws IOException {
         playButton.setText((LangService.getMapping("play_button")));

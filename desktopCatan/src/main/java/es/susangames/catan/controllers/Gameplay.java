@@ -27,6 +27,20 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.stage.Popup;
 import javafx.scene.Node;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Slider;
+import javafx.scene.control.Label;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
+import java.io.IOException;
+
+
+
+
 
 
 
@@ -55,7 +69,72 @@ public class Gameplay {
     @FXML
     private Button cards;
 
+    @FXML
+    private Button inTrade;    
+
+    @FXML
+    private Button outTrade; 
+
+    @FXML
+    private Text player1Name;
+
+    @FXML
+    private Text player2Name;
+
+    @FXML
+    private Text player3Name;
+
+    @FXML
+    private Text player4Name;
+
+    @FXML
+    private Button diceButton;
+
+    @FXML
+    private Button settingsButton;
+
+    @FXML
+    private Button passTurnButton;
+
+
     private Popup popupCards;
+
+    private Popup popupInternalTrade;
+
+    private Popup popupExternalTrade;
+
+    private Popup popupSettings;
+
+
+    private ChoiceBox<String> offerMaterial;
+
+    private ChoiceBox<String> offerPlayer;
+
+    private ChoiceBox<String> receiveMaterial;
+
+    private ChoiceBox<String> receivePlayer;
+
+    private ChoiceBox<String> ratio;
+
+    private Button sendTrade;
+
+    private Button sendTradeExternal;
+
+    private Button leaveGame;
+
+    private Button stopGame;
+
+
+
+
+    private Integer offerAmountInt;
+
+    private Integer receiveAmountInt;
+
+    private String player1,player2,player3,player4;
+
+
+    
 
 
     public Gameplay() {
@@ -68,7 +147,14 @@ public class Gameplay {
         imgFor = new Image("/img/forest.png"); 
         imgHil = new Image("/img/hills.jpeg"); 
 
-     
+        // TODO: Conectar con backend
+        player1 = "Martín";
+        player2 = "Lucía";
+        player3 = "Marta";
+        player4 = "Pablo";
+
+        offerAmountInt = 1;
+        receiveAmountInt = 1;
 
     }
     
@@ -270,33 +356,459 @@ public class Gameplay {
 
     private void cardsPopUp() {
         AnchorPane anchorPane = new AnchorPane();
-        anchorPane.setPrefSize(500, 500);
+        anchorPane.setPrefSize(500, 350);
         anchorPane.setStyle("-fx-background-color:  #965d62; -fx-background-radius: 12px" );
         popupCards = new Popup();
         popupCards.getContent().add(anchorPane);
         popupCards.setAutoHide(true);
+
+
+        // Titulo
+        Text title = new Text(10, 50, (LangService.getMapping("gameplay_cards")));
+        title.setFont(new Font(40));
+        title.setLayoutX(anchorPane.getLayoutX() + 55 );
+        title.setLayoutY(anchorPane.getLayoutY() + 50);
+        title.setFill(Color.WHITE);
+        anchorPane.getChildren().add(title);
   
+        // Carta caballero
+        Text knight_card = new Text(10, 50, (LangService.getMapping("knight_card")) + "\t 2");
+        knight_card.setFont(new Font(20));
+        knight_card.setLayoutX(anchorPane.getLayoutX()+ 10);
+        knight_card.setLayoutY(anchorPane.getLayoutY() + 100);
+        knight_card.setFill(Color.WHITE);
+        anchorPane.getChildren().add(knight_card);
+
+        // Carta carretera
+        Text road_cons_card = new Text(10, 50, (LangService.getMapping("road_cons_card")) + "\t 5");
+        road_cons_card.setFont(new Font(20));
+        road_cons_card.setLayoutX(anchorPane.getLayoutX()+ 10);
+        road_cons_card.setLayoutY(anchorPane.getLayoutY() + 160);
+        road_cons_card.setFill(Color.WHITE);
+        anchorPane.getChildren().add(road_cons_card);
+
+        // Carta descubrimiento
+        Text discovery_card = new Text(10, 50, (LangService.getMapping("discovery_card")) + "\t 1");
+        discovery_card.setFont(new Font(20));
+        discovery_card.setLayoutX(anchorPane.getLayoutX()+ 10);
+        discovery_card.setLayoutY(anchorPane.getLayoutY() + 220);
+        discovery_card.setFill(Color.WHITE);
+        anchorPane.getChildren().add(discovery_card);
+
+        // Carta puntos victoria
+        Text victory_points = new Text(10, 50, (LangService.getMapping("victory_points")) + "\t 8");
+        victory_points.setFont(new Font(20));
+        victory_points.setLayoutX(anchorPane.getLayoutX()+ 10);
+        victory_points.setLayoutY(anchorPane.getLayoutY() + 280);
+        victory_points.setFill(Color.WHITE);
+        anchorPane.getChildren().add(victory_points);
        
         cards.setOnAction((ActionEvent event) -> {
             
             if (!popupCards.isShowing()) {
-                System.out.println("hola");
                 Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
                 popupCards.show(stage);
             }
             
          });
-    
+         
+         cards.setText((LangService.getMapping("gameplay_cards")));
 
     }
 
+    private void playersName() {
+        player1Name.setText(player1);
+        player2Name.setText(player2);
+        player3Name.setText(player3);
+        player4Name.setText(player4);
+    }
+
+
+    private void inTradePopUp() {
+        AnchorPane anchorPane = new AnchorPane();
+        anchorPane.setPrefSize(500, 650);
+        anchorPane.setStyle("-fx-background-color:  #965d62; -fx-background-radius: 12px" );
+        popupInternalTrade = new Popup();
+        popupInternalTrade.getContent().add(anchorPane);
+        popupInternalTrade.setAutoHide(true);
+
+        // Titulo
+        Text title = new Text(10, 50, (LangService.getMapping("internal_trade")));
+        title.setFont(new Font(40));
+        title.setLayoutX(anchorPane.getLayoutX() + 55 );
+        title.setLayoutY(anchorPane.getLayoutY() + 50);
+        title.setFill(Color.WHITE);
+        anchorPane.getChildren().add(title);
+
+        // Selecciona un jugador para tradeo
+        Text tofferPlayer = new Text(10, 50, "Seleccione un jugador");
+        tofferPlayer.setFont(new Font(20));
+        tofferPlayer.setLayoutX(anchorPane.getLayoutX() + 10 );
+        tofferPlayer.setLayoutY(anchorPane.getLayoutY() + 100);
+        tofferPlayer.setFill(Color.WHITE);
+        anchorPane.getChildren().add(tofferPlayer);
+
+
+        // Select jugador elegido
+        offerPlayer = new ChoiceBox<>();
+        offerPlayer.setStyle("-fx-background-radius: 12px;" );
+        offerPlayer.getItems().add(player2);
+        offerPlayer.getItems().add(player3);
+        offerPlayer.getItems().add(player4);
+        offerPlayer.setValue(player2);
+        offerPlayer.setLayoutX(anchorPane.getLayoutX() + 270);
+        offerPlayer.setLayoutY(anchorPane.getLayoutY() + 127);
+        anchorPane.getChildren().add(offerPlayer);
+
+
+         // Selecciona un material para tradeo
+         Text tofferMaterial = new Text(10, 50, "Material ofrecido");
+         tofferMaterial.setFont(new Font(20));
+         tofferMaterial.setLayoutX(anchorPane.getLayoutX() + 10 );
+         tofferMaterial.setLayoutY(anchorPane.getLayoutY() + 180);
+         tofferMaterial.setFill(Color.WHITE);
+         anchorPane.getChildren().add(tofferMaterial);
+
+         // Select material ofrecido
+        offerMaterial = new ChoiceBox<>();
+        offerMaterial.setStyle("-fx-background-radius: 12px;" );
+        offerMaterial.getItems().add("Lana");
+        offerMaterial.getItems().add("Madera");
+        offerMaterial.getItems().add("Cereales");
+        offerMaterial.getItems().add("Arcilla");
+        offerMaterial.getItems().add("Mineral");
+        offerMaterial.setValue("Lana");
+        offerMaterial.setLayoutX(anchorPane.getLayoutX() + 270);
+        offerMaterial.setLayoutY(anchorPane.getLayoutY() + 210);
+        anchorPane.getChildren().add(offerMaterial);
+
+        // Cantidad de material ofrecido
+        Text tofferAmmount = new Text(10, 50, "Cantidad ofrecida");
+        tofferAmmount.setFont(new Font(20));
+        tofferAmmount.setLayoutX(anchorPane.getLayoutX() + 10 );
+        tofferAmmount.setLayoutY(anchorPane.getLayoutY() + 260);
+        tofferAmmount.setFill(Color.WHITE);
+        anchorPane.getChildren().add(tofferAmmount);
+
+
+
+        // Slider cantidad material ofrecido
+        Slider sliderGive = new Slider(0, 250, 1);  
+        sliderGive.setMin(1);
+        sliderGive.setBlockIncrement(1);
+        sliderGive.setMajorTickUnit(1);
+        sliderGive.setMinorTickCount(0);        
+        sliderGive.setLayoutX(anchorPane.getLayoutX() + 270 );
+        sliderGive.setLayoutY(anchorPane.getLayoutY() + 290);
+        
+        // Etiqueta cantidad representada en slider material ofrecido
+        Label offerAmmount = new Label(
+                            Integer.toString((int) Math.round(sliderGive.getValue())));
+        offerAmmount.setFont(new Font(20));
+        offerAmmount.setTextFill(Color.WHITE);
+        offerAmmount.setLayoutX(anchorPane.getLayoutX() + 420 );
+        offerAmmount.setLayoutY(anchorPane.getLayoutY() + 287);
+
+        // Obtener valor slider
+        sliderGive.valueProperty().addListener(new ChangeListener<Number>() {
+            public void changed(ObservableValue<? extends Number> ov,
+                Number old_val, Number new_val) {
+                    offerAmmount.setText(String.format("%d", new_val.intValue()));
+                    offerAmountInt = new_val.intValue();
+            }
+        });
+
+        anchorPane.getChildren().add(sliderGive);
+        anchorPane.getChildren().add(offerAmmount);
+
+
+        // Selecciona un material para tradeo (recibir)
+        Text treceiveMaterial = new Text(10, 50, "Material solicitado");
+        treceiveMaterial.setFont(new Font(20));
+        treceiveMaterial.setLayoutX(anchorPane.getLayoutX() + 10 );
+        treceiveMaterial.setLayoutY(anchorPane.getLayoutY() + 343);
+        treceiveMaterial.setFill(Color.WHITE);
+        anchorPane.getChildren().add(treceiveMaterial);
+        
+        
+        // Material solicitado
+         receiveMaterial = new ChoiceBox<>();
+         receiveMaterial.setStyle("-fx-background-radius: 12px;" );
+         receiveMaterial.getItems().add("Lana");
+         receiveMaterial.getItems().add("Madera");
+         receiveMaterial.getItems().add("Cereales");
+         receiveMaterial.getItems().add("Arcilla");
+         receiveMaterial.getItems().add("Mineral");
+         receiveMaterial.setValue("Lana");
+         receiveMaterial.setLayoutX(anchorPane.getLayoutX() + 270);
+         receiveMaterial.setLayoutY(anchorPane.getLayoutY() + 373);
+         anchorPane.getChildren().add(receiveMaterial);
+ 
+         // Cantidad de material ofrecido
+         Text treceiveAmmount = new Text(10, 50, "Cantidad solicitada");
+         treceiveAmmount.setFont(new Font(20));
+         treceiveAmmount.setLayoutX(anchorPane.getLayoutX() + 10 );
+         treceiveAmmount.setLayoutY(anchorPane.getLayoutY() + 423);
+         treceiveAmmount.setFill(Color.WHITE);
+         anchorPane.getChildren().add(treceiveAmmount);
+ 
+ 
+ 
+         // Slider cantidad material ofrecido
+         Slider sliderReceive = new Slider(0, 250, 1);  
+         sliderReceive.setMin(1);
+         sliderReceive.setBlockIncrement(1);
+         sliderReceive.setMajorTickUnit(1);
+         sliderReceive.setMinorTickCount(0);        
+         sliderReceive.setLayoutX(anchorPane.getLayoutX() + 270 );
+         sliderReceive.setLayoutY(anchorPane.getLayoutY() + 453);
+         
+         // Etiqueta cantidad representada en slider material RECIBIDO
+         Label receiveAmmount = new Label(
+                             Integer.toString((int) Math.round(sliderReceive.getValue())));
+         receiveAmmount.setFont(new Font(20));
+         receiveAmmount.setTextFill(Color.WHITE);
+         receiveAmmount.setLayoutX(anchorPane.getLayoutX() + 420 );
+         receiveAmmount.setLayoutY(anchorPane.getLayoutY() + 450);
+ 
+         // Obtener valor slider
+         sliderReceive.valueProperty().addListener(new ChangeListener<Number>() {
+             public void changed(ObservableValue<? extends Number> ov,
+                 Number old_val, Number new_val) {
+                    receiveAmmount.setText(String.format("%d", new_val.intValue()));
+                    receiveAmountInt = new_val.intValue();
+             }
+         });
+ 
+         anchorPane.getChildren().add(sliderReceive);
+         anchorPane.getChildren().add(receiveAmmount);
+
+         // Boton enviar solicitud tradeo
+        sendTrade = new Button();
+        sendTrade.setPrefSize(180,90);
+        sendTrade.setLayoutX(anchorPane.getLayoutX() + 160);
+        sendTrade.setLayoutY(anchorPane.getLayoutY() + 520);
+        sendTrade.setStyle("-fx-background-color: #c7956d; -fx-background-radius: 12px");
+        sendTrade.setText("Aceptar");
+        DropShadow shadow = new DropShadow();
+        sendTrade.setEffect(shadow);
+
+
+
+        // TODO: Añadir accion cuando se hace click sobre boton compra
+        sendTrade.setOnAction((ActionEvent event) -> {
+            popupInternalTrade.hide();
+        });
+
+        anchorPane.getChildren().add(sendTrade);
+
+
+        // Boton para acceder al popup
+        inTrade.setOnAction((ActionEvent event) -> {
+            
+            if (!popupInternalTrade.isShowing()) {
+                Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+                popupInternalTrade.show(stage);
+            }
+            
+         });
+         
+         inTrade.setText((LangService.getMapping("internal_trade")));
+    }
+
+
+    private void externalTradePopUp() {
+        AnchorPane anchorPane = new AnchorPane();
+        anchorPane.setPrefSize(500, 500);
+        anchorPane.setStyle("-fx-background-color:  #965d62; -fx-background-radius: 12px" );
+        popupExternalTrade = new Popup();
+        popupExternalTrade.getContent().add(anchorPane);
+        popupExternalTrade.setAutoHide(true);
+
+        // Titulo
+       Text title = new Text(10, 50, (LangService.getMapping("external_trade")));
+        title.setFont(new Font(40));
+        title.setLayoutX(anchorPane.getLayoutX() + 55 );
+        title.setLayoutY(anchorPane.getLayoutY() + 50);
+        title.setFill(Color.WHITE);
+        anchorPane.getChildren().add(title);
+
+
+        // Selecciona una Ratio
+        Text tratio = new Text(10, 50, "Seleccione una ratio");
+        tratio.setFont(new Font(20));
+        tratio.setLayoutX(anchorPane.getLayoutX() + 10 );
+        tratio.setLayoutY(anchorPane.getLayoutY() + 100);
+        tratio.setFill(Color.WHITE);
+        anchorPane.getChildren().add(tratio);
+
+
+        // Select jugador elegido
+        ratio = new ChoiceBox<>();
+        ratio.setStyle("-fx-background-radius: 12px;" );
+        ratio.getItems().add("2:1");
+        ratio.getItems().add("3:1");
+        ratio.getItems().add("4:1");
+        ratio.setValue("2:1");
+        ratio.setLayoutX(anchorPane.getLayoutX() + 270);
+        ratio.setLayoutY(anchorPane.getLayoutY() + 127);
+        anchorPane.getChildren().add(ratio);
+
+
+        // Selecciona un material para tradeo
+        Text tofferMaterial = new Text(10, 50, "Material ofrecido");
+        tofferMaterial.setFont(new Font(20));
+        tofferMaterial.setLayoutX(anchorPane.getLayoutX() + 10 );
+        tofferMaterial.setLayoutY(anchorPane.getLayoutY() + 150);
+        tofferMaterial.setFill(Color.WHITE);
+        anchorPane.getChildren().add(tofferMaterial);
+
+        // Select material ofrecido
+       offerMaterial = new ChoiceBox<>();
+       offerMaterial.setStyle("-fx-background-radius: 12px;" );
+       offerMaterial.getItems().add("Lana");
+       offerMaterial.getItems().add("Madera");
+       offerMaterial.getItems().add("Cereales");
+       offerMaterial.getItems().add("Arcilla");
+       offerMaterial.getItems().add("Mineral");
+       offerMaterial.setValue("Lana");
+       offerMaterial.setLayoutX(anchorPane.getLayoutX() + 270);
+       offerMaterial.setLayoutY(anchorPane.getLayoutY() + 180);
+       anchorPane.getChildren().add(offerMaterial);
+
+        // Selecciona un material para tradeo (recibir)
+        Text treceiveMaterial = new Text(10, 50, "Material solicitado");
+        treceiveMaterial.setFont(new Font(20));
+        treceiveMaterial.setLayoutX(anchorPane.getLayoutX() + 10 );
+        treceiveMaterial.setLayoutY(anchorPane.getLayoutY() + 200);
+        treceiveMaterial.setFill(Color.WHITE);
+        anchorPane.getChildren().add(treceiveMaterial);
+        
+        
+        // Material solicitado
+         receiveMaterial = new ChoiceBox<>();
+         receiveMaterial.setStyle("-fx-background-radius: 12px;" );
+         receiveMaterial.getItems().add("Lana");
+         receiveMaterial.getItems().add("Madera");
+         receiveMaterial.getItems().add("Cereales");
+         receiveMaterial.getItems().add("Arcilla");
+         receiveMaterial.getItems().add("Mineral");
+         receiveMaterial.setValue("Lana");
+         receiveMaterial.setLayoutX(anchorPane.getLayoutX() + 270);
+         receiveMaterial.setLayoutY(anchorPane.getLayoutY() + 230);
+         anchorPane.getChildren().add(receiveMaterial);
+
+        // Boton enviar solicitud tradeo
+        sendTradeExternal = new Button();
+        sendTradeExternal.setPrefSize(180,90);
+        sendTradeExternal.setLayoutX(anchorPane.getLayoutX() + 160);
+        sendTradeExternal.setLayoutY(anchorPane.getLayoutY() + 320);
+        sendTradeExternal.setStyle("-fx-background-color: #c7956d; -fx-background-radius: 12px");
+        sendTradeExternal.setText("Aceptar");
+        DropShadow shadow = new DropShadow();
+        sendTradeExternal.setEffect(shadow);
+
+
+
+        // TODO: Añadir accion cuando se hace click sobre boton compra
+        sendTradeExternal.setOnAction((ActionEvent event) -> {
+            popupExternalTrade.hide();
+        });
+
+        anchorPane.getChildren().add(sendTradeExternal);
+
+        // Boton para acceder al popup
+        outTrade.setOnAction((ActionEvent event) -> {
+            
+            if (!popupExternalTrade.isShowing()) {
+                Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+                popupExternalTrade.show(stage);
+            }
+            
+         });
+         
+         outTrade.setText((LangService.getMapping("external_trade")));
+
+
+    }
+
+ 
+    private void settingsPopup() throws IOException {
+        AnchorPane anchorPane = new AnchorPane();
+        anchorPane.setPrefSize(200, 250);
+        anchorPane.setStyle("-fx-background-color:  #965d62; -fx-background-radius: 12px" );
+        popupSettings = new Popup();
+        popupSettings.getContent().add(anchorPane);
+        popupSettings.setAutoHide(true);
+
+        leaveGame = new Button();
+        leaveGame.setPrefSize(150,90);
+        leaveGame.setLayoutX(anchorPane.getLayoutX() + 25);
+        leaveGame.setLayoutY(anchorPane.getLayoutY() + 30);
+        leaveGame.setStyle("-fx-background-color: #c7956d; -fx-background-radius: 12px");
+        leaveGame.setText("Abandonar partida");
+        DropShadow shadow = new DropShadow();
+        leaveGame.setEffect(shadow);
+        anchorPane.getChildren().add(leaveGame);
+
+        stopGame = new Button();
+        stopGame.setPrefSize(150,90);
+        stopGame.setLayoutX(anchorPane.getLayoutX() + 25);
+        stopGame.setLayoutY(anchorPane.getLayoutY() + 140);
+        stopGame.setStyle("-fx-background-color: #c7956d; -fx-background-radius: 12px");
+        stopGame.setText("Solicitud fin partida");
+        stopGame.setEffect(shadow);
+        anchorPane.getChildren().add(stopGame);
+
+
+        leaveGame.setOnAction((ActionEvent event) -> {
+            try {
+                popupSettings.hide();
+                App.nuevaPantalla("/view/mainMenu.fxml");
+            } catch (IOException e) {
+        
+            }
+            
+        });
+
+        stopGame.setOnAction((ActionEvent event) -> {
+            popupSettings.hide();
+        });
+
+        settingsButton.setOnAction((ActionEvent event) -> {
+            if (!popupSettings.isShowing()) {
+                Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+                popupSettings.show(stage);
+            }
+         });
+        settingsButton.setText((LangService.getMapping("settings"))); 
+         
+    }
+
+    private void updateDice() {
+        // TODO: Conectar con backend
+        diceButton.setText("Dados: 8");
+    }
+
+    
+
+    
+    
     @FXML
     public void initialize() throws IOException {
         chatContent.setEditable(false);
         chatContent.setMouseTransparent(true);
         chatContent.setFocusTraversable(false);    
         cardsPopUp();
+        inTradePopUp();
+        externalTradePopUp();
+        playersName();
+        updateDice();
+        settingsPopup();
+        passTurnButton.setText((LangService.getMapping("next_turn")));
+        
        
+        // Crear hexagonos
         for(Integer i =0; i < hexagons.length; i++) {
             Polygon pol = createHexagon(i);
             fillHexagon(pol, i);    
