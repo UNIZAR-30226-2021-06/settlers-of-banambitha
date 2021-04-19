@@ -72,6 +72,14 @@ export class UserService {
     UserService.avatar = avatar_url
   }
 
+  public static updateUserData(userData: Object){
+    UserService.username = userData["nombre"]
+    UserService.apariencia = userData["apariencia"]
+    UserService.saldo = userData["saldo"]
+    UserService.mail = userData["mail"]
+    UserService.avatar = userData["avatar"]
+  }
+
   /**
    * Trata de registrar un nuevo usuario en el sistema. Si se produce
    * algún error, lanza una excepción.
@@ -86,12 +94,7 @@ export class UserService {
       contrasenya : pass
     }
     let response = await this.http.post<any>(this.baseUrl + "/add", JSON.stringify(msg), this.httpOptions).toPromise()
-    UserService.username = response["nombre"]
-    UserService.apariencia = response["apariencia"]
-    UserService.saldo = response["saldo"]
-    UserService.mail = response["mail"]
-    UserService.avatar = response["avatar"]
-    UserService.validUser = true
+    UserService.updateUserData(response.body)
     return response
   }
 
@@ -138,11 +141,7 @@ export class UserService {
       "contrasenya" : pass
     }
     let response = await this.http.post(this.baseUrl + "/validate", JSON.stringify(msg), this.httpOptions).toPromise()
-    UserService.apariencia = response["apariencia"]
-    UserService.saldo = response["saldo"]
-    UserService.mail = response["mail"]
-    UserService.avatar = response["avatar"]
-    UserService.validUser = true
+    UserService.updateUserData(response.body)
   }
 
 
@@ -160,11 +159,7 @@ export class UserService {
   public checkSession(router: Router, urlLogin: boolean): Observable<boolean>{
     return this.http.get(this.baseUrl + "/session", this.httpOptions).pipe(
       map(response => {
-        UserService.apariencia = response["apariencia"]
-        UserService.saldo = response["saldo"]
-        UserService.mail = response["mail"]
-        UserService.avatar = response["avatar"]
-        UserService.validUser = true
+        UserService.updateUserData(response.body)
         if ( urlLogin ){
           router.navigate(["/home"])
           return false

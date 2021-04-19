@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ShopService } from 'src/app/service/shop/shop.service';
 import { UserService } from 'src/app/service/user/user.service';
+import { BoardSkinsComponent } from '../board-skins/board-skins.component';
 
 @Component({
   selector: 'app-profile-pictures',
@@ -9,49 +10,41 @@ import { UserService } from 'src/app/service/user/user.service';
 })
 export class ProfilePicturesComponent implements OnInit {
 
-  constructor(private UserService: UserService, private ShopService: ShopService) { }
-
-  imageNames : string [] = [
-    'Dave',
-    'Señor bigotes',
-    'Científica',
-    'Bruno',
-    'Agente Secreto',
-    'Desarrollador Dae',
-    'Developer',
-    'Ingeniera',
-    'Azafata',
-    'Alfred',
-    'Profesora',
-    'Señora formal',
-    'Astronauta',
-    'Anciano feliz',
-    'Chico tranquilo',
-    'barbero',
-    'Hombre desconfiado'
-  ]
+  constructor(public UserService: UserService, private ShopService: ShopService) { }
 
   public empty: Boolean = false
 
   public profile_products: Array<Object> = []
 
-  buy(profile: String){
-    console.log("comprar " + profile)
-  }
-
-  ngOnInit(): void {
+  public updateView(){
+    this.profile_products = []
     this.ShopService.ObtenerProductosDisponibles().subscribe( response => {
-      console.log("fin")
-      console.log(response)
-      console.log(response.body)
+      let saldo = UserService.getSaldo()
+      console.log(saldo)
       for ( var x in response.body){
         if ( response.body[x]["tipo"]  == "AVATAR" && !response.body[x]["adquirido"]){ 
-          console.log(response.body[x])
+          response.body[x]["available"] = saldo >= parseInt(response.body[x]["precio"], 10)
           this.profile_products.push(response.body[x])
         }
       }
       this.empty =  this.profile_products.length == 0
     })
+  }
+
+  buy(profile: String){
+    console.log("comprar " + profile);
+    ( async () => {
+      try {
+        await this.ShopService.adquirproducto(profile)
+        this.updateView()
+      } catch( e ){
+        console.log("no se pudo adquirir el producto")
+      }
+    })()
+  }
+
+  ngOnInit(): void {
+    this.updateView()
   }
 
 }

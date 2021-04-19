@@ -28,6 +28,11 @@ export class ShopService {
   }
 
   public async adquirproducto(id_producto: String){
-
+    let msg = {
+      usuario_id: UserService.getUsername(),
+      producto_id: id_producto
+    }
+    let response = await this.http.put(ShopService.adquirir, msg, ShopService.httpOptions).toPromise()
+    UserService.updateUserData(response.body["usuario"])
   }
 }

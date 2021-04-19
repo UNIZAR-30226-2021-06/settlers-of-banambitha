@@ -56,7 +56,7 @@ public class UsuarioResourcee {
 	public ResponseEntity<Usuario> newUsuario(@RequestBody Usuario usuario, HttpSession session) {
 		
 		Usuario newUsuario = usuarioService.newUsuario(usuario);
-		session.setAttribute("user", newUsuario);
+		session.setAttribute("username", newUsuario.getNombre() );
 		return new ResponseEntity<>(newUsuario, HttpStatus.CREATED);
 	}
 	
@@ -146,7 +146,7 @@ public class UsuarioResourcee {
 		
 		if(valid) {
 			Usuario valid_usuario = usuarioService.findUsuario(usuario.getNombre());
-			session.setAttribute("user", valid_usuario);
+			session.setAttribute("username", valid_usuario.getNombre() );
 			return new ResponseEntity<>(valid_usuario,HttpStatus.OK);
 		} else {
 			return new ResponseEntity<>(new Usuario(),HttpStatus.NOT_FOUND);
@@ -156,8 +156,9 @@ public class UsuarioResourcee {
 
 	@GetMapping("/session")
 	public ResponseEntity<Usuario> checkSession(HttpSession session){
-		Usuario user = (Usuario) session.getAttribute("user");
-		if (user != null ){
+		String username = (String) session.getAttribute("username");
+		if (username != null ){
+			Usuario user = usuarioService.findUsuario(username);
 			return new ResponseEntity<>(user,HttpStatus.OK);
 		}else{
 			return new ResponseEntity<>(new Usuario(),HttpStatus.NOT_FOUND);

@@ -3,6 +3,8 @@ package es.susangames.catan.resource;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -136,7 +138,7 @@ public class ProductoResource {
 	 *				}
 	****************************************************** */
 	@PutMapping("/adquirir")
-	public ResponseEntity<Map<String,Object>> adquirirProducto(@RequestBody Dispone dispone){
+	public ResponseEntity<Map<String,Object>> adquirirProducto(@RequestBody Dispone dispone, HttpSession session){
 		
 		Map<String,Object> compra = productoService.adquirir(dispone.getUsuario_id(), dispone.getProducto_id());
 		

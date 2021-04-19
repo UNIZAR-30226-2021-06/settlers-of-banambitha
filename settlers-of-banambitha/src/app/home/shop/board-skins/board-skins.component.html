@@ -1,46 +1,26 @@
 <html>
-<!-- <mat-card [class.mat-elevation-z4]="!isActive1" [class.mat-elevation-z22]="isActive1" (mouseenter)='isActive1 = !isActive1' (mouseleave)='isActive1 = !isActive1'>
-    <mat-card-title>
-        Hardware
-    </mat-card-title>
-    <mat-divider></mat-divider>
-    <img mat-card-image class="user-image" src="../../../../assets/images/shop/board/hardware_shop_image.jpg">
-    <mat-card-content>
-        <img mat-card-image class="icon" src="../../../../assets/images/icons/gold_icon.png"> 5458128
-    </mat-card-content>
-    <mat-card-actions>
-        <button mat-raised-button>Comprar ahora</button>
-    </mat-card-actions>
-</mat-card>
-<div style="width: 50px; "></div>
-<mat-card [class.mat-elevation-z4]="!isActive2" [class.mat-elevation-z22]="isActive2" (mouseenter)='isActive2 = !isActive2' (mouseleave)='isActive2 = !isActive2'>
-    <mat-card-title>
-        Espacial
-    </mat-card-title>
-    <mat-divider></mat-divider>
-    <img mat-card-image class="user-image" src="../../../../assets/images/shop/board/espacial_shop_image.jpg">
-    <mat-card-content>
-        <img mat-card-image class="icon" src="../../../../assets/images/icons/gold_icon.png"> 999666
-    </mat-card-content>
-    <mat-card-actions>
-        <button mat-raised-button>Comprar ahora</button>
-    </mat-card-actions>
-</mat-card> -->
 
 <div class="content">
-    <div fxLayout="row wrap" fxLayoutGap="16px grid">
-        <div fxFlex="25%" fxFlex.xs="100%" fxFlex.sm="33%" *ngFor="let product of board_products">
+    <div fxLayout="row wrap" fxLayoutGap="36px grid">
+        <div fxFlex="50%" fxFlex.xs="100%" fxFlex.sm="33%" *ngFor="let product of board_products">
             <mat-card class="mat-elevation-z4">
                 <mat-card-title>
                     <mat-card-title>{{product["producto_id"]}}</mat-card-title>
                 </mat-card-title>
                 <mat-divider></mat-divider>
-                <img mat-card-image class="user-image" src='{{ "../../../../assets/images/shop/board/" + product.url}} '>
+                <img mat-card-image class="user-image" src='{{ "../../../../assets/images/shop/board/" + product.url}}'>
                 <mat-card-content>
                     <img mat-card-image class="icon" src="../../../../assets/images/icons/gold_icon.png"> {{product["precio"]}}
                 </mat-card-content>
                 <mat-card-actions>
-                    <button mat-raised-button (click)="buy(name)">Comprar ahora</button>
+                    <button mat-raised-button (click)='buy(product["producto_id"])' [disabled]="!product['available']">
+                        <div *ngIf="product['available']; else notAvailable">
+                            Comprar
+                        </div>
+                        <ng-template #notAvailable>
+                            Saldo insuficiente
+                        </ng-template>
+                    </button>
                 </mat-card-actions>
             </mat-card>
         </div>

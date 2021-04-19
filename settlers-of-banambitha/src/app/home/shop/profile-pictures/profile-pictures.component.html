@@ -2,7 +2,7 @@
 
 <div class="content">
     <div fxLayout="row wrap" fxLayoutGap="16px grid">
-        <div fxFlex="25%" fxFlex.xs="100%" fxFlex.sm="33%" *ngFor="let product of profile_products">
+        <div fxFlex="20%" fxFlex.xs="100%" fxFlex.sm="33%" *ngFor="let product of profile_products">
             <mat-card class="mat-elevation-z4">
                 <mat-card-title>
                     <mat-card-title>{{product["producto_id"]}}</mat-card-title>
@@ -13,7 +13,14 @@
                     <img mat-card-image class="icon" src="../../../../assets/images/icons/gold_icon.png"> {{product["precio"]}}
                 </mat-card-content>
                 <mat-card-actions>
-                    <button mat-raised-button (click)="buy(name)">Comprar ahora</button>
+                    <button mat-raised-button (click)='buy(product["producto_id"])' [disabled]="!product['available']">
+                        <div *ngIf="product['available']; else notAvailable">
+                            Comprar
+                        </div>
+                        <ng-template #notAvailable>
+                            Saldo insuficiente
+                        </ng-template>
+                    </button>
                 </mat-card-actions>
             </mat-card>
         </div>

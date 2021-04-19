@@ -4,15 +4,14 @@ html
     background-color: map-get($palette, mainDark)
 
 .content 
-    padding: 16px
-    display: flex
+    padding: 26px
     justify-content: center
     align-items: center
-    box-sizing: border-box
     height: fit-content
+    box-sizing: border-box
 
 .content > mat-card
-    width: 200px
+    width: 100px
 
 mat-card
   background-color: map-get($palette, mainRed)
@@ -33,15 +32,14 @@ mat-card-content
     margin-right: 1%
 
 .user-image
-  display: inline-block
-  width: 200px
-  height: 200px
+  width: 400px
+  height: 250px
   margin-top: 10%
-  border-radius: 10%
-
+  border-radius: 5%
   background-repeat: no-repeat
   background-position: center center
   background-size: cover
+  object-fit: cover
 
 button  
     background-color: map-get($palette, mainOrange )
