@@ -4,9 +4,13 @@ package es.susangames.catan.logica;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class Hexagonos {
 	static private int tam = 1;
@@ -132,7 +136,7 @@ public class Hexagonos {
 	/*
 	 * Devuelve el valor del hexagono
 	 * */
-	public int getValor () {
+	public Integer getValor () {
 		return this.valor;
 	} 
 	
@@ -226,7 +230,7 @@ public class Hexagonos {
 		}
 	}
 	
-	private Aristas[] aristasDelVertice (Vertices v) {
+	private static Aristas[] aristasDelVertice (Vertices v) {
 		Aristas a[] = null;
 		Coordenadas c = v.getCoordenadas();
 		// Se trata de un vertice que pertenece a un Hexagono.
@@ -238,7 +242,7 @@ public class Hexagonos {
 		return a;
 	}
 	
-	public void construirAsentamiento (Vertices v, Jugadores j) {
+	public static void construirAsentamiento (Vertices v, Jugadores j) {
 		CoordenadasAristas coordAristas;
 		Coordenadas coordAux;		
 		Vertices v_adyacentes[] = new Vertices[3];
@@ -287,7 +291,7 @@ public class Hexagonos {
 		}
 	}
 	
-	public void construirCarretera (Aristas a, Jugadores j) {
+	public static void construirCarretera (Aristas a, Jugadores j) {
 		Boolean sePuedeConstruir = false;
 		Vertices v1 = vertices.get(a.getCoordenadasVertice1());
 		Vertices v2 = vertices.get(a.getCoordenadasVertice2());
@@ -372,7 +376,7 @@ public class Hexagonos {
 	}
 	
 	//
-	public void mejorarAsentamiento (Vertices v, Jugadores j) {
+	public static void mejorarAsentamiento (Vertices v, Jugadores j) {
 		if (j.puedeConstruirCiudad()) {
 			if (vertices.containsKey(v.getCoordenadas())) {
 				if (v.tieneAsentamiento() && !v.tieneCiudad() && v.getPropietario().equals(j)) {
@@ -392,14 +396,78 @@ public class Hexagonos {
 		this.tipo_terreno = tipo_terreno;
 	}
 
-	/*
-	public JSONArray listAsentamientoToJSON () {}
+	public static JSONObject listAsentamientoToJSON () {
+		Iterator<Vertices> it = vertices.values().iterator();
+		String aux = "\"asentamiento\" : [" + "\"" + it.next().getAsentamientoJugador() +"\"";
+		while (it.hasNext()) {
+			aux = ",\"" + it.next().getAsentamientoJugador() + "\"";
+		}
+		
+		aux += "]";
+		
+		return new JSONObject(aux);
+	}
 	
-	public JSONArray posibleAsentamientoToJSON () {}
+	public static JSONObject posibleAsentamientoToJSON () {
+		Iterator<Vertices> it = vertices.values().iterator();
+		Vertices vAux = it.next();
+		String aux = "\"posibles_asentamiento\" : [{" + vAux.getPosibleAsentamientoDeJugador(0) + 
+				vAux.getPosibleAsentamientoDeJugador(1) + vAux.getPosibleAsentamientoDeJugador(2) +
+				vAux.getPosibleAsentamientoDeJugador(3) + "}";
+		while (it.hasNext()) {
+			vAux = it.next();
+			aux += ", {" + vAux.getPosibleAsentamientoDeJugador(0) + 
+					vAux.getPosibleAsentamientoDeJugador(1) + vAux.getPosibleAsentamientoDeJugador(2) +
+					vAux.getPosibleAsentamientoDeJugador(3) + "}";
+		}
+		
+		aux += "]";
+		
+		return new JSONObject(aux);
+	}
 	
-	public JSONArray listCaminoToJSON () {}
+	public static JSONObject listCaminoToJSON () {
+		Iterator<Aristas> it = aristas.values().iterator();
+		String aux = "\"camino\" : [" + "\"" + it.next().getCaminoJugador() +"\"";
+		while (it.hasNext()) {
+			aux = ",\"" + it.next().getCaminoJugador() + "\"";
+		}
+		
+		aux += "]";
+		
+		return new JSONObject(aux);
+	}
 	
-	public JSONArray posibleCaminoToJSON () {}*/
+	public static JSONObject posibleCaminoToJSON () {
+		Iterator<Aristas> it = aristas.values().iterator();
+		Aristas aAux = it.next();
+		String aux = "\"posibles_caminos\" : [{" + aAux.getPosibleCaminoDeJugador(0) + 
+				aAux.getPosibleCaminoDeJugador(1) + aAux.getPosibleCaminoDeJugador(2) +
+				aAux.getPosibleCaminoDeJugador(3) + "}";
+		while (it.hasNext()) {
+			aAux = it.next();
+			aux += ", {" + aAux.getPosibleCaminoDeJugador(0) + 
+					aAux.getPosibleCaminoDeJugador(1) + aAux.getPosibleCaminoDeJugador(2) +
+					aAux.getPosibleCaminoDeJugador(3) + "}";
+		}
+		
+		aux += "]";
+		
+		return new JSONObject(aux);
+	}
+	
+	public static JSONObject puertosToJSON () {
+		String aux = "\"puertos\" : [";
+		Iterator<Aristas> it = aristas.values().iterator();
+		Aristas aAux = it.next();
+		aux += aAux.getIdentificador().toString();
+		while (it.hasNext()) {
+			aAux = it.next();
+			aux += "," + aAux.getIdentificador().toString();
+		}
+		aux += "]";
+		return new JSONObject (aux);
+	}
 	
 	public static Vertices getVerticePorId (int id) {
 		return verticesPorID.get(id);
@@ -409,7 +477,7 @@ public class Hexagonos {
 		return aristasPorID.get(id);
 	}
 	
-	public Vertices[] getVerticesAdyacentes (int id) {
+	public static Vertices[] getVerticesAdyacentes (int id) {
 		CoordenadasAristas coordAristas;
 		Coordenadas coordAux;
 		Vertices v_adyacentes[] = new Vertices[3];
@@ -433,7 +501,7 @@ public class Hexagonos {
 		return v_adyacentes;
 	}
 	
-	public Vertices[] getVerticesAdyacentes (Vertices vertice) {
+	public static Vertices[] getVerticesAdyacentes (Vertices vertice) {
 		CoordenadasAristas coordAristas;
 		Coordenadas coordAux;
 		Vertices v_adyacentes[] = new Vertices[3];
@@ -455,4 +523,8 @@ public class Hexagonos {
 		
 		return v_adyacentes;
 	}
+	
+	public static void construirPrimerAsentamiento (Vertices v) {}
+	
+	public static void construirPrimerCamino (Aristas a) {}
 }

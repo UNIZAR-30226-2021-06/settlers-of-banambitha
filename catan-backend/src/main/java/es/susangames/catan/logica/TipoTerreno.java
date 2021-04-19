@@ -22,7 +22,7 @@ public enum TipoTerreno {
 		else return Desierto;
 	}
 	
-	public String toString () {
+	public String getStringTipoTerreno () {
 		switch (terreno) {
 		case 0:
 			return "Bosque";

@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 public class Tablero {
@@ -35,9 +36,14 @@ public class Tablero {
 	private Jugadores j[];
 	private int num_jugadores;
 	
+	int turno;
+	int dados;
+	
 	Tablero (Integer num_jugadores) {
 		this.num_jugadores = num_jugadores;
 		j = new Jugadores[num_jugadores];
+		
+		turno = 0; dados = 0;
 		
 		hexagonos = new HashMap<Integer,Hexagonos>();
 		
@@ -194,6 +200,80 @@ public class Tablero {
 		
 	}
 	
+	public JSONObject infoHexagonosJSON () {
+		String aux = "\"hexagono\":{";
+		String auxTipo = "\"tipo\": [";
+		String auxValor = "\"valor\": [";
+		String auxLadron = "\"ladron\":";
+		Integer i = 0;
+		Iterator<Hexagonos> it = hexagonos.values().iterator();
+		
+		Hexagonos h = it.next();
+		auxTipo += h.getTipo_terreno().getStringTipoTerreno();
+		auxValor += h.getValor().toString();
+		if (h.tieneLadron())
+			auxLadron = i.toString();
+		i++;
+		while(it.hasNext()) {
+			h = it.next();
+			auxTipo += "," + h.getTipo_terreno().getStringTipoTerreno();
+			auxValor += "," + h.getValor().toString();
+			if (h.tieneLadron())
+				auxLadron = i.toString();
+			i++;
+		}
+		aux += auxTipo + "," + auxValor + "," + auxLadron;
+		return new JSONObject(aux);
+	}
+	
+	public JSONObject returnMessage () {
+		JSONObject respuesta = new JSONObject ();
+		
+		respuesta.put("Message", "");
+
+		JSONObject Tab_inf = new JSONObject();
+		Tab_inf.put("hexagono", infoHexagonosJSON());
+		
+		JSONObject vertices = new JSONObject();
+		vertices.put("asentamiento" , new JSONObject());
+		vertices.put("posibles_asentamiento" , new JSONObject());
+		
+		JSONObject aristas = new JSONObject();
+		aristas.put("camino" , new JSONObject());
+		aristas.put("posibles_camino" , new JSONObject());
+		aristas.put("puertos", Hexagonos.puertosToJSON());
+		
+		Tab_inf.put("vertices", vertices);
+		Tab_inf.put("aristas", aristas);
+		
+		respuesta.put("Tab_inf", Tab_inf);
+		
+		JSONObject recursos = new JSONObject();
+		recursos.put("Player_1", new JSONObject());
+		recursos.put("Player_2", new JSONObject());
+		recursos.put("Player_3", new JSONObject());
+		recursos.put("Player_4", new JSONObject());
+		respuesta.put("Recursos", recursos);
+		
+		JSONObject cartas = new JSONObject();
+		cartas.put("Player_1", new JSONObject());
+		cartas.put("Player_2", new JSONObject());
+		cartas.put("Player_3", new JSONObject());
+		cartas.put("Player_4", new JSONObject());
+		respuesta.put("Cartas", cartas);
+		
+		JSONObject puntuacion = new JSONObject();
+		puntuacion.put("Player_1", this.j[0].getPuntosVictoria());
+		puntuacion.put("Player_2", this.j[1].getPuntosVictoria());
+		puntuacion.put("Player_3", this.j[2].getPuntosVictoria());
+		puntuacion.put("Player_4", this.j[3].getPuntosVictoria());
+		respuesta.put("Puntuacion", puntuacion);
+		
+		respuesta.put("Resultado_Tirada", this.dados);
+		respuesta.put("Turno", this.turno);
+		return respuesta;
+	}
+	
 	public JSONObject JSONmessage ( JSONObject jsObject ) {
 		
 		Integer id_jugador = jsObject.getInt("player");
@@ -206,32 +286,51 @@ public class Tablero {
 			if ( jug.puedeConstruirPueblo() ) {
 				int id_vertice = move.getInt("param");
 				Vertices v = Hexagonos.getVerticePorId(id_vertice);
-				
-				jug.construirAsentamiento();
+				if (v.getPosibleAsentamientoDeJugador(id_vertice)) {
+					Hexagonos.construirAsentamiento(v, jug);
+					jug.construirAsentamiento();
+				}
 			}
 			break;
 		case "mejorar poblado":
 			if ( jug.puedeConstruirCiudad() ) {
 				int id_vertice = move.getInt("param");
 				Vertices v = Hexagonos.getVerticePorId(id_vertice);
-				if ( v.getPropietario().equals(jug) )
+				if ( v.tieneAsentamiento() && !v.tieneCiudad() && v.getPropietario().equals(jug) )
+					Hexagonos.mejorarAsentamiento(v, jug);
 					jug.mejorarAsentamiento();
 			}
 			break;
 		case "crear carretera":
-			if ( jug.puedeConstruirCarretera() )
+			if ( jug.puedeConstruirCarretera() ) {
+				int id_arista = move.getInt("param");
+				Aristas a = Hexagonos.getAristaPorId(id_arista);
+				if (!a.tieneCamino() && a.getPosibleCaminoDeJugador(id_arista)) {
+					Hexagonos.construirCarretera(a, jug);
+				}
+			}
 			break;
 		case "mover ladron":
+			int id_hexagono = move.getInt("param");
+			moverLadron();
 			break;
 		case "finalizar turno":
+			this.dados = generarNumero();
+			turno++;
 			break;
 		case "comerciar":
 			break;
 		case "comerciar con puerto":
 			break;
 		case "primer asentamiento":
+			int id_vertice = move.getInt("param");
+			Vertices v = Hexagonos.getVerticePorId(id_vertice);
+			Hexagonos.construirPrimerAsentamiento(v);
 			break;
 		case "primer camino":
+			int id_arista = move.getInt("param");
+			Aristas a = Hexagonos.getAristaPorId(id_arista);
+			Hexagonos.construirPrimerCamino(a);
 			break;
 		default:
 			// No existe la accion solicitada.
@@ -240,6 +339,52 @@ public class Tablero {
 		// RESPUESTA GENERAL.
 		JSONObject respuesta = new JSONObject ();
 		
+		respuesta.put("Message", "");
+
+		JSONObject Tab_inf = new JSONObject();
+		Tab_inf.put("hexagono", infoHexagonosJSON());
+		JSONObject vertices = new JSONObject();
+		vertices.put("asentamiento" , Hexagonos.listAsentamientoToJSON());
+		vertices.put("posibles_asentamiento" , Hexagonos.posibleAsentamientoToJSON());
+		
+		JSONObject aristas = new JSONObject();
+		aristas.put("camino" , Hexagonos.listCaminoToJSON());
+		aristas.put("posibles_camino" , Hexagonos.posibleCaminoToJSON());
+		aristas.put("puertos", Hexagonos.puertosToJSON());
+		
+		Tab_inf.put("vertices", vertices);
+		Tab_inf.put("aristas", aristas);
+		
+		respuesta.put("Tab_inf", Tab_inf);
+		
+		JSONObject recursos = new JSONObject();
+		recursos.put("Player_1", this.j[0].recursosJugadorToJSON());
+		recursos.put("Player_2", this.j[1].recursosJugadorToJSON());
+		recursos.put("Player_3", this.j[2].recursosJugadorToJSON());
+		recursos.put("Player_4", this.j[3].recursosJugadorToJSON());
+		respuesta.put("Recursos", recursos);
+		
+		JSONObject cartas = new JSONObject();
+		cartas.put("Player_1", this.j[0].cartasJugadorToJSON());
+		cartas.put("Player_2", this.j[1].cartasJugadorToJSON());
+		cartas.put("Player_3", this.j[2].cartasJugadorToJSON());
+		cartas.put("Player_4", this.j[3].cartasJugadorToJSON());
+		respuesta.put("Cartas", cartas);
+		
+		this.j[0].actualizarPuntosVictoria();
+		this.j[1].actualizarPuntosVictoria();
+		this.j[2].actualizarPuntosVictoria();
+		this.j[3].actualizarPuntosVictoria();
+		
+		JSONObject puntuacion = new JSONObject();
+		puntuacion.put("Player_1", this.j[0].getPuntosVictoria());
+		puntuacion.put("Player_2", this.j[1].getPuntosVictoria());
+		puntuacion.put("Player_3", this.j[2].getPuntosVictoria());
+		puntuacion.put("Player_4", this.j[3].getPuntosVictoria());
+		respuesta.put("Puntuacion", puntuacion);
+		
+		respuesta.put("Resultado_Tirada", this.dados);
+		respuesta.put("Turno", this.turno);
 		return respuesta;
 	}
 	

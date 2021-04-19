@@ -1,5 +1,7 @@
 package es.susangames.catan.logica;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class Jugadores {
 	private ColorJugador color;
@@ -30,6 +32,10 @@ public class Jugadores {
 	private int MAX_NUM_CIUDADES = 4;
 	private int MAX_NUM_CARRETERAS = 15;
 	
+	private int numPobladosConstruidos;
+	private int numCiudadesConstruidos;
+	private int numCaminosConstruidos;
+	
 	public Jugadores (ColorJugador color, Tablero tablero) {
 		this.color = color;
 		this.tablero = tablero;
@@ -44,6 +50,10 @@ public class Jugadores {
 		
 		this.granRutaComercial = false;
 		this.granEjecitoCaballeria = false;
+		
+		this.numPobladosConstruidos = 0;
+		this.numCiudadesConstruidos = 0;
+		this.numCaminosConstruidos = 0;
 	}
 	
 	public void anyadirRecurso (TipoTerreno tipo, Boolean produceCiudad) {
@@ -81,8 +91,13 @@ public class Jugadores {
 		return madera >= 1 && arcilla >= 1;
 	}
 	
-	public void actualizarPuntoVictoria () {
-		
+	public void actualizarPuntosVictoria () {
+		this.puntosVictoria = this.numCartasPuntoVictoria + this.numPobladosConstruidos +
+				this.numCiudadesConstruidos * 2;
+	}
+	
+	public Integer getPuntosVictoria () {
+		return this.puntosVictoria;
 	}
 	
 	public Boolean mismoJugador (Jugadores j) {
@@ -121,15 +136,27 @@ public class Jugadores {
 	}
 	
 	public void construirAsentamiento () {
-		// Eliminar recursos.
+		// Eliminar recursos. --> madera >= 1 && lana >= 1 && cereales >= 1 && arcilla >= 1;
+		this.madera--;
+		this.lana--;
+		this.cereales--;
+		this.arcilla--;
+		this.numPobladosConstruidos++;
 	}
 	
 	public void mejorarAsentamiento () {
-		// Eliminar recursos.
+		// Eliminar recursos. -->  mineral x3, cereales x2.
+		this.mineral -= 3;
+		this.cereales -= 2;
+		this.numPobladosConstruidos--;
+		this.numCiudadesConstruidos++;
 	}
 	
 	public void construirCarretera () {
-		// Eliminar recursos.
+		// Eliminar recursos. --> madera >= 1 && arcilla >= 1;
+		this.madera--;
+		this.arcilla--;
+		this.numCaminosConstruidos++;
 	}
 	
 	public void construirCartasDesarrollo () {
@@ -163,17 +190,11 @@ public class Jugadores {
 		this.puntosVictoria++;
 	}
 	
-	public void usarCartaMonopolio () {
-		
-	}
+	public void usarCartaMonopolio () {}
 	
-	public void usarCartaDescubrimiento() {
-		
-	}
+	public void usarCartaDescubrimiento() {}
 	
-	public void usarCartasConstruccionCarretera() {
-		
-	}
+	public void usarCartasConstruccionCarretera() {}
 
 	@Override
 	public int hashCode() {
@@ -195,5 +216,20 @@ public class Jugadores {
 		if (color != other.color)
 			return false;
 		return true;
+	}
+	
+	public JSONObject recursosJugadorToJSON () {
+		return new JSONObject ("\"Player_" + this.color.numeroColor() + 1 + "\": [" + this.madera + "," + 
+				this.lana + "," + this.cereales + "," + this.arcilla + "," + this.mineral + "]");
+	}
+	
+	public JSONObject cartasJugadorToJSON () {
+		Integer numGranEjecitoCaballeria = 1;
+		if (this.granEjecitoCaballeria) numGranEjecitoCaballeria = 0;
+		Integer numGranRutaComercial = 1;
+		if (this.granRutaComercial) numGranRutaComercial = 0;
+		return new JSONObject ("\"Player_" + this.color.numeroColor() + 1 + "\": [" + this.numCartasCaballeros + "," +
+				this.numCartasPuntoVictoria + "," +this.numCartasContruccionCarreteras + "," + this.numCartasDescubrimiento +
+				"," + this.numCartasMonopolio + "," + numGranEjecitoCaballeria + "," + numGranRutaComercial + "]");
 	}
 }

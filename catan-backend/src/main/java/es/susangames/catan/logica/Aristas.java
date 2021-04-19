@@ -32,6 +32,10 @@ public class Aristas {
 		this.puedeConstruirJugador = new Boolean[] {false, false, false, false};
 	}
 	
+	public Integer getIdentificador () {
+		return this.id;
+	}
+	
 	public CoordenadasAristas getCoordenadasAristas () {
 		return this.coord;
 	}
@@ -86,7 +90,7 @@ public class Aristas {
 		puedeConstruirJugador[j.getColor().numeroColor()] = true;
 	}
 	
-	public String getAsentamientoJugador () {
+	public String getCaminoJugador () {
 		if ( tieneCamino() ) {
 			return "Camino" + propietario.getColor().getStringColor();
 		}
@@ -99,5 +103,16 @@ public class Aristas {
 	
 	public Coordenadas getCoordenadasVertice2 () {
 		return new Coordenadas (this.coord.getFin_x(),this.coord.getFin_y());
+	}
+	
+	public Boolean[] getPosibleCaminoDeJugador () {
+		return puedeConstruirJugador;
+	}
+	
+	public Boolean getPosibleCaminoDeJugador (int i) {
+		if (i > 3) {
+			return false;
+		}
+		return puedeConstruirJugador[i];
 	}
 }

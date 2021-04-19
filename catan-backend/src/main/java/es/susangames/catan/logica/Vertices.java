@@ -72,4 +72,15 @@ public class Vertices {
 	public void posibleAsentamientoDeJugador (Jugadores j) {
 		puedeConstruirJugador[j.getColor().numeroColor()] = true;
 	}
+	
+	public Boolean[] getPosibleAsentamientoDeJugador () {
+		return puedeConstruirJugador;
+	}
+	
+	public Boolean getPosibleAsentamientoDeJugador (int i) {
+		if (i > 3) {
+			return false;
+		}
+		return puedeConstruirJugador[i];
+	}
 }
