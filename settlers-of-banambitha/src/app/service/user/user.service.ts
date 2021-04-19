@@ -1,7 +1,9 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, throwError } from 'rxjs';
-import { catchError, retry } from 'rxjs/operators';
+import { Router } from '@angular/router';
+import { Observable, of, throwError } from 'rxjs';
+import { catchError, retry, map } from 'rxjs/operators';
+
 
 @Injectable({
   providedIn: 'root'
@@ -16,6 +18,11 @@ export class UserService {
   private readonly baseUrl = "http://localhost:8080/usuario"
   private readonly addUrl = this.baseUrl + "/add"
   private readonly validae = this.baseUrl + "/validate"
+  private httpOptions = {
+    headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+    withCredentials: true,
+    observe: 'response' as 'response'
+  }
 
   //Atributos relacionados con el usuario
   private static username: String
@@ -65,13 +72,12 @@ export class UserService {
    * @param pass contraseña del usuario
    */
   public async register(name: String, mail: String, pass: String){
-    let myHeaders = new HttpHeaders().set('Content-Type','application/json');
     let msg = {
       nombre : name,
       email : mail,
       contrasenya : pass
     }
-    let response = await this.http.post<any>(this.baseUrl + "/add", JSON.stringify(msg), { 'headers': myHeaders }).toPromise()
+    let response = await this.http.post<any>(this.baseUrl + "/add", JSON.stringify(msg), this.httpOptions).toPromise()
     UserService.username = response["nombre"]
     UserService.apariencia = response["apariencia"]
     UserService.saldo = response["saldo"]
@@ -101,6 +107,11 @@ export class UserService {
     }
   }
 
+  /**
+   * Devuelve la promise de una petición que solicita la 
+   * búsqueda de un usuario
+   * @param name 
+   */
   public findUserObservable(name: String){
     return this.http.get(this.baseUrl + "/find/" + name)
   }
@@ -114,16 +125,54 @@ export class UserService {
    * @param pass 
    */
   public async validate(name: String, pass: String){
-    let myHeaders = new HttpHeaders().set('Content-Type','application/json');
     let msg = {
       "nombre" : name,
       "contrasenya" : pass
     }
-    let response = await this.http.post(this.baseUrl + "/validate", JSON.stringify(msg), { 'headers': myHeaders }).toPromise()
+    let response = await this.http.post(this.baseUrl + "/validate", JSON.stringify(msg), this.httpOptions).toPromise()
     UserService.apariencia = response["apariencia"]
     UserService.saldo = response["saldo"]
     UserService.mail = response["mail"]
     UserService.avatar = response["avatar"]
     UserService.validUser = true
+  }
+
+  /**
+   * Comprueba si el usuario tiene una sesión iniciada. Si no es el caso, 
+   * entonces lanza una excepción
+   */
+  public async checkSession(){
+    let response = await this.http.get(this.baseUrl + "/session", this.httpOptions).toPromise()
+    UserService.apariencia = response["apariencia"]
+    UserService.saldo = response["saldo"]
+    UserService.mail = response["mail"]
+    UserService.avatar = response["avatar"]
+    UserService.validUser = true
+  }
+
+  public checkSessionObservable(router: Router, urlLogin: boolean): Observable<boolean>{
+    console.log(router.url)
+    return this.http.get(this.baseUrl + "/session", this.httpOptions).pipe(
+      map(response => {
+        UserService.apariencia = response["apariencia"]
+        UserService.saldo = response["saldo"]
+        UserService.mail = response["mail"]
+        UserService.avatar = response["avatar"]
+        UserService.validUser = true
+        if ( urlLogin ){
+          router.navigate(["/home"])
+          return false
+        } else {
+          return true
+        }
+      }
+    ), catchError(() => {
+      if ( urlLogin ){
+        return of(true)
+      }else{
+        router.navigate(["/login"])
+        return of(false)
+      }
+    }))
   }
 }

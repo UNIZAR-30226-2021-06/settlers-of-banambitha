@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { AuthHomeGuard } from './guards/auth-home.guard';
+import { AuthLoginGuard } from './guards/auth-login.guard';
 import { HomeModule } from './home/home.module';
 import { MainHomeComponent } from './home/main-home/main-home.component';
 import { PlayComponent } from './home/play/play.component';
@@ -15,7 +17,9 @@ const routes: Routes = [
 
   {path:'',redirectTo:'login/signin', pathMatch: 'full' },
   {path:'login',redirectTo:'login/signin', pathMatch: 'full' },
+
   {path: 'login', component: MainLoginComponent, 
+   canActivate: [AuthLoginGuard],
    children: [
     {path: 'signin', component: SigninComponent },
     {path: 'register', component: RegisterComponent},
@@ -24,6 +28,7 @@ const routes: Routes = [
   },
 
   {path: 'home', component: MainHomeComponent,
+   canActivate: [AuthHomeGuard],
    children: [
     {path: 'play', component: PlayComponent },
     {path: 'profile', component: ProfileComponent},

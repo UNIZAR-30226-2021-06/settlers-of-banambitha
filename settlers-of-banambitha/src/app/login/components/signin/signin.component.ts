@@ -38,9 +38,20 @@ export class SigninComponent implements OnInit {
     Validators.pattern("^(?=.*[0-9]*)(?=.*[a-z]*)(?=.*[A-Z]*)(?=.*[-_]*).{5,32}$")
   ]
 
-  constructor(private userService: UserService, private router: Router) { }
+  constructor(private userService: UserService, private router: Router) {
+
+       }
 
   ngOnInit(): void {
+
+    ( async () => {
+        try{
+          await this.userService.checkSession()
+          console.log("navega")
+          this.router.navigate(["/home"])
+        } catch (e){}
+    })()
+
     this.usernameForm = new FormGroup({
       username: new FormControl('',
         this.usernameSyncValidators,

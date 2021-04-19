@@ -2,19 +2,21 @@ package es.susangames.catan.resource;
 
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import es.susangames.catan.model.Usuario;
 import es.susangames.catan.service.UsuarioService;
 
-@RestController
+@Controller
 @RequestMapping(value = "/usuario")
 public class UsuarioResourcee {
 	
@@ -51,9 +53,10 @@ public class UsuarioResourcee {
 	 *				}
 	****************************************************** */
 	@PostMapping("/add")
-	public ResponseEntity<Usuario> newUsuario(@RequestBody Usuario usuario) {
+	public ResponseEntity<Usuario> newUsuario(@RequestBody Usuario usuario, HttpSession session) {
 		
 		Usuario newUsuario = usuarioService.newUsuario(usuario);
+		session.setAttribute("user", newUsuario);
 		return new ResponseEntity<>(newUsuario, HttpStatus.CREATED);
 	}
 	
@@ -137,16 +140,28 @@ public class UsuarioResourcee {
 	 *			-On failure all fields are null
 	****************************************************** */
 	@PostMapping("/validate")
-	public ResponseEntity<Usuario> validateUsuario(@RequestBody Usuario usuario) {
+	public ResponseEntity<Usuario> validateUsuario(@RequestBody Usuario usuario, HttpSession session) {
 
 		boolean valid = usuarioService.validarUsuario(usuario);
 		
 		if(valid) {
 			Usuario valid_usuario = usuarioService.findUsuario(usuario.getNombre());
+			session.setAttribute("user", valid_usuario);
 			return new ResponseEntity<>(valid_usuario,HttpStatus.OK);
 		} else {
 			return new ResponseEntity<>(new Usuario(),HttpStatus.NOT_FOUND);
 		}
 	
 	}
+
+	@GetMapping("/session")
+	public ResponseEntity<Usuario> checkSession(HttpSession session){
+		Usuario user = (Usuario) session.getAttribute("user");
+		if (user != null ){
+			return new ResponseEntity<>(user,HttpStatus.OK);
+		}else{
+			return new ResponseEntity<>(new Usuario(),HttpStatus.NOT_FOUND);
+		}
+	}
+
 }
