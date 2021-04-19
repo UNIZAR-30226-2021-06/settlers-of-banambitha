@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ShopService } from 'src/app/service/shop/shop.service';
+import { UserService } from 'src/app/service/user/user.service';
 
 @Component({
   selector: 'app-board-skins',
@@ -7,21 +9,29 @@ import { Component, OnInit } from '@angular/core';
 })
 export class BoardSkinsComponent implements OnInit {
 
-  constructor() { }
+  constructor(private UserService: UserService, private ShopService: ShopService) { }
 
-  isActive1: boolean = false
-  isActive2: boolean = false
 
-  imageNames: { [src: string]: string} = {
-    'Hardware' : "hardware_shop_image",
-    'Espacial' : "espacial_shop_image",
-  }
+  public empty: boolean = false
+  public board_products: Array<Object> = []
 
-  getRandomInt() {
-    return Math.floor(Math.random() * 1000000);
+  buy(profile: String){
+    console.log("comprar " + profile)
   }
 
   ngOnInit(): void {
+    this.ShopService.ObtenerProductosDisponibles().subscribe( response => {
+      console.log("fin")
+      console.log(response)
+      console.log(response.body)
+      for ( var x in response.body){
+        if ( response.body[x]["tipo"]  == "APARIENCIA" && !response.body[x]["adquirido"]){ 
+          console.log(response.body[x])
+          this.board_products.push(response.body[x])
+        }
+      }
+      this.empty =  this.board_products.length == 0
+    })
   }
 
 }

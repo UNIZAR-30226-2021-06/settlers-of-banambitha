@@ -1,5 +1,5 @@
 <html>
-<mat-card [class.mat-elevation-z4]="!isActive1" [class.mat-elevation-z22]="isActive1" (mouseenter)='isActive1 = !isActive1' (mouseleave)='isActive1 = !isActive1'>
+<!-- <mat-card [class.mat-elevation-z4]="!isActive1" [class.mat-elevation-z22]="isActive1" (mouseenter)='isActive1 = !isActive1' (mouseleave)='isActive1 = !isActive1'>
     <mat-card-title>
         Hardware
     </mat-card-title>
@@ -25,6 +25,27 @@
     <mat-card-actions>
         <button mat-raised-button>Comprar ahora</button>
     </mat-card-actions>
-</mat-card>
+</mat-card> -->
+
+<div class="content">
+    <div fxLayout="row wrap" fxLayoutGap="16px grid">
+        <div fxFlex="25%" fxFlex.xs="100%" fxFlex.sm="33%" *ngFor="let product of board_products">
+            <mat-card class="mat-elevation-z4">
+                <mat-card-title>
+                    <mat-card-title>{{product["producto_id"]}}</mat-card-title>
+                </mat-card-title>
+                <mat-divider></mat-divider>
+                <img mat-card-image class="user-image" src='{{ "../../../../assets/images/shop/board/" + product.url}} '>
+                <mat-card-content>
+                    <img mat-card-image class="icon" src="../../../../assets/images/icons/gold_icon.png"> {{product["precio"]}}
+                </mat-card-content>
+                <mat-card-actions>
+                    <button mat-raised-button (click)="buy(name)">Comprar ahora</button>
+                </mat-card-actions>
+            </mat-card>
+        </div>
+        <H1 *ngIf="empty">No hay Productos nuevos para comprar!</H1>
+    </div>
+</div>
 
 </html>

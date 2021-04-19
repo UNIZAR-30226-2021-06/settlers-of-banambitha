@@ -13,7 +13,12 @@ export class AuthLoginGuard implements CanActivate {
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-      return this.userService.checkSessionObservable(this.router, true)
+      if ( UserService.logedUser() ){
+        this.router.navigate(["/home"])
+        return false
+      } else{
+        return this.userService.checkSession(this.router, true)
+      }
   }
   
 }

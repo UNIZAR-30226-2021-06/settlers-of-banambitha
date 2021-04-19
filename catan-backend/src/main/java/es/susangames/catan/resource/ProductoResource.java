@@ -65,6 +65,7 @@ public class ProductoResource {
 	 * 				[
      *					{
      *    					"producto_id"	: <producto>,
+	 * 						"url"			: <url>
      * 						"precio"		: <precio>,
      *   					"tipo"			: <tipo [APARIENCIA | AVATAR]>,
      *   					"adquirido"		: <[true | false]>

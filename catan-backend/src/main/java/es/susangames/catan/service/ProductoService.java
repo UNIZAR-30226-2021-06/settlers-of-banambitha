@@ -42,8 +42,8 @@ public class ProductoService {
 		List<Producto> productos = new ArrayList<Producto>();
 		
 		for(String producto : disponeRepo.getProdAdquiridos(usuarioId)) {
-			String [] params = producto.split(",", 3);
-			productos.add(new Producto(params[0], Integer.parseInt(params[1]), params[2]));
+			String [] params = producto.split(",", 4);
+			productos.add(new Producto(params[0], params[3], Integer.parseInt(params[1]), params[2]));
 		}
 		
 		return productos;
@@ -54,8 +54,8 @@ public class ProductoService {
 		List<ProdDisponible> productosDisponibles = new ArrayList<ProdDisponible>();
 		
 		for (String s : productoRepo.getProdDisp(usuarioId)) {
-			String[] params = s.split(",", 4);
-			productosDisponibles.add(new ProdDisponible(params[0],Integer.parseInt(params[1]),params[2],params[3].contentEquals("true")));
+			String[] params = s.split(",", 5);
+			productosDisponibles.add(new ProdDisponible(params[0], params[3], Integer.parseInt(params[1]),params[2],params[4].contentEquals("true")));
 		}
 
 		return productosDisponibles;

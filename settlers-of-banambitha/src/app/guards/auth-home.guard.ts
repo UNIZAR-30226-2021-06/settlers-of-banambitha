@@ -13,7 +13,11 @@ export class AuthHomeGuard implements CanActivate {
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-      return this.userService.checkSessionObservable(this.router, false)
+      if ( UserService.logedUser() ){
+        return true
+      }else{ 
+        return this.userService.checkSession(this.router, false)
+      }
   }
   
 }

@@ -44,14 +44,6 @@ export class SigninComponent implements OnInit {
 
   ngOnInit(): void {
 
-    ( async () => {
-        try{
-          await this.userService.checkSession()
-          console.log("navega")
-          this.router.navigate(["/home"])
-        } catch (e){}
-    })()
-
     this.usernameForm = new FormGroup({
       username: new FormControl('',
         this.usernameSyncValidators,

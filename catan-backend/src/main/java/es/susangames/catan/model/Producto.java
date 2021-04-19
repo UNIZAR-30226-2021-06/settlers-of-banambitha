@@ -16,6 +16,9 @@ public class Producto implements Serializable{
 	private String nombre;
 	
 	@Column(nullable = false, updatable = true)
+	private String url;
+
+	@Column(nullable = false, updatable = true)
 	private Integer precio;
 	
 	@Column(columnDefinition = "VARCHAR(10) CHECK (tipo IN ('AVATAR', 'APARIENCIA'))", nullable = false, updatable = true)
@@ -28,12 +31,20 @@ public class Producto implements Serializable{
 		return nombre;
 	}
 	
-	public Producto(String nombre, Integer precio, String tipo) {
+	public Producto(String nombre, String url, Integer precio, String tipo) {
+		this.url = url;
 		this.nombre = nombre;
 		this.precio = precio;
 		this.tipo = tipo;
 	}
 	
+	public String getUrl(){
+		return this.url;
+	}
+
+	public void setUrl( String url){
+		this.url = url;
+	}
 
 	public void setNombre(String nombre) {
 		this.nombre = nombre;

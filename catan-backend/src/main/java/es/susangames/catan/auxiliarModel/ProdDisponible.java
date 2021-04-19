@@ -3,12 +3,14 @@ package es.susangames.catan.auxiliarModel;
 public class ProdDisponible {
 	
 	private String producto_id;
+	private String url;
 	private Integer precio;
 	private String tipo;
 	private boolean adquirido;
 	
-	public ProdDisponible(String producto_id, Integer precio, String tipo, boolean adquirido) {
+	public ProdDisponible(String producto_id, String url, Integer precio, String tipo, boolean adquirido) {
 		this.producto_id = producto_id;
+		this.url = url;
 		this.precio = precio;
 		this.tipo = tipo;
 		this.adquirido = adquirido;
@@ -20,6 +22,14 @@ public class ProdDisponible {
 
 	public void setProducto_id(String producto_id) {
 		this.producto_id = producto_id;
+	}
+
+	public String getUrl(){
+		return this.url;
+	}
+
+	public void setUrl(String url){
+		this.url = url;
 	}
 
 	public Integer getPrecio() {
@@ -46,7 +56,4 @@ public class ProdDisponible {
 		this.adquirido = adquirido;
 	}
 	
-	
-	
-
 }

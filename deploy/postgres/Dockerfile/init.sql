@@ -158,11 +158,42 @@ CREATE TABLE public.producto (
     producto_id character varying(255) NOT NULL,
     precio integer NOT NULL,
     tipo character varying(10) NOT NULL,
+    url character varying(255) NOT NULL,
     CONSTRAINT producto_tipo_check CHECK (((tipo)::text = ANY ((ARRAY['AVATAR'::character varying, 'APARIENCIA'::character varying])::text[])))
 );
 
 
 ALTER TABLE public.producto OWNER TO postgres;
+
+--
+-- Name: spring_session; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.spring_session (
+    primary_id character(36) NOT NULL,
+    session_id character(36) NOT NULL,
+    creation_time bigint NOT NULL,
+    last_access_time bigint NOT NULL,
+    max_inactive_interval integer NOT NULL,
+    expiry_time bigint NOT NULL,
+    principal_name character varying(100)
+);
+
+
+ALTER TABLE public.spring_session OWNER TO postgres;
+
+--
+-- Name: spring_session_attributes; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.spring_session_attributes (
+    session_primary_id character(36) NOT NULL,
+    attribute_name character varying(200) NOT NULL,
+    attribute_bytes bytea NOT NULL
+);
+
+
+ALTER TABLE public.spring_session_attributes OWNER TO postgres;
 
 --
 -- Name: usuario; Type: TABLE; Schema: public; Owner: postgres
@@ -219,9 +250,46 @@ COPY public.peticion_amistad (usuario1_id, usuario2_id) FROM stdin;
 -- Data for Name: producto; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.producto (producto_id, precio, tipo) FROM stdin;
-Clasica	10	APARIENCIA
-Original	10	AVATAR
+COPY public.producto (producto_id, precio, tipo, url) FROM stdin;
+\.
+
+INSERT INTO public.producto VALUES('Clasica', 0, 'APARIENCIA', 'apariencia_clasica.png');
+INSERT INTO public.producto VALUES('Espacial', 100, 'APARIENCIA', 'espacial_shop_image.jpg');
+INSERT INTO public.producto VALUES('Hardware', 100, 'APARIENCIA', 'hardware_shop_image.jpg');
+
+INSERT INTO public.producto VALUES('Original', 0, 'AVATAR', 'user_profile_image_original.png');
+INSERT INTO public.producto VALUES('Dave', 1, 'AVATAR', 'user_profile_image_0.png');
+INSERT INTO public.producto VALUES('Sr bigotes', 2, 'AVATAR', 'user_profile_image_1.png');
+INSERT INTO public.producto VALUES('Científica', 3, 'AVATAR', 'user_profile_image_2.png');
+INSERT INTO public.producto VALUES('Bruno', 4, 'AVATAR', 'user_profile_image_3.png');
+INSERT INTO public.producto VALUES('Agente Secreto', 5, 'AVATAR', 'user_profile_image_4.png');
+INSERT INTO public.producto VALUES('Desarrollador Dae', 6, 'AVATAR', 'user_profile_image_5.png');
+INSERT INTO public.producto VALUES('Developer', 7, 'AVATAR', 'user_profile_image_6.png');
+INSERT INTO public.producto VALUES('Ingeniera', 8, 'AVATAR', 'user_profile_image_7.png');
+INSERT INTO public.producto VALUES('Azafata', 9, 'AVATAR', 'user_profile_image_8.png');
+INSERT INTO public.producto VALUES('Alfred', 10, 'AVATAR', 'user_profile_image_9.png');
+INSERT INTO public.producto VALUES('Profesora', 11, 'AVATAR', 'user_profile_image_10.png');
+INSERT INTO public.producto VALUES('Señora formal', 12, 'AVATAR', 'user_profile_image_11.png');
+INSERT INTO public.producto VALUES('Astronauta', 13, 'AVATAR', 'user_profile_image_12.png');
+INSERT INTO public.producto VALUES('Anciano feliz', 14, 'AVATAR', 'user_profile_image_13.png');
+INSERT INTO public.producto VALUES('Chico tranquilo', 15, 'AVATAR', 'user_profile_image_14.png');
+INSERT INTO public.producto VALUES('Barbero', 16, 'AVATAR', 'user_profile_image_15.png');
+INSERT INTO public.producto VALUES('Sr desonfiado', 17, 'AVATAR', 'user_profile_image_16.png');
+
+
+--
+-- Data for Name: spring_session; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.spring_session (primary_id, session_id, creation_time, last_access_time, max_inactive_interval, expiry_time, principal_name) FROM stdin;
+\.
+
+
+--
+-- Data for Name: spring_session_attributes; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.spring_session_attributes (session_primary_id, attribute_name, attribute_bytes) FROM stdin;
 \.
 
 
@@ -274,6 +342,22 @@ ALTER TABLE ONLY public.producto
 
 
 --
+-- Name: spring_session_attributes spring_session_attributes_pk; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.spring_session_attributes
+    ADD CONSTRAINT spring_session_attributes_pk PRIMARY KEY (session_primary_id, attribute_name);
+
+
+--
+-- Name: spring_session spring_session_pk; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.spring_session
+    ADD CONSTRAINT spring_session_pk PRIMARY KEY (primary_id);
+
+
+--
 -- Name: usuario uk_5171l57faosmj8myawaucatdw; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -287,6 +371,27 @@ ALTER TABLE ONLY public.usuario
 
 ALTER TABLE ONLY public.usuario
     ADD CONSTRAINT usuario_pkey PRIMARY KEY (usuario_id);
+
+
+--
+-- Name: spring_session_ix1; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE UNIQUE INDEX spring_session_ix1 ON public.spring_session USING btree (session_id);
+
+
+--
+-- Name: spring_session_ix2; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX spring_session_ix2 ON public.spring_session USING btree (expiry_time);
+
+
+--
+-- Name: spring_session_ix3; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX spring_session_ix3 ON public.spring_session USING btree (principal_name);
 
 
 --
@@ -359,6 +464,14 @@ ALTER TABLE ONLY public.dispone
 
 ALTER TABLE ONLY public.amigo
     ADD CONSTRAINT fkwyeatyjd7b03k5q2pkcr4ust FOREIGN KEY (usuario2_id) REFERENCES public.usuario(usuario_id);
+
+
+--
+-- Name: spring_session_attributes spring_session_attributes_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.spring_session_attributes
+    ADD CONSTRAINT spring_session_attributes_fk FOREIGN KEY (session_primary_id) REFERENCES public.spring_session(primary_id) ON DELETE CASCADE;
 
 
 --

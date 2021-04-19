@@ -18,7 +18,7 @@ export class UserService {
   private readonly baseUrl = "http://localhost:8080/usuario"
   private readonly addUrl = this.baseUrl + "/add"
   private readonly validae = this.baseUrl + "/validate"
-  private httpOptions = {
+  private readonly httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
     withCredentials: true,
     observe: 'response' as 'response'
@@ -62,6 +62,14 @@ export class UserService {
 
   public static logedUser(): Boolean {
     return this.validUser
+  }
+
+  public static setSaldo(nuevoSaldo: Number){
+    UserService.saldo = nuevoSaldo
+  }
+
+  public static setAvatar(avatar_url: String){
+    UserService.avatar = avatar_url
   }
 
   /**
@@ -137,21 +145,19 @@ export class UserService {
     UserService.validUser = true
   }
 
-  /**
-   * Comprueba si el usuario tiene una sesión iniciada. Si no es el caso, 
-   * entonces lanza una excepción
-   */
-  public async checkSession(){
-    let response = await this.http.get(this.baseUrl + "/session", this.httpOptions).toPromise()
-    UserService.apariencia = response["apariencia"]
-    UserService.saldo = response["saldo"]
-    UserService.mail = response["mail"]
-    UserService.avatar = response["avatar"]
-    UserService.validUser = true
-  }
 
-  public checkSessionObservable(router: Router, urlLogin: boolean): Observable<boolean>{
-    console.log(router.url)
+  /**
+   * Devuelve un valor booleano observable cuyo valor es: 
+   *  - true si urlLogin y el usuario no ha iniciado sesión o si !urlLogin 
+   *    pero el usuario ya ha iniciado sesión.  
+   *  - False en cualquier otro caso
+   * El valor booleano determina si se puede navegar a la ruta solicitada
+   * Función auxiliar para los guards del router
+   * @param router 
+   * @param urlLogin True si la url solicitada es login o hijas, false en caso 
+   *                 contrario
+   */
+  public checkSession(router: Router, urlLogin: boolean): Observable<boolean>{
     return this.http.get(this.baseUrl + "/session", this.httpOptions).pipe(
       map(response => {
         UserService.apariencia = response["apariencia"]
@@ -167,6 +173,7 @@ export class UserService {
         }
       }
     ), catchError(() => {
+      UserService.validUser = false
       if ( urlLogin ){
         return of(true)
       }else{
