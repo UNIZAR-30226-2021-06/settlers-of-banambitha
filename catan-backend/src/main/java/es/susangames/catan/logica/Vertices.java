@@ -24,6 +24,10 @@ public class Vertices {
 		this.puedeConstruirJugador = new Boolean[] {false, false, false, false};
 	}
 	
+	public Integer getIdentificador () {
+		return this.id;
+	}
+	
 	public Coordenadas getCoordenadas () {
 		return this.coord;
 	}

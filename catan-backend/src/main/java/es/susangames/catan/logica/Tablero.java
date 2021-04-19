@@ -4,8 +4,10 @@ package es.susangames.catan.logica;
 import java.util.Map;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -42,6 +44,11 @@ public class Tablero {
 	Tablero (Integer num_jugadores) {
 		this.num_jugadores = num_jugadores;
 		j = new Jugadores[num_jugadores];
+		
+		j[0] = new Jugadores(ColorJugador.Azul);
+		j[1] = new Jugadores(ColorJugador.Rojo);
+		j[2] = new Jugadores(ColorJugador.Amarillo);
+		j[3] = new Jugadores(ColorJugador.Verde);
 		
 		turno = 0; dados = 0;
 		
@@ -100,18 +107,46 @@ public class Tablero {
 		// Total de 9 puertos.
 		// 5 de ellos son espec�ficos.
 		// pueden tener puertos los hexagonos: 0(3),1(2),2(3),3(2),6(2),7(3),11(3),12(2),15(3),16(2),17(2),18(3).
+		int i = 0;
 		Collection<Aristas> aristasExteriores = Hexagonos.getAristasExteriores();
-		Object a[] = aristasExteriores.toArray();
-		Aristas aux;
-		for (int i = 0; i < a.length; ++i) {
-			aux = (Aristas) a[i];
-			aux.setPuerto(i);
+		List<Aristas> aristasNoPuertos = new ArrayList<Aristas>();
+		for (Aristas a : aristasExteriores) {
+			if (this.vector_puertos[i] == -1) {
+				aristasNoPuertos.add(a);
+			} else {
+				a.setPuerto(this.vector_puertos[i]);
+			}
+			i++;
 		}
 		
+		for (Aristas a : aristasNoPuertos) {
+			Hexagonos.eliminarPuerto(a);
+		}
 	}
 	
-	public void moverLadron () {
+	public Hexagonos getPosicionLadron () {
+		Hexagonos hexagonoLadron = null;
+		for (Hexagonos h : hexagonos.values()) {
+			if (h.tieneLadron()) {
+				hexagonoLadron = h;
+				break;
+			}
+		}
+		return hexagonoLadron;
+	}
+	
+	public void moverLadron (Integer nuevaPosicion) {
+		Hexagonos posActualLadron = getPosicionLadron();
 		
+		Hexagonos nuevaPosLadron = hexagonos.get(nuevaPosicion);
+		// Si el hexagono al que se puede mover existe
+		if (nuevaPosLadron != null) {
+			// Comprobamos que los dos hexagonos son adyacentes.
+			if (posActualLadron.sonAdyacentes(nuevaPosLadron)) {
+				posActualLadron.moverLadron();
+				nuevaPosLadron.colocarLadron();
+			}
+		}
 	} 
 	
 	public void producir (Integer valor) {	
@@ -130,8 +165,8 @@ public class Tablero {
 			System.out.println("Hexagono " + i + ": (" + hexagonos.get(i).getCentro().getX() + ", " + 
 					hexagonos.get(i).getCentro().getY() + ")");
 			for (int j = 0; j < v.length; ++j) {
-				System.out.println("\t(" + v[j].getCoordenadas().getX() + ", " + v[j].getCoordenadas().getY() + ")");
-				System.out.println("\t[(" + a[j].getCoordenadasAristas().getX() + ", " + a[j].getCoordenadasAristas().getY() + 
+				//System.out.println("\tid : " + v[j].getIdentificador() +"\t(" + v[j].getCoordenadas().getX() + ", " + v[j].getCoordenadas().getY() + ")");
+				System.out.println("\tid : " + a[j].getIdentificador() + "\t[(" + a[j].getCoordenadasAristas().getX() + ", " + a[j].getCoordenadasAristas().getY() + 
 						"),( " + a[j].getCoordenadasAristas().getFin_x() + ", " + a[j].getCoordenadasAristas().getFin_y() + ")]");
 			}
 		}
@@ -200,11 +235,11 @@ public class Tablero {
 		
 	}
 	
-	public JSONObject infoHexagonosJSON () {
-		String aux = "\"hexagono\":{";
+	public JSONObject infoHexagonosJSON () throws JSONException {
+		String aux = "{";
 		String auxTipo = "\"tipo\": [";
 		String auxValor = "\"valor\": [";
-		String auxLadron = "\"ladron\":";
+		String auxLadron = "";
 		Integer i = 0;
 		Iterator<Hexagonos> it = hexagonos.values().iterator();
 		
@@ -222,11 +257,11 @@ public class Tablero {
 				auxLadron = i.toString();
 			i++;
 		}
-		aux += auxTipo + "," + auxValor + "," + auxLadron;
+		aux += auxTipo + "]," + auxValor + "]," + "\"ladron\":" + auxLadron + "}";
 		return new JSONObject(aux);
 	}
 	
-	public JSONObject returnMessage () {
+	public JSONObject returnMessage () throws JSONException {
 		JSONObject respuesta = new JSONObject ();
 		
 		respuesta.put("Message", "");
@@ -274,7 +309,7 @@ public class Tablero {
 		return respuesta;
 	}
 	
-	public JSONObject JSONmessage ( JSONObject jsObject ) {
+	public JSONObject JSONmessage ( JSONObject jsObject ) throws JSONException {
 		
 		Integer id_jugador = jsObject.getInt("player");
 		Jugadores jug = this.j[id_jugador - 1];
@@ -312,7 +347,7 @@ public class Tablero {
 			break;
 		case "mover ladron":
 			int id_hexagono = move.getInt("param");
-			moverLadron();
+			moverLadron(id_hexagono);
 			break;
 		case "finalizar turno":
 			this.dados = generarNumero();

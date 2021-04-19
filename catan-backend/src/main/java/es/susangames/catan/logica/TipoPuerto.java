@@ -18,4 +18,24 @@ public enum TipoPuerto {
 		return this.identificador == 1 || this.identificador == 2 || this.identificador == 3
 				|| this.identificador == 4 || this.identificador == 5;
 	}
+	
+	public Boolean esPuertoMadera () {
+		return this.identificador == 1;
+	}
+	
+	public Boolean esPuertoLana () {
+		return this.identificador == 2;
+	}
+	
+	public Boolean esPuertoCereales () {
+		return this.identificador == 3;
+	}
+	
+	public Boolean esPuertoArcilla () {
+		return this.identificador == 4;
+	}
+	
+	public Boolean esPuertoMineral () {
+		return this.identificador == 5;
+	}
 }

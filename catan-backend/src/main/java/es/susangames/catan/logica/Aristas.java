@@ -40,6 +40,10 @@ public class Aristas {
 		return this.coord;
 	}
 	
+	public TipoPuerto getTipoPuerto () {
+		return this.puerto;
+	}
+	
 	public Boolean tieneCamino () {
 		return this.tieneCamino;
 	}

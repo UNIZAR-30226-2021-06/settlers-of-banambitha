@@ -1,15 +1,14 @@
 package es.susangames.catan.logica;
 
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class Hexagonos {
@@ -179,6 +178,10 @@ public class Hexagonos {
 		return this.tieneLadron;
 	}
 	
+	public void moverLadron () {
+		this.tieneLadron = false;
+	}
+	
 	/*
 	 * Asigna el valor del booleano tieneLadron a Verdadero. 
 	 * */
@@ -216,6 +219,10 @@ public class Hexagonos {
 	
 	public static Collection<Aristas> getAristasExteriores () {
 		return puertos.values();
+	}
+	
+	public static void eliminarPuerto (Aristas p) {
+		puertos.remove(p.getCoordenadasAristas());
 	}
 	
 	/*
@@ -396,7 +403,7 @@ public class Hexagonos {
 		this.tipo_terreno = tipo_terreno;
 	}
 
-	public static JSONObject listAsentamientoToJSON () {
+	public static JSONObject listAsentamientoToJSON () throws JSONException {
 		Iterator<Vertices> it = vertices.values().iterator();
 		String aux = "\"asentamiento\" : [" + "\"" + it.next().getAsentamientoJugador() +"\"";
 		while (it.hasNext()) {
@@ -408,7 +415,7 @@ public class Hexagonos {
 		return new JSONObject(aux);
 	}
 	
-	public static JSONObject posibleAsentamientoToJSON () {
+	public static JSONObject posibleAsentamientoToJSON () throws JSONException {
 		Iterator<Vertices> it = vertices.values().iterator();
 		Vertices vAux = it.next();
 		String aux = "\"posibles_asentamiento\" : [{" + vAux.getPosibleAsentamientoDeJugador(0) + 
@@ -426,7 +433,7 @@ public class Hexagonos {
 		return new JSONObject(aux);
 	}
 	
-	public static JSONObject listCaminoToJSON () {
+	public static JSONObject listCaminoToJSON () throws JSONException {
 		Iterator<Aristas> it = aristas.values().iterator();
 		String aux = "\"camino\" : [" + "\"" + it.next().getCaminoJugador() +"\"";
 		while (it.hasNext()) {
@@ -438,7 +445,7 @@ public class Hexagonos {
 		return new JSONObject(aux);
 	}
 	
-	public static JSONObject posibleCaminoToJSON () {
+	public static JSONObject posibleCaminoToJSON () throws JSONException {
 		Iterator<Aristas> it = aristas.values().iterator();
 		Aristas aAux = it.next();
 		String aux = "\"posibles_caminos\" : [{" + aAux.getPosibleCaminoDeJugador(0) + 
@@ -456,17 +463,36 @@ public class Hexagonos {
 		return new JSONObject(aux);
 	}
 	
-	public static JSONObject puertosToJSON () {
-		String aux = "\"puertos\" : [";
-		Iterator<Aristas> it = aristas.values().iterator();
-		Aristas aAux = it.next();
-		aux += aAux.getIdentificador().toString();
+	public static JSONObject puertosToJSON () throws JSONException {
+		JSONObject jsObj = new JSONObject();
+		JSONArray puertosBasicos = new JSONArray();
+		Iterator<Aristas> it = puertos.values().iterator();
+		Aristas aAux;
+		Integer puertoMadera, puertoLana, puertoArcilla, puertoCereales, puertoMineral;
+		puertoMadera = puertoLana = puertoArcilla = puertoCereales = puertoMineral = -1;
 		while (it.hasNext()) {
 			aAux = it.next();
-			aux += "," + aAux.getIdentificador().toString();
+			if (aAux.getTipoPuerto().esBasico())
+				puertosBasicos.put(aAux.getIdentificador());
+			else if (aAux.getTipoPuerto().esPuertoMadera())
+				puertoMadera = aAux.getIdentificador();
+			else if (aAux.getTipoPuerto().esPuertoLana())
+				puertoLana = aAux.getIdentificador();
+			else if (aAux.getTipoPuerto().esPuertoArcilla())
+				puertoArcilla = aAux.getIdentificador();
+			else if (aAux.getTipoPuerto().esPuertoCereales())
+				puertoCereales = aAux.getIdentificador();
+			else if (aAux.getTipoPuerto().esPuertoMineral())
+				puertoMineral = aAux.getIdentificador();
 		}
-		aux += "]";
-		return new JSONObject (aux);
+		
+		jsObj.put("puertosBasicos", puertosBasicos);
+		jsObj.put("puertoMadera", puertoMadera);
+		jsObj.put("puertoLana", puertoLana);
+		jsObj.put("puertoCereales", puertoCereales);
+		jsObj.put("puertoArcilla", puertoArcilla);		
+		jsObj.put("puertoMineral", puertoMineral);
+		return jsObj;
 	}
 	
 	public static Vertices getVerticePorId (int id) {

@@ -1,11 +1,10 @@
 package es.susangames.catan.logica;
 
-import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class Jugadores {
 	private ColorJugador color;
-	private Tablero tablero;
 	
 	private Integer puntosVictoria;
 	
@@ -36,9 +35,8 @@ public class Jugadores {
 	private int numCiudadesConstruidos;
 	private int numCaminosConstruidos;
 	
-	public Jugadores (ColorJugador color, Tablero tablero) {
+	public Jugadores (ColorJugador color) {
 		this.color = color;
-		this.tablero = tablero;
 		this.puntosVictoria = 0;
 		this.madera = 0; this.lana = 0; this.cereales = 0; this.arcilla = 0; this.mineral = 0;
 		
@@ -218,12 +216,12 @@ public class Jugadores {
 		return true;
 	}
 	
-	public JSONObject recursosJugadorToJSON () {
+	public JSONObject recursosJugadorToJSON () throws JSONException {
 		return new JSONObject ("\"Player_" + this.color.numeroColor() + 1 + "\": [" + this.madera + "," + 
 				this.lana + "," + this.cereales + "," + this.arcilla + "," + this.mineral + "]");
 	}
 	
-	public JSONObject cartasJugadorToJSON () {
+	public JSONObject cartasJugadorToJSON () throws JSONException {
 		Integer numGranEjecitoCaballeria = 1;
 		if (this.granEjecitoCaballeria) numGranEjecitoCaballeria = 0;
 		Integer numGranRutaComercial = 1;
