@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { GameplayComponent } from './game/gameplay/gameplay.component';
 import { AuthHomeGuard } from './guards/auth-home.guard';
 import { AuthLoginGuard } from './guards/auth-login.guard';
 import { HomeModule } from './home/home.module';
@@ -33,9 +34,11 @@ const routes: Routes = [
     {path: 'play', component: PlayComponent },
     {path: 'profile', component: ProfileComponent},
     {path: 'rules', component: RulesComponent},
-    {path: 'shop', component: ShopComponent}
+    {path: 'shop', component: ShopComponent},
     ]
-   }
+   },
+
+   {path: 'board', component: GameplayComponent}
 
 ];
 

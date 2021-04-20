@@ -1,0 +1,22 @@
+table {
+    width: 100%;
+    border-radius: 12px;
+    overflow:hidden !important;
+    background-color: #965d62;
+}
+  
+.mat-cell {
+    color: white;
+    font-size: 18px;
+    font-family:fantasy;
+    font-style: bold;
+    text-align: center;
+}
+
+.mat-header-cell {
+    color: white;
+    font-size: 20px;
+    font-family: fantasy;
+    font-weight: bold;
+    text-align: center;
+}

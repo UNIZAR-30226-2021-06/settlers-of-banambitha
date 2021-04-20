@@ -1,4 +1,5 @@
 import { Component, NgModule, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home-play',
@@ -9,9 +10,12 @@ import { Component, NgModule, OnInit } from '@angular/core';
 
 export class PlayComponent implements OnInit {
 
-  constructor() { }
+  constructor(private router:Router) { }
 
   ngOnInit(): void {
   }
 
+  goGame() {
+    this.router.navigate(['/board'])
+  }
 }
