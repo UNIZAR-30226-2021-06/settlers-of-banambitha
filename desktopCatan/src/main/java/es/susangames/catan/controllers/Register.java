@@ -39,7 +39,7 @@ public class Register {
              wrongRegister.setText("Rellene los campos");
         }
     	else {
-             wrongRegister.setText("Nombre o Nombre o Contraseña incorrectos!");
+             wrongRegister.setText("Nombre o Contraseña incorrectos!");
          }
 
     }

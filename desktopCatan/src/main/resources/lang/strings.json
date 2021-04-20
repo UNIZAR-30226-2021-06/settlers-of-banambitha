@@ -39,6 +39,42 @@
         "esp": "Figuras y recursos"
     },
 
+    "instructions_development": {
+        "eng": "Development cards",
+        "esp": "Cartas de desarrollo"
+    },
+
+    "instructions_development_paragraph1": {
+        "eng": "Available soon",
+        "esp": "Si un jugador juega en su turno la carta de desarrollo “caballero” (la puede jugar también antes de tirar los dados), debe mover inmediatamente el ladrón.El jugador que ha jugado la carta de caballero tiene que tomar el ladrón y moverlo a otro terreno a su elección."
+    },
+
+    "instructions_development_paragraph2": {
+        "eng": "Available soon",
+        "esp": "Después, puede robar 1 carta de materia prima (y quedársela) al jugadorque tenga algún poblado o ciudad adyacente a ese terreno. Si hay dos o más jugadores que hayan construido en ese terreno, entonces puede elegir a quién le quiere robar."
+    },
+
+    "instructions_development_paragraph3": {
+        "eng": "Available soon",
+        "esp": "Las cartas de progreso son uno de los tipos de las cartas de desarrollo. Durante su turno, un jugador sólo puede jugar una carta de desarrollo. De cada carta de progreso hay dos copias:"
+    },
+
+    "instructions_development_paragraph4": {
+        "eng": "Available soon",
+        "esp": "Construcción de carreteras: el jugador que juega esta carta puede, sin pagarninguna materia prima, construir 2 nuevas carreteras en el tablero. Para ellose tienen en cuenta las reglas habituales de construcción de carreteras."
+    },
+
+    "instructions_development_paragraph5": {
+        "eng": "Available soon",
+        "esp": "Descubrimiento: el jugador que juega esta carta puede tomar dos cartas demateria prima de las pilas de la reserva. Si el jugador aún no ha resuelto sufase de construcción, puede usar estas cartas de materia prima para construir."
+    },
+
+    "instructions_development_paragraph6": {
+        "eng": "Available soon",
+        "esp": "Monopolio: el jugador que juega esta carta elige una materia prima. Todoslos demás jugadores le tienen que entregar las cartas de materia prima de esetipo que tengan. Si algún jugador no tiene cartas de esa materia prima, notiene que entregar nada."
+    },
+
+
     "instructions_basics_info_paragraph1": {
         "eng": "Available soon",
         "esp": "El juego Colonos de Catán se trata de un juego de mesa por turnos para 3 o 4 jugadores. El objetivo de este juego es reunir recursos para poder construir asentamientos, carreteras y cartas de desarrollo y con esta ganar punto de victoria. El primero en llegar a 10 puntos de victoria habrá ganado la partida. El tablero se encuentra dividido en 19 hexágonos de terreno y de 6 marcos de mar. Cada uno        de los hexágonos de terreno tiene asociados un bioma, estos son: Bosque, Pasto, Sembrado,        Cerro, Montaña, Desierto. El número de hexágonos de terreno por cada bioma varía según        el bioma, el Bosque, Prado y Sembrado tienen 4 hexágonos, el Cerro y la Montaña tienen 3 y el Desierto 1. El bioma marca cual va a ser el recurso que se va a producir en esa zona:"
@@ -159,6 +195,26 @@
     "settings": {
         "eng": "Settings",
         "esp": "Ajustes"
+    },
+
+    "new_mail": {
+        "eng": "Change your email",
+        "esp": "Cambie su correo"
+    },
+
+    "accept": {
+        "eng": "Accept",
+        "esp": "Aceptar"
+    },
+
+    "new_psw": {
+        "eng": "Change your password",
+        "esp": "Cambie su contraseña"
+    },
+
+    "set_icon": {
+        "eng": "Use this icon",
+        "esp": "Usar este icono"
     }
 
     

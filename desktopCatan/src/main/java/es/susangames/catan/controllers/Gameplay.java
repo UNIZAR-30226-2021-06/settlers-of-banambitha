@@ -20,7 +20,7 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.shape.Circle;
 import javafx.scene.paint.Color;
 import javafx.scene.input.MouseEvent;
-
+import javafx.scene.control.Spinner;
 import javafx.event.EventHandler;
 import com.jfoenix.controls.JFXTextArea;
 import javafx.scene.control.TextField;
@@ -37,6 +37,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import java.io.IOException;
+
+
 
 
 
@@ -426,7 +428,7 @@ public class Gameplay {
 
     private void inTradePopUp() {
         AnchorPane anchorPane = new AnchorPane();
-        anchorPane.setPrefSize(500, 650);
+        anchorPane.setPrefSize(400, 650);
         anchorPane.setStyle("-fx-background-color:  #965d62; -fx-background-radius: 12px" );
         popupInternalTrade = new Popup();
         popupInternalTrade.getContent().add(anchorPane);
@@ -435,8 +437,8 @@ public class Gameplay {
         // Titulo
         Text title = new Text(10, 50, (LangService.getMapping("internal_trade")));
         title.setFont(new Font(40));
-        title.setLayoutX(anchorPane.getLayoutX() + 55 );
-        title.setLayoutY(anchorPane.getLayoutY() + 50);
+        title.setLayoutX(anchorPane.getLayoutX() + 10 );
+        title.setLayoutY(anchorPane.getLayoutY() + 30);
         title.setFill(Color.WHITE);
         anchorPane.getChildren().add(title);
 
@@ -492,35 +494,15 @@ public class Gameplay {
 
 
 
-        // Slider cantidad material ofrecido
-        Slider sliderGive = new Slider(0, 250, 1);  
-        sliderGive.setMin(1);
-        sliderGive.setBlockIncrement(1);
-        sliderGive.setMajorTickUnit(1);
-        sliderGive.setMinorTickCount(0);        
-        sliderGive.setLayoutX(anchorPane.getLayoutX() + 270 );
-        sliderGive.setLayoutY(anchorPane.getLayoutY() + 290);
+         // Spinner cantidad material ofrecido
+         Spinner<Integer> spinnerGive = new Spinner(1, 250, 1);
+         spinnerGive.setStyle("-fx-background-radius: 12px;" );
+         spinnerGive.setPrefSize(75, 25);
+         spinnerGive.setLayoutX(anchorPane.getLayoutX() + 270 );
+         spinnerGive.setLayoutY(anchorPane.getLayoutY() + 290);
+         anchorPane.getChildren().add(spinnerGive);
+ 
         
-        // Etiqueta cantidad representada en slider material ofrecido
-        Label offerAmmount = new Label(
-                            Integer.toString((int) Math.round(sliderGive.getValue())));
-        offerAmmount.setFont(new Font(20));
-        offerAmmount.setTextFill(Color.WHITE);
-        offerAmmount.setLayoutX(anchorPane.getLayoutX() + 420 );
-        offerAmmount.setLayoutY(anchorPane.getLayoutY() + 287);
-
-        // Obtener valor slider
-        sliderGive.valueProperty().addListener(new ChangeListener<Number>() {
-            public void changed(ObservableValue<? extends Number> ov,
-                Number old_val, Number new_val) {
-                    offerAmmount.setText(String.format("%d", new_val.intValue()));
-                    offerAmountInt = new_val.intValue();
-            }
-        });
-
-        anchorPane.getChildren().add(sliderGive);
-        anchorPane.getChildren().add(offerAmmount);
-
 
         // Selecciona un material para tradeo (recibir)
         Text treceiveMaterial = new Text(10, 50, "Material solicitado");
@@ -553,40 +535,21 @@ public class Gameplay {
          anchorPane.getChildren().add(treceiveAmmount);
  
  
- 
-         // Slider cantidad material ofrecido
-         Slider sliderReceive = new Slider(0, 250, 1);  
-         sliderReceive.setMin(1);
-         sliderReceive.setBlockIncrement(1);
-         sliderReceive.setMajorTickUnit(1);
-         sliderReceive.setMinorTickCount(0);        
-         sliderReceive.setLayoutX(anchorPane.getLayoutX() + 270 );
-         sliderReceive.setLayoutY(anchorPane.getLayoutY() + 453);
-         
-         // Etiqueta cantidad representada en slider material RECIBIDO
-         Label receiveAmmount = new Label(
-                             Integer.toString((int) Math.round(sliderReceive.getValue())));
-         receiveAmmount.setFont(new Font(20));
-         receiveAmmount.setTextFill(Color.WHITE);
-         receiveAmmount.setLayoutX(anchorPane.getLayoutX() + 420 );
-         receiveAmmount.setLayoutY(anchorPane.getLayoutY() + 450);
- 
-         // Obtener valor slider
-         sliderReceive.valueProperty().addListener(new ChangeListener<Number>() {
-             public void changed(ObservableValue<? extends Number> ov,
-                 Number old_val, Number new_val) {
-                    receiveAmmount.setText(String.format("%d", new_val.intValue()));
-                    receiveAmountInt = new_val.intValue();
-             }
-         });
- 
-         anchorPane.getChildren().add(sliderReceive);
-         anchorPane.getChildren().add(receiveAmmount);
+        // Spinner cantidad material solicitado
+        Spinner<Integer> spinnerReceive = new Spinner(1, 250, 1);
+        spinnerReceive.setStyle("-fx-background-radius: 12px;" );
+        spinnerReceive.setPrefSize(75, 25);
+        spinnerReceive.setLayoutX(anchorPane.getLayoutX() + 270 );
+        spinnerReceive.setLayoutY(anchorPane.getLayoutY() + 453);
+        anchorPane.getChildren().add(spinnerReceive);
+   
+        
+
 
          // Boton enviar solicitud tradeo
         sendTrade = new Button();
         sendTrade.setPrefSize(180,90);
-        sendTrade.setLayoutX(anchorPane.getLayoutX() + 160);
+        sendTrade.setLayoutX(anchorPane.getLayoutX() + 100);
         sendTrade.setLayoutY(anchorPane.getLayoutY() + 520);
         sendTrade.setStyle("-fx-background-color: #c7956d; -fx-background-radius: 12px");
         sendTrade.setText("Aceptar");
@@ -597,6 +560,8 @@ public class Gameplay {
 
         // TODO: Añadir accion cuando se hace click sobre boton compra
         sendTrade.setOnAction((ActionEvent event) -> {
+            System.out.println(spinnerGive.getValue().toString());
+            System.out.println(spinnerReceive.getValue().toString());
             popupInternalTrade.hide();
         });
 
@@ -619,7 +584,7 @@ public class Gameplay {
 
     private void externalTradePopUp() {
         AnchorPane anchorPane = new AnchorPane();
-        anchorPane.setPrefSize(500, 500);
+        anchorPane.setPrefSize(500, 400);
         anchorPane.setStyle("-fx-background-color:  #965d62; -fx-background-radius: 12px" );
         popupExternalTrade = new Popup();
         popupExternalTrade.getContent().add(anchorPane);
@@ -702,7 +667,7 @@ public class Gameplay {
         sendTradeExternal = new Button();
         sendTradeExternal.setPrefSize(180,90);
         sendTradeExternal.setLayoutX(anchorPane.getLayoutX() + 160);
-        sendTradeExternal.setLayoutY(anchorPane.getLayoutY() + 320);
+        sendTradeExternal.setLayoutY(anchorPane.getLayoutY() + 300);
         sendTradeExternal.setStyle("-fx-background-color: #c7956d; -fx-background-radius: 12px");
         sendTradeExternal.setText("Aceptar");
         DropShadow shadow = new DropShadow();

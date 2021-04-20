@@ -223,7 +223,7 @@ public class MainMenu {
             loadScene("/view/instructions.fxml", btnInst);
         });
 
-        loadScene("/view/play.fxml", btnPlay);
+        loadScene("/view/shop.fxml", btnPlay);
     }
 
 }

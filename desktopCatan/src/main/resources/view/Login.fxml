@@ -29,9 +29,9 @@
                      </font>
                   </Text>
                   <PasswordField fx:id="password" layoutX="128.0" layoutY="360.0" prefHeight="54.0" prefWidth="507.0" promptText="Enter your password*" style="-fx-background-radius: 12;" AnchorPane.leftAnchor="128.0" AnchorPane.rightAnchor="124.0" />
-                  <Label fx:id="wrongLogIn" layoutX="260.0" layoutY="163.0" prefHeight="36.0" prefWidth="236.0" textAlignment="CENTER">
+                  <Label fx:id="wrongLogIn" layoutX="191.0" layoutY="163.0" prefHeight="36.0" prefWidth="515.0" textAlignment="CENTER" textFill="WHITE">
                      <font>
-                        <Font size="19.0" />
+                        <Font name="System Bold Italic" size="19.0" />
                      </font></Label>
 
 

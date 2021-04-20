@@ -30,23 +30,32 @@ public class Instructions {
     private JFXButton buttonFigures;
 
     @FXML
+    private JFXButton buttonDevelopment;
+
+    @FXML
     private AnchorPane anchorContent;
 
    
     public Instructions() {}
     
-
+ 
     @FXML
     public void initialize() throws IOException {
         menuText.setText((LangService.getMapping("instructions_menu")));
         rulesInstructions.setText((LangService.getMapping("instructions_rules_instructions")));
         buttonBasics.setText((LangService.getMapping("instructions_basics")));
         buttonFigures.setText((LangService.getMapping("instructions_figures")));
+        buttonDevelopment.setText((LangService.getMapping("instructions_development")));
+        
         anchorContent.getChildren().clear();
         anchorContent.getChildren().add(FXMLLoader.load(getClass().getResource("/view/basics.fxml")));
     } 
     
     
+    public void loadDevelopment(ActionEvent event) throws IOException {
+        anchorContent.getChildren().clear();
+        anchorContent.getChildren().add(FXMLLoader.load(getClass().getResource("/view/development.fxml")));
+    }
 
 
     public void loadBasics(ActionEvent event) throws IOException {

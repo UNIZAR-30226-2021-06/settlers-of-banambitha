@@ -30,7 +30,7 @@
                      </font>
                   </Text>
                   <PasswordField fx:id="password" layoutX="126.0" layoutY="390.0" prefHeight="54.0" prefWidth="507.0" promptText="Enter your password*" style="-fx-background-radius: 12;" AnchorPane.leftAnchor="126.0" AnchorPane.rightAnchor="126.0" />
-                  <Label fx:id="wrongLogIn" layoutX="260.0" layoutY="163.0" prefHeight="36.0" prefWidth="236.0" textAlignment="CENTER">
+                  <Label fx:id="wrongLogIn" layoutX="201.0" layoutY="145.0" prefHeight="36.0" prefWidth="333.0" textAlignment="CENTER" textFill="WHITE">
                      <font>
                         <Font size="19.0" />
                      </font></Label>
@@ -40,9 +40,9 @@
                      </font>
                   </Hyperlink>
                   <TextField fx:id="username" layoutX="126.0" layoutY="199.0" prefHeight="54.0" prefWidth="507.0" promptText="Enter your username*" style="-fx-background-radius: 12;" AnchorPane.leftAnchor="126.0" AnchorPane.rightAnchor="126.0" />
-                  <Label fx:id="wrongRegister" layoutX="271.0" layoutY="151.0" prefHeight="24.0" prefWidth="178.0">
+                  <Label fx:id="wrongRegister" layoutX="216.0" layoutY="151.0" prefHeight="24.0" prefWidth="322.0" textFill="WHITE">
                      <font>
-                        <Font size="19.0" />
+                        <Font name="System Bold Italic" size="19.0" />
                      </font>
                   </Label>
                </children>
