@@ -15,7 +15,14 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+
+/**
+ * Esta clase define el tablero de la partida
+ * @author: Fabian Conde Lafuente y Víctor García García
+ */
 public class Tablero {
+//Campos de la clase
+
 	// Mapa con las coordenadas de los centros de los 19 hexagonos del tablero. 
 	private Map<Integer, Hexagonos> hexagonos;
 	public Integer NUM_HEXAGONOS = 19;
@@ -73,6 +80,9 @@ public class Tablero {
 		mostrarHexagonos();
 	}
 	
+	/**
+     * Método que genera los hexagonos del tablero
+     */
 	private void generarHexagonos () {
 		Coordenadas aux;
 		int count_value = 0;
@@ -103,6 +113,9 @@ public class Tablero {
 		}
 	}
 	
+	/**
+     * Método que genera los puertos del tablero
+     */
 	private void generarPuertos () {
 		// Total de 9 puertos.
 		// 5 de ellos son espec�ficos.
@@ -124,6 +137,10 @@ public class Tablero {
 		}
 	}
 	
+	/**
+     * Método que devuelve el hexagono donde se encuentra el ladron
+     * @return el hexagono donde se encuentra el ladron
+     */
 	public Hexagonos getPosicionLadron () {
 		Hexagonos hexagonoLadron = null;
 		for (Hexagonos h : hexagonos.values()) {
@@ -135,6 +152,9 @@ public class Tablero {
 		return hexagonoLadron;
 	}
 	
+	/**
+     * Método que mueve el ladron al hexagono indicado
+     */
 	public void moverLadron (Integer nuevaPosicion) {
 		Hexagonos posActualLadron = getPosicionLadron();
 		
@@ -149,13 +169,18 @@ public class Tablero {
 		}
 	} 
 	
+	/**
+     * Método que entrega los recursos producidos por las ciudades y pueblos de los hexagonos activados a los jugadores propietarios de estos
+     */
 	public void producir (Integer valor) {	
 		for (Hexagonos hex : hexagonos.values()) {
 			if (hex.getValor() == valor) hex.producir();
 		}
 	}
 	
-	
+	/**
+     * Método que imprime informacion del tablero por pantalla
+     */
 	public void mostrarHexagonos () {
 		Vertices v[];
 		Aristas a[];
@@ -175,6 +200,10 @@ public class Tablero {
 		System.out.println("Numero de puertos: " + Hexagonos.num_puertos());
 	}
 	
+	/**
+     * Método que devuelve los tipos de terreno de los hexagonos
+     * @return los tipos de terreno de los hexagonos
+     */
 	public JSONArray tiposHexagonosToJSONArray () {
 		JSONArray jsArray = new JSONArray ();
 		
@@ -185,6 +214,10 @@ public class Tablero {
 		return jsArray;
 	}
 	
+	/**
+     * Método que devuelve los valores de los hexagonos
+     * @return los valores de los hexagonos
+     */
 	public JSONArray valorHexagonosToJSONArray () {
 		JSONArray jsArray = new JSONArray ();
 		
@@ -195,6 +228,10 @@ public class Tablero {
 		return jsArray;
 	}
 	
+	/**
+     * Método que tranforma el JSONObject a jsObject
+     * @return jsObject
+     */
 	public JSONObject generarTablero () {
 		JSONObject jsObject = new JSONObject();
 		// Generar respuesta.
@@ -202,8 +239,7 @@ public class Tablero {
 	}
 	
 	/*
-	 * Genera un n�mero aleatorio n del 1 al 6. Simula la acci�n de lanzar un dado.
-	 * 
+	 * Genera un numero aleatorio n del 1 al 6. Simula la accion de lanzar un dado.
 	 * @return Devuelve n, siendo n un entero 1 <= n <= 6.
 	 * */
 	public int generarNumero () {
@@ -217,6 +253,9 @@ public class Tablero {
 		
 	}
 	
+	/*
+	 * Construye un asentamiento en la posicion indicada a nobre del jugador indicado.
+	 * */
 	public void construirAsentamiento (Integer idHexagono, Coordenadas c, Jugadores j) {
 		// Comprobar si el jugador puede construir el asentamiento.
 		if (j.puedeConstruirPueblo()) {
@@ -235,6 +274,10 @@ public class Tablero {
 		
 	}
 	
+	/*
+	 * Genera un JSONObject con informacion de los hexagonos
+	 * @return devuelve informacion de los hexagonos
+	 * */
 	public JSONObject infoHexagonosJSON () throws JSONException {
 		String aux = "{";
 		String auxTipo = "\"tipo\": [";
@@ -261,6 +304,10 @@ public class Tablero {
 		return new JSONObject(aux);
 	}
 	
+	/*
+	 * Genera un JSONObject con la informacion de la partida
+	 * @return JSONObject con la informacion de la partida
+	 * */
 	public JSONObject returnMessage () throws JSONException {
 		JSONObject respuesta = new JSONObject ();
 		
@@ -309,6 +356,10 @@ public class Tablero {
 		return respuesta;
 	}
 	
+	/*
+	 * Atiende todas las posibles jugadas del juegador, las ejecuta y actualiza la informacion de la partida.
+	 * @return JSONObject con la informacion de la partida
+	 * */
 	public JSONObject JSONmessage ( JSONObject jsObject ) throws JSONException {
 		
 		Integer id_jugador = jsObject.getInt("player");
@@ -423,4 +474,4 @@ public class Tablero {
 		return respuesta;
 	}
 	
-}
+} //Cierre de la clase
