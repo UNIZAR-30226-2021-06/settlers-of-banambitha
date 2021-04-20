@@ -1,7 +1,8 @@
 package es.susangames.catan.logica;
 
-import java.util.List;
-
+/*
+ * 
+ * */
 public class Aristas {
 	private CoordenadasAristas coord;
 	

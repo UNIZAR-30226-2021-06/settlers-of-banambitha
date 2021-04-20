@@ -1,31 +1,62 @@
 package es.susangames.catan.logica;
 
+/*
+ * Clase hija de Coordenadas.
+ * Esta clase representa las coordenadas un punto de un segmento.
+ * */
 public class CoordenadasAristas extends Coordenadas {
+	/*
+	 * */
 	private double fin_x;
 	private double fin_y;
 	
+	/*
+	 * Constructor de la clase CoordenadasAristas, representa las coordenadas segmento en un plano
+	 * @param ini_x coordenadas del eje x del primer punto que forma el segmento.
+	 * @param ini_y coordenadas del eje y del primer punto que forma el segmento.
+	 * @param fin_x coordenadas del eje x del segundo punto que forma el segmento.
+	 * @param fin_y coordenadas del eje y del segundo punto que forma el segmento. 
+	 * */
 	CoordenadasAristas (double ini_x, double ini_y, double fin_x, double fin_y) {
 		super(ini_x, ini_y);
 		this.fin_x = fin_x;
 		this.fin_y = fin_y;
 	}
 
+	/*
+	 * @return la coordenada x del segundo punto que forma el segmento.
+	 * */
 	public double getFin_x() {
 		return fin_x;
 	}
-
+	
+	/*
+	 * Actualiza el valor de la variable fin_x.
+	 * @param fin_x nuevo valor de la variable fin_x.
+	 * */
 	public void setFin_x(double fin_x) {
 		this.fin_x = fin_x;
 	}
 
+	/*
+	 * @return la coordenada x del segundo punto que forma el segmento.
+	 * */
 	public double getFin_y() {
 		return fin_y;
 	}
 
+	/*
+	 * Actualiza el valor de la variable fin_y.
+	 * @param fin_y nuevo valor de la variable fin_x.
+	 * */
 	public void setFin_y(double fin_y) {
 		this.fin_y = fin_y;
 	}
 
+	/*
+	 * @return dados los valores de x e y del punto inicial y del punto final se aplica una 
+	 * función hash y se suma el resultado del punto inicial y final
+	 * */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -39,6 +70,13 @@ public class CoordenadasAristas extends Coordenadas {
 		return to_result + from_result;
 	}
 
+	/*
+	 * Devuelve si el objeto obj es igual a un objeto de clase Coordenadas.
+	 * 
+	 * @return true si son el mismo objeto o si el valor de los punto inicial y final de las 
+	 * 	clases son iguales o si el punto inicial de la primera clase es el mismo que el punto
+	 * 	final de la segunad clase y viceversa.
+	 * */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
