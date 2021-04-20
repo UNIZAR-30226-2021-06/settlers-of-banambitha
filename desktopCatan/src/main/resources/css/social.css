@@ -1,0 +1,33 @@
+.list-view {
+    fx-border-width: 0;
+    text-align: center;
+    -fx-text-fill: whitesmoke;
+}
+
+.list-view .list-cell:odd {
+    -fx-background-color: #525252;
+}
+
+.list-view .list-cell:even {
+    -fx-background-color: #414141;
+}
+
+.list-view .label {
+    -fx-text-fill: whitesmoke;
+    text-align: center;
+}
+
+.list-view .list-cell {
+    -fx-text-fill: white;
+    text-align: center;
+}
+
+.list-cell:empty {
+    -fx-opacity: 0;
+}
+
+#social {
+    -fx-background-color: #414141;
+    -fx-text-fill: whitesmoke;
+    -fx-text-align: center;
+}
