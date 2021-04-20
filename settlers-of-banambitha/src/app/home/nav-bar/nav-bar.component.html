@@ -1,6 +1,6 @@
-<div class="header">
+<div class="header" [class.mat-elevation-z9]="true">
     <div class="logo-menu">
-        <img class="logo" src="../../../assets/images/catan-logo.png">
+        <img class="logo" src="../../../assets/images/icons/logo_large.png">
         <div class="header-left">
             <div><a routerLink="/home/play" routerLinkActive="active">Jugar</a></div>
             <div><a routerLink="/home/shop" routerLinkActive="active">Tienda</a></div>
@@ -9,6 +9,6 @@
         </div>
     </div>
     <div class="profile-card">
-        <app-profile-card playerELO="999" playerName="world_champion" playerCoins="999"></app-profile-card>
+        <app-profile-card [playerELO]="" [playerName]="userName" [playerCoins]="saldo"></app-profile-card>
     </div>
 </div>

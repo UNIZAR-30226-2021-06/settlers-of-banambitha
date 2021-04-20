@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ShopService } from 'src/app/service/shop/shop.service';
 import { UserService } from 'src/app/service/user/user.service';
-import { ProfilePicturesComponent } from '../profile-pictures/profile-pictures.component';
 
 @Component({
   selector: 'app-board-skins',

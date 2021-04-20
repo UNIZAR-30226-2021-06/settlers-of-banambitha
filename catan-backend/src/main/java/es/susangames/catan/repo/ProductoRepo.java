@@ -14,7 +14,7 @@ public interface ProductoRepo extends JpaRepository<Producto, String> {
 	@Query(value = "SELECT * FROM producto WHERE NOT (producto_id = 'Original' OR producto_id = 'Clasica')", nativeQuery = true)
 	public List<Producto> getTienda();
 	
-	@Query(value = "SELECT p.*, EXISTS(SELECT * FROM dispone d WHERE d.producto_id = p.producto_id) FROM producto p WHERE NOT (p.producto_id = 'Original' OR p.producto_id = 'Clasica')", nativeQuery = true)
+	@Query(value = "SELECT p.*, EXISTS(SELECT * FROM dispone d WHERE d.producto_id = p.producto_id AND d.usuario_id = :usuarioId) FROM producto p WHERE NOT (p.producto_id = 'Original' OR p.producto_id = 'Clasica')", nativeQuery = true)
 	public List<String> getProdDisp(@Param("usuarioId") String usuarioId);
 
 }
