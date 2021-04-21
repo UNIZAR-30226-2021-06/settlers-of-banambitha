@@ -1,6 +1,7 @@
 package es.susangames.catan.controllers;
 
 import java.io.IOException;
+import es.susangames.catan.service.UserService;
 
 import es.susangames.catan.App;
 import javafx.event.ActionEvent;
@@ -28,11 +29,10 @@ public class Register {
 
     
     private void comprobar_registro() throws IOException {
-    	if(email.getText().toString().equals("prueba") && 
-    	   username.getText().toString().equals("prueba") &&
-    	   password.getText().toString().equals("prueba")) {
-    	            
-    	           App.nuevaPantalla("/view/Login.fxml");
+    	if(UserService.register( username.getText().toString(),
+                                 email.getText().toString(), 
+                                 password.getText().toString())) {
+    	    App.nuevaPantalla("/view/Login.fxml");
     	}
     	else if(email.getText().isEmpty() ||  password.getText().isEmpty() ||
     			username.getText().isEmpty()) {

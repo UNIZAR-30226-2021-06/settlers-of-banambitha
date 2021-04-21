@@ -8,7 +8,7 @@ public class UserService {
     private static HttpService netService;
     private static final String baseUrl = "http://localhost:8080/usuario";
     private static final String addUrl = baseUrl + "/add";
-    private static final String validate = baseUrl + "/validate";
+    private static final String validateUrl = baseUrl + "/validate";
 
     private static String username;
     private static String mail;
@@ -21,6 +21,28 @@ public class UserService {
         netService = new HttpService();
     }
 
+    public static String getUsername() {
+        return username;
+    }
+
+    public static String getMail() {
+        return idioma;
+    }
+
+    public static String getIdioma() {
+        return avatar;
+    }
+    public static String getAvatar() {
+        return apariencia;
+    }
+
+    public static String getApariencia() {
+        return mail;
+    }
+    public static Integer getSaldo() {
+        return saldo;
+    }
+
 
 
     public static Boolean validate(String name, String pass) {
@@ -29,7 +51,7 @@ public class UserService {
         myObject.put("contrasenya", pass);
         JSONObject response;
         try {
-            response = netService.post(validate, myObject.toString());
+            response = netService.post(validateUrl, myObject.toString());
         } catch(IOException e) {
             return false;
         }
@@ -41,6 +63,21 @@ public class UserService {
         }
     }
 
+
+    public static Boolean register(String name, String mail, String pass) {
+        JSONObject myObject = new JSONObject();
+        myObject.put("nombre", name);
+        myObject.put("email", mail);
+        myObject.put("contrasenya", pass);
+        JSONObject response;
+        try {
+            response = netService.post(addUrl, myObject.toString());
+        } catch(IOException e) {
+            System.out.println("No funciona");
+            return false;
+        }   
+        return (!response.has("error"));
+    }
 
     private static void fillData(JSONObject data) {
         username = data.get("nombre").toString();

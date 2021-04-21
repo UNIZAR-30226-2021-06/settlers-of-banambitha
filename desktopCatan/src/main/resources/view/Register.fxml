@@ -40,7 +40,7 @@
                      </font>
                   </Hyperlink>
                   <TextField fx:id="username" layoutX="126.0" layoutY="199.0" prefHeight="54.0" prefWidth="507.0" promptText="Enter your username*" style="-fx-background-radius: 12;" AnchorPane.leftAnchor="126.0" AnchorPane.rightAnchor="126.0" />
-                  <Label fx:id="wrongRegister" layoutX="216.0" layoutY="151.0" prefHeight="24.0" prefWidth="322.0" textFill="WHITE">
+                  <Label fx:id="wrongRegister" layoutX="131.0" layoutY="151.0" prefHeight="24.0" prefWidth="506.0" textFill="WHITE">
                      <font>
                         <Font name="System Bold Italic" size="19.0" />
                      </font>
