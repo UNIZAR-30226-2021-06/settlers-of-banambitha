@@ -30,4 +30,19 @@ public class HttpService {
            return jsonObject;
         }
     }
+
+    JSONObject get(String url) throws IOException {
+        JSONObject jsonObject;
+        Request request = new Request.Builder()
+            .url(url)
+            .build();
+        try (Response response = client.newCall(request).execute()) {
+           try {
+                jsonObject = new JSONObject(response.body().string());
+           }catch (JSONException err){
+                return null;
+           }
+           return jsonObject;
+        }
+    }
 }

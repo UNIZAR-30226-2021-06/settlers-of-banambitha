@@ -29,15 +29,18 @@ public class Register {
 
     
     private void comprobar_registro() throws IOException {
-    	if(UserService.register( username.getText().toString(),
+        if(UserService.userExists(username.getText().toString())) {
+            wrongRegister.setText("Ya existe un usuario con esas credenciales");
+        }
+        else if(email.getText().isEmpty() ||  password.getText().isEmpty() ||
+    			username.getText().isEmpty()) {
+             wrongRegister.setText("Rellene los campos");
+        }
+        else if(UserService.register( username.getText().toString(),
                                  email.getText().toString(), 
                                  password.getText().toString())) {
     	    App.nuevaPantalla("/view/Login.fxml");
     	}
-    	else if(email.getText().isEmpty() ||  password.getText().isEmpty() ||
-    			username.getText().isEmpty()) {
-             wrongRegister.setText("Rellene los campos");
-        }
     	else {
              wrongRegister.setText("Nombre o Contraseña incorrectos!");
          }

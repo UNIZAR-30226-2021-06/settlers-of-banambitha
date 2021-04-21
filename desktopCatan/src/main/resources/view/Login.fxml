@@ -22,7 +22,7 @@
                         <Font name="Lohit Kannada" size="22.0" />
                      </font>
                   </Button>
-                  <TextField fx:id="email" layoutX="126.0" layoutY="231.0" prefHeight="54.0" prefWidth="507.0" promptText="Enter your email*" style="-fx-background-radius: 12;" AnchorPane.leftAnchor="126.0" AnchorPane.rightAnchor="126.0" />
+                  <TextField fx:id="email" layoutX="126.0" layoutY="231.0" prefHeight="54.0" prefWidth="507.0" promptText="Enter your username*" style="-fx-background-radius: 12;" AnchorPane.leftAnchor="126.0" AnchorPane.rightAnchor="126.0" />
                   <Text fill="WHITE" fontSmoothingType="LCD" layoutX="284.0" layoutY="131.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Sign In" textAlignment="CENTER" wrappingWidth="186.560546875">
                      <font>
                         <Font name="System Bold" size="40.0" />

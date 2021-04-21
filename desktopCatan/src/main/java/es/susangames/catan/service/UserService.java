@@ -63,6 +63,16 @@ public class UserService {
         }
     }
 
+    public static Boolean userExists(String name) {
+        JSONObject response;
+        try {
+            response = netService.get(baseUrl + "/find/" + name);
+        } catch(IOException e) {
+            return false;
+        }   
+        return (!response.has("error"));
+    }
+
 
     public static Boolean register(String name, String mail, String pass) {
         JSONObject myObject = new JSONObject();
@@ -73,7 +83,6 @@ public class UserService {
         try {
             response = netService.post(addUrl, myObject.toString());
         } catch(IOException e) {
-            System.out.println("No funciona");
             return false;
         }   
         return (!response.has("error"));
