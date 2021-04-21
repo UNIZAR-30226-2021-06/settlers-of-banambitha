@@ -1,5 +1,6 @@
 package es.susangames.catan.controllers;
 
+import es.susangames.catan.service.UserService;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
@@ -22,9 +23,11 @@ public class Login {
     @FXML
     private Label wrongRegister;
     
-    
+    private UserService userService;
 
-    public Login() {}
+    public Login() {
+        userService = new UserService();
+    }
 
 
     public void login_user(ActionEvent event) throws IOException {
@@ -42,9 +45,7 @@ public class Login {
     
 
     private void comprobar_login() throws IOException {
-        if(email.getText().toString().equals("prueba") && 
-           password.getText().toString().equals("prueba")) {
-            
+        if(UserService.validate(email.getText().toString(),password.getText().toString())) {
             App.nuevaPantalla("/view/mainMenu.fxml");
         }
 
