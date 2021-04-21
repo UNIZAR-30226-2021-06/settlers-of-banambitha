@@ -34,9 +34,9 @@
                </BorderPane.margin>
                <children>
                   <Circle fx:id="userImg" fill="DODGERBLUE" layoutX="1607.0" layoutY="126.0" radius="38.0" stroke="BLACK" strokeType="INSIDE" />
-                  <Text fx:id="userName" fill="WHITE" layoutX="1661.0" layoutY="94.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="88.0">
+                  <Text fx:id="userName" fill="WHITE" layoutX="1661.0" layoutY="93.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="172.0">
                      <font>
-                        <Font name="System Bold Italic" size="19.0" />
+                        <Font name="System Bold Italic" size="16.0" />
                      </font>
                   </Text>
                   <ImageView fx:id="goldImage" fitHeight="51.0" fitWidth="70.0" layoutX="1661.0" layoutY="100.0" pickOnBounds="true" preserveRatio="true" />

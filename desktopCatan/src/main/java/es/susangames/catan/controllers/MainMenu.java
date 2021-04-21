@@ -2,6 +2,7 @@ package es.susangames.catan.controllers;
 
 import es.susangames.catan.App;
 import es.susangames.catan.controllers.Instructions;
+import es.susangames.catan.service.UserService;
 import es.susangames.catan.service.LangService;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -198,8 +199,8 @@ public class MainMenu {
 
 
         // TODO: Conectar con backend. Sirve como ejemplo
-        userName.setText("Dave");
-        numberCoins.setText("761231");
+        userName.setText(UserService.getUsername());
+        numberCoins.setText(UserService.getSaldo().toString());
         numberELO.setText("835");
         catanLogo.setImage(catanLog);
 

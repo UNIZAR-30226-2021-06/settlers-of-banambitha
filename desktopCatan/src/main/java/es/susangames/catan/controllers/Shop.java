@@ -1,6 +1,8 @@
 package es.susangames.catan.controllers;
 
 import es.susangames.catan.service.LangService;
+import es.susangames.catan.service.ShopService;
+
 import javafx.fxml.FXML;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.*;
@@ -20,6 +22,9 @@ import javafx.scene.paint.Color;
 import java.util.Random;
 import javafx.scene.control.Button;
 import javafx.scene.effect.DropShadow;
+import org.json.*;
+
+
 
 
 
@@ -38,10 +43,12 @@ public class Shop {
 
     private Image goldImage;
 
+    private ShopService shop;
+
 
     public Shop() {
         goldImage = new Image("/img/gold_icon.png");
-
+        shop = new ShopService();
     }
     
 
@@ -110,21 +117,36 @@ public class Shop {
 
 
     private void loadUserSkins() {
+        JSONArray skinList =  shop.obtenerProductosDisponibles();
         elementsList.getItems().clear();
-        for(Integer i = 0; i < 12; i++) {
-            newShopElement("Skin " + i.toString(),(int) (Math.random() * 10000000 + 1) , 
-                            "/img/users/user_profile_image_" + i.toString() + ".png");
-         } 
+        for (int i = 0; i < skinList.length(); i++) {
+            JSONObject object = skinList.getJSONObject(i);
+            System.out.println(object.getString("tipo").toString());
+            String aux = object.getString("tipo").toString();
+            if(!object.getBoolean("adquirido") && 
+                aux.equals("AVATAR")) {
+                    newShopElement(object.getString("producto_id"),
+                                   object.getInt("precio"),
+                               "/img/users/" + object.getString("url"));
+              }
+        }
     }
 
 
     private void loadGameAspects() {
+        JSONArray skinList =  shop.obtenerProductosDisponibles();
         elementsList.getItems().clear();
-        newShopElement("Space " ,(int) (Math.random() * 10000000 + 1) , 
-                            "/img/board/espacial_shop_image.jpg");
-                            
-        newShopElement("Computers ",(int) (Math.random() * 10000000 + 1) , 
-                            "/img/board/hardware_shop_image.jpg");
+        for (int i = 0; i < skinList.length(); i++) {
+            JSONObject object = skinList.getJSONObject(i);
+            System.out.println(object.getString("tipo").toString());
+            String aux = object.getString("tipo").toString();
+            if(!object.getBoolean("adquirido") && 
+                aux.equals("APARIENCIA")) {
+                    newShopElement(object.getString("producto_id"),
+                                   object.getInt("precio"),
+                               "/img/board/" + object.getString("url"));
+              }
+        }
     }
 
     @FXML

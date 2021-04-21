@@ -12,7 +12,7 @@ import org.json.*;
 public class HttpService {
     public static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
 
-    OkHttpClient client = new OkHttpClient();
+    private static OkHttpClient client = new OkHttpClient();
 
     JSONObject post(String url, String json) throws IOException {
         JSONObject jsonObject;
@@ -45,4 +45,19 @@ public class HttpService {
            return jsonObject;
         }
     }
+
+    JSONArray getArr(String url) throws IOException {
+        JSONArray jsonObject;
+        Request request = new Request.Builder()
+            .url(url)
+            .build();
+        try (Response response = client.newCall(request).execute()) {
+           try {
+                jsonObject = new JSONArray(response.body().string());
+           }catch (JSONException err){
+                return null;
+           }
+        }
+         return jsonObject;
+     }
 }
