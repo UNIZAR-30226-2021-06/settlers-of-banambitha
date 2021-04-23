@@ -1,4 +1,5 @@
-package es.susangames.catan.logica;
+package logica;
+
 
 
 /**

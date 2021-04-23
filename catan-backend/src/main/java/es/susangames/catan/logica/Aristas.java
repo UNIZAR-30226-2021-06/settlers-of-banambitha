@@ -1,4 +1,5 @@
-package es.susangames.catan.logica;
+package logica;
+
 
 /*
  * 
@@ -15,22 +16,32 @@ public class Aristas {
 	
 	private TipoPuerto puerto;
 	
-	Aristas(CoordenadasAristas coord, int id) {
+	private Integer numJugadores;
+	
+	Aristas(CoordenadasAristas coord, int id, Integer numJugadores) {
 		this.coord = coord;
 		this.tieneCamino = false;
 		this.propietario = null;
 		this.puerto = TipoPuerto.Nada;
 		this.id = id;
-		this.puedeConstruirJugador = new Boolean[] {false, false, false, false};
+		this.numJugadores = numJugadores;
+		this.puedeConstruirJugador = new Boolean[numJugadores];
+		for ( int i = 0; i < numJugadores; ++i) {
+			this.puedeConstruirJugador[i] = false;
+		}
 	}
 	
-	Aristas(CoordenadasAristas coord, TipoPuerto puerto, Jugadores propietario, int id) {
+	Aristas(CoordenadasAristas coord, TipoPuerto puerto, Integer numJugadores, Jugadores propietario, int id) {
 		this.coord = coord;
 		this.puerto = puerto;
 		this.tieneCamino = true;
 		this.propietario = propietario;
 		this.id = id;
-		this.puedeConstruirJugador = new Boolean[] {false, false, false, false};
+		this.numJugadores = numJugadores;
+		this.puedeConstruirJugador = new Boolean[numJugadores];
+		for ( int i = 0; i < numJugadores; ++i) {
+			this.puedeConstruirJugador[i] = false;
+		}
 	}
 	
 	public Integer getIdentificador () {
@@ -53,22 +64,34 @@ public class Aristas {
 		return this.propietario;
 	}
 	
-	public void setCarretera (Jugadores j) {
-		if ( !tieneCamino() && puedeConstruirJugador[j.getColor().numeroColor()]) {
-			this.propietario = j;
-			this.tieneCamino = true;
-			// Ninguno podrá ya construir un camino --> Todo a false.
-			puedeConstruirJugador[0] = false;
-			puedeConstruirJugador[1] = false;
-			puedeConstruirJugador[2] = false;
-			puedeConstruirJugador[3] = false;
+	/*
+	 * Devuelve true si y solo si ha podido construir un camino en la Arista.
+	 * */
+	public Boolean setCamino (Jugadores j) {
+		try {
+			if (j == null) {
+				throw new Exception ("function setCarretera (Jugadores j): El parámetro j corresponde a un jugador.");
+			} 
+			if ( !tieneCamino() && puedeConstruirJugador[j.getColor().numeroColor()]) {
+				this.propietario = j;
+				this.tieneCamino = true;
+				// Ninguno podrá ya construir un camino --> Todo a false.
+				puedeConstruirJugador[0] = false;
+				puedeConstruirJugador[1] = false;
+				puedeConstruirJugador[2] = false;
+				puedeConstruirJugador[3] = false;
+				return true;
+			} else {
+				return false;
+			}
+		} catch (Exception e) {
+			System.out.println(e.toString());
+			return false;
 		}
 	}
 	
 	public void setPuerto (int tipoPuerto) {
 		switch(tipoPuerto) {
-		case -1:
-			this.puerto = TipoPuerto.Nada; break;
 		case 0:
 			this.puerto = TipoPuerto.PuertoBasico; break;
 		case 1:
@@ -81,6 +104,8 @@ public class Aristas {
 			this.puerto = TipoPuerto.PuertoArcilla; break;
 		case 5:
 			this.puerto = TipoPuerto.PuertoMinerales; break;
+		default:
+			this.puerto = TipoPuerto.Nada; break;
 		}
 	}
 	
@@ -89,10 +114,24 @@ public class Aristas {
 	}
 	
 	/*
-	 * Actualiza la aristas como posible lugar donde el jugador j puede construir un camino.
+	 * Actualiza la arista como posible lugar donde el jugador con identificador identificador si 
+	 * el valor del parámetro identificador es mayor o igual a 0 y menor al numero de jugadores.
+	 * @return true si y solo si el valor de identificador es valido.
 	 * */
-	public void posibleCarreteraDeJugador (Jugadores j) {
-		puedeConstruirJugador[j.getColor().numeroColor()] = true;
+	public Boolean posibleCaminoDeJugador (int identificador) {
+		try {
+			if (identificador >= 0 && identificador < this.numJugadores) {
+				puedeConstruirJugador[identificador] = true;
+			} else {
+				throw new Exception ("function posibleCarreteraDeJugador (int identificador): El "
+						+ "identificador debe de pertenecer a un jugador, se esperaban valores "
+						+ "0 <= i < " + this.numJugadores);
+			}
+			return true;
+		} catch (Exception e) {
+			System.out.println("");
+			return false;
+		}
 	}
 	
 	public String getCaminoJugador () {
@@ -114,10 +153,20 @@ public class Aristas {
 		return puedeConstruirJugador;
 	}
 	
-	public Boolean getPosibleCaminoDeJugador (int i) {
-		if (i > 3) {
+	
+	public Boolean getPosibleCaminoDeJugador (int identificador) {
+		try {
+			if (identificador >= this.numJugadores || identificador < 0) {
+				throw new Exception("function getPosibleCaminoDeJugador (int identificador): El "
+						+ "valor de la variable i introducido no corresponde a ningún "
+						+ "jugador, los identificadores de jugadores disponibles son 0 <= i < " 
+						+ this.numJugadores);
+			}
+			return puedeConstruirJugador[identificador];
+		} catch (Exception e) {
+			System.out.println(e.toString());
 			return false;
 		}
-		return puedeConstruirJugador[i];
+		
 	}
 }

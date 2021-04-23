@@ -1,6 +1,8 @@
-package es.susangames.catan.logica;
+package logica;
 
 
+
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -24,6 +26,8 @@ public class Hexagonos {
 	private TipoTerreno tipo_terreno;
 	private int valor;
 	
+	private Integer numJugadores;
+	
 	/*
 	 * Vertices de todos los hexagonos creados.
 	 * */
@@ -35,7 +39,7 @@ public class Hexagonos {
 	private static int next_id_arista = 0;
 	private static Map<CoordenadasAristas, Aristas> puertos = new HashMap<CoordenadasAristas, Aristas>();
 	
-	Hexagonos (Coordenadas c, TipoTerreno tipo_terreno, int valor) {
+	Hexagonos (Coordenadas c, TipoTerreno tipo_terreno, int valor, Integer numJugadores) {
 		this.centro = c;
 		this.tipo_terreno = tipo_terreno;
 		this.valor = valor;
@@ -43,6 +47,8 @@ public class Hexagonos {
 		if(tipo_terreno.esDesierto()) {
 			this.tieneLadron = true;
 		}
+		
+		this.numJugadores = numJugadores;
 		
 		v = new Vertices[NUM_VERTICES_ARISTAS];
 		a = new Aristas[NUM_VERTICES_ARISTAS];
@@ -74,7 +80,7 @@ public class Hexagonos {
 			else if ( i == (NUM_VERTICES_ARISTAS - 1) ) {
 				auxCoordAristas = new CoordenadasAristas(aux.getX(), aux.getY(),aux2.getX(), aux2.getY());
 				if (!aristas.containsKey(auxCoordAristas)) {
-					a[i-1] = new Aristas(auxCoordAristas, next_id_arista);
+					a[i-1] = new Aristas(auxCoordAristas, next_id_arista, this.numJugadores);
 					aristas.put(auxCoordAristas, a[i-1]);
 					puertos.put(auxCoordAristas, a[i-1]);
 					aristasPorID.put(next_id_arista, a[i-1]);
@@ -85,7 +91,7 @@ public class Hexagonos {
 				}
 				auxCoordAristas = new CoordenadasAristas(aux.getX(), aux.getY(),v1.getX(), v1.getY());
 				if (!aristas.containsKey(auxCoordAristas)) {
-					a[i] = new Aristas(auxCoordAristas,next_id_arista);
+					a[i] = new Aristas(auxCoordAristas,next_id_arista, this.numJugadores);
 					aristas.put(auxCoordAristas, a[i]);
 					puertos.put(auxCoordAristas, a[i]);
 					aristasPorID.put(next_id_arista, a[i]);
@@ -97,7 +103,7 @@ public class Hexagonos {
 			} else {
 				auxCoordAristas = new CoordenadasAristas(aux.getX(), aux.getY(),aux2.getX(), aux2.getY());
 				if (!aristas.containsKey(auxCoordAristas)) {
-					a[i-1] = new Aristas(auxCoordAristas,next_id_arista);
+					a[i-1] = new Aristas(auxCoordAristas,next_id_arista, this.numJugadores);
 					aristas.put(auxCoordAristas, a[i-1]);
 					puertos.put(auxCoordAristas, a[i-1]);
 					aristasPorID.put(next_id_arista, a[i-1]);
@@ -154,7 +160,15 @@ public class Hexagonos {
 	 * Comprueba si el hexagono h es adyacente.
 	 * */
 	public Boolean sonAdyacentes (Hexagonos h) {
-		return this.centro.getDistancia(h.getCentro()) <= 2*calcularApotema();
+		try {
+			if (h == null) {
+				throw new Exception ("El hexagono h no puede ser nulo.");
+			}
+			return this.centro.getDistancia(h.getCentro()) <= 2*calcularApotema();
+		} catch (Exception e) {
+			System.out.println(e.toString());
+			return false;
+		}
 	}
 	
 	/*
@@ -168,7 +182,12 @@ public class Hexagonos {
 	 * Comprueba si el Vertice v forma parte de los v�rtices del hexagono.
 	 * */
 	public Boolean contieneVertice (Vertices v) {
-		return centro.getDistancia(v.getCoordenadas()) <= tam;
+		Boolean encontrado = false;
+		for (int i = 0; i < this.NUM_VERTICES_ARISTAS && !encontrado; ++i) {
+			if (this.v[i] == v) encontrado = true;
+		}
+		
+		return true;
 	}
 	
 	/*
@@ -242,9 +261,10 @@ public class Hexagonos {
 		Coordenadas c = v.getCoordenadas();
 		// Se trata de un vertice que pertenece a un Hexagono.
 		if (vertices.containsKey(v.getCoordenadas())) {
-			 a= (Aristas[]) aristas.entrySet().stream()
+			 Object o[] = aristas.entrySet().stream()
 					.filter(x -> x.getKey().contieneCoordenada(c))
 					.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)).values().toArray();
+			 a = Arrays.copyOf(o, o.length, Aristas[].class);
 		}
 		return a;
 	}
@@ -292,7 +312,7 @@ public class Hexagonos {
 				Aristas posiblesCarreteras[] = aristasDelVertice(v);
 				
 				for (int i = 0 ; i < posiblesCarreteras.length; ++i) {
-					posiblesCarreteras[i].posibleCarreteraDeJugador(j);
+					posiblesCarreteras[i].posibleCaminoDeJugador(j.getColor().numeroColor());
 				}
 			}
 		}
@@ -339,19 +359,19 @@ public class Hexagonos {
 		
 		if (sePuedeConstruir) {
 			// Construir camino.
-			a.setCarretera(j);
+			a.setCamino(j);
 			
 			// Posibles nuevo caminos.
 			aristasAdyacentesAv1 = aristasDelVertice(v1);
 			for (int i = 0; i < aristasAdyacentesAv1.length; ++i ) {
 				if (!aristasAdyacentesAv1[i].tieneCamino())
-					aristasAdyacentesAv1[i].posibleCarreteraDeJugador(j);
+					aristasAdyacentesAv1[i].posibleCaminoDeJugador(j.getColor().numeroColor());
 			}
 			
 			aristasAdyacentesAv2 = aristasDelVertice(v2);
 			for (int i = 0; i < aristasAdyacentesAv1.length; ++i ) {
 				if (!aristasAdyacentesAv2[i].tieneCamino())
-					aristasAdyacentesAv2[i].posibleCarreteraDeJugador(j);
+					aristasAdyacentesAv2[i].posibleCaminoDeJugador(j.getColor().numeroColor());
 			}
 			
 			// Actualizar posibles asentamientos.

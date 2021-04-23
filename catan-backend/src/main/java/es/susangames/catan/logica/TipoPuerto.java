@@ -1,4 +1,5 @@
-package es.susangames.catan.logica;
+package logica;
+
 
 /**
  * Esta clase define un enumerador de los distintos tipos de puertos del juego

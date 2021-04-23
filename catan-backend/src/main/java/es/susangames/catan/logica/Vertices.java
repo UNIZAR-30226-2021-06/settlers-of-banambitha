@@ -1,4 +1,5 @@
-package es.susangames.catan.logica;
+package logica;
+
 
 public class Vertices {
 	
@@ -94,9 +95,18 @@ public class Vertices {
 	 * @param material tipo de materia prima que el Vertice da al jugador.
 	 * */
 	public void producir (TipoTerreno material) {
-		if (propietario != null) {
-			propietario.anyadirRecurso(material, tieneCiudad());
+		try  {
+			if (material == null) {
+				throw new Exception ("function producir (TipoTerreno material): el parametro "
+						+ "material no puede ser nulo.");
+			}
+			if (propietario != null) {
+				propietario.anyadirRecurso(material, tieneCiudad());
+			}
+		} catch (Exception e) {
+			System.out.println(e.toString());
 		}
+		
 	}
 	
 	/*

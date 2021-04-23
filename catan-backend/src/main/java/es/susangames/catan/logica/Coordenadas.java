@@ -1,4 +1,5 @@
-package es.susangames.catan.logica;
+package logica;
+
 
 /*
  * La clase coordenadas representa las coordenadas en un plano.
@@ -100,7 +101,15 @@ public class Coordenadas {
 	 * 
 	 * @return	devuelve la distancia en un plano de dos coordenadas.
 	 * */
-	public double getDistancia (Coordenadas coord) {
-		return Math.sqrt( Math.abs(coord.getX() - this.x) + Math.abs(coord.getY() - this.y) );
+	public Double getDistancia (Coordenadas coord) {
+		try {
+			if (coord == null) {
+				throw new Exception ("function getDistancia (Coordenadas coord): El parámetro coord no puede ser nulo.");
+			}
+			
+			return Math.sqrt( Math.abs(coord.getX() - this.x) + Math.abs(coord.getY() - this.y) );
+		} catch (Exception e) {
+			return null;
+		}
 	}
 }

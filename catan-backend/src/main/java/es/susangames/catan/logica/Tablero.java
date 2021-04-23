@@ -1,5 +1,4 @@
-package es.susangames.catan.logica;
-
+package logica;
 
 import java.util.Map;
 
@@ -48,7 +47,7 @@ public class Tablero {
 	int turno;
 	int dados;
 	
-	Tablero (Integer num_jugadores) {
+	public Tablero (Integer num_jugadores) {
 		this.num_jugadores = num_jugadores;
 		j = new Jugadores[num_jugadores];
 		
@@ -77,7 +76,7 @@ public class Tablero {
 		
 		generarPuertos ();
 
-		mostrarHexagonos();
+		//mostrarHexagonos();
 	}
 	
 	/**
@@ -101,10 +100,10 @@ public class Tablero {
 			for (int j = 0; j < this.num_hexagonos_fila[i]; ++j) {
 				aux = new Coordenadas(ini_x, ini_y);
 				if ( this.vector_terrenos[id].esDesierto() ) {
-					hexagonos.put(id, new Hexagonos(aux, this.vector_terrenos[id], -1));
+					hexagonos.put(id, new Hexagonos(aux, this.vector_terrenos[id], -1, this.num_jugadores));
 				} else {
 					hexagonos.put(id, new Hexagonos(aux, this.vector_terrenos[id], 
-							this.vector_valores[count_value]));
+							this.vector_valores[count_value], this.num_jugadores));
 					count_value++;
 				}
 				ini_x += 2*apotema;
@@ -134,6 +133,15 @@ public class Tablero {
 		
 		for (Aristas a : aristasNoPuertos) {
 			Hexagonos.eliminarPuerto(a);
+		}
+	}
+	
+	public Hexagonos getHexagono (int identificador) {
+		try {
+			return this.hexagonos.get(identificador);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+			return null;
 		}
 	}
 	

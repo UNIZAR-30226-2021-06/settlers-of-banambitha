@@ -1,4 +1,5 @@
-package es.susangames.catan.logica;
+package logica;
+
 
 /*
  * Clase hija de Coordenadas.
@@ -106,7 +107,15 @@ public class CoordenadasAristas extends Coordenadas {
 	}
 	
 	public Boolean contieneCoordenada (Coordenadas c) {
-		return (c.getX() == this.getX() && c.getY() == this.getY() ) ||
-				( c.getX() == this.getFin_x() && c.getY() == this.getFin_y() );
+		try {
+			if (c == null) {
+				throw new Exception ("function contieneCoordenada (Coordenadas c): El valor del parametro c no puede ser nulo.");
+			}
+			return (c.getX() == this.getX() && c.getY() == this.getY() ) ||
+					( c.getX() == this.getFin_x() && c.getY() == this.getFin_y() );
+		} catch (Exception e) {
+			System.out.print(e.toString());
+			return false;
+		}
 	}
 }
