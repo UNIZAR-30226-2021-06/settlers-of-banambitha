@@ -33,10 +33,8 @@ import org.json.*;
 
 public class Shop {
  
-
     @FXML
     private JFXListView<AnchorPane> elementsList;
-
 
     @FXML
     private Button buttonSkins;

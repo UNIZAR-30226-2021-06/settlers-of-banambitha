@@ -40,4 +40,15 @@ public class ShopService {
         
     }
 
+
+    public JSONArray obtenerProductosAdquiridos() {
+        JSONArray response;
+        try {
+            response = netService.getArr(adquiridosUrl + "/" + UserService.getUsername());
+        } catch(Exception e) {
+            return null;
+        }
+        return response;
+    }
+
 }

@@ -26,18 +26,18 @@ public class UserService {
     }
 
     public static String getMail() {
-        return idioma;
+        return mail;
     }
 
     public static String getIdioma() {
-        return avatar;
+        return idioma;
     }
     public static String getAvatar() {
-        return apariencia;
+        return avatar;
     }
 
     public static String getApariencia() {
-        return mail;
+        return apariencia;
     }
     public static Integer getSaldo() {
         return saldo;

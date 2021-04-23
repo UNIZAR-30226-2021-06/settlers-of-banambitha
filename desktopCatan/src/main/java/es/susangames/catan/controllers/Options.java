@@ -1,6 +1,8 @@
 package es.susangames.catan.controllers;
 
 import es.susangames.catan.service.LangService;
+import es.susangames.catan.service.ShopService;
+import es.susangames.catan.service.UserService;
 import javafx.fxml.FXML;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.*;
@@ -10,25 +12,21 @@ import java.io.IOException;
 import javafx.stage.Popup;
 import javafx.scene.Node;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.shape.Circle;
 import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
-
 import javafx.fxml.FXML;
 import javafx.scene.image.ImageView;
 import javafx.scene.shape.Circle;
-import javafx.scene.text.Text;
-import javafx.scene.image.Image;
-import javafx.scene.paint.ImagePattern;
 import javafx.stage.Stage;
 import javafx.scene.paint.Color;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.DropShadow;
 import com.jfoenix.controls.JFXListView;
 import javafx.scene.control.ToggleButton;
+import org.json.*;
 
 
 
@@ -72,10 +70,14 @@ public class Options {
 
     private Image userImg,win,record;
 
+    private ShopService shop;
+
+
     public Options() {
-        userImg = new Image("/img/users/user_profile_image_2.png");
+        userImg = new Image("/img/users/user_profile_image_original.png");
         win = new Image("/img/win.png");
         record = new Image("/img/win.png");
+        shop = new ShopService();
     }
 
     private void changeMailPopUp() {
@@ -156,8 +158,6 @@ public class Options {
          textField.setLayoutY(anchorPane.getLayoutY() + 110);
          anchorPane.getChildren().add(textField);
 
-
-
          Button accept = new Button();
          accept.setPrefSize(100,30);
          accept.setLayoutX(anchorPane.getLayoutX() + 330);
@@ -181,9 +181,7 @@ public class Options {
                 Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
                 popupChangePsw.show(stage);
             }
-            
          });
-         
          buttonChangePsw.setText((LangService.getMapping("new_psw")));
     }
 
@@ -193,11 +191,18 @@ public class Options {
         popupChangeUserImg = new Popup();
        
         popupChangeUserImg.setAutoHide(true);
-        for(Integer i = 0; i < 12; i++) {
-            newShopElement("Skin " + i.toString(),  
-                            "/img/users/user_profile_image_" + i.toString() + ".png",
-                            elementsList);
-         } 
+        
+        JSONArray skinList =  shop.obtenerProductosAdquiridos();
+        elementsList.getItems().clear();
+        for (int i = 0; i < skinList.length(); i++) {
+            JSONObject object = skinList.getJSONObject(i);
+            String aux = object.getString("tipo").toString();
+            if(aux.equals("AVATAR")) {
+                newShopElement(object.getString("nombre"),  
+                                "/img/users/" + object.getString("url"),
+                                elementsList);
+            }
+        }
 
          changeUserImg.setOnAction((ActionEvent event) -> {
             
@@ -262,13 +267,14 @@ public class Options {
     @FXML
     public void initialize()  {
         userImage.setFill(new ImagePattern(userImg));
-        userName.setText("Dave");
-        userEmail.setText("daveCatan@gmail.com");
+        userName.setText(UserService.getUsername());
+        userEmail.setText(UserService.getMail());
+        
+        // TODO: Integrar con backend
         numberVictory.setText("23");
         numberDefeat.setText("7");
         imgWin.setImage(win);
-        //imgDefeat.setImage(record);
-       // imgDefeat.setStyle("-fx-background-color: transparent;");
+
         changeMailPopUp();
         changePasswordPopUp();
         changeUserImage();

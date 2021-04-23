@@ -91,7 +91,7 @@ public class MainMenu {
 
     public MainMenu() {
         goldImg = new Image("/img/gold_icon.png");
-        userImage = new Image("/img/users/user_profile_image_2.png");
+        userImage = new Image("/img/users/user_profile_image_original.png");
         catanLog = new Image("/img/catan-logo.png");
 
     }
