@@ -88,7 +88,7 @@ public class UserService {
         return (!response.has("error"));
     }
 
-    private static void fillData(JSONObject data) {
+    public static void fillData(JSONObject data) {
         username = data.get("nombre").toString();
         mail = data.get("email").toString();
         idioma = data.get("idioma").toString();

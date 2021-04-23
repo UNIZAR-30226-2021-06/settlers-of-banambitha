@@ -81,6 +81,8 @@ public class MainMenu {
     @FXML
     private ImageView catanLogo;
 
+    private static Text _numberCoins;
+
 
     private Image goldImg;
     private Image userImage;
@@ -170,12 +172,24 @@ public class MainMenu {
         playerList.getItems().add(anchorPane);
     }
 
+    public void updateInfo() {
+        userName.setText(UserService.getUsername());
+        numberCoins.setText(UserService.getSaldo().toString());
+        numberELO.setText("835");
+    }
+
+    // Metodo para actualizar el numero de monedas
+    public static void updateCoins() {
+        _numberCoins.setText(UserService.getSaldo().toString());
+    }
+
     /**
      * Inicializa la scene del menu principal.
      */
     @FXML
     public void initialize(){
         updateStrings();
+        _numberCoins = numberCoins;
         playerList.getStylesheets().add("/css/shop.css"); 
 
         mainMenuBP.prefHeightProperty().bind(mainMenu.heightProperty());
@@ -197,11 +211,8 @@ public class MainMenu {
         loadFriend("World_champion", "/img/users/user_profile_image_10.png");
 
 
-
-        // TODO: Conectar con backend. Sirve como ejemplo
-        userName.setText(UserService.getUsername());
-        numberCoins.setText(UserService.getSaldo().toString());
-        numberELO.setText("835");
+        // Actualizar informacion del
+        updateInfo();
         catanLogo.setImage(catanLog);
 
        
@@ -209,6 +220,7 @@ public class MainMenu {
         //Barra de navegación
         btnPlay.setOnAction( f -> {
             loadScene("/view/play.fxml", btnPlay);
+            
         });
 
 

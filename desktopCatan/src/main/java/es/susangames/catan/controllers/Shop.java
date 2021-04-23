@@ -2,7 +2,9 @@ package es.susangames.catan.controllers;
 
 import es.susangames.catan.service.LangService;
 import es.susangames.catan.service.ShopService;
-
+import es.susangames.catan.service.UserService;
+import es.susangames.catan.controllers.MainMenu;
+import es.susangames.catan.App;
 import javafx.fxml.FXML;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.*;
@@ -23,6 +25,7 @@ import java.util.Random;
 import javafx.scene.control.Button;
 import javafx.scene.effect.DropShadow;
 import org.json.*;
+
 
 
 
@@ -52,7 +55,8 @@ public class Shop {
     }
     
 
-    private void newShopElement(String name, Integer price, String imgURL) {
+    private void newShopElement(String name, Integer price, String imgURL, 
+                                Boolean avatar) {
         
         AnchorPane anchorPane = new AnchorPane();
         anchorPane.setPrefSize(300, 300);
@@ -108,8 +112,18 @@ public class Shop {
 
         // TODO: Añadir accion cuando se hace click sobre boton compra
         buyButton.setOnAction((ActionEvent event) -> {
-           System.out.println("Comprar: " + name);
+           shop.adquirirProducto(name);
+           if(avatar) {
+              loadUserSkins();
+           } else {
+               loadGameAspects();
+           } 
+           MainMenu.updateCoins();
         });
+
+        if (UserService.getSaldo() < price) {
+            buyButton.setDisable(true);
+        }
 
         anchorPane.getChildren().add(buyButton);
         elementsList.getItems().add(anchorPane);
@@ -121,13 +135,13 @@ public class Shop {
         elementsList.getItems().clear();
         for (int i = 0; i < skinList.length(); i++) {
             JSONObject object = skinList.getJSONObject(i);
-            System.out.println(object.getString("tipo").toString());
             String aux = object.getString("tipo").toString();
             if(!object.getBoolean("adquirido") && 
                 aux.equals("AVATAR")) {
                     newShopElement(object.getString("producto_id"),
                                    object.getInt("precio"),
-                               "/img/users/" + object.getString("url"));
+                               "/img/users/" + object.getString("url"),
+                               true);
               }
         }
     }
@@ -138,13 +152,13 @@ public class Shop {
         elementsList.getItems().clear();
         for (int i = 0; i < skinList.length(); i++) {
             JSONObject object = skinList.getJSONObject(i);
-            System.out.println(object.getString("tipo").toString());
             String aux = object.getString("tipo").toString();
             if(!object.getBoolean("adquirido") && 
                 aux.equals("APARIENCIA")) {
                     newShopElement(object.getString("producto_id"),
                                    object.getInt("precio"),
-                               "/img/board/" + object.getString("url"));
+                               "/img/board/" + object.getString("url"),
+                               false);
               }
         }
     }

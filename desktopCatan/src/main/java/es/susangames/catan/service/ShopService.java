@@ -4,6 +4,7 @@ import org.json.*;
 import java.io.IOException;
 
 
+
 public class ShopService {
     private static HttpService netService;
     private static final String baseUrl = "http://localhost:8080/producto";
@@ -19,9 +20,24 @@ public class ShopService {
     JSONArray response;
         try {
             response = netService.getArr(disponiblesUrl + "/" + UserService.getUsername());
-        } catch(IOException e) {
+        } catch(Exception e) {
             return null;
         }
         return response;
     }
+
+    public void  adquirirProducto(String id_producto) {
+        JSONObject myObject = new JSONObject();
+        myObject.put("usuario_id", UserService.getUsername());
+        myObject.put("producto_id", id_producto);
+        String response;
+        try {
+            response = netService.put(adquirirUrl, myObject.toString());
+            JSONObject arr = new JSONObject(response);
+            JSONObject aux = new JSONObject(arr.get("usuario").toString());
+            UserService.fillData(aux);
+        } catch(Exception e) {}
+        
+    }
+
 }

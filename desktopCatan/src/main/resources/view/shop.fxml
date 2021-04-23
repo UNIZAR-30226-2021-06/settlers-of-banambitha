@@ -22,6 +22,6 @@
          <effect>
             <DropShadow />
          </effect></Button>
-      <JFXListView fx:id="elementsList" layoutX="58.0" layoutY="134.0" prefHeight="809.0" prefWidth="1513.0" style="-fx-background-color: transparent;;" />
+      <JFXListView fx:id="elementsList" layoutX="58.0" layoutY="134.0" prefHeight="783.0" prefWidth="1513.0" style="-fx-background-color: transparent;;" AnchorPane.bottomAnchor="61.0" />
    </children>
 </AnchorPane>
