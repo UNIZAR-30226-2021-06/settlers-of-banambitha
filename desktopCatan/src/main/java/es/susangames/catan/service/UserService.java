@@ -95,7 +95,17 @@ public class UserService {
         avatar = data.get("avatar").toString();
         apariencia = data.get("apariencia").toString();
         saldo = Integer.parseInt(data.get("saldo").toString());
-        
+    }
+
+    
+    public static JSONObject getUserInfo(String name) {
+        JSONObject response;
+        try {
+            response = netService.get(baseUrl + "/find/" + name);
+        } catch(IOException e) {
+            return null;
+        }   
+        return response;
     }
     
 }

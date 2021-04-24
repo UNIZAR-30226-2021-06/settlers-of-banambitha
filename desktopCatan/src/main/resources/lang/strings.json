@@ -215,12 +215,26 @@
     "set_icon": {
         "eng": "Use this icon",
         "esp": "Usar este icono"
+    },
+
+    "leave_chat": {
+        "eng": "Leave chat",
+        "esp": "Abandonar chat"
+    },
+
+    "find_user": {
+        "eng": "Search for users",
+        "esp": "Busque a un usuario"
+    },
+
+    "new_friend": {
+        "eng": "Add",
+        "esp": "Agregar"
+    },
+
+    "no_user" : {
+        "eng": "User doesn't exist",
+        "esp": "Usuario inexistente"
     }
-
-    
-    
-
-
-
 }
  

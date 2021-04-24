@@ -203,7 +203,6 @@ public class Options {
                                 elementsList);
             }
         }
-
          changeUserImg.setOnAction((ActionEvent event) -> {
             
             if (!popupChangeUserImg.isShowing()) {

@@ -16,7 +16,6 @@ import javafx.scene.shape.Polygon;
 import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.control.ToggleButton;
-//import java.awt.*;
 import javafx.scene.shape.Circle;
 import javafx.scene.paint.Color;
 import javafx.scene.input.MouseEvent;
