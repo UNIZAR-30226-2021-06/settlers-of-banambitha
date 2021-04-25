@@ -1,5 +1,4 @@
-package logica;
-
+package es.susangames.catan.logica;
 
 /**
  * Esta clase define un enumerador de los distintos tipos de asentamientos del juego
@@ -23,7 +22,7 @@ public enum TipoAsentamiento {
      * @return cierto si es un asentamiento vacio
      */
 	public Boolean tieneAsentamiento () {
-		return tipo == 0;
+		return tipo != 0;
 	}
 	/**
      * Método que devuelve cierto si es un asentamiento ciudad

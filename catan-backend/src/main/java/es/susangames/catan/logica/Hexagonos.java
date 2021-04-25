@@ -1,6 +1,4 @@
-package logica;
-
-
+package es.susangames.catan.logica;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -26,7 +24,7 @@ public class Hexagonos {
 	private TipoTerreno tipo_terreno;
 	private int valor;
 	
-	private Integer numJugadores;
+	private static Integer numJugadores;
 	
 	/*
 	 * Vertices de todos los hexagonos creados.
@@ -216,13 +214,13 @@ public class Hexagonos {
 		return vertices.containsKey(c);
 	}
 	
-	public static Boolean sePuedeConstruirAsentamiento(Coordenadas c, Jugadores j) {
+	/*public static Boolean sePuedeConstruirAsentamiento(Coordenadas c, Jugadores j) {
 		if (existeCoordenada(c)) {
 			// Comprobar se existe carretera del jugador cercana.
 			// Comprobar que se cumple la regla de la distancia.
 		}
 		return false;
-	}
+	}*/
 	
 	public static int num_vertices () {
 		return vertices.size();
@@ -257,7 +255,7 @@ public class Hexagonos {
 	}
 	
 	private static Aristas[] aristasDelVertice (Vertices v) {
-		Aristas a[] = null;
+		Aristas a[] = new Aristas[3];
 		Coordenadas c = v.getCoordenadas();
 		// Se trata de un vertice que pertenece a un Hexagono.
 		if (vertices.containsKey(v.getCoordenadas())) {
@@ -270,135 +268,48 @@ public class Hexagonos {
 	}
 	
 	public static void construirAsentamiento (Vertices v, Jugadores j) {
-		CoordenadasAristas coordAristas;
-		Coordenadas coordAux;		
-		Vertices v_adyacentes[] = new Vertices[3];
-		int ind = 0;
+		Vertices verticesAdyacentes[] = Hexagonos.getVerticesAdyacentes(v);
+		Aristas aristasAdyacentes[] = Hexagonos.aristasDelVertice(v);
 		if (j.puedeConstruirPueblo() && !v.tieneAsentamiento()) {
-			if (vertices.containsKey(v.getCoordenadas())) {
-				Aristas a[] = aristasDelVertice(v);
-				for (int i = 0; i < a.length; ++i) {
-					coordAristas = a[i].getCoordenadasAristas();
-					coordAux = new Coordenadas(coordAristas.getX() , coordAristas.getY());
-					if (!v.getCoordenadas().equals(coordAux)) {
-						v_adyacentes[ind] = vertices.get(coordAux); ind++;
-					}
-					coordAux = new Coordenadas(coordAristas.getFin_x() , coordAristas.getFin_y());
-					if (!v.getCoordenadas().equals(coordAux)) {
-						v_adyacentes[ind] = vertices.get(coordAux); ind++;
-					}
+			// No existe asentamiento adyacente.
+			Boolean existeAsentamiento = false;
+			for (int i = 0; i < verticesAdyacentes.length && !existeAsentamiento; ++i) {
+				if (verticesAdyacentes[i] != null) {
+					if (verticesAdyacentes[i].tieneAsentamiento()) existeAsentamiento = true;
 				}
-				// Se ha calculado aristas y vertices adyacentes.
-				// Para cada una de las carreteras hay que mirar si hay una carretera aliada,
-				// si la hay, hay que comprobar que el vertice adyacente esta vacio.
-				
-				if (a[0].tieneCamino() && a[0].getPropietario().equals(j)) {
-					if (!v_adyacentes[0].tieneAsentamiento()) {
-						v_adyacentes[0].construirAsentamiento(j);
-						j.construirAsentamiento();
-					}
-				} else if (a[1].tieneCamino() && a[1].getPropietario().equals(j)) {
-					if (!v_adyacentes[1].tieneAsentamiento()) {
-						v_adyacentes[1].construirAsentamiento(j);
-						j.construirAsentamiento();
-					}
-				} else { // a[2].tieneCarretera() && a[2].getPropietario().equals(j)
-					if (!v_adyacentes[2].tieneAsentamiento()) {
-						v_adyacentes[2].construirAsentamiento(j);
-						j.construirAsentamiento();
+			}
+			
+			if (!existeAsentamiento) {
+				// Comprobamos que existe un camino del jugador en alguno de las aristas adyacentes.
+				Boolean existeCaminoDeJugador = false;
+				for (int i = 0; i < aristasAdyacentes.length && !existeCaminoDeJugador; ++i) {
+					if (aristasAdyacentes[i] != null) {
+						if (aristasAdyacentes[i].tieneCamino() && aristasAdyacentes[i].getPropietario().equals(j)) {
+							existeCaminoDeJugador = true;
+						}
 					}
 				}
 				
-				Aristas posiblesCarreteras[] = aristasDelVertice(v);
-				
-				for (int i = 0 ; i < posiblesCarreteras.length; ++i) {
-					posiblesCarreteras[i].posibleCaminoDeJugador(j.getColor().numeroColor());
+				if (existeCaminoDeJugador) {
+					v.construirAsentamiento(j);
+					
+					for (int i = 0; i < verticesAdyacentes.length; ++i) {
+						if (verticesAdyacentes[i] != null)
+							verticesAdyacentes[i].asentamientoAdyacente();
+					}
+					for (int i = 0; i < aristasAdyacentes.length; ++i) {
+						if (aristasAdyacentes[i] != null) {
+							aristasAdyacentes[i].posibleCaminoDeJugador(j.getColor().numeroColor());
+						}
+					}
 				}
 			}
 		}
 	}
 	
-	public static void construirCarretera (Aristas a, Jugadores j) {
-		Boolean sePuedeConstruir = false;
-		Vertices v1 = vertices.get(a.getCoordenadasVertice1());
-		Vertices v2 = vertices.get(a.getCoordenadasVertice2());
-		
-		Aristas aristasAdyacentesAv1[];
-		Aristas aristasAdyacentesAv2[];
-		
-		if (j.puedeConstruirCarretera() && !a.tieneCamino()) {
-			// Buscar asentamiento del jugador j en uno de los vertices.
-			
-			if (v1.tieneAsentamiento()) {
-				if (v1.getPropietario().equals(j))
-					sePuedeConstruir = true;
-			} else {
-				// Se comprueba que las aristas adyacentes tengan al menos un camino del jugador.
-				aristasAdyacentesAv1 = aristasDelVertice(v1);
-				for (int i = 0; i < aristasAdyacentesAv1.length && !sePuedeConstruir; ++i ) {
-					if (aristasAdyacentesAv1[i].getPropietario().equals(j))
-						sePuedeConstruir = true;
-				}
-			}
-			
-			if (!sePuedeConstruir) {
-				if (v2.tieneAsentamiento()) {
-					if (v2.getPropietario().equals(j) ) {
-						sePuedeConstruir = true;
-					}
-				} else {
-					// Se comprueba que las aristas adyacentes tengan al menos un camino del jugador.
-					aristasAdyacentesAv2 = aristasDelVertice(v2);
-					for (int i = 0; i < aristasAdyacentesAv2.length && !sePuedeConstruir; ++i ) {
-						if (aristasAdyacentesAv2[i].getPropietario().equals(j))
-							sePuedeConstruir = true;
-					}
-				}
-			}
-		}
-		
-		if (sePuedeConstruir) {
-			// Construir camino.
-			a.setCamino(j);
-			
-			// Posibles nuevo caminos.
-			aristasAdyacentesAv1 = aristasDelVertice(v1);
-			for (int i = 0; i < aristasAdyacentesAv1.length; ++i ) {
-				if (!aristasAdyacentesAv1[i].tieneCamino())
-					aristasAdyacentesAv1[i].posibleCaminoDeJugador(j.getColor().numeroColor());
-			}
-			
-			aristasAdyacentesAv2 = aristasDelVertice(v2);
-			for (int i = 0; i < aristasAdyacentesAv1.length; ++i ) {
-				if (!aristasAdyacentesAv2[i].tieneCamino())
-					aristasAdyacentesAv2[i].posibleCaminoDeJugador(j.getColor().numeroColor());
-			}
-			
-			// Actualizar posibles asentamientos.
-			// Comprobar que v1 y v2 estan vacios.
-				// comprobar que al menos uno de los vertices adyacentes a v1 y v2 tiene un 
-				// asentamiento del jugador j.
-			Boolean puedeConstruirseAsentamiento = false;
-			if (!v1.tieneAsentamiento()) {
-				Vertices v1Adyacentes[] = getVerticesAdyacentes(v1);
-				for (int i = 0; i < v1Adyacentes.length; ++i) {
-					puedeConstruirseAsentamiento |= v1Adyacentes[i].tieneAsentamiento() 
-							&& v1Adyacentes[i].getPropietario().equals(j);
-				}
-				
-				if (puedeConstruirseAsentamiento) v1.posibleAsentamientoDeJugador(j);
-			}
-			
-			puedeConstruirseAsentamiento = false;
-			if (!v2.tieneAsentamiento()) {
-				Vertices v2Adyacentes[] = getVerticesAdyacentes(v2);
-				for (int i = 0; i < v2Adyacentes.length; ++i) {
-					puedeConstruirseAsentamiento |= v2Adyacentes[i].tieneAsentamiento() 
-							&& v2Adyacentes[i].getPropietario().equals(j);
-				}
-				
-				if (puedeConstruirseAsentamiento) v2.posibleAsentamientoDeJugador(j);
-			}
+	public static void construirCamino (Aristas a, Jugadores j) {
+		if (j.puedeConstruirCamino()) {
+			construirPrimerCamino(a,j);
 		}
 	}
 	
@@ -423,64 +334,78 @@ public class Hexagonos {
 		this.tipo_terreno = tipo_terreno;
 	}
 
-	public static JSONObject listAsentamientoToJSON () throws JSONException {
+	public static JSONArray listAsentamientoToJSON () throws JSONException {
 		Iterator<Vertices> it = vertices.values().iterator();
-		String aux = "\"asentamiento\" : [" + "\"" + it.next().getAsentamientoJugador() +"\"";
+		Vertices aux;
+		JSONArray jsArray = new JSONArray();
+		String listAsentamiento[] = new String[Hexagonos.num_vertices()];
+		int id;
 		while (it.hasNext()) {
-			aux = ",\"" + it.next().getAsentamientoJugador() + "\"";
+			aux = it.next();
+			id = aux.getIdentificador();
+			listAsentamiento[id] = aux.getAsentamientoJugador();
 		}
 		
-		aux += "]";
+		jsArray.put(listAsentamiento);
 		
-		return new JSONObject(aux);
+		return jsArray;
 	}
 	
-	public static JSONObject posibleAsentamientoToJSON () throws JSONException {
+	public static JSONArray posibleAsentamientoToJSON () throws JSONException {
 		Iterator<Vertices> it = vertices.values().iterator();
-		Vertices vAux = it.next();
-		String aux = "\"posibles_asentamiento\" : [{" + vAux.getPosibleAsentamientoDeJugador(0) + 
-				vAux.getPosibleAsentamientoDeJugador(1) + vAux.getPosibleAsentamientoDeJugador(2) +
-				vAux.getPosibleAsentamientoDeJugador(3) + "}";
+		Vertices vAux;
+		JSONArray jsArray = new JSONArray();
+		Boolean posiblesAsentamientos[][] = new Boolean[numJugadores][Hexagonos.num_vertices()];
+		int id;
 		while (it.hasNext()) {
 			vAux = it.next();
-			aux += ", {" + vAux.getPosibleAsentamientoDeJugador(0) + 
-					vAux.getPosibleAsentamientoDeJugador(1) + vAux.getPosibleAsentamientoDeJugador(2) +
-					vAux.getPosibleAsentamientoDeJugador(3) + "}";
+			id = vAux.getIdentificador();
+			posiblesAsentamientos[0][id] = vAux.getPosibleAsentamientoDeJugador(0);
+			posiblesAsentamientos[1][id] = vAux.getPosibleAsentamientoDeJugador(1);
+			posiblesAsentamientos[2][id] = vAux.getPosibleAsentamientoDeJugador(2);
+			posiblesAsentamientos[3][id] = vAux.getPosibleAsentamientoDeJugador(3);
 		}
 		
-		aux += "]";
+		jsArray.put(posiblesAsentamientos);
 		
-		return new JSONObject(aux);
+		return jsArray;
 	}
 	
-	public static JSONObject listCaminoToJSON () throws JSONException {
+	public static JSONArray listCaminoToJSON () throws JSONException {
 		Iterator<Aristas> it = aristas.values().iterator();
-		String aux = "\"camino\" : [" + "\"" + it.next().getCaminoJugador() +"\"";
+		JSONArray jsArray = new JSONArray();
+		Aristas aux;
+		String caminos[] = new String[Hexagonos.num_aristas()];
+		int id;
 		while (it.hasNext()) {
-			aux = ",\"" + it.next().getCaminoJugador() + "\"";
+			aux = it.next();
+			id = aux.getIdentificador();
+			caminos[id] = aux.getCaminoJugador();
 		}
 		
-		aux += "]";
+		jsArray.put(caminos);
 		
-		return new JSONObject(aux);
+		return jsArray;
 	}
 	
-	public static JSONObject posibleCaminoToJSON () throws JSONException {
+	public static JSONArray posibleCaminoToJSON () throws JSONException {
 		Iterator<Aristas> it = aristas.values().iterator();
-		Aristas aAux = it.next();
-		String aux = "\"posibles_caminos\" : [{" + aAux.getPosibleCaminoDeJugador(0) + 
-				aAux.getPosibleCaminoDeJugador(1) + aAux.getPosibleCaminoDeJugador(2) +
-				aAux.getPosibleCaminoDeJugador(3) + "}";
+		Aristas aAux;
+		JSONArray jsArray = new JSONArray();
+		Boolean posiblesCaminos[][] = new Boolean [4][Hexagonos.num_aristas()];
+		int id;
 		while (it.hasNext()) {
 			aAux = it.next();
-			aux += ", {" + aAux.getPosibleCaminoDeJugador(0) + 
-					aAux.getPosibleCaminoDeJugador(1) + aAux.getPosibleCaminoDeJugador(2) +
-					aAux.getPosibleCaminoDeJugador(3) + "}";
+			id = aAux.getIdentificador();
+			posiblesCaminos[0][id] = aAux.getPosibleCaminoDeJugador(0);
+			posiblesCaminos[1][id] = aAux.getPosibleCaminoDeJugador(1);
+			posiblesCaminos[2][id] = aAux.getPosibleCaminoDeJugador(2);
+			posiblesCaminos[3][id] = aAux.getPosibleCaminoDeJugador(3);
 		}
 		
-		aux += "]";
+		jsArray.put(posiblesCaminos);
 		
-		return new JSONObject(aux);
+		return jsArray;
 	}
 	
 	public static JSONObject puertosToJSON () throws JSONException {
@@ -570,7 +495,130 @@ public class Hexagonos {
 		return v_adyacentes;
 	}
 	
-	public static void construirPrimerAsentamiento (Vertices v) {}
+	public static void construirPrimerAsentamiento (Vertices v, Jugadores j) {
+		// Antes de comprobar si se puede construir vamos a comprobar que el vertice no tiene 
+		// ning�n asentamiento construido.
+		System.out.println("Vamos a intentar construir en " + v.getIdentificador());
+		if (!v.tieneAsentamiento()) {
+			// Comprobamos que no hay ningun asentamiento construido en los vertices adyacentes.
+			Vertices vAdyacentes[] = getVerticesAdyacentes(v.getIdentificador());
+			Boolean existeAsentamiento = false;
+			for (int i = 0; i < vAdyacentes.length && !existeAsentamiento; ++i) {
+				if (vAdyacentes[i] != null) {
+					if (vAdyacentes[i].tieneAsentamiento()) {
+						existeAsentamiento = true;
+					}
+				}
+			}
+			
+			if (!existeAsentamiento) {
+				v.construirPrimerAsentamiento(j);
+				
+				Aristas posiblesCamino[] = aristasDelVertice(v);
+				
+				System.out.println("Aristas del vertice:");
+				System.out.println("\t" + posiblesCamino[0].getIdentificador());
+				System.out.println("\t" + posiblesCamino[1].getIdentificador());
+				if (posiblesCamino.length == 3) {
+					if (posiblesCamino[2] == null) System.out.println("\tNull");
+					else System.out.println("\t" + posiblesCamino[2].getIdentificador());
+				} else {
+					System.out.println("\tNull");
+				}
+				
+				for (int i = 0 ; i < posiblesCamino.length; ++i) {
+					System.out.println("Posible camino en " + posiblesCamino[i].getIdentificador());
+					aristasPorID.get(posiblesCamino[i].getIdentificador()).posibleCaminoDeJugador(j.getColor().numeroColor());
+					//posiblesCamino[i].posibleCaminoDeJugador(j.getColor().numeroColor());
+					System.out.println("\t" + posiblesCamino[i].getPosibleCaminoDeJugador(j.getColor().numeroColor()));
+				}
+			}
+		}
+	}
 	
-	public static void construirPrimerCamino (Aristas a) {}
+	public static void construirPrimerCamino (Aristas a, Jugadores j) {
+		Boolean sePuedeConstruir = false;
+		Vertices v1 = vertices.get(a.getCoordenadasVertice1());
+		Vertices v2 = vertices.get(a.getCoordenadasVertice2());
+		
+		Aristas aristasAdyacentesAv1[] = aristasDelVertice(v1);
+		Aristas aristasAdyacentesAv2[] = aristasDelVertice(v2);
+		
+		// Solo se puede construir en una arista si esta no tiene un camino ya construido
+		if (!a.tieneCamino()) {
+			// Para que se pueda construir hay que comprobar que si alguno de los dos vertices que
+			// forman la arista tienen construido una asentamiento o hay un camino construido en 
+			// las aristas adyacentes.
+			
+			// V1 tiene asentamiento del jugador
+			if ( (v1.tieneAsentamiento() && v1.getPropietario().equals(j) ) || 
+					( v2.tieneAsentamiento() && v2.getPropietario().equals(j) ) ){
+				// No podemos marcar ningun vertice como posible asentamiento ya que no cumplir�a 
+				// la regla de la distancia
+				Boolean resul = a.setCamino(j);
+				//System.out.println(resul);
+				// Solo podemos marcar aristas adyacentes como camino
+				for (int i = 0; i < aristasAdyacentesAv1.length; ++i) {
+					//System.out.println(aristasAdyacentesAv1[i].getIdentificador());
+					aristasAdyacentesAv1[i].posibleCaminoDeJugador(j.getColor().numeroColor());
+				}
+				for (int i = 0; i < aristasAdyacentesAv2.length; ++i) {
+					//System.out.println(aristasAdyacentesAv2[i].getIdentificador());
+					aristasAdyacentesAv2[i].posibleCaminoDeJugador(j.getColor().numeroColor());
+				}
+				
+			}
+			else if (!v1.tieneAsentamiento() && !v2.tieneAsentamiento()){
+				// Existe camino en alguno de las aristas adyacentes a v1 y esta arista no es a.
+				for (int i = 0; i < aristasAdyacentesAv1.length && !sePuedeConstruir; ++i) {
+					if (!aristasAdyacentesAv1[i].equals(a) && aristasAdyacentesAv1[i].tieneCamino() && 
+							j.equals(aristasAdyacentesAv1[i].getPropietario())) {
+						sePuedeConstruir = true;
+					}
+				}
+				
+				for (int i = 0; i < aristasAdyacentesAv2.length && !sePuedeConstruir; ++i) {
+					if (!aristasAdyacentesAv2[i].equals(a) && aristasAdyacentesAv2[i].tieneCamino() && 
+							j.equals(aristasAdyacentesAv2[i].getPropietario())) {
+						sePuedeConstruir = true;
+					}
+				}
+				
+				if (sePuedeConstruir) {
+					// Construir
+					a.setCamino(j);
+					Vertices verticesAdyacentesV1[] = Hexagonos.getVerticesAdyacentes(v1);
+					Vertices verticesAdyacentesV2[] = Hexagonos.getVerticesAdyacentes(v2);
+					// Posibles Caminos.
+					for (int i = 0; i < aristasAdyacentesAv1.length; ++i) {
+						aristasAdyacentesAv1[i].posibleCaminoDeJugador(j.getColor().numeroColor());
+					}
+					for (int i = 0; i < aristasAdyacentesAv2.length; ++i) {
+						aristasAdyacentesAv2[i].posibleCaminoDeJugador(j.getColor().numeroColor());
+					}
+					// Posibles Asentamientos. --> Respeta la regla de la distancia.
+					for (int i = 0; i < verticesAdyacentesV1.length; ++i) {
+						if (!verticesAdyacentesV1[i].equals(v2) && !verticesAdyacentesV1[i].tieneAsentamiento()) 
+							v1.posibleAsentamientoDeJugador(j);
+					}
+					for (int i = 0; i < verticesAdyacentesV2.length; ++i) {
+						if (!verticesAdyacentesV2[i].equals(v1) && !verticesAdyacentesV2[i].tieneAsentamiento()) 
+							v2.posibleAsentamientoDeJugador(j);
+					}
+				}
+			}
+		}
+	}
+	
+	public static Aristas[] getTodasAristas () {
+		Collection<Aristas> collect = aristas.values();
+		Object o[] = collect.toArray();
+		return Arrays.copyOf(o, o.length, Aristas[].class);
+	}
+	
+	public static Vertices[] getTodosVertices () {
+		Collection<Vertices> collect = vertices.values();
+		Object o[] = collect.toArray();
+		return Arrays.copyOf(o, o.length, Vertices[].class);
+	}
 }

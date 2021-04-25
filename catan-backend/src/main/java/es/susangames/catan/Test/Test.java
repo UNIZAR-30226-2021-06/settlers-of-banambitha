@@ -1,4 +1,4 @@
-package Test;
+package es.susangames.catan.Test;
 
 public class Test {
 	public static void main(String[] args) {

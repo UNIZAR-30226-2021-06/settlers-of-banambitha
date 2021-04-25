@@ -1,5 +1,4 @@
-package logica;
-
+package es.susangames.catan.logica;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -109,7 +108,7 @@ public class Jugadores {
      * Método que devuelve si el jugador puede construir una carretera
      * @return cierto si el jugador puede construir una carretera
      */
-	public Boolean puedeConstruirCarretera () {
+	public Boolean puedeConstruirCamino () {
 		return madera >= 1 && arcilla >= 1;
 	}
 	
@@ -188,6 +187,7 @@ public class Jugadores {
 		this.arcilla--;
 		this.numPobladosConstruidos++;
 	}
+	
 	/**
      * Método que elimina los recusos empleados en mejorar un asentamiento y actualiza al numero de ciudades.
      */
@@ -201,7 +201,7 @@ public class Jugadores {
 	/**
      * Método que elimina los recusos empleados en construir una carretera y actualiza al numero de carreteras.
      */
-	public void construirCarretera () {
+	public void construirCamino () {
 		// Eliminar recursos. --> madera >= 1 && arcilla >= 1;
 		this.madera--;
 		this.arcilla--;
@@ -235,13 +235,14 @@ public class Jugadores {
 	
 	public void usarCartaCaballero() {
 		// mover Ladron 
-		
 	}
+	
 	/**
      * Método que intercambiua carta de victoria por punto de victoria.
      */
 	public void usarCartasPuntosVictoria() {
 		this.puntosVictoria++;
+		this.numCartasPuntoVictoria--;
 	}
 	
 	public void usarCartaMonopolio () {}
@@ -279,6 +280,7 @@ public class Jugadores {
 		return new JSONObject ("\"Player_" + this.color.numeroColor() + 1 + "\": [" + this.madera + "," + 
 				this.lana + "," + this.cereales + "," + this.arcilla + "," + this.mineral + "]");
 	}
+	
 	/**
      * Método que envia informacion del jugador.
      */
@@ -291,4 +293,45 @@ public class Jugadores {
 				this.numCartasPuntoVictoria + "," +this.numCartasContruccionCarreteras + "," + this.numCartasDescubrimiento +
 				"," + this.numCartasMonopolio + "," + numGranEjecitoCaballeria + "," + numGranRutaComercial + "]");
 	}
+
+	public Integer getMadera() {
+		return madera;
+	}
+
+	public void setMadera(Integer madera) {
+		this.madera = madera;
+	}
+
+	public Integer getLana() {
+		return lana;
+	}
+
+	public void setLana(Integer lana) {
+		this.lana = lana;
+	}
+
+	public Integer getCereales() {
+		return cereales;
+	}
+
+	public void setCereales(Integer cereales) {
+		this.cereales = cereales;
+	}
+
+	public Integer getArcilla() {
+		return arcilla;
+	}
+
+	public void setArcilla(Integer arcilla) {
+		this.arcilla = arcilla;
+	}
+
+	public Integer getMineral() {
+		return mineral;
+	}
+
+	public void setMineral(Integer mineral) {
+		this.mineral = mineral;
+	}
+	
 } //Cierre de la clase

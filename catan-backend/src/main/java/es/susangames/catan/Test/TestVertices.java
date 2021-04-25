@@ -1,5 +1,7 @@
-package Test;
+package es.susangames.catan.Test;
+
+import es.susangames.catan.logica.*;
 
 public class TestVertices {
-	/** Por diseñar **/
+	/** Por diseï¿½ar **/
 }

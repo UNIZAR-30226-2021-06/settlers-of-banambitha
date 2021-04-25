@@ -1,5 +1,4 @@
-package logica;
-
+package es.susangames.catan.logica;
 
 public class Vertices {
 	
@@ -105,8 +104,12 @@ public class Vertices {
 			}
 		} catch (Exception e) {
 			System.out.println(e.toString());
-		}
-		
+		}	
+	}
+	
+	public void construirPrimerAsentamiento (Jugadores j) {
+		this.asentamiento = TipoAsentamiento.Pueblo;
+		this.propietario = j;
 	}
 	
 	/*
@@ -156,7 +159,15 @@ public class Vertices {
 	 * Actualiza la vertice como posible lugar donde el jugador j puede construir un asentamiento.
 	 * */
 	public void posibleAsentamientoDeJugador (Jugadores j) {
-		puedeConstruirJugador[j.getColor().numeroColor()] = true;
+		if (!tieneAsentamiento())
+			puedeConstruirJugador[j.getColor().numeroColor()] = true;
+	}
+	
+	public void asentamientoAdyacente () {
+		puedeConstruirJugador[0] = false;
+		puedeConstruirJugador[1] = false;
+		puedeConstruirJugador[2] = false;
+		puedeConstruirJugador[3] = false;
 	}
 	
 	/*
@@ -175,4 +186,5 @@ public class Vertices {
 		}
 		return puedeConstruirJugador[i];
 	}
+	
 }

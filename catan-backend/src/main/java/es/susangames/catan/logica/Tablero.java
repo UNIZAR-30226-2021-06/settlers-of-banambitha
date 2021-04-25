@@ -1,4 +1,4 @@
-package logica;
+package es.susangames.catan.logica;
 
 import java.util.Map;
 
@@ -325,12 +325,12 @@ public class Tablero {
 		Tab_inf.put("hexagono", infoHexagonosJSON());
 		
 		JSONObject vertices = new JSONObject();
-		vertices.put("asentamiento" , new JSONObject());
-		vertices.put("posibles_asentamiento" , new JSONObject());
+		vertices.put("asentamiento" , Hexagonos.listAsentamientoToJSON());
+		vertices.put("posibles_asentamiento" , Hexagonos.posibleAsentamientoToJSON());
 		
 		JSONObject aristas = new JSONObject();
-		aristas.put("camino" , new JSONObject());
-		aristas.put("posibles_camino" , new JSONObject());
+		aristas.put("camino" , Hexagonos.listCaminoToJSON());
+		aristas.put("posibles_camino" , Hexagonos.posibleCaminoToJSON());
 		aristas.put("puertos", Hexagonos.puertosToJSON());
 		
 		Tab_inf.put("vertices", vertices);
@@ -395,13 +395,15 @@ public class Tablero {
 					jug.mejorarAsentamiento();
 			}
 			break;
-		case "crear carretera":
-			if ( jug.puedeConstruirCarretera() ) {
+		case "construir camino":
+			if ( jug.puedeConstruirCamino() ) {
 				int id_arista = move.getInt("param");
 				Aristas a = Hexagonos.getAristaPorId(id_arista);
+				
 				if (!a.tieneCamino() && a.getPosibleCaminoDeJugador(id_arista)) {
-					Hexagonos.construirCarretera(a, jug);
+					Hexagonos.construirCamino(a, jug);
 				}
+				jug.construirCamino();
 			}
 			break;
 		case "mover ladron":
@@ -419,12 +421,12 @@ public class Tablero {
 		case "primer asentamiento":
 			int id_vertice = move.getInt("param");
 			Vertices v = Hexagonos.getVerticePorId(id_vertice);
-			Hexagonos.construirPrimerAsentamiento(v);
+			Hexagonos.construirPrimerAsentamiento(v,jug);
 			break;
 		case "primer camino":
 			int id_arista = move.getInt("param");
 			Aristas a = Hexagonos.getAristaPorId(id_arista);
-			Hexagonos.construirPrimerCamino(a);
+			Hexagonos.construirPrimerCamino(a,jug);
 			break;
 		default:
 			// No existe la accion solicitada.

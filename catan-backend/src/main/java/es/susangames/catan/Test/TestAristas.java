@@ -1,5 +1,5 @@
-package Test;
+package es.susangames.catan.Test;
 
 public class TestAristas {
-	/** Por diseñar **/
+	/** Por diseï¿½ar **/
 }

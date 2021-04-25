@@ -1,5 +1,4 @@
-package logica;
-
+package es.susangames.catan.logica;
 
 /*
  * 
@@ -121,15 +120,19 @@ public class Aristas {
 	public Boolean posibleCaminoDeJugador (int identificador) {
 		try {
 			if (identificador >= 0 && identificador < this.numJugadores) {
-				puedeConstruirJugador[identificador] = true;
+				if (!this.tieneCamino()) {
+					puedeConstruirJugador[identificador] = true;
+				} else {
+					puedeConstruirJugador[identificador] = false;
+				}
+				return true;
 			} else {
 				throw new Exception ("function posibleCarreteraDeJugador (int identificador): El "
 						+ "identificador debe de pertenecer a un jugador, se esperaban valores "
 						+ "0 <= i < " + this.numJugadores);
 			}
-			return true;
 		} catch (Exception e) {
-			System.out.println("");
+			System.out.println(e.toString());
 			return false;
 		}
 	}

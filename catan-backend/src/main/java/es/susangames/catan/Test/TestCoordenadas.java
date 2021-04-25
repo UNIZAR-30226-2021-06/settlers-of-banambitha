@@ -1,6 +1,6 @@
-package Test;
+package es.susangames.catan.Test;
 
-import logica.Coordenadas;
+import es.susangames.catan.logica.*;
 
 public class TestCoordenadas {
 	
@@ -15,7 +15,7 @@ public class TestCoordenadas {
 	}
 	
 	/*
-	 * Esta función comprueba que la distancia de dos coordenadas es igual a la esperada.
+	 * Esta funciï¿½n comprueba que la distancia de dos coordenadas es igual a la esperada.
 	 * @param c1	coordenada 1.
 	 * @param c2	coordenada 2.
 	 * @param dist	distancia esperada entre la coordenada 1 y la coordenada 2.
