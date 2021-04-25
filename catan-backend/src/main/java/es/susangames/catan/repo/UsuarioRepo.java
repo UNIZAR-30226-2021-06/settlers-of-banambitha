@@ -21,5 +21,15 @@ public interface UsuarioRepo extends JpaRepository<Usuario, String> {
 	@Transactional
 	@Query(value = "INSERT INTO usuario (usuario_id, email, contrasenya) values (:usuarioId, :mail, :passw)", nativeQuery = true)
 	public void newUsuario(@Param("usuarioId") String usuarioId, @Param("mail") String mail, @Param("passw") String passw);
+	
+	@Modifying
+	@Transactional
+	@Query(value = "UPDATE usuario SET partida = :partidaId WHERE usuario_id = :usuarioId", nativeQuery = true)
+	public void setPartida(@Param("usuarioId") String usuarioId, @Param("partidaId") String partidaId);
 
+
+	@Modifying
+	@Transactional
+	@Query(value = "UPDATE usuario SET partida = null WHERE usuario_id = :usuarioId", nativeQuery = true)
+	public void endPartida(@Param("usuarioId") String usuarioId);
 }

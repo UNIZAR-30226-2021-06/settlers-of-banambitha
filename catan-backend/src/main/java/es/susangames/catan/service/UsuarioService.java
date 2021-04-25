@@ -79,6 +79,17 @@ public class UsuarioService {
 		return (contrasenya==null)?false:EncryptPassword(usuario.getContrasenya()).contentEquals(contrasenya);
 	}
 	
+	public void setPartida(String usuarioId, String partidaId) {
+		
+		usuarioRepo.setPartida(usuarioId, partidaId);
+		
+	}
+	
+	public void endPartida(String usuarioId) {
+		
+		usuarioRepo.endPartida(usuarioId);
+	}
+	
 	//Función que devuelve el resultado de encriptar mediante MD5 una cadena de caracteres 
 	private static String EncryptPassword(String plain_password) {
 
