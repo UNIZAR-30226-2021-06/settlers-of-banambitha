@@ -269,7 +269,9 @@ public class SalaController {
 	 * 				{
 	 * 					"status"	: "ACCEPTED" | "FULL",
 	 * 					"leader"	: <liderId>,
-	 * 					"room"		: <salaId>
+	 * 					"room"		: <salaId>,
+	 * 					"players"	: [previous players, <invitadoId>],
+	 * 					"invites"	: [previous invites - <invitadoId>]
 	 *				}
 	 *
 	 *			-Broadcast point:	/sala-act/<salaId>
@@ -299,12 +301,26 @@ public class SalaController {
 			
 			if(sala.aceptarInvitacion(invitado)) {
 				
-				invitacion.put("status", "ACCEPTED");
-				template.convertAndSend(WebSocketConfig.TOPIC_INVITACION + "/" + invitado, invitacion.toString());
+				if(sala.size()==4) {
+					JSONObject actualizacionInvitacion = new JSONObject();
+					
+					actualizacionInvitacion.put("status", "FULL");
+					actualizacionInvitacion.put("leader", liderId);
+					actualizacionInvitacion.put("room", salaId);
+					
+					for(String i : sala.getInvites()) {
+						template.convertAndSend(WebSocketConfig.TOPIC_INVITACION + "/" + i, actualizacionInvitacion.toString());
+					}
+				}
 				
 				JSONObject actualizacion = new JSONObject();
 				JSONArray jugadores = new JSONArray(sala.getPlayers());
 				JSONArray invitados = new JSONArray(sala.getInvites());
+				
+				invitacion.put("status", "ACCEPTED");
+				invitacion.put("players", jugadores);
+				invitacion.put("invites", invitados);
+				template.convertAndSend(WebSocketConfig.TOPIC_INVITACION + "/" + invitado, invitacion.toString());
 				
 				actualizacion.put("status", "UPDATED-PLAYERS");
 				actualizacion.put("players", jugadores);

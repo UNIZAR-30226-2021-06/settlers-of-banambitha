@@ -42,7 +42,7 @@ public class MoveCarrierHeap {
 		return Id;
 	}
 	
-	public boolean deleteGame(String partidaId) {
+	public static boolean deleteGame(String partidaId) {
 		
 		synchronized (conjuntoJugadas) {
 			return conjuntoJugadas.remove(partidaId)!=null;

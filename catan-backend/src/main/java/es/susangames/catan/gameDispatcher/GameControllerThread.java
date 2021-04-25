@@ -73,6 +73,8 @@ public class GameControllerThread implements Runnable {
 			usuarioService.endPartida(jugador);
 		}
 		
+		MoveCarrierHeap.deleteGame(partidaId);
+		
 		System.out.println("Partida " + partidaId + "finalizada");
 	}
 
