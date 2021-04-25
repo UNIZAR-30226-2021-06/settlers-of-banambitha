@@ -53,7 +53,7 @@ public class ProductoResource {
 	}
 	
 	/* ******************************************************
-	 * Maps: 	Get Every Product and their whether or not
+	 * Maps: 	Get Every Product and whether or not
 	 * 			they have already been purchased by the user @Get
 	 * 
 	 * Expects: -Parameter in url

@@ -31,6 +31,9 @@ public class Usuario implements Serializable {
 	@Column(columnDefinition = "varchar(10) default 'Español' CHECK (idioma IN ('Español','English'))", nullable = false, updatable = true)
 	private String idioma;
 	
+	@Column(nullable = true, updatable = true)
+	private String partida;
+	
 	@Column(columnDefinition = "varchar(100) default 'Original'", nullable = false, updatable = false, insertable = false)
 	private String avatar;
 	
@@ -48,12 +51,13 @@ public class Usuario implements Serializable {
 	
 	public Usuario() {}
 
-	public Usuario(String nombre, String email, String contrasenya, Integer saldo, String idioma, String avatar, String apariencia) {
+	public Usuario(String nombre, String email, String contrasenya, Integer saldo, String idioma, String partida, String avatar, String apariencia) {
 		this.nombre = nombre;
 		this.email = email;
 		this.contrasenya = contrasenya;
 		this.saldo = saldo;
 		this.idioma = idioma;
+		this.partida = partida;
 		this.avatar = avatar;
 		this.apariencia = apariencia;
 	}
@@ -98,6 +102,14 @@ public class Usuario implements Serializable {
 		this.idioma = idioma;
 	}
 	
+	public String getPartida() {
+		return partida;
+	}
+
+	public void setPartida(String partida) {
+		this.partida = partida;
+	}
+
 	public String getAvatar() {
 		return avatar;
 	}

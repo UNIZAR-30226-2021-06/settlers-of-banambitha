@@ -137,7 +137,7 @@ public class UsuarioResourcee {
 	 *				}
 	 *			-On failure all fields are null
 	****************************************************** */
-	@GetMapping("/validate")
+	@PostMapping("/validate")
 	public ResponseEntity<Usuario> validateUsuario(@RequestBody Usuario usuario) {
 
 		boolean valid = usuarioService.validarUsuario(usuario);
