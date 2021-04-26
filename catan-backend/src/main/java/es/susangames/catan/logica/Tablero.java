@@ -1,5 +1,6 @@
 package es.susangames.catan.logica;
 
+
 import java.util.Map;
 
 import org.json.JSONArray;
@@ -47,7 +48,7 @@ public class Tablero {
 	int turno;
 	int dados;
 	
-	public Tablero (Integer num_jugadores) {
+	Tablero (Integer num_jugadores) {
 		this.num_jugadores = num_jugadores;
 		j = new Jugadores[num_jugadores];
 		
@@ -76,7 +77,7 @@ public class Tablero {
 		
 		generarPuertos ();
 
-		//mostrarHexagonos();
+		mostrarHexagonos();
 	}
 	
 	/**
@@ -100,10 +101,10 @@ public class Tablero {
 			for (int j = 0; j < this.num_hexagonos_fila[i]; ++j) {
 				aux = new Coordenadas(ini_x, ini_y);
 				if ( this.vector_terrenos[id].esDesierto() ) {
-					hexagonos.put(id, new Hexagonos(aux, this.vector_terrenos[id], -1, this.num_jugadores));
+					hexagonos.put(id, new Hexagonos(aux, this.vector_terrenos[id], -1));
 				} else {
 					hexagonos.put(id, new Hexagonos(aux, this.vector_terrenos[id], 
-							this.vector_valores[count_value], this.num_jugadores));
+							this.vector_valores[count_value]));
 					count_value++;
 				}
 				ini_x += 2*apotema;
@@ -133,15 +134,6 @@ public class Tablero {
 		
 		for (Aristas a : aristasNoPuertos) {
 			Hexagonos.eliminarPuerto(a);
-		}
-	}
-	
-	public Hexagonos getHexagono (int identificador) {
-		try {
-			return this.hexagonos.get(identificador);
-		} catch (Exception e) {
-			System.out.println(e.toString());
-			return null;
 		}
 	}
 	
@@ -282,6 +274,47 @@ public class Tablero {
 		
 	}
 	
+	public void usarCartaCaballero(Integer nuevaPosicion, Jugadores j) {
+		if (j.numCartasCaballeros > 0){
+			j.usarCartaCaballero();
+			this.moverLadron(nuevaPosicion);
+		}
+	}
+	
+	public void usarCartaMonopolio (TipoTerreno tipo, Jugadores j) {
+		if (j.numCartasMonopolio > 0){
+			j.usarCartaMonopolio();
+			for (int i = 0; i < 4; ++i ) {
+				if(!j.mismoJugador(this.Jugadores[i])){
+					switch (tipo) {
+						case 0:
+							j.madera += this.Jugadores[i].madera;
+							this.Jugadores[i].madera = 0;
+						case 1:
+							j.lana += this.Jugadores[i].lana;
+							this.Jugadores[i].lana = 0;
+						case 2:
+							j.cereales += this.Jugadores[i].cereales;
+							this.Jugadores[i].cereales = 0;
+						case 3:								
+							j.arcilla += this.Jugadores[i].arcilla;
+							this.Jugadores[i].arcilla = 0;
+						case 4:
+							j.mineral += this.Jugadores[i].mineral;
+							this.Jugadores[i].mineral = 0;
+					}
+				}
+			}		
+		}
+	}
+	
+	public void usarCartasConstruccionCarretera(Hexagono hexagono, Aristas arista, Jugadores j) {
+		if (j.numCartasContruccionCarreteras > 0){
+			j.usarCartasConstruccionCarretera();
+			hexagono.construirCarretera(arista, j)
+		}
+	}
+	
 	/*
 	 * Genera un JSONObject con informacion de los hexagonos
 	 * @return devuelve informacion de los hexagonos
@@ -325,12 +358,12 @@ public class Tablero {
 		Tab_inf.put("hexagono", infoHexagonosJSON());
 		
 		JSONObject vertices = new JSONObject();
-		vertices.put("asentamiento" , Hexagonos.listAsentamientoToJSON());
-		vertices.put("posibles_asentamiento" , Hexagonos.posibleAsentamientoToJSON());
+		vertices.put("asentamiento" , new JSONObject());
+		vertices.put("posibles_asentamiento" , new JSONObject());
 		
 		JSONObject aristas = new JSONObject();
-		aristas.put("camino" , Hexagonos.listCaminoToJSON());
-		aristas.put("posibles_camino" , Hexagonos.posibleCaminoToJSON());
+		aristas.put("camino" , new JSONObject());
+		aristas.put("posibles_camino" , new JSONObject());
 		aristas.put("puertos", Hexagonos.puertosToJSON());
 		
 		Tab_inf.put("vertices", vertices);
@@ -395,15 +428,13 @@ public class Tablero {
 					jug.mejorarAsentamiento();
 			}
 			break;
-		case "construir camino":
-			if ( jug.puedeConstruirCamino() ) {
+		case "crear carretera":
+			if ( jug.puedeConstruirCarretera() ) {
 				int id_arista = move.getInt("param");
 				Aristas a = Hexagonos.getAristaPorId(id_arista);
-				
 				if (!a.tieneCamino() && a.getPosibleCaminoDeJugador(id_arista)) {
-					Hexagonos.construirCamino(a, jug);
+					Hexagonos.construirCarretera(a, jug);
 				}
-				jug.construirCamino();
 			}
 			break;
 		case "mover ladron":
@@ -421,12 +452,12 @@ public class Tablero {
 		case "primer asentamiento":
 			int id_vertice = move.getInt("param");
 			Vertices v = Hexagonos.getVerticePorId(id_vertice);
-			Hexagonos.construirPrimerAsentamiento(v,jug);
+			Hexagonos.construirPrimerAsentamiento(v);
 			break;
 		case "primer camino":
 			int id_arista = move.getInt("param");
 			Aristas a = Hexagonos.getAristaPorId(id_arista);
-			Hexagonos.construirPrimerCamino(a,jug);
+			Hexagonos.construirPrimerCamino(a);
 			break;
 		default:
 			// No existe la accion solicitada.
