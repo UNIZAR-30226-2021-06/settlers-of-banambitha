@@ -80,28 +80,49 @@ public class UsuarioService {
 		return estadisticasRepo.findById(usuarioId).orElseThrow(() -> new  UserNotFoundException(usuarioId));
 	}
 	
-	private Estadisticas updateOnVictory(String usuarioId) {
+	private void updateOnVictory(String usuarioId) {
 		
 		Estadisticas oldEstadisticas = estadisticasRepo.findById(usuarioId).orElseThrow(() -> new  UserNotFoundException(usuarioId));
 		
 		oldEstadisticas.onVictory();
 		
-		return estadisticasRepo.save(oldEstadisticas);
+		int partidasJugadas = oldEstadisticas.getPartidasJugadas();
+		int totalVictorias 	= oldEstadisticas.getTotalDeVictorias();
+		float porcentajeV 	= oldEstadisticas.getPorcentajeDeVictorias();
+		int rachaActual 	= oldEstadisticas.getRachaDeVictoriasActual();
+		int mayorRacha 		= oldEstadisticas.getMayorRachaDeVictorias();
+		
+		estadisticasRepo.update(usuarioId, partidasJugadas, totalVictorias, porcentajeV, rachaActual, mayorRacha);
+		
 	}
 	
-	private Estadisticas updateOnDefeat(String usuarioId) {
+	private void updateOnDefeat(String usuarioId) {
 		
 		Estadisticas oldEstadisticas = estadisticasRepo.findById(usuarioId).orElseThrow(() -> new  UserNotFoundException(usuarioId));
 		
 		oldEstadisticas.onDefeat();
 		
-		return estadisticasRepo.save(oldEstadisticas);
+		int partidasJugadas = oldEstadisticas.getPartidasJugadas();
+		int totalVictorias 	= oldEstadisticas.getTotalDeVictorias();
+		float porcentajeV 	= oldEstadisticas.getPorcentajeDeVictorias();
+		int rachaActual 	= oldEstadisticas.getRachaDeVictoriasActual();
+		int mayorRacha 		= oldEstadisticas.getMayorRachaDeVictorias();
+		
+		estadisticasRepo.update(usuarioId, partidasJugadas, totalVictorias, porcentajeV, rachaActual, mayorRacha);
 	}
 	
 	public boolean validarUsuario(Usuario usuario) {
 		
 		String contrasenya = usuarioRepo.getConstrasenya(usuario.getNombre());
 		return (contrasenya==null)?false:EncryptPassword(usuario.getContrasenya()).contentEquals(contrasenya);
+	}
+	
+	public void setSala(String usuarioId, String salaId) {
+		usuarioRepo.setSala(usuarioId, salaId);
+	}
+	
+	public void leaveSala(String usuarioId) {
+		usuarioRepo.leaveSala(usuarioId);
 	}
 	
 	public void setPartida(String usuarioId, String partidaId) {

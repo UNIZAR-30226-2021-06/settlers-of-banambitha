@@ -187,7 +187,7 @@ public class UsuarioResourcee {
 	 *			-On failure all fields are null
 	****************************************************** */
 	@PutMapping("/update")
-	public ResponseEntity<Usuario> updateUsuario(@RequestBody Usuario usuario){
+	public ResponseEntity<Usuario> updateUsuario(@RequestBody Usuario usuario) {
 		
 		Usuario updatedUsuario = usuarioService.updateUsuario(usuario);
 		

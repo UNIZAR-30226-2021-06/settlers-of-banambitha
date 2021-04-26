@@ -20,6 +20,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 	public static final String TOPIC_PARTIDA_ACT 	= "/partida-act";	// Subscribe("/partida-act/<gameId>")
 	public static final String TOPIC_PARTIDA_CHAT 	= "/partida-chat";	// Subscribe("/partida-chat/<gameId>")
 	public static final String TOPIC_PARTIDA_COM 	= "/partida-com";	// Subscribe("/partida-com/<gameId>/<playerId>")
+	public static final String TOPIC_PARTIDA_RELOAD = "/partida-rld";	// Subscribe("/partida-rld/<playerId>")
 	
 	@Override
 	public void configureMessageBroker(MessageBrokerRegistry config) {
@@ -32,7 +33,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 									TOPIC_SALA_ACT,
 									TOPIC_PARTIDA_ACT,
 									TOPIC_PARTIDA_CHAT,
-									TOPIC_PARTIDA_COM
+									TOPIC_PARTIDA_COM,
+									TOPIC_PARTIDA_RELOAD
 								);
 		
 		//Application calls

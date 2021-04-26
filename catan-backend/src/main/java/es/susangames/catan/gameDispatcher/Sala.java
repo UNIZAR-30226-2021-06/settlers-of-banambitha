@@ -30,6 +30,21 @@ public class Sala {
 		invites.remove(invitado);
 	}
 	
+	public boolean eliminarJugador(String jugador) {
+		
+		if (leader.contentEquals(jugador)) {
+			
+			players.remove(jugador);
+			leader = players.get(0);
+			return true;
+			
+		} else return players.remove(jugador);
+	}
+	
+	public boolean comprobarJugador(String jugador) {
+		return players.contains(jugador);
+	}
+	
 	public boolean aceptarInvitacion(String invitado) {
 		return invites.remove(invitado) && players.size()<4 && players.add(invitado);
 	}
@@ -46,11 +61,9 @@ public class Sala {
 		return leader;
 	}
 
-
 	public List<String> getPlayers() {
 		return players;
 	}
-
 
 	public List<String> getInvites() {
 		return invites;

@@ -72,8 +72,10 @@ public class ProductoService {
 		
 		if(factible.contentEquals("true")) {
 			
-			usuario.setSaldo(usuario.getSaldo()-producto.getPrecio());
-			usuario = usuarioRepo.save(usuario);
+			int newSaldo = usuario.getSaldo()-producto.getPrecio();
+			
+			usuario.setSaldo(newSaldo);
+			usuarioRepo.updateSaldo(usuarioId, newSaldo);
 			
 			Dispone compra = disponeRepo.save(new Dispone(usuarioId, productoId));
 			

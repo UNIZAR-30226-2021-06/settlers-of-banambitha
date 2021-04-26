@@ -56,16 +56,26 @@ public class GameControllerThread implements Runnable {
 			
 			System.out.print(jugada.toString());
 			//TODO pasar la jugada al controlador y recibir la respuesta
-			respuesta = new JSONObject();
-			respuesta.put("respuesta", true);
-			template.convertAndSend(WebSocketConfig.TOPIC_PARTIDA_ACT + "/" + partidaId, respuesta.toString());
 			
-			synchronized (listaJugadas) {
-				try {
-					listaJugadas.wait();
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}	
+			if(jugada.has("reload")) {
+				
+				//TODO Petición de reload, enviar toda la información de la partida al jugador que lo ha solicitado
+				
+			} else {
+				
+				//TODO pasar la jugada al controlador y recibir la respuesta
+				
+				respuesta = new JSONObject();
+				respuesta.put("respuesta", true);
+				template.convertAndSend(WebSocketConfig.TOPIC_PARTIDA_ACT + "/" + partidaId, respuesta.toString());
+				
+				synchronized (listaJugadas) {
+					try {
+						listaJugadas.wait();
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}	
+				}
 			}
 		}
 		

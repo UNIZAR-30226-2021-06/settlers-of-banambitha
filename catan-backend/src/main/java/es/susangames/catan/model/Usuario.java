@@ -32,6 +32,9 @@ public class Usuario implements Serializable {
 	private String idioma;
 	
 	@Column(nullable = true, updatable = true)
+	private String sala;
+	
+	@Column(nullable = true, updatable = true)
 	private String partida;
 	
 	@Column(columnDefinition = "varchar(100) default 'Original'", nullable = false, updatable = false, insertable = false)
@@ -51,12 +54,13 @@ public class Usuario implements Serializable {
 	
 	public Usuario() {}
 
-	public Usuario(String nombre, String email, String contrasenya, Integer saldo, String idioma, String partida, String avatar, String apariencia) {
+	public Usuario(String nombre, String email, String contrasenya, Integer saldo, String idioma, String sala, String partida, String avatar, String apariencia) {
 		this.nombre = nombre;
 		this.email = email;
 		this.contrasenya = contrasenya;
 		this.saldo = saldo;
 		this.idioma = idioma;
+		this.sala = sala;
 		this.partida = partida;
 		this.avatar = avatar;
 		this.apariencia = apariencia;
@@ -102,6 +106,14 @@ public class Usuario implements Serializable {
 		this.idioma = idioma;
 	}
 	
+	public String getSala() {
+		return sala;
+	}
+
+	public void setSala(String sala) {
+		this.sala = sala;
+	}
+
 	public String getPartida() {
 		return partida;
 	}
