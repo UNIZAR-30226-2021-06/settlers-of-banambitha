@@ -3,6 +3,7 @@ package es.susangames.catan.gameDispatcher;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 
@@ -42,6 +43,8 @@ public class GameControllerThread implements Runnable {
 		
 		//TODO inicializar el controlador de la partida
 		
+		JSONObject respuesta = new JSONObject();
+		
 		while(!finalizada) {
 			
 			JSONObject jugada;
@@ -53,7 +56,7 @@ public class GameControllerThread implements Runnable {
 			
 			System.out.print(jugada.toString());
 			//TODO pasar la jugada al controlador y recibir la respuesta
-			JSONObject respuesta = new JSONObject();
+			respuesta = new JSONObject();
 			respuesta.put("respuesta", true);
 			template.convertAndSend(WebSocketConfig.TOPIC_PARTIDA_ACT + "/" + partidaId, respuesta.toString());
 			
@@ -69,8 +72,17 @@ public class GameControllerThread implements Runnable {
 		//TODO Actualizar las estádisticas de los jugadores en función del resultado de la partida
 		//Comunicar la finalización de la partida
 		
-		for(String jugador : jugadores) {
-			usuarioService.endPartida(jugador);
+		JSONArray puntuaciones = respuesta.getJSONArray("puntuaciones");
+		
+		List<Integer> puntuacionesList = new ArrayList<Integer>();
+		
+		for(Object punt : puntuaciones) {
+			puntuacionesList.add(Integer.parseInt(punt.toString()));
+		}
+		
+		for(int i=0 ; i<4 ; i++) {
+			
+			usuarioService.endPartida(jugadores.get(i), puntuacionesList.get(i));
 		}
 		
 		MoveCarrierHeap.deleteGame(partidaId);

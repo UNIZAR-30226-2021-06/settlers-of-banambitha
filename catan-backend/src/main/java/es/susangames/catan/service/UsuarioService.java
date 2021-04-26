@@ -46,6 +46,32 @@ public class UsuarioService {
 		return usuarioRepo.findAll();
 	}
 	
+	public Usuario updateUsuario(Usuario usuario) {
+		
+		String usuarioId = usuario.getNombre();
+		
+		if(usuarioRepo.existsById(usuarioId)) {
+			
+			String apariencia = usuario.getApariencia();
+			String avatar = usuario.getAvatar();
+			String idioma = usuario.getIdioma();
+	
+			if(apariencia!=null) {
+				usuarioRepo.updateApariencia(usuarioId,apariencia);
+			}
+			if(avatar!=null) {
+				usuarioRepo.updateAvatar(usuarioId,avatar);
+			}
+			if(idioma!=null) {
+				usuarioRepo.updateIdioma(usuarioId,idioma);
+			}
+			
+			return usuarioRepo.findById(usuarioId).orElseThrow(() -> new UserNotFoundException(usuarioId));
+		}
+		
+		return new Usuario();
+	}
+	
 	public void deleteUsuario(String usuarioId) {
 		usuarioRepo.deleteById(usuarioId);
 	}
@@ -54,7 +80,7 @@ public class UsuarioService {
 		return estadisticasRepo.findById(usuarioId).orElseThrow(() -> new  UserNotFoundException(usuarioId));
 	}
 	
-	public Estadisticas updateOnVictory(String usuarioId) {
+	private Estadisticas updateOnVictory(String usuarioId) {
 		
 		Estadisticas oldEstadisticas = estadisticasRepo.findById(usuarioId).orElseThrow(() -> new  UserNotFoundException(usuarioId));
 		
@@ -63,7 +89,7 @@ public class UsuarioService {
 		return estadisticasRepo.save(oldEstadisticas);
 	}
 	
-	public Estadisticas updateOnDefeat(String usuarioId) {
+	private Estadisticas updateOnDefeat(String usuarioId) {
 		
 		Estadisticas oldEstadisticas = estadisticasRepo.findById(usuarioId).orElseThrow(() -> new  UserNotFoundException(usuarioId));
 		
@@ -75,7 +101,6 @@ public class UsuarioService {
 	public boolean validarUsuario(Usuario usuario) {
 		
 		String contrasenya = usuarioRepo.getConstrasenya(usuario.getNombre());
-		System.out.println(contrasenya);
 		return (contrasenya==null)?false:EncryptPassword(usuario.getContrasenya()).contentEquals(contrasenya);
 	}
 	
@@ -85,9 +110,16 @@ public class UsuarioService {
 		
 	}
 	
-	public void endPartida(String usuarioId) {
+	public void endPartida(String usuarioId, int puntosVictoria) {
 		
-		usuarioRepo.endPartida(usuarioId);
+		Usuario usuario = usuarioRepo.findById(usuarioId).orElseThrow(() -> new UserNotFoundException(usuarioId));
+		
+		if(puntosVictoria == 10) updateOnVictory(usuarioId);
+		else updateOnDefeat(usuarioId);
+		
+		int newSaldo = usuario.getSaldo() + puntosVictoria;
+		
+		usuarioRepo.endPartida(usuarioId, newSaldo);
 	}
 	
 	//Función que devuelve el resultado de encriptar mediante MD5 una cadena de caracteres 
