@@ -18,7 +18,6 @@ export class PlayComponent implements OnInit {
   }
 
   goGame() {
-    this.WsService.buscarPartida()
   }
 
   goOnline() {
@@ -26,6 +25,5 @@ export class PlayComponent implements OnInit {
   }
 
   goPrivada() {
-    this.WsService.crearSala()
   }
 }
