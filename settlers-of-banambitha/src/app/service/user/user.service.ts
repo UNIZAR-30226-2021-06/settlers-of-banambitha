@@ -34,6 +34,7 @@ export class UserService {
   public avatar:     String
   public apariencia: String
   public saldo:      Number
+  public partida:    String
   public validUser:  boolean = false
 
   constructor(private http: HttpClient) {}
@@ -81,6 +82,7 @@ export class UserService {
     this.saldo = userData["saldo"]
     this.mail = userData["mail"]
     this.avatar = userData["avatar"]
+    this.partida = userData["partida"]
   }
 
   /**
