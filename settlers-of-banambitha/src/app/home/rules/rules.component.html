@@ -1,4 +1,4 @@
-<body>
+<!-- <body>
     <mat-sidenav-container class="sidenav-container">
         <mat-sidenav #drawer class="sidenav" fixedInViewport [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'" [mode]="(isHandset$ | async) ? 'over' : 'side'" [opened]="(isHandset$ | async) === false">
             <mat-toolbar>Menu</mat-toolbar>
@@ -69,5 +69,31 @@
             </div>
         </mat-sidenav-content>
     </mat-sidenav-container>
+    <body> -->
 
-    <body>
+
+<html>
+
+<mat-tab-group mat-align-tabs="center">
+    <mat-tab label="Aspectos Básicos">
+        <rules-terrain></rules-terrain>
+    </mat-tab>
+
+    <mat-tab label="Figuras y Recursos">
+        <rules-resources></rules-resources>
+    </mat-tab>
+
+    <mat-tab label="Cartas de desarrollo">
+        <rules-development-card></rules-development-card>
+    </mat-tab>
+
+    <mat-tab label="Acciones">
+        <rules-actions></rules-actions>
+    </mat-tab>
+
+    <mat-tab label="Fases de juego">
+        <rules-ingame></rules-ingame>
+    </mat-tab>
+</mat-tab-group>
+
+</html>

@@ -12,7 +12,6 @@ body
 
 .sidenav 
   width: 200px
-  margin-top: 80px
 
 
 .sidenav .mat-toolbar 
@@ -32,7 +31,7 @@ body
   background: map-get($palette, mainRed )
   
 .title
-  font-size: 25px
+  font-size: 18px
   font-weight: bold
   margin: 10px
   padding: 10px
@@ -43,7 +42,6 @@ body
   background: map-get($palette, secondDark )
   
 .info
-  font-size: 25px
   font-family: Fantasy
   text-align: justify
   text-justify: inter-word
@@ -52,3 +50,32 @@ body
 
 .trading
   margin: 5px
+
+html
+    padding: 0
+    margin: 0
+    background-color: map-get($palette, mainDark)
+    height: 100%
+    color: #FFFFFF
+
+mat-tab-group
+    color: map-get($palette, secondDark)
+
+mat-tab
+    display: flex
+    box-sizing: border-box
+    height: 100vh
+    justify-content: center
+    align-items: center
+    padding: 3%
+    background-color: map-get($palette, mainDark)
+
+.center
+    display: flex
+    justify-content: center
+    align-items: center
+    height: 100vh
+
+::ng-deep .mat-tab-group.mat-primary .mat-ink-bar, .mat-tab-nav-bar.mat-primary .mat-ink-bar
+    background-color: map-get($palette, mainYellow)
+
