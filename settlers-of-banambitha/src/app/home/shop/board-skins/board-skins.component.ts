@@ -9,19 +9,17 @@ import { UserService } from 'src/app/service/user/user.service';
 })
 export class BoardSkinsComponent implements OnInit {
 
-  constructor(private UserService: UserService, private ShopService: ShopService) { }
+  constructor(private userService: UserService, private shopService: ShopService) { }
 
 
   public empty: boolean = false
   public board_products: Array<Object> = []
 
   public updateView(){
-    this.ShopService.ObtenerProductosDisponibles().subscribe( response => {
+    this.shopService.ObtenerProductosDisponibles().subscribe( response => {
       this.board_products = []
-      let saldo = UserService.getSaldo()
       for ( var x in response.body){
         if ( response.body[x]["tipo"]  == "APARIENCIA" && !response.body[x]["adquirido"]){ 
-          response.body[x]["available"] = saldo >= parseInt(response.body[x]["precio"], 10)
           this.board_products.push(response.body[x])
         }
       }
@@ -33,7 +31,7 @@ export class BoardSkinsComponent implements OnInit {
     console.log("comprar " + profile);
     ( async () => {
       try {
-        await this.ShopService.adquirproducto(profile)
+        await this.shopService.adquirproducto(profile)
         this.updateView()
       } catch( e ){
         console.log("no se pudo adquirir el producto")

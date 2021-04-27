@@ -13,8 +13,8 @@
                     <img mat-card-image class="icon" src="../../../../assets/images/icons/gold_icon.png"> {{product["precio"]}}
                 </mat-card-content>
                 <mat-card-actions>
-                    <button mat-raised-button (click)='buy(product["producto_id"])' [disabled]="!product['available']">
-                        <div *ngIf="product['available']; else notAvailable">
+                    <button mat-raised-button (click)='buy(product["producto_id"])' [disabled]="product['precio'] > this.userService.saldo">
+                        <div *ngIf="product['precio'] <= this.userService.saldo; else notAvailable">
                             Comprar
                         </div>
                         <ng-template #notAvailable>

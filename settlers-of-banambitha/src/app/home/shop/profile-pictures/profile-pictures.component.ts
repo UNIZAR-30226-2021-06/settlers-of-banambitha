@@ -10,7 +10,7 @@ import { BoardSkinsComponent } from '../board-skins/board-skins.component';
 })
 export class ProfilePicturesComponent implements OnInit {
 
-  constructor(public UserService: UserService, private ShopService: ShopService) { }
+  constructor(public userService: UserService, private shopService: ShopService) { }
 
   public empty: Boolean = false
 
@@ -18,12 +18,9 @@ export class ProfilePicturesComponent implements OnInit {
 
   public updateView(){
     this.profile_products = []
-    this.ShopService.ObtenerProductosDisponibles().subscribe( response => {
-      let saldo = UserService.getSaldo()
-      console.log(saldo)
+    this.shopService.ObtenerProductosDisponibles().subscribe( response => {
       for ( var x in response.body){
         if ( response.body[x]["tipo"]  == "AVATAR" && !response.body[x]["adquirido"]){ 
-          response.body[x]["available"] = saldo >= parseInt(response.body[x]["precio"], 10)
           this.profile_products.push(response.body[x])
         }
       }
@@ -35,7 +32,7 @@ export class ProfilePicturesComponent implements OnInit {
     console.log("comprar " + profile);
     ( async () => {
       try {
-        await this.ShopService.adquirproducto(profile)
+        await this.shopService.adquirproducto(profile)
         this.updateView()
       } catch( e ){
         console.log("no se pudo adquirir el producto")

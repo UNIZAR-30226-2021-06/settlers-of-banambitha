@@ -1,16 +1,11 @@
 <body>
-    <mat-grid-list cols="4" rowHeight="30rem" layout-align="center center">
+
+    <br/>
+    <h1> Sala de Martín </h1>
+
+    <mat-grid-list cols="1" rowHeight="30rem" layout-align="center center">
         <mat-grid-tile>
             <app-player-card playerName="Martín" playerELO="55" playerNumber=1></app-player-card>
-        </mat-grid-tile>
-        <mat-grid-tile>
-            <app-player-card playerName="Lucía" playerELO="738" playerNumber=2></app-player-card>
-        </mat-grid-tile>
-        <mat-grid-tile>
-            <app-player-card playerName="Marta" playerELO="81" playerNumber=3></app-player-card>
-        </mat-grid-tile>
-        <mat-grid-tile>
-            <app-player-card playerName="Pablo" playerELO="919" playerNumber=4></app-player-card>
         </mat-grid-tile>
     </mat-grid-list>
 
@@ -31,18 +26,9 @@
         </mat-form-field>
     </div>
 
-    <section class="mb">
-        <div class="button-row">
-            <button mat-raised-button (click)="goOnline()">Online</button>
-        </div>
-        <div style="width: 10px; "></div>
-        <div class="button-row">
-            <button mat-raised-button (click)="goPrivada()">Privada</button>
-        </div>
-    </section>
     <div>
         <div class="center">
-            <button mat-raised-button (click)="goGame()">Comenzar partida</button>
+            <button mat-raised-button (click)="goGame()">Buscar partida</button>
         </div>
     </div>
 </body>

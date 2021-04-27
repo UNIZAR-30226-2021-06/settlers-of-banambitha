@@ -10,6 +10,7 @@ export class ProfileCardComponent implements OnInit {
   @Input() playerELO: bigint
   @Input() playerName: bigint
   @Input() playerCoins: bigint
+  @Input() playerAvatar: string
 
   constructor() { }
 

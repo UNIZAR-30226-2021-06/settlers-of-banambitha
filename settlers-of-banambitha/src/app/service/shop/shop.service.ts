@@ -17,22 +17,22 @@ export class ShopService {
     observe: 'response' as 'response'
   }
 
-  constructor( private http: HttpClient, private UserService: UserService ) { }
+  constructor( private http: HttpClient, private userService: UserService ) { }
 
   public ObtenerProductosDisponibles(){
-    return this.http.get(ShopService.disponibles + "/" + UserService.getUsername(), ShopService.httpOptions)
+    return this.http.get(ShopService.disponibles + "/" + this.userService.getUsername(), ShopService.httpOptions)
   }
 
   public ObtenerProductosAdquiridos(){
-    return this.http.get(ShopService.adquiridos + "/" + UserService.getUsername(), ShopService.httpOptions)
+    return this.http.get(ShopService.adquiridos + "/" + this.userService.getUsername(), ShopService.httpOptions)
   }
 
   public async adquirproducto(id_producto: String){
     let msg = {
-      usuario_id: UserService.getUsername(),
+      usuario_id: this.userService.getUsername(),
       producto_id: id_producto
     }
     let response = await this.http.put(ShopService.adquirir, msg, ShopService.httpOptions).toPromise()
-    UserService.updateUserData(response.body["usuario"])
+    this.userService.updateUserData(response.body["usuario"])
   }
 }
