@@ -3,6 +3,9 @@ import { Router } from '@angular/router';
 import { UserService } from '../user/user.service';
 import { WsService } from '../ws/ws.service';
 
+/**
+ * Estados de un mensaje de acción de una sala en concreto
+ */
 enum RoomMsgStatus {
   FOUND           = "FOUND",
   SEARCHING       = "SEARCHING",
@@ -13,6 +16,9 @@ enum RoomMsgStatus {
   CREATED         = "CREATED"
 }
 
+/**
+ * Estados posibles de una sala
+ */
 export enum RoomStatus {
   FOUND           = "FOUND",
   SEARCHING       = "SEARCHING",
@@ -21,49 +27,124 @@ export enum RoomStatus {
   CREATED         = "CREATED"
 }
 
+/**
+ * Información básica de un usuario para
+ * mostrar en la pantalla de espera de sala
+ */
 export interface UserCardInfo {
-  username: string
-  avatar: string
+  username: String
+  avatar: String
 }
 
+/**
+ * Información de la sala
+ */
 export interface Room {
-  leader:  string
-  id:      string
+  leader:  String
+  id:      String
   invites: Array<string>
   players: Array<UserCardInfo>
   status:  RoomStatus
 }
 
+/**
+ * Información de una invitación
+ */
 export interface invite {
-  leader: string
-  id:     string
+  leader: String
+  id:     String
 }
 
 @Injectable({
   providedIn: 'root'
 })
+/**
+ * Servicio que gestiona todos los aspectos relacionados con la
+ * sala de espera previa a una partida: búsqueda de partida, invitaciones
+ * y creación de salas. 
+ */
 export class RoomService {
 
   private invitacion_topic_id: any
+  private sala_crear_topic_id: any
+  private sala_act_topic_id:   any
 
   //Cliente de stomp
   private stompClient: any
 
+  public room: Room = null
 
   constructor(private wsService: WsService, private router: Router, private userService: UserService) {
     this.stompClient = wsService.getStompClient() 
-    // this.invitacion_topic_id = this.stompClient.subscribe(WsService.invitacion_topic, function (message) {
-    //   console.log(message)
-    // });
+    //Suscripción a las invitaciones
+    this.invitacion_topic_id = this.stompClient.subscribe(WsService.invitacion_topic + this.userService.getUsername(),
+    function (message) {
+      console.log(message)
+    });
+
+    this.sala_crear_topic_id = this.stompClient.subscribe(WsService.sala_crear_topic + this.userService.getUsername(),
+    function (message) {
+      if (message.body){
+        this.procesarMensajeCreacionSala(JSON.parse(message.body))
+      }else{
+        console.log("Error crítico")
+      }
+    });
+  }
+
+  /**
+   * Procesa un mensaje de respuesta a la creación de una sala
+   * (confirma la creación de la sala)
+   * 
+   * @param msg mensaje re respuesta ercibido
+   */
+  private procesarMensajeCreacionSala(msg: Object){
+    if ( this.room == null && msg["status"] == RoomMsgStatus.CREATED ) {
+      this.room =
+      {
+        status: RoomStatus.CREATED,
+        leader: msg["leader"],
+        id: msg["room"],
+        invites: msg["invites"],
+        players: [
+          {
+            username: this.userService.username,
+            avatar: this.userService.avatar
+          }
+        ]
+      }
+
+      this.sala_act_topic_id = this.stompClient.subscribe(WsService.sala_act_topic + this.room.id, (message) => {
+        if ( message.body ){
+          this.procesarMensajeAccionSala(JSON.parse(message.body))
+        }
+      })
+    }
+  }
+
+  /**
+   * Procesa un mensaje de acción recibido para la sala en la
+   * que se encuentra actualmente el jugador
+   * 
+   * @param msg mensaje recibido
+   */
+  private procesarMensajeAccionSala(msg: Object){
+    if ( this.room != null ){
+
+    }
   }
 
 
   /**
    * Crea una sala en la que el usuario loggeado (userService) es
    * el líder y único jugador. No hay jugadores invitados. 
+   * Solo se puede crear una sala si el jugador todavía no está en ninguna sala
    */
   public crearSala(): void {
-
+    if (this.room != null){
+     let msg = { leader: this.userService.getUsername() }
+     this.stompClient.send(WsService.salaCrear, {}, JSON.stringify(msg) )
+    }
   }
 
 
@@ -146,44 +227,6 @@ export class RoomService {
   public cancelarBusqueda(): boolean{
     return true
   }
-
-  // public crearSala(){
-  //   const that = this
-  //   this.sala_crear_topic_id = this.stompClient.subscribe(this.sala_crear_topic, (message) => {
-  //     if ( message.body ){
-
-  //       let obj = JSON.parse(message.body)
-  //       this.procesarMensajeCreacionSala(obj)
-
-  //     }else{
-
-  //       console.log("Error crítico")
-
-  //     }
-
-  //   });
-
-  //   let msg = { leader: this.userService.getUsername() }
-  //   this.stompClient.send(WsService.salaCrear, {}, JSON.stringify(msg) )
-  // }
-
-
-  // private procesarMensajeCreacionSala(msg: object){
-  //   this.salaId        = msg["room"]
-  //   this.leaderId      = msg["leader"]
-  //   this.jugadoresSala = msg["players"]
-  //   this.invitadosSala = msg["invites"]
-
-  //   this.sala_crear_topic_id.unsubscribe()
-  //   this.sala_act_topic_id = this.stompClient.subscribe(this.sala_act_topic + "/" + this.salaId, (message) => {
-  //     console.log(message)
-  //     if ( message.body ){
-  //       this.procesarMensajeActSala(JSON.parse(message.body))
-  //     }
-  //   })
-
-  // }
-
 
   // private procesarMensajeActSala(msg: object){
   //   console.log(msg)
