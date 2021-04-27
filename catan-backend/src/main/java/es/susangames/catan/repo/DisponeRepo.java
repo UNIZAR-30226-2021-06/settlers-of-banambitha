@@ -11,7 +11,7 @@ import es.susangames.catan.model.Dispone;
 
 public interface DisponeRepo extends JpaRepository<Dispone, DisponePK>{
 
-	@Query(value = "SELECT p.* FROM producto p WHERE p.producto_id IN (SELECT d.producto_id FROM dispone d WHERE d.usuario_id = :usuarioId)", nativeQuery = true)
+	@Query(value = "SELECT p.* FROM producto p WHERE (p.producto_id IN (SELECT d.producto_id FROM dispone d WHERE d.usuario_id = :usuarioId)) OR (p.nombre = 'Original') OR (p.nombre = 'Clasica')", nativeQuery = true)
 	public List<String> getProdAdquiridos(@Param("usuarioId") String usuarioId);
 	
 

@@ -108,7 +108,7 @@ public class Estadisticas implements Serializable {
 	public void onVictory() {
 		this.partidasJugadas++;
 		this.totalDeVictorias++;
-		this.porcentajeDeVictorias = (float) (this.totalDeVictorias / this.partidasJugadas);
+		this.porcentajeDeVictorias = ((float) this.totalDeVictorias / this.partidasJugadas) * 100;
 		this.rachaDeVictoriasActual++;
 		
 		if(this.rachaDeVictoriasActual > this.mayorRachaDeVictorias) {
@@ -118,6 +118,6 @@ public class Estadisticas implements Serializable {
 	
 	public void onDefeat() {
 		this.partidasJugadas++;
-		this.porcentajeDeVictorias = (float) (this.totalDeVictorias / this.partidasJugadas);
+		this.porcentajeDeVictorias = ((float)this.totalDeVictorias / this.partidasJugadas) * 100;
 	}
 }

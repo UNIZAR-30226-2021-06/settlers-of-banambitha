@@ -43,7 +43,7 @@ public class ProductoService {
 		
 		for(String producto : disponeRepo.getProdAdquiridos(usuarioId)) {
 			String [] params = producto.split(",", 4);
-			productos.add(new Producto(params[0], params[3], Integer.parseInt(params[1]), params[2]));
+			productos.add(new Producto(params[0], params[1], Integer.parseInt(params[2]), params[3]));
 		}
 		
 		return productos;
@@ -55,7 +55,7 @@ public class ProductoService {
 		
 		for (String s : productoRepo.getProdDisp(usuarioId)) {
 			String[] params = s.split(",", 5);
-			productosDisponibles.add(new ProdDisponible(params[0], params[3], Integer.parseInt(params[1]),params[2],params[4].contentEquals("true")));
+			productosDisponibles.add(new ProdDisponible(params[0], params[1], Integer.parseInt(params[2]),params[3],params[4].contentEquals("true")));
 		}
 
 		return productosDisponibles;
@@ -72,8 +72,10 @@ public class ProductoService {
 		
 		if(factible.contentEquals("true")) {
 			
-			usuario.setSaldo(usuario.getSaldo()-producto.getPrecio());
-			usuario = usuarioRepo.save(usuario);
+			int newSaldo = usuario.getSaldo()-producto.getPrecio();
+			
+			usuario.setSaldo(newSaldo);
+			usuarioRepo.updateSaldo(usuarioId, newSaldo);
 			
 			Dispone compra = disponeRepo.save(new Dispone(usuarioId, productoId));
 			

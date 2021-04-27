@@ -13,11 +13,11 @@ public class Producto implements Serializable{
 
 	@Id
 	@Column(name = "producto_id", nullable = false, updatable = false)
+	private String url;
+	
+	@Column(nullable = false, updatable = false, unique = true)
 	private String nombre;
 	
-	@Column(nullable = false, updatable = true)
-	private String url;
-
 	@Column(nullable = false, updatable = true)
 	private Integer precio;
 	
@@ -27,11 +27,7 @@ public class Producto implements Serializable{
 	
 	public Producto() {}
 
-	public String getNombre() {
-		return nombre;
-	}
-	
-	public Producto(String nombre, String url, Integer precio, String tipo) {
+	public Producto(String url, String nombre, Integer precio, String tipo) {
 		this.url = url;
 		this.nombre = nombre;
 		this.precio = precio;
@@ -45,7 +41,11 @@ public class Producto implements Serializable{
 	public void setUrl( String url){
 		this.url = url;
 	}
-
+	
+	public String getNombre() {
+		return nombre;
+	}
+	
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}

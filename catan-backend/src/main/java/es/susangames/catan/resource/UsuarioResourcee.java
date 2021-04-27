@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -115,7 +116,7 @@ public class UsuarioResourcee {
 	}
 	
 	/* ******************************************************
-	 * Maps: 	Validate a user using Id and password @get
+	 * Maps: 	Validate a user using Id and password @post
 	 * 
 	 * Expects: -User in body
 	 * 			-Mapped point: 	/usuario/validate
@@ -131,7 +132,7 @@ public class UsuarioResourcee {
 	 * 				{
 	 * 					"nombre" 	 : <nombre>,
 	 * 					"email" 	 : <email>,
-	 * 					"contrasenya": <contrasenya>
+	 * 					"contrasenya": <contrasenya>,
 	 *	 				"saldo"		 : <saldo>,
 	 *				    "idioma"	 : <idioma>,
 	 *				    "avatar"	 : <avatar>,
@@ -152,6 +153,46 @@ public class UsuarioResourcee {
 			return new ResponseEntity<>(new Usuario(),HttpStatus.NOT_FOUND);
 		}
 	
+	}
+	
+	/* ******************************************************
+	 * Maps: 	Update a user (avatar, apariencia,...)
+	 * 
+	 * Expects: -User in body
+	 * 			-Mapped point: 	/usuario/validate
+	 * 			-Format: 
+	 * 				{
+	 * 					"nombre" 	 : <nombre>,
+	 * 					campo_act	 : <nuevoValor>
+	 * 				}
+	 * 			-Los parámetros restantes no son necesarios	
+	 * 			-Se pueden especificar varios parámetros a actualizar	
+	 * 			-Parámetros aceptables para actualizar:
+	 * 				{
+	 * 					"avatar" 	 : <nuevoAvatar>,
+	 * 					"apariencia" : <nuevaApariencia>,
+	 * 					"idioma"	 : <Español | English>
+	 * 		
+	 * Returns: -JSON Message
+	 * 			-Format:
+	 * 				{
+	 * 					"nombre" 	 : <nombre>,
+	 * 					"email" 	 : <email>,
+	 * 					"contrasenya": <contrasenya>,
+	 *	 				"saldo"		 : <saldo>,
+	 *				    "idioma"	 : <idioma>,
+	 *				    "avatar"	 : <avatar>,
+	 *				    "apariencia" : <apariencia>
+	 *				}
+	 *			-On failure all fields are null
+	****************************************************** */
+	@PutMapping("/update")
+	public ResponseEntity<Usuario> updateUsuario(@RequestBody Usuario usuario) {
+		
+		Usuario updatedUsuario = usuarioService.updateUsuario(usuario);
+		
+		return new ResponseEntity<>(updatedUsuario, HttpStatus.OK);
+		
 	}
 
 	@GetMapping("/session")

@@ -34,10 +34,10 @@ public class Usuario implements Serializable {
 	@Column(nullable = true, updatable = true)
 	private String partida;
 	
-	@Column(columnDefinition = "varchar(100) default 'Original'", nullable = false, updatable = false, insertable = false)
+	@Column(columnDefinition = "varchar(100) default 'user_profile_image_original.png'", nullable = false, updatable = false, insertable = false)
 	private String avatar;
 	
-	@Column(columnDefinition = "varchar(100) default 'Clasica'", nullable = false, updatable = false, insertable = false)
+	@Column(columnDefinition = "varchar(100) default 'apariencia_clasica.png'", nullable = false, updatable = false, insertable = false)
 	private String apariencia;
 	
 	@ManyToOne(cascade = CascadeType.ALL)

@@ -40,6 +40,7 @@ public class ProductoResource {
 	 * 			-Format:
 	 * 				[
      *					{
+     *						"url"	: <url>,
 	 * 				        "nombre": <nombre>,
 	 *				        "precio": <precio>,
 	 *				        "tipo"	: <tipo [APARIENCIA | AVATAR]>
@@ -66,8 +67,8 @@ public class ProductoResource {
 	 * 			-Format:
 	 * 				[
      *					{
-     *    					"producto_id"	: <producto>,
-	 * 						"url"			: <url>
+     *    					"url"			: <url>,
+	 * 						"nombre"		: <nombre>,
      * 						"precio"		: <precio>,
      *   					"tipo"			: <tipo [APARIENCIA | AVATAR]>,
      *   					"adquirido"		: <[true | false]>
@@ -92,6 +93,7 @@ public class ProductoResource {
 	 * 			-Format:
 	 * 				[
      *					{
+     *						"url"		: <productoUrl>
      *    					"nombre"	: <producto>,
      * 						"precio"	: <precio>,
      *   					"tipo"		: <tipo [APARIENCIA | AVATAR]>,
@@ -115,7 +117,7 @@ public class ProductoResource {
 	 * 			-Format:
 	 * 				{
 	 *		       		"usuario_id"	: <nombre>,
-	 *		       		"producto_id"	: <producto>
+	 *		       		"producto_id"	: <url>
 	 *			   	}
 	 * 
 	 * 
@@ -124,7 +126,7 @@ public class ProductoResource {
 	 * 				{
 	 * 					"compra": {
 	 *		        		"usuario_id"	: <nombre>,
-	 *		        		"producto_id"	: <producto>
+	 *		        		"producto_id"	: <url>
 	 *			    	},
 	 *			    	"usuario": {
 	 *			        	"nombre"		: <nombre>,
@@ -132,6 +134,7 @@ public class ProductoResource {
 	 *			        	"contrasenya"	: <contrasenya (Encriptada)>,
 	 *			        	"saldo"			: <saldo>,
 	 *			        	"idioma"		: <idioma>,
+	 *						"partida"		: <partida>,
 	 *			        	"avatar"		:"<avatar>",
 	 *			        	"apariencia"	: <apariencia>
 	 *			    	}

@@ -56,6 +56,29 @@ public class PartidaController {
 	
 	
 	/* ******************************************************
+	 * Maps: 	Player moves
+	 * 
+	 * Expects: -JSON Message
+	 * 			-Mapped point: 		/app/partida/recargar
+	 * 			-Format:
+	 * 				{
+	 * 					"player": <playerId>,
+	 * 					"game"	: <partida>,
+	 * 					"reload": true
+	 * 				}
+	****************************************************** */
+	@MessageMapping("/partida/recargar")
+	public void recargarPartida(String mensaje) {
+		
+		JSONObject jugada = new JSONObject(mensaje);
+		
+		String partida = jugada.getString("game");
+		
+		moveCarrierHeap.newJugada(partida, jugada);
+	}
+	
+	
+	/* ******************************************************
 	 * Maps: 	Trade proposals
 	 * 
 	 * Expects: -JSON Message
