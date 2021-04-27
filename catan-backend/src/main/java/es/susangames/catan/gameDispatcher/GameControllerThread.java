@@ -61,6 +61,10 @@ public class GameControllerThread implements Runnable {
 				
 				//TODO Petición de reload, enviar toda la información de la partida al jugador que lo ha solicitado
 				
+			} else if(jugada.has("left")) {
+			
+				//TODO Informar de que el jugador ha dejado la partida
+			
 			} else {
 				
 				//TODO pasar la jugada al controlador y recibir la respuesta

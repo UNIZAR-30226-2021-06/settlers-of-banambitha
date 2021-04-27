@@ -1,6 +1,7 @@
 package es.susangames.catan.WSController;
 
 import java.util.HashMap;
+
 import java.util.List;
 import java.util.Map;
 
@@ -20,21 +21,19 @@ import es.susangames.catan.service.UsuarioService;
 @Controller
 public class SalaController {
 	
-	private Matchmaker matchmaker;
-	
-	private Cola cola;
-	private SimpMessagingTemplate template;
-	private UsuarioService usuarioService;
-	private Map<String,Sala> salas;
+	private static Matchmaker matchmaker;
+	private static Cola cola = new Cola();
+	private static SimpMessagingTemplate template;
+	private static UsuarioService usuarioService;
+	private static Map<String,Sala> salas = new HashMap<String, Sala>();
 	
 	@Autowired
 	public SalaController(SimpMessagingTemplate template, UsuarioService usuarioService) {
 
-		this.template = template;
-		this.cola = new Cola();
-		this.salas = new HashMap<String, Sala>();
-		this.usuarioService = usuarioService;
-		matchmaker = new Matchmaker(template, cola, usuarioService);
+		SalaController.template = template;
+		SalaController.usuarioService = usuarioService;
+		
+		SalaController.matchmaker = new Matchmaker(template, usuarioService);
 		
 		Thread matchmakerThread = new Thread(matchmaker,"Matchmaker");
 		
@@ -72,8 +71,10 @@ public class SalaController {
 		String lider = message.getString("leader");
 		Sala sala = new Sala(lider);
 		String salaId = sala.getId();
-
-		salas.put(salaId, sala);
+		
+		synchronized (salas) {
+			salas.put(salaId, sala);
+		}
 		
 		JSONArray players = new JSONArray(sala.getPlayers());
 		JSONArray invites = new JSONArray(sala.getInvites());
@@ -116,23 +117,27 @@ public class SalaController {
 		String salaId = message.getString("room");
 		String liderId = message.getString("leader");
 		
-		Sala sala = salas.remove(salaId);
-
-		if(sala != null && sala.getLeader().contentEquals(liderId)) {
-			message.put("status", "CLOSED");
-			
-			for(String jugador : sala.getPlayers()) {
-				usuarioService.leaveSala(jugador);
-			}
-			
-			for(String invitado : sala.getInvites()) {
-			
-				template.convertAndSend(WebSocketConfig.TOPIC_INVITACION + "/" + invitado, message.toString());
-			}
-		} else {
-			message.put("status", "FAILED");
-		}
+		Sala sala;
 		
+		synchronized (salas) {
+			
+			sala = salas.remove(salaId);
+
+			if(sala != null && sala.getLeader().contentEquals(liderId)) {
+				message.put("status", "CLOSED");
+				
+				for(String jugador : sala.getPlayers()) {
+					usuarioService.leaveSala(jugador);
+				}
+				
+				for(String invitado : sala.getInvites()) {
+				
+					template.convertAndSend(WebSocketConfig.TOPIC_INVITACION + "/" + invitado, message.toString());
+				}
+			} else {
+				message.put("status", "FAILED");
+			}
+		}
 		template.convertAndSend(WebSocketConfig.TOPIC_SALA_ACT + "/" + salaId, message.toString());
 	}
 	
@@ -143,7 +148,6 @@ public class SalaController {
 	 * 			-Mapped point: 		/app/sala/abandonar
 	 * 			-Format:
 	 * 				{
-	 * 					"leader"	: <liderId>,
 	 * 					"room"		: <salaId>,
 	 * 					"player"	: <playerId>
 	 *				}
@@ -155,29 +159,21 @@ public class SalaController {
 	 * 					"status"	: "UPDATED-PLAYERS",
 	 * 					"players"	: [previous players - <playerId>],
 	 *				}
-	 *				or
-	 *				{
-	 * 					"status"	: "CLOSED",
-	 * 					"leader"	: <liderId>,
-	 * 					"room"		: <salaId>
-	 *				}
 	 *
-	 *			OPTIONAL
 	 *			-Broadcast point:	/invitacion/<invitadosId>
 	 * 			-Format:
 	 * 				{
-	 * 					"status"	: "OPEN" | "CLOSED",
+	 * 					"status"	: "OPEN",
 	 * 					"leader"	: <liderId>,
 	 * 					"room"		: <salaId>
 	 *				}
 	****************************************************** */
 	@MessageMapping("/sala/abandonar")
-	public void abandonarPartida(String mensaje) {
+	public static void abandonarPartida(String mensaje) {
 		
 		JSONObject message = new JSONObject(mensaje);
 		
 		String salaId = message.getString("room");
-		String liderId = message.getString("leader");
 		String jugador = message.getString("player");
 		
 		JSONObject actualizacion = new JSONObject();
@@ -185,53 +181,38 @@ public class SalaController {
 		
 		boolean existente = false;
 		
-		Sala sala = salas.get(salaId);
-		
-		existente = sala!=null && sala.getLeader().contentEquals(liderId) && sala.eliminarJugador(jugador);
+		synchronized (salas) {
 			
-		if(!existente) {
+			Sala sala = salas.get(salaId);
 			
-			synchronized (cola) {
+			existente = sala!=null && sala.eliminarJugador(jugador);
+				
+			if(!existente) {
+				
 				sala = cola.desencolar(salaId);
+				
+				existente = sala!=null && sala.eliminarJugador(jugador);
 			}
 			
-			existente = sala!=null && sala.getLeader().contentEquals(liderId) && sala.eliminarJugador(jugador);
-		}
-		
-		if(existente) {
-			
-			if(jugador.contentEquals(liderId)) {
-				
-				actualizacion.put("status", "CLOSED");
-				actualizacion.put("leader", liderId);
-				actualizacion.put("room", salaId);
-				
-				invitacion.put("status", "CLOSED");
-				
-				for(String player : sala.getPlayers()) {
-					usuarioService.leaveSala(player);
-				}
-				
-			} else {
+			if(existente) {
 				
 				actualizacion.put("status", "UPDATED-PLAYERS");
 				JSONArray players = new JSONArray(sala.getPlayers());
 				actualizacion.put("players", players);
 				
-				invitacion.put("status", "OPEN");
-				
 				usuarioService.leaveSala(jugador);
+				
+				template.convertAndSend(WebSocketConfig.TOPIC_SALA_ACT + "/" + salaId, actualizacion);
+				
+				invitacion.put("status", "OPEN");
+				invitacion.put("leader", sala.getLeader());
+				invitacion.put("room", salaId);
+				
+				for(String invitado : sala.getInvites()) {
+					template.convertAndSend(WebSocketConfig.TOPIC_INVITACION + "/" + invitado, invitacion);
+				}
 			}
-			
-			template.convertAndSend(WebSocketConfig.TOPIC_SALA_ACT + "/" + salaId, actualizacion);
-			
-			invitacion.put("leader", liderId);
-			invitacion.put("room", salaId);
-			
-			for(String invitado : sala.getInvites()) {
-				template.convertAndSend(WebSocketConfig.TOPIC_INVITACION + "/" + invitado, invitacion);
-			}
-		}
+		}	
 	}
 	
 	/* ******************************************************
@@ -271,28 +252,30 @@ public class SalaController {
 		String salaId 	= message.getString("room");
 		String invitado = message.getString("invite");
 		
-		Sala sala = salas.get(salaId);
+		synchronized (salas) {
+			
+			Sala sala = salas.get(salaId);
 		
-		if(sala != null && sala.getLeader().contentEquals(liderId)) {
-			
-			sala.invitar(invitado);
-			
-			JSONObject invitacion = new JSONObject();
-			invitacion.put("status", "INVITED");
-			invitacion.put("leader", liderId);
-			invitacion.put("room", salaId);
-			
-			template.convertAndSend(WebSocketConfig.TOPIC_INVITACION + "/" + invitado, invitacion.toString());
-			
-			JSONObject actualizacion = new JSONObject();
-			JSONArray invitados = new JSONArray(sala.getInvites());
-			
-			actualizacion.put("status", "UPDATED-INVITES");
-			actualizacion.put("invites", invitados);
-			
-			template.convertAndSend(WebSocketConfig.TOPIC_SALA_ACT + "/" + salaId, actualizacion.toString());
+			if(sala != null && sala.getLeader().contentEquals(liderId)) {
+				
+				sala.invitar(invitado);
+				
+				JSONObject invitacion = new JSONObject();
+				invitacion.put("status", "INVITED");
+				invitacion.put("leader", liderId);
+				invitacion.put("room", salaId);
+				
+				template.convertAndSend(WebSocketConfig.TOPIC_INVITACION + "/" + invitado, invitacion.toString());
+				
+				JSONObject actualizacion = new JSONObject();
+				JSONArray invitados = new JSONArray(sala.getInvites());
+				
+				actualizacion.put("status", "UPDATED-INVITES");
+				actualizacion.put("invites", invitados);
+				
+				template.convertAndSend(WebSocketConfig.TOPIC_SALA_ACT + "/" + salaId, actualizacion.toString());
+			}
 		}
-		
 	}
 	
 	/* ******************************************************
@@ -332,26 +315,29 @@ public class SalaController {
 		String salaId 	= message.getString("room");
 		String invitado = message.getString("invite");
 		
-		Sala sala = salas.get(salaId);
-		
-		if(sala != null && sala.getLeader().contentEquals(liderId)) {
+		synchronized (salas) {
 			
-			sala.eliminarInvitacion(invitado);
+			Sala sala = salas.get(salaId);
 			
-			JSONObject invitacion = new JSONObject();
-			invitacion.put("status", "CANCELLED");
-			invitacion.put("leader", liderId);
-			invitacion.put("room", salaId);
-			
-			template.convertAndSend(WebSocketConfig.TOPIC_INVITACION + "/" + invitado, invitacion.toString());
-			
-			JSONObject actualizacion = new JSONObject();
-			JSONArray invitados = new JSONArray(sala.getInvites());
-			
-			actualizacion.put("status", "UPDATED-INVITES");
-			actualizacion.put("invites", invitados);
-			
-			template.convertAndSend(WebSocketConfig.TOPIC_SALA_ACT + "/" + salaId, actualizacion.toString());
+			if(sala != null && sala.getLeader().contentEquals(liderId)) {
+				
+				sala.eliminarInvitacion(invitado);
+				
+				JSONObject invitacion = new JSONObject();
+				invitacion.put("status", "CANCELLED");
+				invitacion.put("leader", liderId);
+				invitacion.put("room", salaId);
+				
+				template.convertAndSend(WebSocketConfig.TOPIC_INVITACION + "/" + invitado, invitacion.toString());
+				
+				JSONObject actualizacion = new JSONObject();
+				JSONArray invitados = new JSONArray(sala.getInvites());
+				
+				actualizacion.put("status", "UPDATED-INVITES");
+				actualizacion.put("invites", invitados);
+				
+				template.convertAndSend(WebSocketConfig.TOPIC_SALA_ACT + "/" + salaId, actualizacion.toString());
+			}
 		}
 	}
 	
@@ -395,48 +381,51 @@ public class SalaController {
 		String salaId 	= message.getString("room");
 		String invitado = message.getString("invite");
 		
-		Sala sala = salas.get(salaId);
+		synchronized (salas) {
+			
+			Sala sala = salas.get(salaId);
 		
-		if(sala != null && sala.getLeader().contentEquals(liderId)) {
-			
-			JSONObject invitacion = new JSONObject();
-			invitacion.put("leader", liderId);
-			invitacion.put("room", salaId);
-			
-			if(sala.aceptarInvitacion(invitado)) {
+			if(sala != null && sala.getLeader().contentEquals(liderId)) {
 				
-				usuarioService.setSala(invitado, salaId);
+				JSONObject invitacion = new JSONObject();
+				invitacion.put("leader", liderId);
+				invitacion.put("room", salaId);
 				
-				if(sala.size()==4) {
-					JSONObject actualizacionInvitacion = new JSONObject();
+				if(sala.aceptarInvitacion(invitado)) {
 					
-					actualizacionInvitacion.put("status", "FULL");
-					actualizacionInvitacion.put("leader", liderId);
-					actualizacionInvitacion.put("room", salaId);
+					usuarioService.setSala(invitado, salaId);
 					
-					for(String i : sala.getInvites()) {
-						template.convertAndSend(WebSocketConfig.TOPIC_INVITACION + "/" + i, actualizacionInvitacion.toString());
+					if(sala.size()==4) {
+						JSONObject actualizacionInvitacion = new JSONObject();
+						
+						actualizacionInvitacion.put("status", "FULL");
+						actualizacionInvitacion.put("leader", liderId);
+						actualizacionInvitacion.put("room", salaId);
+						
+						for(String i : sala.getInvites()) {
+							template.convertAndSend(WebSocketConfig.TOPIC_INVITACION + "/" + i, actualizacionInvitacion.toString());
+						}
 					}
+					
+					JSONObject actualizacion = new JSONObject();
+					JSONArray jugadores = new JSONArray(sala.getPlayers());
+					JSONArray invitados = new JSONArray(sala.getInvites());
+					
+					invitacion.put("status", "ACCEPTED");
+					invitacion.put("players", jugadores);
+					invitacion.put("invites", invitados);
+					template.convertAndSend(WebSocketConfig.TOPIC_INVITACION + "/" + invitado, invitacion.toString());
+					
+					actualizacion.put("status", "UPDATED-PLAYERS");
+					actualizacion.put("players", jugadores);
+					actualizacion.put("invites", invitados);
+					
+					template.convertAndSend(WebSocketConfig.TOPIC_SALA_ACT + "/" + salaId, actualizacion.toString());
+					
+				} else {
+					invitacion.put("status", "FULL");
+					template.convertAndSend(WebSocketConfig.TOPIC_INVITACION + "/" + invitado, invitacion.toString());
 				}
-				
-				JSONObject actualizacion = new JSONObject();
-				JSONArray jugadores = new JSONArray(sala.getPlayers());
-				JSONArray invitados = new JSONArray(sala.getInvites());
-				
-				invitacion.put("status", "ACCEPTED");
-				invitacion.put("players", jugadores);
-				invitacion.put("invites", invitados);
-				template.convertAndSend(WebSocketConfig.TOPIC_INVITACION + "/" + invitado, invitacion.toString());
-				
-				actualizacion.put("status", "UPDATED-PLAYERS");
-				actualizacion.put("players", jugadores);
-				actualizacion.put("invites", invitados);
-				
-				template.convertAndSend(WebSocketConfig.TOPIC_SALA_ACT + "/" + salaId, actualizacion.toString());
-				
-			} else {
-				invitacion.put("status", "FULL");
-				template.convertAndSend(WebSocketConfig.TOPIC_INVITACION + "/" + invitado, invitacion.toString());
 			}
 		}
 	}
@@ -477,15 +466,15 @@ public class SalaController {
 		
 		JSONObject respuesta = new JSONObject();
 		
-		Sala sala = salas.remove(salaId);
-		
-		if(sala != null && sala.getLeader().contentEquals(liderId)) {
+		synchronized (salas) {
 			
-			List<String> invitados = sala.getInvites();
-					
-			if(sala.size() != 4) {
+			Sala sala = salas.remove(salaId);
+			
+			if(sala != null && sala.getLeader().contentEquals(liderId)) {
 				
-				synchronized (cola) {
+				List<String> invitados = sala.getInvites();
+						
+				if(sala.size() != 4) {
 					
 					cola.encolar(sala);
 					
@@ -498,22 +487,22 @@ public class SalaController {
 					respuesta.put("status", "SEARCHING");
 					template.convertAndSend(WebSocketConfig.TOPIC_SALA_ACT + "/" + salaId, respuesta.toString());
 					
-					cola.notify();
-				}
+					cola.notifyOnCola();
 				
-			} else {
-				
-				message.put("status", "CLOSED");
-				for(String invitado : invitados) {
+				} else {
 					
-					template.convertAndSend(WebSocketConfig.TOPIC_INVITACION + "/" + invitado, message.toString());
+					message.put("status", "CLOSED");
+					for(String invitado : invitados) {
+						
+						template.convertAndSend(WebSocketConfig.TOPIC_INVITACION + "/" + invitado, message.toString());
+					}
+					
+					matchmaker.privada(sala);
 				}
-				
-				matchmaker.privada(sala);
+			} else {
+				respuesta.put("status", "FAILED");
+				template.convertAndSend(WebSocketConfig.TOPIC_SALA_ACT + "/" + salaId, respuesta.toString());
 			}
-		} else {
-			respuesta.put("status", "FAILED");
-			template.convertAndSend(WebSocketConfig.TOPIC_SALA_ACT + "/" + salaId, respuesta.toString());
 		}
 	}
 	
@@ -556,138 +545,30 @@ public class SalaController {
 		String salaId 	= message.getString("room");
 		String playerId = message.getString("player");
 		
-		Sala sala;
+		synchronized (salas) {
 		
-		synchronized (cola) {
-			sala = cola.desencolar(salaId);
-		}
-		
-		if(sala!=null) salas.put(sala.getId(),sala);
-		
-		JSONObject respuesta = new JSONObject();
-		
-		String status = (sala!=null)?"CANCELLED":"FAILED";
-		respuesta.put("status", status);
-		respuesta.put("player", playerId);
-		
-		template.convertAndSend(WebSocketConfig.TOPIC_SALA_ACT + "/" + salaId, respuesta.toString());
-		
-		JSONObject invitacion = new JSONObject();
-		
-		status = (sala.size()<4)?"OPEN":"FULL";
-		invitacion.put("status", status);
-		invitacion.put("leader", liderId);
-		invitacion.put("room", salaId);
-		
-		for(String invitado : sala.getInvites()) {
-			template.convertAndSend(WebSocketConfig.TOPIC_INVITACION + "/" + invitado, invitacion.toString());
-		}
-	}
-	
-	
-	/* ******************************************************
-	 * Maps: 	Game Room Reload
-	 * 
-	 * Expects: -JSON Message
-	 * 			-Mapped point: 		/app/sala/recargar
-	 * 			-Format:
-	 * 				{
-	 * 					"room"		: <salaId>,
-	 * 					"player"	: <jugadorId>
-	 *				}
-	 * 
-	 * Returns: -JSON Message
-	 * 			-Broadcast point:	/sala-rld/<playerId>
-	 * 			-Format:
-	 * 				{
-	 * 					"status"	: "REJOINED" | "FAILED",
-	 * 					"leader"	: <liderId>,
-	 * 					"room"		: <salaId>,
-	 * 					"players" 	: [<previousPlayers>],
-	 * 					"invites"	: [<previousInvites>]
-	 *				}
-	 *
-	 *			OPTIONAL
-	 *			-JSON Message
-	 * 			-Broadcast point:	/sala-act/<salaId>
-	 * 			-Format:
-	 * 				{
-	 * 					"status"	: "CANCELLED",
-	 * 					"player"	: <playerId>
-	 *				}
-	 *
-	 *			OPTIONAL
-	 *			-Broadcast point:	/invitacion/<invitadoId>
-	 * 			-Format:
-	 * 				{
-	 * 					"status"	: "OPEN" | "FULL",
-	 * 					"leader"	: <liderId>,
-	 * 					"room"		: <salaId>
-	 *				}
-	****************************************************** */
-	@MessageMapping("/sala/recargar")
-	public void recargarSala(String mensaje) {
-		
-		JSONObject message = new JSONObject(mensaje);
-		
-		String salaId = message.getString("room");
-		String jugador = message.getString("player");
-		
-		JSONObject reconexion = new JSONObject();
-		JSONObject actualizacion = new JSONObject();
-		JSONObject invitacion = new JSONObject();
-		
-		boolean queing = false;
-		
-		Sala sala = salas.get(salaId);
-		
-		if(sala==null) {
+			Sala sala = cola.desencolar(salaId);
 			
-			synchronized (cola) {
-				sala = cola.desencolar(salaId);
+			if(sala!=null) salas.put(sala.getId(),sala);
+			
+			JSONObject respuesta = new JSONObject();
+			
+			String status = (sala!=null)?"CANCELLED":"FAILED";
+			respuesta.put("status", status);
+			respuesta.put("player", playerId);
+			
+			template.convertAndSend(WebSocketConfig.TOPIC_SALA_ACT + "/" + salaId, respuesta.toString());
+			
+			JSONObject invitacion = new JSONObject();
+			
+			status = (sala.size()<4)?"OPEN":"FULL";
+			invitacion.put("status", status);
+			invitacion.put("leader", liderId);
+			invitacion.put("room", salaId);
+			
+			for(String invitado : sala.getInvites()) {
+				template.convertAndSend(WebSocketConfig.TOPIC_INVITACION + "/" + invitado, invitacion.toString());
 			}
-			
-			queing = sala!=null;
-		}
-		
-		if(sala!=null && sala.comprobarJugador(jugador)) {
-			
-			String lider = sala.getLeader();
-			List<String> players = sala.getPlayers();
-			List<String> invites = sala.getInvites();
-			JSONArray jugadores = new JSONArray(players);
-			JSONArray invitados = new JSONArray(invites);
-			
-			reconexion.put("status", "REJOINED");
-			reconexion.put("leader", lider);
-			reconexion.put("room", salaId);
-			reconexion.put("players", jugadores);
-			reconexion.put("invites", invitados);
-			template.convertAndSend(WebSocketConfig.TOPIC_SALA_CREAR + "/" + jugador, reconexion);
-			
-			if(queing) { 
-			
-				actualizacion.put("status", "CANCELLED");
-				actualizacion.put("player", jugador);
-				
-				template.convertAndSend(WebSocketConfig.TOPIC_SALA_ACT + "/" + salaId, actualizacion);
-				
-				String status = (sala.size()<4)?"OPEN":"FULL";
-				
-				invitacion.put("status", status);
-				invitacion.put("leader", lider);
-				invitacion.put("room", salaId);
-				
-				for(String invitado : sala.getInvites()) {
-					template.convertAndSend(WebSocketConfig.TOPIC_INVITACION + "/" + invitado, invitacion);
-				}
-			}
-		} else {
-			
-			usuarioService.leaveSala(jugador);
-			
-			reconexion.put("status", "FAILED");
-			template.convertAndSend(WebSocketConfig.TOPIC_SALA_CREAR + "/" + jugador, reconexion);
 		}
 	}
 }

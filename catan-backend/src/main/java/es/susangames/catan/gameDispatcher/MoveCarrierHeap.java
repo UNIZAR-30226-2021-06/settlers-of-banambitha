@@ -49,7 +49,7 @@ public class MoveCarrierHeap {
 		}
 	}
 	
-	public void newJugada(String partidaId, JSONObject jugada) {
+	public static void newJugada(String partidaId, JSONObject jugada) {
 		
 		synchronized (conjuntoJugadas) {
 			

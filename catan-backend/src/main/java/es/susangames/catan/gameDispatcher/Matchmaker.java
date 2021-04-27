@@ -17,9 +17,9 @@ public class Matchmaker implements Runnable {
 	private Cola cola;
 	private MoveCarrierHeap moveCarrierHeap;
 	
-	public Matchmaker(SimpMessagingTemplate template, Cola cola, UsuarioService usuarioService) {
+	public Matchmaker(SimpMessagingTemplate template, UsuarioService usuarioService) {
 		this.template = template;
-		this.cola = cola;
+		this.cola = new Cola();
 		this.usuarioService = usuarioService;
 		this.moveCarrierHeap = new MoveCarrierHeap(template,usuarioService);
 	}
@@ -52,10 +52,7 @@ public class Matchmaker implements Runnable {
 		while(true) {
 			
 			do {
-				synchronized (cola) {
-				
-					salas = cola.emparejar();
-				}
+				salas = cola.emparejar();
 				
 				if (salas != null) {
 					
@@ -95,13 +92,7 @@ public class Matchmaker implements Runnable {
 				
 			} while (salas != null); 
 			
-			synchronized (cola) {
-				try {
-					cola.wait();
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
+			cola.waitOnCola();
 		}	
 	}
 	
