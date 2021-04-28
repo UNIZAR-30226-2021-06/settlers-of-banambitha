@@ -117,28 +117,39 @@ public class SalaController {
 		String salaId = message.getString("room");
 		String liderId = message.getString("leader");
 		
-		Sala sala;
+		boolean existente = false;
 		
 		synchronized (salas) {
 			
-			sala = salas.remove(salaId);
+			Sala sala = salas.remove(salaId);
+			
+			existente = sala!=null && sala.getLeader().contentEquals(liderId);
+				
+			if(!existente) {
+				
+				sala = cola.desencolar(salaId);
+				
+				existente = sala!=null && sala.getLeader().contentEquals(liderId);
+			}
 
-			if(sala != null && sala.getLeader().contentEquals(liderId)) {
+			if(existente) {
+				
 				message.put("status", "CLOSED");
+				template.convertAndSend(WebSocketConfig.TOPIC_SALA_ACT + "/" + salaId, message.toString());
 				
 				for(String jugador : sala.getPlayers()) {
 					usuarioService.leaveSala(jugador);
 				}
 				
 				for(String invitado : sala.getInvites()) {
-				
 					template.convertAndSend(WebSocketConfig.TOPIC_INVITACION + "/" + invitado, message.toString());
 				}
+				
 			} else {
 				message.put("status", "FAILED");
+				template.convertAndSend(WebSocketConfig.TOPIC_SALA_ACT + "/" + salaId, message.toString());
 			}
 		}
-		template.convertAndSend(WebSocketConfig.TOPIC_SALA_ACT + "/" + salaId, message.toString());
 	}
 	
 	/* ******************************************************
@@ -185,7 +196,7 @@ public class SalaController {
 		
 		synchronized (salas) {
 			
-			Sala sala = salas.get(salaId);
+			Sala sala = salas.remove(salaId);
 			
 			existente = sala!=null && sala.getLeader().contentEquals(liderId) && sala.eliminarJugador(jugador);
 				
@@ -197,6 +208,8 @@ public class SalaController {
 			}
 			
 			if(existente) {
+				
+				salas.put(salaId, sala);
 				
 				actualizacion.put("status", "UPDATED-PLAYERS");
 				JSONArray players = new JSONArray(sala.getPlayers());
