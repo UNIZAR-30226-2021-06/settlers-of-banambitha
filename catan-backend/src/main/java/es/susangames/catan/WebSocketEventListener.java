@@ -64,7 +64,7 @@ public class WebSocketEventListener {
 				mensaje.put("room", salaId);
 				mensaje.put("player", usuarioId);
 				
-				SalaController.abandonarPartida(mensaje.toString());
+				SalaController.desconexion(mensaje);
 			
 			} else if(partidaId!=null) {
 				

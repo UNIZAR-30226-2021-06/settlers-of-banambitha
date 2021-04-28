@@ -110,7 +110,7 @@ public class SalaController {
 	 *				}
 	****************************************************** */
 	@MessageMapping("/sala/cerrar")
-	public void cerrarSala(String mensaje) {
+	public static void cerrarSala(String mensaje) {
 		
 		JSONObject message = new JSONObject(mensaje);
 		
@@ -148,6 +148,7 @@ public class SalaController {
 	 * 			-Mapped point: 		/app/sala/abandonar
 	 * 			-Format:
 	 * 				{
+	 * 					"leader"	: <liderId>,
 	 * 					"room"		: <salaId>,
 	 * 					"player"	: <playerId>
 	 *				}
@@ -175,6 +176,7 @@ public class SalaController {
 		
 		String salaId = message.getString("room");
 		String jugador = message.getString("player");
+		String liderId = message.getString("leader");
 		
 		JSONObject actualizacion = new JSONObject();
 		JSONObject invitacion = new JSONObject();
@@ -185,13 +187,13 @@ public class SalaController {
 			
 			Sala sala = salas.get(salaId);
 			
-			existente = sala!=null && sala.eliminarJugador(jugador);
+			existente = sala!=null && sala.getLeader().contentEquals(liderId) && sala.eliminarJugador(jugador);
 				
 			if(!existente) {
 				
 				sala = cola.desencolar(salaId);
 				
-				existente = sala!=null && sala.eliminarJugador(jugador);
+				existente = sala!=null && sala.getLeader().contentEquals(liderId) && sala.eliminarJugador(jugador);
 			}
 			
 			if(existente) {
@@ -205,7 +207,7 @@ public class SalaController {
 				template.convertAndSend(WebSocketConfig.TOPIC_SALA_ACT + "/" + salaId, actualizacion);
 				
 				invitacion.put("status", "OPEN");
-				invitacion.put("leader", sala.getLeader());
+				invitacion.put("leader", liderId);
 				invitacion.put("room", salaId);
 				
 				for(String invitado : sala.getInvites()) {
@@ -568,6 +570,44 @@ public class SalaController {
 			
 			for(String invitado : sala.getInvites()) {
 				template.convertAndSend(WebSocketConfig.TOPIC_INVITACION + "/" + invitado, invitacion.toString());
+			}
+		}
+	}
+	
+	
+	/* ******************************************************
+	 * Maps: 	Game Room Disconnection
+	 * 
+	 * Expects: -JSONObject
+	 * 			-Format:
+	 * 				{
+	 * 					"room"		: <salaId>,
+	 * 					"player"	: <playerId>
+	 *				}
+	****************************************************** */
+	public static void desconexion(JSONObject mensaje) {
+		
+		String salaId = mensaje.getString("room");
+		String jugadorId = mensaje.getString("player");
+		
+		synchronized (salas) {
+			
+			Sala sala = salas.get(salaId);
+			
+			if(sala!=null) {
+				
+				String liderId = sala.getLeader();
+				mensaje.put("leader", liderId);
+
+				if(liderId.contentEquals(jugadorId)) {
+					
+					mensaje.remove("player");
+					cerrarSala(mensaje.toString());
+					
+				} else {
+					
+					abandonarPartida(mensaje.toString());
+				}
 			}
 		}
 	}
