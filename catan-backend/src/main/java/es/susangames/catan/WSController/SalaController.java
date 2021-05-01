@@ -110,35 +110,46 @@ public class SalaController {
 	 *				}
 	****************************************************** */
 	@MessageMapping("/sala/cerrar")
-	public void cerrarSala(String mensaje) {
+	public static void cerrarSala(String mensaje) {
 		
 		JSONObject message = new JSONObject(mensaje);
 		
 		String salaId = message.getString("room");
 		String liderId = message.getString("leader");
 		
-		Sala sala;
+		boolean existente = false;
 		
 		synchronized (salas) {
 			
-			sala = salas.remove(salaId);
+			Sala sala = salas.remove(salaId);
+			
+			existente = sala!=null && sala.getLeader().contentEquals(liderId);
+				
+			if(!existente) {
+				
+				sala = cola.desencolar(salaId);
+				
+				existente = sala!=null && sala.getLeader().contentEquals(liderId);
+			}
 
-			if(sala != null && sala.getLeader().contentEquals(liderId)) {
+			if(existente) {
+				
 				message.put("status", "CLOSED");
+				template.convertAndSend(WebSocketConfig.TOPIC_SALA_ACT + "/" + salaId, message.toString());
 				
 				for(String jugador : sala.getPlayers()) {
 					usuarioService.leaveSala(jugador);
 				}
 				
 				for(String invitado : sala.getInvites()) {
-				
 					template.convertAndSend(WebSocketConfig.TOPIC_INVITACION + "/" + invitado, message.toString());
 				}
+				
 			} else {
 				message.put("status", "FAILED");
+				template.convertAndSend(WebSocketConfig.TOPIC_SALA_ACT + "/" + salaId, message.toString());
 			}
 		}
-		template.convertAndSend(WebSocketConfig.TOPIC_SALA_ACT + "/" + salaId, message.toString());
 	}
 	
 	/* ******************************************************
@@ -148,6 +159,7 @@ public class SalaController {
 	 * 			-Mapped point: 		/app/sala/abandonar
 	 * 			-Format:
 	 * 				{
+	 * 					"leader"	: <liderId>,
 	 * 					"room"		: <salaId>,
 	 * 					"player"	: <playerId>
 	 *				}
@@ -175,6 +187,7 @@ public class SalaController {
 		
 		String salaId = message.getString("room");
 		String jugador = message.getString("player");
+		String liderId = message.getString("leader");
 		
 		JSONObject actualizacion = new JSONObject();
 		JSONObject invitacion = new JSONObject();
@@ -183,18 +196,20 @@ public class SalaController {
 		
 		synchronized (salas) {
 			
-			Sala sala = salas.get(salaId);
+			Sala sala = salas.remove(salaId);
 			
-			existente = sala!=null && sala.eliminarJugador(jugador);
+			existente = sala!=null && sala.getLeader().contentEquals(liderId) && sala.eliminarJugador(jugador);
 				
 			if(!existente) {
 				
 				sala = cola.desencolar(salaId);
 				
-				existente = sala!=null && sala.eliminarJugador(jugador);
+				existente = sala!=null && sala.getLeader().contentEquals(liderId) && sala.eliminarJugador(jugador);
 			}
 			
 			if(existente) {
+				
+				salas.put(salaId, sala);
 				
 				actualizacion.put("status", "UPDATED-PLAYERS");
 				JSONArray players = new JSONArray(sala.getPlayers());
@@ -205,7 +220,7 @@ public class SalaController {
 				template.convertAndSend(WebSocketConfig.TOPIC_SALA_ACT + "/" + salaId, actualizacion);
 				
 				invitacion.put("status", "OPEN");
-				invitacion.put("leader", sala.getLeader());
+				invitacion.put("leader", liderId);
 				invitacion.put("room", salaId);
 				
 				for(String invitado : sala.getInvites()) {
@@ -568,6 +583,44 @@ public class SalaController {
 			
 			for(String invitado : sala.getInvites()) {
 				template.convertAndSend(WebSocketConfig.TOPIC_INVITACION + "/" + invitado, invitacion.toString());
+			}
+		}
+	}
+	
+	
+	/* ******************************************************
+	 * Maps: 	Game Room Disconnection
+	 * 
+	 * Expects: -JSONObject
+	 * 			-Format:
+	 * 				{
+	 * 					"room"		: <salaId>,
+	 * 					"player"	: <playerId>
+	 *				}
+	****************************************************** */
+	public static void desconexion(JSONObject mensaje) {
+		
+		String salaId = mensaje.getString("room");
+		String jugadorId = mensaje.getString("player");
+		
+		synchronized (salas) {
+			
+			Sala sala = salas.get(salaId);
+			
+			if(sala!=null) {
+				
+				String liderId = sala.getLeader();
+				mensaje.put("leader", liderId);
+
+				if(liderId.contentEquals(jugadorId)) {
+					
+					mensaje.remove("player");
+					cerrarSala(mensaje.toString());
+					
+				} else {
+					
+					abandonarPartida(mensaje.toString());
+				}
 			}
 		}
 	}
