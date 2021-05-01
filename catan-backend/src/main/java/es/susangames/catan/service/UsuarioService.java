@@ -117,13 +117,6 @@ public class UsuarioService {
 		return (contrasenya==null)?false:EncryptPassword(usuario.getContrasenya()).contentEquals(contrasenya);
 	}
 	
-	public void setSala(String usuarioId, String salaId) {
-		usuarioRepo.setSala(usuarioId, salaId);
-	}
-	
-	public void leaveSala(String usuarioId) {
-		usuarioRepo.leaveSala(usuarioId);
-	}
 	
 	public void setPartida(String usuarioId, String partidaId) {
 		

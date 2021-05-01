@@ -3,6 +3,11 @@ import * as SockJS from 'sockjs-client';
 import { Injectable, OnDestroy } from '@angular/core';
 import { UserService } from '../user/user.service';
 
+
+export interface Connectable{
+  onConnect(): void; 
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -20,6 +25,7 @@ export class WsService implements OnDestroy{
 
   public static readonly salaCrear:          String = WsService.appPrefix + "/sala/crear" 
   public static readonly salaCerrar:         String = WsService.appPrefix + "/sala/cerrar" 
+  public static readonly salaAbandonar:      String = WsService.appPrefix + "/sala/abandonar" 
   public static readonly invitacionEnviar:   String = WsService.appPrefix + "/invitacion/enviar"
   public static readonly invitacionCancelar: String = WsService.appPrefix + "/invitacion/cancelar"
   public static readonly invitacionAceptar:  String = WsService.appPrefix + "/invitacion/aceptar"
@@ -38,6 +44,8 @@ export class WsService implements OnDestroy{
 
   //Cliente de stomp
   private stompClient: any = null;
+  private connected: boolean = false
+  private observers: Array<Connectable> = []
 
   /**
    * Constructor: realiza la conexión con el servidor
@@ -56,6 +64,28 @@ export class WsService implements OnDestroy{
 
 
   /**
+   * Devuelve true si ya se ha establecido la conexión con websockets
+   */
+  public isConnected(): boolean {
+    return this.connected
+  }
+
+  /**
+   * Añade un nuevo observador. Cuando se termine de realizar la conexión
+   * de websockets con el servidor, se invocará connectable.onConnect()
+   * @param connectable nuevo observer
+   * @return true si la conexión todavía no se habñia establecido, y por tanto
+   * se invocará connectable.onConnect() en algún momento.
+   */
+  public atatchConnectable(connectable: Connectable): boolean {
+    if ( !this.connected && ! this.observers.includes(connectable)){
+      this.observers.push(connectable)
+    }
+    return !this.connected
+  }
+
+
+  /**
    * Realiza la conexión con el servidor utilizando websockets, 
    * con el protocolo stomp sobre sockjs.
    */
@@ -70,7 +100,11 @@ export class WsService implements OnDestroy{
     }
 
     that.stompClient.connect(this.getWsHeaders(), function (frame) {
-      console.log("Connected")
+      that.observers.forEach( observer => {
+        observer.onConnect()
+      })
+      that.connected = true
+      that.observers = null
     }, this.errorCallBack);
   };
 

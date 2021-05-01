@@ -106,25 +106,6 @@ export class UserService {
 
 
   /**
-   * Si el usuario existe en el sistema entonces lanza una excepción, en caso 
-   * contrario no hace nada.  
-   * @param name 
-   */
-  public async findUser(name: String){
-    let found: boolean = false
-    let response: Object
-    try {
-      response = await this.http.get(UserService.baseUrl + "/find/" + name).toPromise()
-      found = true
-    } catch(e){}
-    if (found){
-      throw new Error("El nombre de usuario ya existe")
-    }else{
-      return response
-    }
-  }
-
-  /**
    * Devuelve la promise de una petición que solicita la 
    * búsqueda de un usuario
    * @param name 

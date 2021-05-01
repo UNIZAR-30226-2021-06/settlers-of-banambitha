@@ -86,7 +86,6 @@ public class Matchmaker implements Runnable {
 		 				
 	 				for(String player : listaJugadores) {
 	 					usuarioService.setPartida(player, partidaId);
-	 					usuarioService.leaveSala(player);
 	 				}
 		 		}
 				
@@ -124,7 +123,6 @@ public class Matchmaker implements Runnable {
 		
 		for(String player : jugadores) {
 			usuarioService.setPartida(player, partidaId);
-			usuarioService.leaveSala(player);
 		}
 	}
 	

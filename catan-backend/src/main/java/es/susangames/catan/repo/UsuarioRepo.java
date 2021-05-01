@@ -38,16 +38,6 @@ public interface UsuarioRepo extends JpaRepository<Usuario, String> {
 	
 	@Modifying
 	@Transactional
-	@Query(value = "UPDATE usuario SET sala = :salaId WHERE usuario_id = :usuarioId", nativeQuery = true)
-	public void setSala(@Param("usuarioId") String usuarioId, @Param("salaId") String salaId);
-
-	@Modifying
-	@Transactional
-	@Query(value = "UPDATE usuario SET sala = NULL WHERE usuario_id = :usuarioId", nativeQuery = true)
-	public void leaveSala(@Param("usuarioId") String usuarioId);
-	
-	@Modifying
-	@Transactional
 	@Query(value = "UPDATE usuario SET partida = :partidaId WHERE usuario_id = :usuarioId", nativeQuery = true)
 	public void setPartida(@Param("usuarioId") String usuarioId, @Param("partidaId") String partidaId);
 	

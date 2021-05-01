@@ -1,11 +1,10 @@
-<body>
-
+<body *ngIf="this.roomService.room != null && !this.roomService.creandoSala && !this.roomService.uniendoseASala">
     <br/>
-    <h1> Sala de Martín </h1>
+    <h1> Sala de {{this.roomService.room.leader}} </h1>
 
-    <mat-grid-list cols="1" rowHeight="30rem" layout-align="center center">
-        <mat-grid-tile>
-            <app-player-card playerName="Martín" playerELO="55" playerNumber=1></app-player-card>
+    <mat-grid-list [cols]="this.roomService.room.players.length" rowHeight="25rem" layout-align="center center">
+        <mat-grid-tile *ngFor="let user of this.roomService.room.players let i = index">
+            <app-player-card [playerName]="user.username" [playerNumber]="i + 1" [profilePictureUrl]="user.avatar"></app-player-card>
         </mat-grid-tile>
     </mat-grid-list>
 
@@ -26,9 +25,36 @@
         </mat-form-field>
     </div>
 
-    <div>
+    <div *ngIf="!this.roomService.buscandoPartida; else buscando">
         <div class="center">
-            <button mat-raised-button (click)="goGame()">Buscar partida</button>
+            <button mat-raised-button (click)="this.roomService.buscarPartida()">Buscar partida</button>
         </div>
+    </div>
+    <ng-template #buscando>
+        <div>
+            <h2>Buscando partida...</h2>
+            <br/>
+            <mat-spinner class=" center " diameter="30 "></mat-spinner>
+            <br/> <br/>
+            <div class="center ">
+                <button mat-raised-button (click)="this.roomService.cancelarBusqueda()">Cancelar búsqueda</button>
+            </div>
+        </div>
+    </ng-template>
+</body>
+
+<body *ngIf="this.roomService.uniendoseASala ">
+    <div class="center ">
+        <br/> <br/> <br/> <br/> <br/> <br/> <br/>
+        <h1> Entrando a la sala...</h1>
+        <mat-spinner class="center " diameter="60 "></mat-spinner>
+    </div>
+</body>
+
+<body *ngIf="this.roomService.creandoSala ">
+    <div class="center ">
+        <br/> <br/> <br/> <br/> <br/> <br/> <br/>
+        <h1>Creando sala...</h1>
+        <mat-spinner class="center " diameter="60 "></mat-spinner>
     </div>
 </body>

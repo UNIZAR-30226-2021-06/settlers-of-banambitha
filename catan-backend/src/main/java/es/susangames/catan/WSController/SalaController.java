@@ -84,8 +84,6 @@ public class SalaController {
 		message.put("players", players);
 		message.put("invites", invites);
 		
-		usuarioService.setSala(lider, salaId);
-		
 		template.convertAndSend(WebSocketConfig.TOPIC_SALA_CREAR + "/" + lider, message.toString());
 	}
 	
@@ -136,10 +134,6 @@ public class SalaController {
 				
 				message.put("status", "CLOSED");
 				template.convertAndSend(WebSocketConfig.TOPIC_SALA_ACT + "/" + salaId, message.toString());
-				
-				for(String jugador : sala.getPlayers()) {
-					usuarioService.leaveSala(jugador);
-				}
 				
 				for(String invitado : sala.getInvites()) {
 					template.convertAndSend(WebSocketConfig.TOPIC_INVITACION + "/" + invitado, message.toString());
@@ -214,8 +208,6 @@ public class SalaController {
 				actualizacion.put("status", "UPDATED-PLAYERS");
 				JSONArray players = new JSONArray(sala.getPlayers());
 				actualizacion.put("players", players);
-				
-				usuarioService.leaveSala(jugador);
 				
 				template.convertAndSend(WebSocketConfig.TOPIC_SALA_ACT + "/" + salaId, actualizacion);
 				
@@ -407,8 +399,6 @@ public class SalaController {
 				invitacion.put("room", salaId);
 				
 				if(sala.aceptarInvitacion(invitado)) {
-					
-					usuarioService.setSala(invitado, salaId);
 					
 					if(sala.size()==4) {
 						JSONObject actualizacionInvitacion = new JSONObject();
