@@ -26,9 +26,17 @@
     </div>
 
     <div *ngIf="!this.roomService.buscandoPartida; else buscando">
-        <div class="center">
-            <button mat-raised-button (click)="this.roomService.buscarPartida()">Buscar partida</button>
-        </div>
+        <section class="mb">
+            <div class="button-row">
+                <button mat-raised-button (click)="this.roomService.buscarPartida()">Buscar partida</button>
+            </div>
+            <div style="width: 10px; "></div>
+            <div class="button-row">
+                <button mat-raised-button (click)="this.roomService.cerrarSala(true)" [disabled]="this.roomService.room.players.length == 1">
+                   {{this.roomService.soyLider() ? "Expulsar invitados" : "Abandonar sala"}}
+                </button>
+            </div>
+        </section>
     </div>
     <ng-template #buscando>
         <div>

@@ -39,7 +39,7 @@ const routes: Routes = [
     ]
    },
 
-   {path: 'board', component: GameplayComponent}
+  {path: 'board', component: GameplayComponent}
 
 ];
 
