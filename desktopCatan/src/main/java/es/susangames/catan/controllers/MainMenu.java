@@ -4,6 +4,7 @@ import es.susangames.catan.App;
 import es.susangames.catan.controllers.Instructions;
 import es.susangames.catan.service.UserService;
 import es.susangames.catan.service.LangService;
+import es.susangames.catan.service.ws;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -30,9 +31,6 @@ import javafx.event.ActionEvent;
 import com.jfoenix.controls.JFXTextArea;
 import javafx.scene.control.TextField;
 import org.json.*;
-
-
-
 
 
 /**
@@ -434,6 +432,8 @@ public class MainMenu {
         });
 
         loadScene("/view/shop.fxml", btnPlay);
+
+        ws.initialize();
     }
 
 }

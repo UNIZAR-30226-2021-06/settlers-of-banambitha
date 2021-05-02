@@ -67,7 +67,12 @@ public class Shop {
         circle.setRadius(90.0f);
         anchorPane.setTopAnchor(circle, 70.0);
         anchorPane.setLeftAnchor(circle, 50.0);
-        Image imgSkin = new Image(imgURL);
+        Image imgSkin;
+        if(avatar) {
+            imgSkin = new Image("/img/users/" +  imgURL);
+        } else {
+            imgSkin = new Image("/img/board/" +  imgURL);
+        }
         circle.setFill(new ImagePattern(imgSkin));
         anchorPane.getChildren().add(circle);
         
@@ -113,7 +118,7 @@ public class Shop {
 
         // TODO: Añadir accion cuando se hace click sobre boton compra
         buyButton.setOnAction((ActionEvent event) -> {
-           shop.adquirirProducto(name);
+           shop.adquirirProducto(imgURL);
            if(avatar) {
               loadUserSkins();
            } else {
@@ -139,9 +144,9 @@ public class Shop {
             String aux = object.getString("tipo").toString();
             if(!object.getBoolean("adquirido") && 
                 aux.equals("AVATAR")) {
-                    newShopElement(object.getString("producto_id"),
+                    newShopElement(object.getString("nombre"),
                                    object.getInt("precio"),
-                               "/img/users/" + object.getString("url"),
+                               object.getString("url"),
                                true);
               }
         }
@@ -156,9 +161,9 @@ public class Shop {
             String aux = object.getString("tipo").toString();
             if(!object.getBoolean("adquirido") && 
                 aux.equals("APARIENCIA")) {
-                    newShopElement(object.getString("producto_id"),
+                    newShopElement(object.getString("nombre"),
                                    object.getInt("precio"),
-                               "/img/board/" + object.getString("url"),
+                               object.getString("url"),
                                false);
               }
         }

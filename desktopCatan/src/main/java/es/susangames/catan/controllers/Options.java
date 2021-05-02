@@ -74,7 +74,7 @@ public class Options {
 
 
     public Options() {
-        userImg = new Image("/img/users/user_profile_image_original.png");
+        userImg = new Image("/img/users/" + UserService.getAvatar());
         win = new Image("/img/win.png");
         settings = new Image("/img/settings.png");
         shop = new ShopService();
@@ -199,7 +199,7 @@ public class Options {
             String aux = object.getString("tipo").toString();
             if(aux.equals("AVATAR")) {
                 newShopElement(object.getString("nombre"),  
-                                "/img/users/" + object.getString("url"),
+                                object.getString("url"),
                                 elementsList);
             }
         }
@@ -229,7 +229,7 @@ public class Options {
         circle.setRadius(90.0f);
         circle.setLayoutX(anchorPane.getLayoutX() + 25);
         circle.setLayoutY(anchorPane.getLayoutY() + 25);
-        Image imgSkin = new Image(imgURL);
+        Image imgSkin = new Image("/img/users/" + imgURL);
         circle.setFill(new ImagePattern(imgSkin));
         anchorPane.getChildren().add(circle);
         
@@ -254,7 +254,9 @@ public class Options {
 
         // TODO: Añadir accion cuando se hace click sobre boton compra
         selectButton.setOnAction((ActionEvent event) -> {
-           userImage.setFill(new ImagePattern( new Image(imgURL)));
+            System.out.println(imgURL);
+           UserService.updateUser(UserService.getUsername(),"avatar",imgURL);
+            
            popupChangeUserImg.hide();
         });
 

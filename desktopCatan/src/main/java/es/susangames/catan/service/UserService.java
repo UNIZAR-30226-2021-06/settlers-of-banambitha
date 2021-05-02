@@ -9,6 +9,7 @@ public class UserService {
     private static final String baseUrl = "http://localhost:8080/usuario";
     private static final String addUrl = baseUrl + "/add";
     private static final String validateUrl = baseUrl + "/validate";
+    private static final String updateUrl = baseUrl + "/update";
 
     private static String username;
     private static String mail;
@@ -16,6 +17,7 @@ public class UserService {
     private static String avatar;
     private static String apariencia;
     private static Integer saldo;
+    private static String partida;
 
     public UserService() {
         netService = new HttpService();
@@ -42,8 +44,9 @@ public class UserService {
     public static Integer getSaldo() {
         return saldo;
     }
-
-
+    public static String getPartida() {
+        return partida;
+    }
 
     public static Boolean validate(String name, String pass) {
         JSONObject myObject = new JSONObject();
@@ -95,6 +98,7 @@ public class UserService {
         avatar = data.get("avatar").toString();
         apariencia = data.get("apariencia").toString();
         saldo = Integer.parseInt(data.get("saldo").toString());
+        partida = data.get("partida").toString();
     }
 
     
@@ -106,6 +110,17 @@ public class UserService {
             return null;
         }   
         return response;
+    }
+
+    public static void updateUser(String name, String field, String value) {
+        JSONObject myObject = new JSONObject();
+        myObject.put("nombre", name);
+        myObject.put(field, value);
+        String response;
+        try {
+            response = netService.put(updateUrl, myObject.toString());
+            UserService.fillData(new JSONObject(response));
+        } catch(Exception e) {}
     }
     
 }
