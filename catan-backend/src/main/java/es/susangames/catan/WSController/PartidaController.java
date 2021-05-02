@@ -9,6 +9,8 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
 import es.susangames.catan.WebSocketConfig;
+import es.susangames.catan.gameDispatcher.MoveCarrierHeap;
+import es.susangames.catan.service.UsuarioService;
 
 @Controller
 public class PartidaController {
@@ -18,11 +20,12 @@ public class PartidaController {
 	private static final String DECLINE = "DECLINE";
 
 	private final SimpMessagingTemplate template;
+	private MoveCarrierHeap moveCarrierHeap;
 
 	@Autowired
-	public PartidaController(SimpMessagingTemplate template) {
-		super();
+	public PartidaController(SimpMessagingTemplate template, UsuarioService usuarioService) {
 		this.template = template;
+		this.moveCarrierHeap = new MoveCarrierHeap(template,usuarioService);
 	}
 	
 	
@@ -40,19 +43,38 @@ public class PartidaController {
 	 * 						--Resto de Parámetros dependiendo del tipo de Jugada--
 	 * 						}
 	 * 				}
-	 * 
-	 * Returns: -JSON Message
-	 * 			-Broadcast point:	/partida-act/<partida>
-	 * 			-Format:
-	 * 				{
-	 * 					TODO
-	 *				}
 	****************************************************** */
 	@MessageMapping("/partida/jugada")
 	public void realizarJugada(String mensaje) {
 		
+		JSONObject jugada = new JSONObject(mensaje);
 		
+		String partida = jugada.getString("game");
 		
+		moveCarrierHeap.newJugada(partida, jugada);
+	}
+	
+	
+	/* ******************************************************
+	 * Maps: 	Player moves
+	 * 
+	 * Expects: -JSON Message
+	 * 			-Mapped point: 		/app/partida/recargar
+	 * 			-Format:
+	 * 				{
+	 * 					"player": <playerId>,
+	 * 					"game"	: <partida>,
+	 * 					"reload": true
+	 * 				}
+	****************************************************** */
+	@MessageMapping("/partida/recargar")
+	public void recargarPartida(String mensaje) {
+		
+		JSONObject jugada = new JSONObject(mensaje);
+		
+		String partida = jugada.getString("game");
+		
+		moveCarrierHeap.newJugada(partida, jugada);
 	}
 	
 	
@@ -115,7 +137,6 @@ public class PartidaController {
 		message.put("time", H_M);
 		
 		template.convertAndSend(WebSocketConfig.TOPIC_PARTIDA_COM + "/" + partida + "/" + destinatario, message.toString());
-		
 	}
 	
 	
@@ -148,16 +169,6 @@ public class PartidaController {
 	 * 					"from"	: <Jugador que acepta la petición [1-4]>,
 	 * 					"time"	: <marca de tiempo H:M>
 	 *				}
-	 * 
-	 * 			-Broadcast point:	/partida-act/<partida>
-	 * 			-Format:
-	 * 				{
-	 * 					"Mensaje" : <mensaje [TODO A discutir]>,
-	 * 					"Recursos": {
-     *						"<Jugador que acepta la petición [1-4]>": [ "Mad", "Pied", "Ladr", "Lana", "Cereales" ],
-     *						"<Jugador que hizo la petición [1-4]>"  : [ "Mad", "Pied", "Ladr", "Lana", "Cereales" ]
-  	 *					}
-	 *				}
 	****************************************************** */
 	@MessageMapping("/partida/comercio/aceptar")
 	public void aceptarComercio(String mensaje) {
@@ -175,20 +186,8 @@ public class PartidaController {
 		answer.put("to", destinatario);
 		
 		template.convertAndSend(WebSocketConfig.TOPIC_PARTIDA_COM + "/" + partida + "/" + destinatario, answer.toString());
-		
-		JSONObject res1 = message.getJSONObject("res1");
-		String type1 = res1.getString("type");
-		int cuan1 = res1.getInt("cuan");
-		
-		JSONObject res2 = message.getJSONObject("res2");
-		String type2 = res2.getString("type");
-		int cuan2 = res2.getInt("cuan");
-		
-		//TODO Llamar al controlador de la partida para que procecse el cambio de estado
 
-		JSONObject resultado = null; //= Procesar Jugada
-		
-		template.convertAndSend(WebSocketConfig.TOPIC_PARTIDA_ACT + "/" + partida, resultado.toString());
+		moveCarrierHeap.newJugada(partida, message);
 	}
 	
 	
@@ -234,7 +233,6 @@ public class PartidaController {
 		new_message.put("time", H_M);
 		
 		template.convertAndSend(WebSocketConfig.TOPIC_PARTIDA_COM + "/" + partida + "/" + destinatario, new_message.toString());
-		
 	}
 	
 	

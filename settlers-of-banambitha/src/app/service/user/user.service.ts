@@ -15,69 +15,74 @@ import { catchError, retry, map } from 'rxjs/operators';
  */
 export class UserService {
 
-  private readonly baseUrl = "http://localhost:8080/usuario"
-  private readonly addUrl = this.baseUrl + "/add"
-  private readonly validae = this.baseUrl + "/validate"
-  private readonly httpOptions = {
+  private static readonly baseUrl = "http://localhost:8080/usuario"
+  private static readonly addUrl = UserService.baseUrl + "/add"
+  private static readonly validae = UserService.baseUrl + "/validate"
+  private static readonly httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
     withCredentials: true,
     observe: 'response' as 'response'
   }
 
   //Atributos relacionados con el usuario
-  private static username: String
-  private static mail: String
-  private static idioma: String
-  private static avatar: String
-  private static apariencia: String
-  private static saldo: Number
-  private static validUser: boolean = false
+  //son públicos para permitir data binding en el 
+  //resto de la aplicación, pero deben modificarse 
+  //con setters
+  public username:   String
+  public mail:       String
+  public idioma:     String
+  public avatar:     String
+  public apariencia: String
+  public saldo:      Number
+  public partida:    String
+  public validUser:  boolean = false
 
   constructor(private http: HttpClient) {}
 
   //Getters
-  public static getUsername(): String {
+  public getUsername(): String {
     return this.username;
   }
 
-  public static getMail(): String {
+  public getMail(): String {
     return this.mail;
   }
 
-  public static getIdioma(): String {
+  public getIdioma(): String {
     return this.idioma;
   }
 
-  public static getAvatar(): String {
+  public getAvatar(): String {
     return this.avatar;
   }
 
-  public static getApariencia(): String {
+  public getApariencia(): String {
     return this.apariencia;
   }
 
-  public static getSaldo(): Number {
+  public getSaldo(): Number {
     return this.saldo;
   }
 
-  public static logedUser(): Boolean {
+  public logedUser(): Boolean {
     return this.validUser
   }
 
-  public static setSaldo(nuevoSaldo: Number){
-    UserService.saldo = nuevoSaldo
+  public setSaldo(nuevoSaldo: Number){
+    this.saldo = nuevoSaldo
   }
 
-  public static setAvatar(avatar_url: String){
-    UserService.avatar = avatar_url
+  public setAvatar(avatar_url: String){
+    this.avatar = avatar_url
   }
 
-  public static updateUserData(userData: Object){
-    UserService.username = userData["nombre"]
-    UserService.apariencia = userData["apariencia"]
-    UserService.saldo = userData["saldo"]
-    UserService.mail = userData["mail"]
-    UserService.avatar = userData["avatar"]
+  public updateUserData(userData: Object){
+    this.username = userData["nombre"]
+    this.apariencia = userData["apariencia"]
+    this.saldo = userData["saldo"]
+    this.mail = userData["mail"]
+    this.avatar = userData["avatar"]
+    this.partida = userData["partida"]
   }
 
   /**
@@ -93,30 +98,12 @@ export class UserService {
       email : mail,
       contrasenya : pass
     }
-    let response = await this.http.post<any>(this.baseUrl + "/add", JSON.stringify(msg), this.httpOptions).toPromise()
-    UserService.updateUserData(response.body)
+    let response = await this.http.post<any>(UserService.baseUrl + "/add", JSON.stringify(msg),
+                                             UserService.httpOptions).toPromise()
+    this.updateUserData(response.body)
     return response
   }
 
-
-  /**
-   * Si el usuario existe en el sistema entonces lanza una excepción, en caso 
-   * contrario no hace nada.  
-   * @param name 
-   */
-  public async findUser(name: String){
-    let found: boolean = false
-    let response: Object
-    try {
-      response = await this.http.get(this.baseUrl + "/find/" + name).toPromise()
-      found = true
-    } catch(e){}
-    if (found){
-      throw new Error("El nombre de usuario ya existe")
-    }else{
-      return response
-    }
-  }
 
   /**
    * Devuelve la promise de una petición que solicita la 
@@ -124,7 +111,7 @@ export class UserService {
    * @param name 
    */
   public findUserObservable(name: String){
-    return this.http.get(this.baseUrl + "/find/" + name)
+    return this.http.get(UserService.baseUrl + "/find/" + name)
   }
 
 
@@ -140,8 +127,9 @@ export class UserService {
       "nombre" : name,
       "contrasenya" : pass
     }
-    let response = await this.http.post(this.baseUrl + "/validate", JSON.stringify(msg), this.httpOptions).toPromise()
-    UserService.updateUserData(response.body)
+    let response = await this.http.post(UserService.baseUrl + "/validate", JSON.stringify(msg),
+                                        UserService.httpOptions).toPromise()
+    this.updateUserData(response.body)
   }
 
 
@@ -157,9 +145,9 @@ export class UserService {
    *                 contrario
    */
   public checkSession(router: Router, urlLogin: boolean): Observable<boolean>{
-    return this.http.get(this.baseUrl + "/session", this.httpOptions).pipe(
+    return this.http.get(UserService.baseUrl + "/session", UserService.httpOptions).pipe(
       map(response => {
-        UserService.updateUserData(response.body)
+        this.updateUserData(response.body)
         if ( urlLogin ){
           router.navigate(["/home"])
           return false
@@ -168,7 +156,7 @@ export class UserService {
         }
       }
     ), catchError(() => {
-      UserService.validUser = false
+      this.validUser = false
       if ( urlLogin ){
         return of(true)
       }else{

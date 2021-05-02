@@ -18,6 +18,7 @@ const routes: Routes = [
 
   {path:'',redirectTo:'login/signin', pathMatch: 'full' },
   {path:'login',redirectTo:'login/signin', pathMatch: 'full' },
+  {path:'home',redirectTo:'home/play', pathMatch: 'full' },
 
   {path: 'login', component: MainLoginComponent, 
    canActivate: [AuthLoginGuard],
@@ -38,7 +39,7 @@ const routes: Routes = [
     ]
    },
 
-   {path: 'board', component: GameplayComponent}
+  {path: 'board', component: GameplayComponent}
 
 ];
 

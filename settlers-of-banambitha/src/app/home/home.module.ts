@@ -32,6 +32,7 @@ import { DevelopmentCardComponent } from './rules/development-card/development-c
 import { ActionsComponent } from './rules/actions/actions.component';
 import { IngameComponent } from './rules/ingame/ingame.component';
 import { MainHomeComponent } from './main-home/main-home.component';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner'; 
 
 
 @NgModule({
@@ -54,7 +55,8 @@ import { MainHomeComponent } from './main-home/main-home.component';
     MatSidenavModule,
     MatToolbarModule,
     MatListModule,
-    MatIconModule
+    MatIconModule, 
+    MatProgressSpinnerModule
   ],
   exports: [
     NavBarComponent, SocialBarComponent, PlayComponent, ShopComponent, ProfileComponent ,RulesComponent

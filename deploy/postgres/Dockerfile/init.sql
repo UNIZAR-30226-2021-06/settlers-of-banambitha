@@ -156,9 +156,9 @@ ALTER TABLE public.peticion_amistad OWNER TO postgres;
 
 CREATE TABLE public.producto (
     producto_id character varying(255) NOT NULL,
+    nombre character varying(255) NOT NULL,
     precio integer NOT NULL,
     tipo character varying(10) NOT NULL,
-    url character varying(255) NOT NULL,
     CONSTRAINT producto_tipo_check CHECK (((tipo)::text = ANY ((ARRAY['AVATAR'::character varying, 'APARIENCIA'::character varying])::text[])))
 );
 
@@ -201,11 +201,12 @@ ALTER TABLE public.spring_session_attributes OWNER TO postgres;
 
 CREATE TABLE public.usuario (
     usuario_id character varying(255) NOT NULL,
-    apariencia character varying(100) DEFAULT 'Clasica'::character varying NOT NULL,
-    avatar character varying(100) DEFAULT 'Original'::character varying NOT NULL,
+    apariencia character varying(100) DEFAULT 'apariencia_clasica.png'::character varying NOT NULL,
+    avatar character varying(100) DEFAULT 'user_profile_image_original.png'::character varying NOT NULL,
     contrasenya character varying(255) NOT NULL,
     email character varying(255) NOT NULL,
     idioma character varying(10) DEFAULT 'Español'::character varying NOT NULL,
+    partida character varying(255),
     saldo integer DEFAULT 0 NOT NULL,
     CONSTRAINT usuario_idioma_check CHECK (((idioma)::text = ANY ((ARRAY['Español'::character varying, 'English'::character varying])::text[]))),
     CONSTRAINT usuario_saldo_check CHECK ((saldo >= 0))
@@ -250,31 +251,33 @@ COPY public.peticion_amistad (usuario1_id, usuario2_id) FROM stdin;
 -- Data for Name: producto; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.producto (producto_id, precio, tipo, url) FROM stdin;
+COPY public.producto (producto_id, nombre, precio, tipo) FROM stdin;
 \.
 
-INSERT INTO public.producto VALUES('Clasica', 0, 'APARIENCIA', 'apariencia_clasica.png');
-INSERT INTO public.producto VALUES('Espacial', 100, 'APARIENCIA', 'espacial_shop_image.jpg');
-INSERT INTO public.producto VALUES('Hardware', 100, 'APARIENCIA', 'hardware_shop_image.jpg');
+INSERT INTO public.producto (nombre, precio, tipo, producto_id) VALUES('Clasica',  0,   'APARIENCIA', 'apariencia_clasica.png');
+INSERT INTO public.producto (nombre, precio, tipo, producto_id) VALUES('Espacial', 100, 'APARIENCIA', 'espacial_shop_image.jpg');
+INSERT INTO public.producto (nombre, precio, tipo, producto_id) VALUES('Hardware', 100, 'APARIENCIA', 'hardware_shop_image.jpg');
 
-INSERT INTO public.producto VALUES('Original', 0, 'AVATAR', 'user_profile_image_original.png');
-INSERT INTO public.producto VALUES('Dave', 1, 'AVATAR', 'user_profile_image_0.png');
-INSERT INTO public.producto VALUES('Sr bigotes', 2, 'AVATAR', 'user_profile_image_1.png');
-INSERT INTO public.producto VALUES('Científica', 3, 'AVATAR', 'user_profile_image_2.png');
-INSERT INTO public.producto VALUES('Bruno', 4, 'AVATAR', 'user_profile_image_3.png');
-INSERT INTO public.producto VALUES('Agente Secreto', 5, 'AVATAR', 'user_profile_image_4.png');
-INSERT INTO public.producto VALUES('Desarrollador Dae', 6, 'AVATAR', 'user_profile_image_5.png');
-INSERT INTO public.producto VALUES('Developer', 7, 'AVATAR', 'user_profile_image_6.png');
-INSERT INTO public.producto VALUES('Ingeniera', 8, 'AVATAR', 'user_profile_image_7.png');
-INSERT INTO public.producto VALUES('Azafata', 9, 'AVATAR', 'user_profile_image_8.png');
-INSERT INTO public.producto VALUES('Alfred', 10, 'AVATAR', 'user_profile_image_9.png');
-INSERT INTO public.producto VALUES('Profesora', 11, 'AVATAR', 'user_profile_image_10.png');
-INSERT INTO public.producto VALUES('Señora formal', 12, 'AVATAR', 'user_profile_image_11.png');
-INSERT INTO public.producto VALUES('Astronauta', 13, 'AVATAR', 'user_profile_image_12.png');
-INSERT INTO public.producto VALUES('Anciano feliz', 14, 'AVATAR', 'user_profile_image_13.png');
-INSERT INTO public.producto VALUES('Chico tranquilo', 15, 'AVATAR', 'user_profile_image_14.png');
-INSERT INTO public.producto VALUES('Barbero', 16, 'AVATAR', 'user_profile_image_15.png');
-INSERT INTO public.producto VALUES('Sr desonfiado', 17, 'AVATAR', 'user_profile_image_16.png');
+INSERT INTO public.producto (nombre, precio, tipo, producto_id) VALUES('Original',         0, 'AVATAR', 'user_profile_image_original.png');
+INSERT INTO public.producto (nombre, precio, tipo, producto_id) VALUES('Dave',             1, 'AVATAR', 'user_profile_image_0.png');
+INSERT INTO public.producto (nombre, precio, tipo, producto_id) VALUES('Sr bigotes',       2, 'AVATAR', 'user_profile_image_1.png');
+INSERT INTO public.producto (nombre, precio, tipo, producto_id) VALUES('Científica',       3, 'AVATAR', 'user_profile_image_2.png');
+INSERT INTO public.producto (nombre, precio, tipo, producto_id) VALUES('Bruno',            4, 'AVATAR', 'user_profile_image_3.png');
+INSERT INTO public.producto (nombre, precio, tipo, producto_id) VALUES('Mr. Secreto',      5, 'AVATAR', 'user_profile_image_4.png');
+INSERT INTO public.producto (nombre, precio, tipo, producto_id) VALUES('Dae Dev',          6, 'AVATAR', 'user_profile_image_5.png');
+INSERT INTO public.producto (nombre, precio, tipo, producto_id) VALUES('Developer',        7, 'AVATAR', 'user_profile_image_6.png');
+INSERT INTO public.producto (nombre, precio, tipo, producto_id) VALUES('Ingeniera',        8, 'AVATAR', 'user_profile_image_7.png');
+INSERT INTO public.producto (nombre, precio, tipo, producto_id) VALUES('Azafata',          9, 'AVATAR', 'user_profile_image_8.png');
+INSERT INTO public.producto (nombre, precio, tipo, producto_id) VALUES('Alfred',          10, 'AVATAR', 'user_profile_image_9.png');
+INSERT INTO public.producto (nombre, precio, tipo, producto_id) VALUES('Profesora',       11, 'AVATAR', 'user_profile_image_10.png');
+INSERT INTO public.producto (nombre, precio, tipo, producto_id) VALUES('Señora formal',   12, 'AVATAR', 'user_profile_image_11.png');
+INSERT INTO public.producto (nombre, precio, tipo, producto_id) VALUES('Astronauta',      13, 'AVATAR', 'user_profile_image_12.png');
+INSERT INTO public.producto (nombre, precio, tipo, producto_id) VALUES('Anciano feliz',   14, 'AVATAR', 'user_profile_image_13.png');
+INSERT INTO public.producto (nombre, precio, tipo, producto_id) VALUES('Chico tranquilo', 15, 'AVATAR', 'user_profile_image_14.png');
+INSERT INTO public.producto (nombre, precio, tipo, producto_id) VALUES('Barbero',         16, 'AVATAR', 'user_profile_image_15.png');
+INSERT INTO public.producto (nombre, precio, tipo, producto_id) VALUES('Sr desonfiado',   17, 'AVATAR', 'user_profile_image_16.png');
+
+
 
 
 --
@@ -297,7 +300,7 @@ COPY public.spring_session_attributes (session_primary_id, attribute_name, attri
 -- Data for Name: usuario; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.usuario (usuario_id, apariencia, avatar, contrasenya, email, idioma, saldo) FROM stdin;
+COPY public.usuario (usuario_id, apariencia, avatar, contrasenya, email, idioma, partida, saldo) FROM stdin;
 \.
 
 
@@ -363,6 +366,14 @@ ALTER TABLE ONLY public.spring_session
 
 ALTER TABLE ONLY public.usuario
     ADD CONSTRAINT uk_5171l57faosmj8myawaucatdw UNIQUE (email);
+
+
+--
+-- Name: producto uk_9su14n91mtgcg5ehl658v4afx; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.producto
+    ADD CONSTRAINT uk_9su14n91mtgcg5ehl658v4afx UNIQUE (nombre);
 
 
 --

@@ -9,6 +9,6 @@
         </div>
     </div>
     <div class="profile-card">
-        <app-profile-card [playerELO]="" [playerName]="userName" [playerCoins]="saldo"></app-profile-card>
+        <app-profile-card [playerELO]="" [playerName]="this.userService.username" [playerCoins]="this.userService.saldo" [playerAvatar]="this.userService.avatar"></app-profile-card>
     </div>
 </div>

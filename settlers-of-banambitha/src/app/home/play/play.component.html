@@ -1,16 +1,10 @@
-<body>
-    <mat-grid-list cols="4" rowHeight="30rem" layout-align="center center">
-        <mat-grid-tile>
-            <app-player-card playerName="Martín" playerELO="55" playerNumber=1></app-player-card>
-        </mat-grid-tile>
-        <mat-grid-tile>
-            <app-player-card playerName="Lucía" playerELO="738" playerNumber=2></app-player-card>
-        </mat-grid-tile>
-        <mat-grid-tile>
-            <app-player-card playerName="Marta" playerELO="81" playerNumber=3></app-player-card>
-        </mat-grid-tile>
-        <mat-grid-tile>
-            <app-player-card playerName="Pablo" playerELO="919" playerNumber=4></app-player-card>
+<body *ngIf="this.roomService.room != null && !this.roomService.creandoSala && !this.roomService.uniendoseASala">
+    <br/>
+    <h1> Sala de {{this.roomService.room.leader}} </h1>
+
+    <mat-grid-list [cols]="this.roomService.room.players.length" rowHeight="25rem" layout-align="center center">
+        <mat-grid-tile *ngFor="let user of this.roomService.room.players let i = index">
+            <app-player-card [playerName]="user.username" [playerNumber]="i + 1" [profilePictureUrl]="user.avatar"></app-player-card>
         </mat-grid-tile>
     </mat-grid-list>
 
@@ -31,18 +25,44 @@
         </mat-form-field>
     </div>
 
-    <section class="mb">
-        <div class="button-row">
-            <button mat-raised-button>Online</button>
+    <div *ngIf="!this.roomService.buscandoPartida; else buscando">
+        <section class="mb">
+            <div class="button-row">
+                <button mat-raised-button (click)="this.roomService.buscarPartida()">Buscar partida</button>
+            </div>
+            <div style="width: 10px; "></div>
+            <div class="button-row">
+                <button mat-raised-button (click)="this.roomService.cerrarSala(true)" [disabled]="this.roomService.room.players.length == 1">
+                   {{this.roomService.soyLider() ? "Expulsar invitados" : "Abandonar sala"}}
+                </button>
+            </div>
+        </section>
+    </div>
+    <ng-template #buscando>
+        <div>
+            <h2>Buscando partida...</h2>
+            <br/>
+            <mat-spinner class=" center " diameter="30 "></mat-spinner>
+            <br/> <br/>
+            <div class="center ">
+                <button mat-raised-button (click)="this.roomService.cancelarBusqueda()">Cancelar búsqueda</button>
+            </div>
         </div>
-        <div style="width: 10px; "></div>
-        <div class="button-row">
-            <button mat-raised-button>Privada</button>
-        </div>
-    </section>
-    <div>
-        <div class="center">
-            <button mat-raised-button (click)="goGame()">Comenzar partida</button>
-        </div>
+    </ng-template>
+</body>
+
+<body *ngIf="this.roomService.uniendoseASala ">
+    <div class="center ">
+        <br/> <br/> <br/> <br/> <br/> <br/> <br/>
+        <h1> Entrando a la sala...</h1>
+        <mat-spinner class="center " diameter="60 "></mat-spinner>
+    </div>
+</body>
+
+<body *ngIf="this.roomService.creandoSala ">
+    <div class="center ">
+        <br/> <br/> <br/> <br/> <br/> <br/> <br/>
+        <h1>Creando sala...</h1>
+        <mat-spinner class="center " diameter="60 "></mat-spinner>
     </div>
 </body>

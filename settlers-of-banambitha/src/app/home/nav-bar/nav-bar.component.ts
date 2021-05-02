@@ -8,14 +8,10 @@ import { UserService } from 'src/app/service/user/user.service';
 })
 export class NavBarComponent implements OnInit {
 
-  constructor(public UserService: UserService) { }
+  constructor(public userService: UserService) { }
 
-  public saldo;
-  public userName;
 
   ngOnInit(): void {
-    this.saldo = UserService.getSaldo()
-    this.userName = UserService.getUsername()
   }
 
 }

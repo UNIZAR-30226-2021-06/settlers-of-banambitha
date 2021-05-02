@@ -12,13 +12,15 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
 	private static final String ENDPOINT 			= "/catan-stomp-ws-ep";
 	
-	public static final String TOPIC_CHAT 			= "/chat";
-	public static final String TOPIC_PETICION 		= "/peticion";
-	public static final String TOPIC_INVITACION 	= "/invitacion";
-	public static final String TOPIC_BUSQUEDA 		= "/busqueda";
-	public static final String TOPIC_PARTIDA_ACT 	= "/partida-act";
-	public static final String TOPIC_PARTIDA_CHAT 	= "/partida-chat";
-	public static final String TOPIC_PARTIDA_COM 	= "/partida-com";
+	public static final String TOPIC_CHAT 			= "/chat";			// Subscribe("/chat/<playerId>")
+	public static final String TOPIC_PETICION 		= "/peticion";		// Subscribe("/peticion/<playerId>")
+	public static final String TOPIC_INVITACION 	= "/invitacion";	// Subscribe("/invitacion/<playerId>")
+	public static final String TOPIC_SALA_CREAR 	= "/sala-crear";	// Subscribe("/sala-crear/<playerId>")
+	public static final String TOPIC_SALA_ACT 		= "/sala-act";		// Subscribe("/sala-act/<roomId>")
+	public static final String TOPIC_PARTIDA_ACT 	= "/partida-act";	// Subscribe("/partida-act/<gameId>")
+	public static final String TOPIC_PARTIDA_CHAT 	= "/partida-chat";	// Subscribe("/partida-chat/<gameId>")
+	public static final String TOPIC_PARTIDA_COM 	= "/partida-com";	// Subscribe("/partida-com/<gameId>/<playerId>")
+	public static final String TOPIC_PARTIDA_RELOAD = "/partida-rld";	// Subscribe("/partida-rld/<playerId>")
 	
 	@Override
 	public void configureMessageBroker(MessageBrokerRegistry config) {
@@ -27,9 +29,12 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 		config.enableSimpleBroker(	TOPIC_CHAT,
 									TOPIC_PETICION,
 									TOPIC_INVITACION,
-									TOPIC_BUSQUEDA,
+									TOPIC_SALA_CREAR,
+									TOPIC_SALA_ACT,
 									TOPIC_PARTIDA_ACT,
-									TOPIC_PARTIDA_CHAT
+									TOPIC_PARTIDA_CHAT,
+									TOPIC_PARTIDA_COM,
+									TOPIC_PARTIDA_RELOAD
 								);
 		
 		//Application calls
@@ -38,7 +43,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 		
 	@Override
 	public void registerStompEndpoints(StompEndpointRegistry registry) {
-		registry.addEndpoint(ENDPOINT).withSockJS();
+		registry.addEndpoint(ENDPOINT).setAllowedOriginPatterns("*").withSockJS();
 	}
 
 }

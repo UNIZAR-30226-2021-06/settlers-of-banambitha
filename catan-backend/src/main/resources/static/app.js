@@ -3,7 +3,7 @@ var stompClient = null;
 function connect() {
     var socket = new SockJS('/catan-stomp-ws-ep');
     stompClient = Stomp.over(socket);
-    stompClient.connect({}, function (frame) {
+    stompClient.connect({"user-id":"PACO"}, function (frame) {
         console.log('Connected: ' + frame);
     });
 }
@@ -13,28 +13,21 @@ function suscribe(where){
 	stompClient.subscribe(where, function (mensaje) {
 		console.log('Message:' + mensaje);
 		var obj = JSON.parse(mensaje.body);
-		
-		if(obj.to!=null){
-			console.log("Privado");
-			mostratMsg(obj.from, obj.body, obj.time);
-		} else {
-			console.log("Partida");
-			mostratMsg(obj.from, obj.body, obj.time);
-		}
-    });
+		mostratMsg(obj);
+    }, {});
 }
 
-function mostratMsg(from, body, time) {
-	console.log('Message from ' + from + ": " + body);
-    $("#mensajes").append("<tr><td>" + from + ": " + body + " at [" + time + "]</td></tr>");
+function unsuscribe(where){
+	
+	stompClient.unsubscribe(where);
 }
 
-function enviarMensaje(from, to, body) {
-    stompClient.send("/app/enviar/privado", {}, JSON.stringify({'from': from, 'to': to, "body": body}));
+function mostratMsg(msg) {
+    $("#mensajes").append("<tr><td>" + JSON.stringify(msg) + "</td></tr>");
 }
 
-function enviarMensajePartida(from, game, body) {
-    stompClient.send("/app/enviar/partida", {}, JSON.stringify({'from': from, 'game': game, "body": body}));
+function enviarMensaje(where, msg) {
+    stompClient.send(where, {}, msg);
 }
 
 $(function () {
@@ -43,6 +36,6 @@ $(function () {
     });
     $( "#connect" ).click(function() { connect(); });
  	$( "#suscribe" ).click(function() { suscribe($("#where").val()); });
-    $( "#send_private" ).click(function() { enviarMensaje($("#name").val(), $("#to").val(), $("#body").val()); });
-    $( "#send_game" ).click(function() { enviarMensajePartida($("#name").val(), $("#game").val(), $("#body").val()); });
+ 	$( "#unsuscribe" ).click(function() { unsuscribe($("#where").val()); });
+    $( "#send" ).click(function() { enviarMensaje($("#where").val(), $("#msg").val()); });
 });
