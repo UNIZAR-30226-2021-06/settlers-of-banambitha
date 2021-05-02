@@ -65,8 +65,8 @@ public class Shop {
         circle.setCenterX(110.0f);
         circle.setCenterY(110.0f);
         circle.setRadius(90.0f);
-        circle.setLayoutX(anchorPane.getLayoutX() + 25);
-        circle.setLayoutY(anchorPane.getLayoutY() + 25);
+        anchorPane.setTopAnchor(circle, 70.0);
+        anchorPane.setLeftAnchor(circle, 50.0);
         Image imgSkin = new Image(imgURL);
         circle.setFill(new ImagePattern(imgSkin));
         anchorPane.getChildren().add(circle);
@@ -75,16 +75,16 @@ public class Shop {
         // Nombre icono
         Text tName = new Text(10, 50, name);
         tName.setFont(new Font(40));
-        tName.setLayoutX(anchorPane.getLayoutX() + 300);
-        tName.setLayoutY(anchorPane.getLayoutY() + 45);
+        anchorPane.setTopAnchor(tName, 40.0);
+        anchorPane.setLeftAnchor(tName, 215.0);
         tName.setFill(Color.WHITE);
         anchorPane.getChildren().add(tName);
 
 
         // Imagen oro 
         ImageView imageView = new ImageView(goldImage);
-        imageView.setLayoutX(anchorPane.getLayoutX() + 300);
-        imageView.setLayoutY(anchorPane.getLayoutY() + 155);
+        anchorPane.setBottomAnchor(imageView, 40.0);
+        anchorPane.setLeftAnchor(imageView, 215.0);
         imageView.setFitHeight(90);
         imageView.setFitWidth(90);
         anchorPane.getChildren().add(imageView);
@@ -92,8 +92,8 @@ public class Shop {
         // Precio icono
         Text tPrice = new Text(10, 50, price.toString());
         tPrice.setFont(new Font(40));
-        tPrice.setLayoutX(anchorPane.getLayoutX() + 395);
-        tPrice.setLayoutY(anchorPane.getLayoutY() + 175);
+        anchorPane.setBottomAnchor(tPrice, 40.0);
+        anchorPane.setLeftAnchor(tPrice, 320.0);
         tPrice.setFill(Color.WHITE);
         anchorPane.getChildren().add(tPrice);
 
@@ -101,8 +101,11 @@ public class Shop {
         // Boton compra
         Button buyButton = new Button();
         buyButton.setPrefSize(250,100);
-        buyButton.setLayoutX(anchorPane.getLayoutX() + 1090);
-        buyButton.setLayoutY(anchorPane.getLayoutY() + 100);
+        anchorPane.setBottomAnchor(buyButton, 100.0);
+        anchorPane.setRightAnchor(buyButton, 100.0);
+
+
+       
         buyButton.setStyle("-fx-background-color: #c7956d; -fx-background-radius: 12px");
         buyButton.setText((LangService.getMapping("shop_buy")));
         DropShadow shadow = new DropShadow();

@@ -48,7 +48,7 @@ import java.io.IOException;
 
 public class Gameplay {
  
-    private static double start_X_position = 700.0;
+    private static double start_X_position = 250.0;
     private static double start_Y_position = 110.0;
     private static double horizontal_right_gap = 115;
     private static double horizontal_left_gap = 60;
@@ -786,8 +786,11 @@ public class Gameplay {
                 t.setFill(Color.WHITE);
                 mainAnchor.getChildren().add(t); 
             }
-           
-            
+
+           // Text t = new Text(10, 50, "");
+           // t.setLayoutX(mainAnchor.getLayoutX() + 1150);
+           // t.setLayoutY(mainAnchor.getLayoutY() + 200);
+           // mainAnchor.getChildren().add(t); 
             assignRoads(pol, i);
             assignSettlements(pol,i);
             hexagons[i] = pol;

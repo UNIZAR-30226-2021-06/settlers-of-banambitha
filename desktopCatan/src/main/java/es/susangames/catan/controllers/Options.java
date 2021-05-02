@@ -48,9 +48,9 @@ public class Options {
 
     @FXML
     private ImageView imgWin;
-
+    
     @FXML
-    private ImageView imgDefeat;
+    private Circle imgSettings;
 
     @FXML
     private Button buttonChangeMail;
@@ -68,7 +68,7 @@ public class Options {
 
     private Popup popupChangeUserImg;
 
-    private Image userImg,win,record;
+    private Image userImg,win,settings;
 
     private ShopService shop;
 
@@ -76,7 +76,7 @@ public class Options {
     public Options() {
         userImg = new Image("/img/users/user_profile_image_original.png");
         win = new Image("/img/win.png");
-        record = new Image("/img/win.png");
+        settings = new Image("/img/settings.png");
         shop = new ShopService();
     }
 
@@ -212,7 +212,7 @@ public class Options {
             
          });
          popupChangeUserImg.getContent().add(elementsList);
-         elementsList.setPrefSize(700,700);
+         elementsList.setPrefSize(700,300);
 
     }
 
@@ -273,6 +273,7 @@ public class Options {
         numberVictory.setText("23");
         numberDefeat.setText("7");
         imgWin.setImage(win);
+        imgSettings.setFill(new ImagePattern(settings));
 
         changeMailPopUp();
         changePasswordPopUp();
