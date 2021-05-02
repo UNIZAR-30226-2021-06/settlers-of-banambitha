@@ -1,6 +1,5 @@
 package es.susangames.catan.logica;
 
-
 import java.util.Map;
 
 import org.json.JSONArray;
@@ -48,8 +47,8 @@ public class Tablero {
 	int turno;
 	int dados;
 	
-	Tablero (Integer num_jugadores) {
-		this.num_jugadores = num_jugadores;
+	public Tablero () {
+		this.num_jugadores = 4;
 		j = new Jugadores[num_jugadores];
 		
 		j[0] = new Jugadores(ColorJugador.Azul);
@@ -77,7 +76,7 @@ public class Tablero {
 		
 		generarPuertos ();
 
-		mostrarHexagonos();
+		//mostrarHexagonos();
 	}
 	
 	/**
@@ -101,10 +100,10 @@ public class Tablero {
 			for (int j = 0; j < this.num_hexagonos_fila[i]; ++j) {
 				aux = new Coordenadas(ini_x, ini_y);
 				if ( this.vector_terrenos[id].esDesierto() ) {
-					hexagonos.put(id, new Hexagonos(aux, this.vector_terrenos[id], -1));
+					hexagonos.put(id, new Hexagonos(aux, this.vector_terrenos[id], -1, this.num_jugadores));
 				} else {
 					hexagonos.put(id, new Hexagonos(aux, this.vector_terrenos[id], 
-							this.vector_valores[count_value]));
+							this.vector_valores[count_value], this.num_jugadores));
 					count_value++;
 				}
 				ini_x += 2*apotema;
@@ -137,11 +136,29 @@ public class Tablero {
 		}
 	}
 	
+	private Hexagonos getHexagono (int identificador) {
+		try {
+			return this.hexagonos.get(identificador);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+			return null;
+		}
+	}
+	/**
+	 * Dado un identificador id, devuelve true si corresponde con uno de los hexagonos existentes
+	 * en el tablero.
+	 * @param id entero que identifica a un hexagono
+	 * @return true si y solo si existe un hexagono cuyo identificador sea id
+	 */
+	private Boolean existeHexagono (int id) {
+		return hexagonos.containsKey(id);
+	}
+	
 	/**
      * Método que devuelve el hexagono donde se encuentra el ladron
      * @return el hexagono donde se encuentra el ladron
      */
-	public Hexagonos getPosicionLadron () {
+	private Hexagonos getPosicionLadron () {
 		Hexagonos hexagonoLadron = null;
 		for (Hexagonos h : hexagonos.values()) {
 			if (h.tieneLadron()) {
@@ -155,7 +172,7 @@ public class Tablero {
 	/**
      * Método que mueve el ladron al hexagono indicado
      */
-	public void moverLadron (Integer nuevaPosicion) {
+	private void moverLadron (Integer nuevaPosicion) {
 		Hexagonos posActualLadron = getPosicionLadron();
 		
 		Hexagonos nuevaPosLadron = hexagonos.get(nuevaPosicion);
@@ -172,7 +189,7 @@ public class Tablero {
 	/**
      * Método que entrega los recursos producidos por las ciudades y pueblos de los hexagonos activados a los jugadores propietarios de estos
      */
-	public void producir (Integer valor) {	
+	private void producir (Integer valor) {	
 		for (Hexagonos hex : hexagonos.values()) {
 			if (hex.getValor() == valor) hex.producir();
 		}
@@ -181,7 +198,7 @@ public class Tablero {
 	/**
      * Método que imprime informacion del tablero por pantalla
      */
-	public void mostrarHexagonos () {
+	private void mostrarHexagonos () {
 		Vertices v[];
 		Aristas a[];
 		for ( int i = 0; i < this.NUM_HEXAGONOS; ++i ) {
@@ -200,11 +217,86 @@ public class Tablero {
 		System.out.println("Numero de puertos: " + Hexagonos.num_puertos());
 	}
 	
+	/*
+	 * Genera un numero aleatorio n del 1 al 6. Simula la accion de lanzar un dado.
+	 * @return Devuelve n, siendo n un entero 1 <= n <= 6.
+	 * */
+	private int generarNumero () {
+		return (int) Math.floor( Math.random()*5 + 1 );
+	}
+	
+	//--------------------------- Partida pausada -----------------------------------------------\\
+	/*
+	 * Carga un tablero ubicado en la base de datos.
+	 * */
+	public void cargarTablero () {
+		
+	}
+	/*
+	 * Guarda un tablero en la base de datos.
+	 * */
+	public void guardarTablero () {
+		
+	}
+	//-------------------------------------------------------------------------------------------\\
+	
+	//---------------------------------- Cartas -------------------------------------------------\\
+	public void usarCartaCaballero(Integer nuevaPosicion, Jugadores j) {
+		if (j.hayCartasCartasCaballeros()){
+			j.usarCartaCaballero();
+			this.moverLadron(nuevaPosicion);
+		}
+	}
+	
+	public void usarCartaMonopolio (TipoTerreno tipo, Jugadores j) {
+		if (j.numCartasMonopolio() > 0){
+			j.usarCartaMonopolio();
+			for (int i = 0; i < 4; ++i ) {
+				if(!j.mismoJugador(this.Jugadores[i])){
+					switch (tipo) {
+						case 0:
+							j.setMadera(j.getMadera() + this.j[i].getMadera()); // j.madera += this.Jugadores[i].madera;
+							this.j[i].setMadera(0); // this.Jugadores[i].madera = 0;
+						case 1:
+							j.setLana(j.getLana() + this.j[i].getLana()); // j.lana += this.Jugadores[i].lana;
+							this.j[i].setLana(0); // this.Jugadores[i].lana = 0;
+						case 2:
+							j.setCereales(j.getCereales() + this.j[i].getCereales()); // j.cereales += this.Jugadores[i].cereales;
+							this.j[i].setCereales(0); // this.Jugadores[i].cereales = 0;
+						case 3:
+							j.setArcilla(j.getArcilla() + this.j[i].getArcilla()); // j.arcilla += this.Jugadores[i].arcilla;
+							this.j[i].setArcilla(0); // this.Jugadores[i].arcilla = 0;
+						case 4:
+							j.setMineral(j.getMineral() + this.j[i].getMineral()); // j.mineral += this.Jugadores[i].mineral;
+							this.j[i].setMineral(0);// this.Jugadores[i].mineral = 0;
+					}
+				}
+			}		
+		}
+	}
+	
+	private void usarCartasConstruccionCarretera(Hexagono hexagono, Aristas arista, Jugadores j) {
+		if (j.hayCartasContruccionCarreteras()){
+			j.usarCartasConstruccionCarretera();
+			hexagono.construirCarretera(arista, j);
+		}
+	}
+	//-------------------------------------------------------------------------------------------\\
+	
+	//---------------------------------- Comercio -----------------------------------------------\\
+	public void comerciar(Jugadores j1, Jugadores j2, int maderaJ1, int lanaJ1, int cerealesJ1,
+		int arcillaJ1, int mineralJ1, int maderaJ2, int lanaJ2, int cerealesJ2,
+		int arcillaJ2, int mineralJ2) {
+		
+	}
+	
+	//----------------------------------- JSON -----------------------------------\\
+	
 	/**
      * Método que devuelve los tipos de terreno de los hexagonos
      * @return los tipos de terreno de los hexagonos
      */
-	public JSONArray tiposHexagonosToJSONArray () {
+	private JSONArray tiposHexagonosToJSONArray () {
 		JSONArray jsArray = new JSONArray ();
 		
 		for (Hexagonos h : hexagonos.values()) {
@@ -218,7 +310,7 @@ public class Tablero {
      * Método que devuelve los valores de los hexagonos
      * @return los valores de los hexagonos
      */
-	public JSONArray valorHexagonosToJSONArray () {
+	private JSONArray valorHexagonosToJSONArray () {
 		JSONArray jsArray = new JSONArray ();
 		
 		for (Hexagonos h : hexagonos.values()) {
@@ -232,89 +324,12 @@ public class Tablero {
      * Método que tranforma el JSONObject a jsObject
      * @return jsObject
      */
-	public JSONObject generarTablero () {
+	private JSONObject generarTablero () {
 		JSONObject jsObject = new JSONObject();
 		// Generar respuesta.
 		return jsObject;
 	}
-	
-	/*
-	 * Genera un numero aleatorio n del 1 al 6. Simula la accion de lanzar un dado.
-	 * @return Devuelve n, siendo n un entero 1 <= n <= 6.
-	 * */
-	public int generarNumero () {
-		return (int) Math.floor( Math.random()*5 + 1 );
-	}
-	
-	/*
-	 * Carga un tablero ubicado en la base de datos.
-	 * */
-	public void cargarTablero () {
-		
-	}
-	
-	/*
-	 * Construye un asentamiento en la posicion indicada a nobre del jugador indicado.
-	 * */
-	public void construirAsentamiento (Integer idHexagono, Coordenadas c, Jugadores j) {
-		// Comprobar si el jugador puede construir el asentamiento.
-		if (j.puedeConstruirPueblo()) {
-			construirAsentamiento(idHexagono,c, j);
-		}
-	}
-	
-	public void comerciar(Jugadores j) {
-		
-	}
-	
-	/*
-	 * Guarda un tablero en la base de datos.
-	 * */
-	public void guardarTablero () {
-		
-	}
-	
-	public void usarCartaCaballero(Integer nuevaPosicion, Jugadores j) {
-		if (j.numCartasCaballeros > 0){
-			j.usarCartaCaballero();
-			this.moverLadron(nuevaPosicion);
-		}
-	}
-	
-	public void usarCartaMonopolio (TipoTerreno tipo, Jugadores j) {
-		if (j.numCartasMonopolio > 0){
-			j.usarCartaMonopolio();
-			for (int i = 0; i < 4; ++i ) {
-				if(!j.mismoJugador(this.Jugadores[i])){
-					switch (tipo) {
-						case 0:
-							j.madera += this.Jugadores[i].madera;
-							this.Jugadores[i].madera = 0;
-						case 1:
-							j.lana += this.Jugadores[i].lana;
-							this.Jugadores[i].lana = 0;
-						case 2:
-							j.cereales += this.Jugadores[i].cereales;
-							this.Jugadores[i].cereales = 0;
-						case 3:								
-							j.arcilla += this.Jugadores[i].arcilla;
-							this.Jugadores[i].arcilla = 0;
-						case 4:
-							j.mineral += this.Jugadores[i].mineral;
-							this.Jugadores[i].mineral = 0;
-					}
-				}
-			}		
-		}
-	}
-	
-	public void usarCartasConstruccionCarretera(Hexagono hexagono, Aristas arista, Jugadores j) {
-		if (j.numCartasContruccionCarreteras > 0){
-			j.usarCartasConstruccionCarretera();
-			hexagono.construirCarretera(arista, j)
-		}
-	}
-	
+
 	/*
 	 * Genera un JSONObject con informacion de los hexagonos
 	 * @return devuelve informacion de los hexagonos
@@ -344,7 +359,7 @@ public class Tablero {
 		aux += auxTipo + "]," + auxValor + "]," + "\"ladron\":" + auxLadron + "}";
 		return new JSONObject(aux);
 	}
-	
+
 	/*
 	 * Genera un JSONObject con la informacion de la partida
 	 * @return JSONObject con la informacion de la partida
@@ -358,12 +373,12 @@ public class Tablero {
 		Tab_inf.put("hexagono", infoHexagonosJSON());
 		
 		JSONObject vertices = new JSONObject();
-		vertices.put("asentamiento" , new JSONObject());
-		vertices.put("posibles_asentamiento" , new JSONObject());
+		vertices.put("asentamiento" , Hexagonos.listAsentamientoToJSON());
+		vertices.put("posibles_asentamiento" , Hexagonos.posibleAsentamientoToJSON());
 		
 		JSONObject aristas = new JSONObject();
-		aristas.put("camino" , new JSONObject());
-		aristas.put("posibles_camino" , new JSONObject());
+		aristas.put("camino" , Hexagonos.listCaminoToJSON());
+		aristas.put("posibles_camino" , Hexagonos.posibleCaminoToJSON());
 		aristas.put("puertos", Hexagonos.puertosToJSON());
 		
 		Tab_inf.put("vertices", vertices);
@@ -405,40 +420,133 @@ public class Tablero {
 		
 		Integer id_jugador = jsObject.getInt("player");
 		Jugadores jug = this.j[id_jugador - 1];
+
+		String message="";
+		int exist_status;
 		
 		JSONObject move = jsObject.getJSONObject("move");
 		
 		switch ( move.getString("name") ) {
 		case "construir poblado":
+			// Jugador uede construir pueblo
 			if ( jug.puedeConstruirPueblo() ) {
 				int id_vertice = move.getInt("param");
-				Vertices v = Hexagonos.getVerticePorId(id_vertice);
-				if (v.getPosibleAsentamientoDeJugador(id_vertice)) {
-					Hexagonos.construirAsentamiento(v, jug);
-					jug.construirAsentamiento();
+				// Comprobar si el identificador del vertice corresponde a algún vertice
+				if (Hexagonos.existeVertice(id)) {
+					Vertices v = Hexagonos.getVerticePorId(id_vertice);
+					if (v.tieneAsentamiento()) {
+						if (v.getPosibleAsentamientoDeJugador(id_vertice)) {
+							Hexagonos.construirAsentamiento(v, jug);
+							jug.construirAsentamiento();
+							message = "Se ha construido el poblado correctamente";
+							exist_status = 0;
+						}
+						else {
+							message = "[Error] La posición del asentamiento no está disponible para el "
+							+ "jugador ya que no cumple con los requsitos";
+							exit_status = 4;
+						}
+					} else {
+						message = "[Error] Ya existe un poblado construido en ese vertice";
+						exit_status = 3;
+					}
+					
 				}
+				else {
+					message = "[Error] El identificador del vertice introducido no se corresponde "
+					+ "con ninguno existente";
+					exist_status = 2;
+				}
+			} else {
+				message = "[Error] El jugador no dispone de los recursos necesarios para construir"
+				+ " un poblado";
+				exist_status = 1;
 			}
 			break;
 		case "mejorar poblado":
 			if ( jug.puedeConstruirCiudad() ) {
 				int id_vertice = move.getInt("param");
-				Vertices v = Hexagonos.getVerticePorId(id_vertice);
-				if ( v.tieneAsentamiento() && !v.tieneCiudad() && v.getPropietario().equals(jug) )
-					Hexagonos.mejorarAsentamiento(v, jug);
-					jug.mejorarAsentamiento();
+				if (Hexagonos.existeVertice(id)) {
+					Vertices v = Hexagonos.getVerticePorId(id_vertice);
+					if ( v.tieneAsentamiento() ) {
+						if (v.getPropietario().equals(jug)) {
+							if (!v.tieneCiudad()) {
+							Hexagonos.mejorarAsentamiento(v, jug);
+							jug.mejorarAsentamiento();
+							message = "Se ha construido la ciudad correctamente";
+							exit_status = 0;
+							} else {
+								message = "[Error] Ya existe una ciudad construida en ese vertice";
+								exit_status = 9;
+							}
+						} else {
+							message = "[Error] El asentamiento construido en el vertice no " + 
+							"corresponde con un asentamiento del jugador";
+							exit_status = 8;
+						}
+					} else {
+						message = "[Error] En el vertice con id " + id_vertice + 
+						" no se encuentra ningún poblado sobre el que construir una ciudad";
+						exit_status = 7;
+					}
+				} else {
+					message = "[Error] El identificador del vertice introducido no se corresponde con ninguno existente";
+					exit_status = 6;
+				}	
+			} else {
+				message = "[Error] El jugador no dispone de los recursos necesarios para construir una ciudad";
+				exit_status = 5;
 			}
 			break;
-		case "crear carretera":
-			if ( jug.puedeConstruirCarretera() ) {
+		case "construir camino":
+			if ( jug.puedeConstruirCamino() ) {
 				int id_arista = move.getInt("param");
-				Aristas a = Hexagonos.getAristaPorId(id_arista);
-				if (!a.tieneCamino() && a.getPosibleCaminoDeJugador(id_arista)) {
-					Hexagonos.construirCarretera(a, jug);
+				if (Hexagonos.existeArista(id_arista)) {
+					Aristas a = Hexagonos.getAristaPorId(id_arista);
+					if (!a.tieneCamino()) {
+						if (a.getPosibleCaminoDeJugador(id_jugador)) {
+							Hexagonos.construirCamino(a, jug);
+							jug.construirCamino();
+							message = "Se ha construido el camino correctamente";
+							exit_status = 0;
+						} else {
+							message = "[Error] La posición del camino no está disponible para" + 
+							" el jugador ya que no cumple con los requsitos";
+							exit_status = 13;
+						}
+					} else {
+						message = "[Error] Ya existe un camino construido en esa arista";
+						exit_status = 12;
+					}
+				} else {
+					message = "[Error] El identificador de la arista introducido no se corresponde con ninguno existente";
+					exit_status = 11;
 				}
+			} else {
+				message = "[Error] El jugador no dispone de los recursos necesarios para construir un camino";
+				exit_status = 10;
 			}
 			break;
 		case "mover ladron":
+			
 			int id_hexagono = move.getInt("param");
+			if (existeHexagono(id_hexagono)) {
+				Hexagonos posActualLadron = getPosicionLadron();
+				Hexagonos nuevaPosLadron = hexagonos.get(nuevaPosicion);
+				// Si el hexagono al que se puede mover existe
+				if (nuevaPosLadron != null) {
+					// Comprobamos que los dos hexagonos son adyacentes.
+					if (posActualLadron.sonAdyacentes(nuevaPosLadron)) {
+						posActualLadron.moverLadron();
+						nuevaPosLadron.colocarLadron();
+					}
+					else {
+
+					}
+				} else {
+
+				}
+			}
 			moverLadron(id_hexagono);
 			break;
 		case "finalizar turno":
@@ -452,12 +560,12 @@ public class Tablero {
 		case "primer asentamiento":
 			int id_vertice = move.getInt("param");
 			Vertices v = Hexagonos.getVerticePorId(id_vertice);
-			Hexagonos.construirPrimerAsentamiento(v);
+			Hexagonos.construirPrimerAsentamiento(v,jug);
 			break;
 		case "primer camino":
 			int id_arista = move.getInt("param");
 			Aristas a = Hexagonos.getAristaPorId(id_arista);
-			Hexagonos.construirPrimerCamino(a);
+			Hexagonos.construirPrimerCamino(a,jug);
 			break;
 		default:
 			// No existe la accion solicitada.
@@ -466,6 +574,7 @@ public class Tablero {
 		// RESPUESTA GENERAL.
 		JSONObject respuesta = new JSONObject ();
 		
+		respuesta.put("exit_status",exist_status);
 		respuesta.put("Message", "");
 
 		JSONObject Tab_inf = new JSONObject();
@@ -512,7 +621,32 @@ public class Tablero {
 		
 		respuesta.put("Resultado_Tirada", this.dados);
 		respuesta.put("Turno", this.turno);
+		repuesta.put("Ganador",ganador());
 		return respuesta;
 	}
-	
-} //Cierre de la clase
+	//-------------------------------------------------------------------------------------------\\
+
+	//------------------------------------ GANADOR -----------------------------------------------\\
+	public Boolean hayGanador() {
+		int pVJ1 = this.j[0].getPuntosVictoria();
+		int pVJ2 = this.j[1].getPuntosVictoria();
+		int pVJ3 = this.j[2].getPuntosVictoria();
+		int pVJ4 = this.j[3].getPuntosVictoria();
+		return pVJ1 >= 10 || pVJ2 >= 10 || pVJ3 >= 10 || pVJ4 >= 10;
+	}
+
+	public Integer ganador () {
+		if (hayGanador()) {
+			int pVJ1 = this.j[0].getPuntosVictoria();
+			int pVJ2 = this.j[1].getPuntosVictoria();
+			int pVJ3 = this.j[2].getPuntosVictoria();
+			int pVJ4 = this.j[3].getPuntosVictoria();
+			if (pVJ1 >= 10) return 1;
+			else if (pVJ2 >= 10) return 2;
+			else if (pVJ3 >= 10) return 3;
+			else if (pVJ4 >= 10) return 4;
+			else return -1;
+		}
+		else return null;
+	}
+}

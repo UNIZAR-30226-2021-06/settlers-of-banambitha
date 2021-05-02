@@ -108,7 +108,7 @@ public class Jugadores {
      * Método que devuelve si el jugador puede construir una carretera
      * @return cierto si el jugador puede construir una carretera
      */
-	public Boolean puedeConstruirCarretera () {
+	public Boolean puedeConstruirCamino () {
 		return madera >= 1 && arcilla >= 1;
 	}
 	
@@ -187,6 +187,7 @@ public class Jugadores {
 		this.arcilla--;
 		this.numPobladosConstruidos++;
 	}
+	
 	/**
      * Método que elimina los recusos empleados en mejorar un asentamiento y actualiza al numero de ciudades.
      */
@@ -200,7 +201,7 @@ public class Jugadores {
 	/**
      * Método que elimina los recusos empleados en construir una carretera y actualiza al numero de carreteras.
      */
-	public void construirCarretera () {
+	public void construirCamino () {
 		// Eliminar recursos. --> madera >= 1 && arcilla >= 1;
 		this.madera--;
 		this.arcilla--;
@@ -232,25 +233,23 @@ public class Jugadores {
 		}
 	}
 	
-	public void usarCartaCaballero(Integer nuevaPosicion, Tablero tablero) {
-			this.numCartasCaballeros--;
+	public void usarCartaCaballero() {
+		this.numCartasCaballeros--;
 	}
 	
 	/**
      * Método que intercambiua carta de victoria por punto de victoria.
      */
 	public void usarCartasPuntosVictoria() {
-		if (this.numCartasPuntoVictoria > 0){
-			this.numCartasPuntoVictoria--;
-			this.puntosVictoria++;
-		}
+		this.puntosVictoria++;
+		this.numCartasPuntoVictoria--;
 	}
 	
-	public void usarCartaMonopolio (TipoTerreno tipo, Tablero tablero) {
-			this.numCartasMonopolio--;
+	public void usarCartaMonopolio () {
+		this.numCartasMonopolio--;
 	}
 	
-	public void usarCartaDescubrimiento(TipoTerreno tipo1, TipoTerreno tipo2) {
+	public void usarCartaDescubrimiento() {
 		if (this.numCartasDescubrimiento > 0){
 			this.numCartasDescubrimiento--;
 			switch (tipo1) {
@@ -280,12 +279,10 @@ public class Jugadores {
 		}
 	}
 	
-	public void usarCartasConstruccionCarretera(Hexagono hexagono, Aristas arista) {
+	public void usarCartasConstruccionCarretera() {
 		if (this.numCartasContruccionCarreteras > 0){
 			this.numCartasContruccionCarreteras--;
-			hexagono.construirCarretera(arista, this)
 		}
-	
 	}
 
 	@Override
@@ -317,6 +314,7 @@ public class Jugadores {
 		return new JSONObject ("\"Player_" + this.color.numeroColor() + 1 + "\": [" + this.madera + "," + 
 				this.lana + "," + this.cereales + "," + this.arcilla + "," + this.mineral + "]");
 	}
+	
 	/**
      * Método que envia informacion del jugador.
      */
@@ -329,4 +327,57 @@ public class Jugadores {
 				this.numCartasPuntoVictoria + "," +this.numCartasContruccionCarreteras + "," + this.numCartasDescubrimiento +
 				"," + this.numCartasMonopolio + "," + numGranEjecitoCaballeria + "," + numGranRutaComercial + "]");
 	}
+
+	public Integer getMadera() {
+		return madera;
+	}
+
+	public void setMadera(Integer madera) {
+		this.madera = madera;
+	}
+
+	public Integer getLana() {
+		return lana;
+	}
+
+	public void setLana(Integer lana) {
+		this.lana = lana;
+	}
+
+	public Integer getCereales() {
+		return cereales;
+	}
+
+	public void setCereales(Integer cereales) {
+		this.cereales = cereales;
+	}
+
+	public Integer getArcilla() {
+		return arcilla;
+	}
+
+	public void setArcilla(Integer arcilla) {
+		this.arcilla = arcilla;
+	}
+
+	public Integer getMineral() {
+		return mineral;
+	}
+
+	public void setMineral(Integer mineral) {
+		this.mineral = mineral;
+	}
+	
+	public Boolean hayCartasContruccionCarreteras () {
+		return this.numCartasContruccionCarreteras > 0;
+	}
+
+	public Boolean hayCartasCartasMonopolio () {
+		return this.numCartasMonopolio > 0;
+	}
+
+	public Boolean hayCartasCartasCaballeros () {
+		return this.numCartasCaballeros > 0;
+	}
+
 } //Cierre de la clase

@@ -214,13 +214,24 @@ public class Hexagonos {
 		return vertices.containsKey(c);
 	}
 	
-	/*public static Boolean sePuedeConstruirAsentamiento(Coordenadas c, Jugadores j) {
-		if (existeCoordenada(c)) {
-			// Comprobar se existe carretera del jugador cercana.
-			// Comprobar que se cumple la regla de la distancia.
-		}
-		return false;
-	}*/
+	/**
+	 * Dado un identificador id, devuelve true si corresponde con uno de los vertices existentes
+	 * en el tablero.
+	 * @param id entero que identifica a un vertice
+	 * @return true si y solo si existe un vertice cuyo identificador sea id
+	 */
+	public static Boolean existeVertice (int id) {
+		return verticesPorID.containsKey(id);
+	}
+	/**
+	 * Dado un identificador id, devuelve true si corresponde con una de las aristas existentes
+	 * en el tablero.
+	 * @param id entero que identifica a una arista.
+	 * @return true si y solo si existe una aristas cuyo identificador sea id.
+	 */
+	public static Boolean existeArista (int id) {
+		return aristasPorID.containsKey(id);
+	}
 	
 	public static int num_vertices () {
 		return vertices.size();
