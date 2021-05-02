@@ -528,26 +528,25 @@ public class Tablero {
 			}
 			break;
 		case "mover ladron":
-			
 			int id_hexagono = move.getInt("param");
+			// Si el hexagono al que se puede mover existe
 			if (existeHexagono(id_hexagono)) {
 				Hexagonos posActualLadron = getPosicionLadron();
-				Hexagonos nuevaPosLadron = hexagonos.get(nuevaPosicion);
-				// Si el hexagono al que se puede mover existe
-				if (nuevaPosLadron != null) {
-					// Comprobamos que los dos hexagonos son adyacentes.
-					if (posActualLadron.sonAdyacentes(nuevaPosLadron)) {
-						posActualLadron.moverLadron();
-						nuevaPosLadron.colocarLadron();
-					}
-					else {
-
-					}
-				} else {
-
+				Hexagonos nuevaPosLadron = hexagonos.get(id_hexagono);
+				// Comprobamos que los dos hexagonos son adyacentes.
+				if (posActualLadron.sonAdyacentes(nuevaPosLadron)) {
+					posActualLadron.moverLadron();
+					nuevaPosLadron.colocarLadron();
+					message = "Se ha movido correctamente el ladrón de hexagono";
+					exit_status = 0;
 				}
+				else {
+					message = "[Error] El identificador del hexagono introducido no se corresponde"
+					+ "con ninguno existente";
+					exit_status = 14;
+				}
+				
 			}
-			moverLadron(id_hexagono);
 			break;
 		case "finalizar turno":
 			this.dados = generarNumero();
@@ -624,9 +623,9 @@ public class Tablero {
 		repuesta.put("Ganador",ganador());
 		return respuesta;
 	}
-	//-------------------------------------------------------------------------------------------\\
 
-	//------------------------------------ GANADOR -----------------------------------------------\\
+	//-------------------------------------------------------------------------------------------\\
+	
 	public Boolean hayGanador() {
 		int pVJ1 = this.j[0].getPuntosVictoria();
 		int pVJ2 = this.j[1].getPuntosVictoria();
@@ -650,3 +649,4 @@ public class Tablero {
 		else return null;
 	}
 }
+
