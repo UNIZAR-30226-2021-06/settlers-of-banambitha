@@ -365,6 +365,7 @@ public class Tablero {
 	/*
 	 * Genera un JSONObject con la informacion de la partida
 	 * @return JSONObject con la informacion de la partida
+	 * TODO: hacer que esta función devuelva siempre el estado actual del tablero
 	 * */
 	public JSONObject returnMessage () throws JSONException {
 		JSONObject respuesta = new JSONObject ();
