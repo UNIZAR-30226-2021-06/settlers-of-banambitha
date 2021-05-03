@@ -41,7 +41,9 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
     PlayerCardComponent, ShopComponent, SettingsComponent, ProfileComponent,
     RulesComponent, ProfilePicturesComponent, BoardSkinsComponent, TerrainComponent,
     ResourcesComponent, DevelopmentCardComponent, ActionsComponent, IngameComponent,
-    ProfileCardComponent, FriendBrowserComponent, FriendCardComponent, MainHomeComponent, StadisticCardComponent],
+    ProfileCardComponent, FriendBrowserComponent, FriendCardComponent, MainHomeComponent,
+    StadisticCardComponent],
+    
   imports: [
     CommonModule, 
     MatCardModule, 
@@ -58,7 +60,6 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
     MatListModule,
     MatIconModule, 
     MatProgressSpinnerModule, 
-    StadisticCardComponent
   ],
   exports: [
     NavBarComponent, SocialBarComponent, PlayComponent, ShopComponent, ProfileComponent ,RulesComponent
