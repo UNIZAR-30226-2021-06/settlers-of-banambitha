@@ -377,7 +377,10 @@ public class Hexagonos {
 			posiblesAsentamientos[3][id] = vAux.getPosibleAsentamientoDeJugador(3);
 		}
 		
-		jsArray.put(posiblesAsentamientos);
+		jsArray.put(posiblesAsentamientos[0]);
+		jsArray.put(posiblesAsentamientos[1]);
+		jsArray.put(posiblesAsentamientos[2]);
+		jsArray.put(posiblesAsentamientos[3]);
 		
 		return jsArray;
 	}
@@ -414,7 +417,10 @@ public class Hexagonos {
 			posiblesCaminos[3][id] = aAux.getPosibleCaminoDeJugador(3);
 		}
 		
-		jsArray.put(posiblesCaminos);
+		jsArray.put(posiblesCaminos[0]);
+		jsArray.put(posiblesCaminos[1]);
+		jsArray.put(posiblesCaminos[2]);
+		jsArray.put(posiblesCaminos[3]);
 		
 		return jsArray;
 	}

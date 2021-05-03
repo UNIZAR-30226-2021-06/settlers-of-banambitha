@@ -18,7 +18,7 @@ import es.susangames.catan.gameDispatcher.MoveCarrierHeap;
 public class PartidaSimulada implements Runnable{
    
     private static String ficheroJugadas = "/test/jugadasSimuladas.json"; 
-    private static long tiempoEsperaMs = 1000; 
+    private static long tiempoEsperaMs = 3000; 
     private String idPartida; 
     private MoveCarrierHeap mch;
     private ArrayList<Object> jugadas; 

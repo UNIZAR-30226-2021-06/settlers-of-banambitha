@@ -37,9 +37,9 @@ public class GameControllerThread implements Runnable {
 	 * 			-Broadcast point:	/partida-act/<partidaId>
 	 * 			-Format:
 	 * 			{
-	 * 				"Mensaje": "..."
+	 * 				"Message": "..."
 	 *				"exit_status" : 0 (Salida correcta), 1, 2, .. (Salida erronea)
-	 * 				"Tab_info": {
+	 * 				"Tab_inf": {
 	 * 					"hexagono": {
 	 * 						"tipo":   ["Bosque" | "Pasto" | "Sembrado" | "Cerro" | "Montanya" | "Desierto" | "Vacio"],
 	 * 						"valor":  [N], length -> 19 

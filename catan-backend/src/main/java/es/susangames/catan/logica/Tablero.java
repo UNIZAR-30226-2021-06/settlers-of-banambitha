@@ -43,6 +43,7 @@ public class Tablero {
 	
 	private Jugadores j[];
 	private int num_jugadores;
+	private int ultimaJugada; 
 	
 	int turno;
 	int dados;
@@ -56,7 +57,7 @@ public class Tablero {
 		j[2] = new Jugadores(ColorJugador.Amarillo);
 		j[3] = new Jugadores(ColorJugador.Verde);
 		
-		turno = 0; dados = 0;
+		turno = 0; dados = 0; ultimaJugada = 0;
 		
 		hexagonos = new HashMap<Integer,Hexagonos>();
 		
@@ -409,6 +410,7 @@ public class Tablero {
 		puntuacion.put("Player_3", this.j[2].getPuntosVictoria());
 		puntuacion.put("Player_4", this.j[3].getPuntosVictoria());
 		respuesta.put("Puntuacion", puntuacion);
+		respuesta.put("Clock", ultimaJugada);
 		
 		respuesta.put("Resultado_Tirada", this.dados);
 		respuesta.put("Turno", this.turno);
@@ -574,6 +576,7 @@ public class Tablero {
 		}
 		
 		// RESPUESTA GENERAL.
+		ultimaJugada++;
 		JSONObject respuesta = new JSONObject ();
 		
 		respuesta.put("exit_status",exit_status);
@@ -623,6 +626,7 @@ public class Tablero {
 		
 		respuesta.put("Resultado_Tirada", this.dados);
 		respuesta.put("Turno", this.turno);
+		respuesta.put("Clock", ultimaJugada);
 		Integer ganador = ganador(); 
 		if ( ganador != null){
 			respuesta.put("Ganador",ganador);
