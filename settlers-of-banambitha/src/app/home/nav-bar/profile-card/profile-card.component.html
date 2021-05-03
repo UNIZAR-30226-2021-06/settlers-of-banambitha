@@ -1,17 +1,19 @@
 <div class = "card">
     <div class="profile-elo">
-        <img class="user-image" src="../../../../assets/images/random.png">
-        <!--
-        <div class="elo-container">
-        <svg xmlns="http://www.w3.org/2000/svg" float= "right" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" focusable="false" width=100% height=100% style="-ms-transform: rotate(360deg); -webkit-transform: rotate(360deg); transform: rotate(360deg);" preserveAspectRatio="xMaxYMax meet"
-            viewBox="7 2 20 20"><path d="M21 16.5c0 .38-.21.71-.53.88l-7.9 4.44c-.16.12-.36.18-.57.18c-.21 0-.41-.06-.57-.18l-7.9-4.44A.991.991 0 0 1 3 16.5v-9c0-.38.21-.71.53-.88l7.9-4.44c.16-.12.36-.18.57-.18c.21 0 .41.06.57.18l7.9 4.44c.32.17.53.5.53.88v9z" fill="#F2D974"/></svg>
-            <div class="centered hexText">100</div>
+        <div class="pic-elo">
+            <img class="user-image" src="../../../../assets/images/random.png">
         </div>
-        -->
         <div class= "name-coins">
             <div class = "name" >{{playerName}}</div>
             <div class = "space"></div>
-            <div class = "coins"> <img class="centered gem-image" src="../../../../assets/images/gem.png">  {{playerCoins}}</div>
+            <div class = "coins"> 
+                <div money-icon>
+                    
+                </div> 
+                <div money-text>
+                    {{playerCoins}}
+                </div> 
+            </div>
         </div>
     </div>    
 </div>

@@ -33,10 +33,11 @@ import { ResourcesComponent } from './rules/resources/resources.component';
 import { DevelopmentCardComponent } from './rules/development-card/development-card.component';
 import { ActionsComponent } from './rules/actions/actions.component';
 import { IngameComponent } from './rules/ingame/ingame.component';
+import { StadisticCardComponent } from './profile/stadistic-card/stadistic-card.component';
 
 
 @NgModule({
-  declarations: [NavBarComponent, SocialBarComponent, PlayComponent, PlayerCardComponent, ShopComponent, SettingsComponent, ProfileComponent, RulesComponent, ProfilePicturesComponent, BoardSkinsComponent, TerrainComponent, ResourcesComponent, DevelopmentCardComponent, ActionsComponent, IngameComponent, ProfileCardComponent, FriendBrowserComponent, FriendCardComponent],
+  declarations: [NavBarComponent, SocialBarComponent, PlayComponent, PlayerCardComponent, ShopComponent, SettingsComponent, ProfileComponent, RulesComponent, ProfilePicturesComponent, BoardSkinsComponent, TerrainComponent, ResourcesComponent, DevelopmentCardComponent, ActionsComponent, IngameComponent, ProfileCardComponent, FriendBrowserComponent, FriendCardComponent, StadisticCardComponent],
   imports: [
     CommonModule, 
     MatCardModule, 

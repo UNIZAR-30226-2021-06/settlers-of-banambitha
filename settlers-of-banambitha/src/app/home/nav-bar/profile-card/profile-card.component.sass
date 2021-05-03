@@ -11,7 +11,9 @@
     position: absolute
     height: 100%
     float: left
-    padding: 0 20px
+    box-sizing: border-box
+    border: 3px solid map-get($palette,  mainYellow)
+    border-radius: 50%
 
 .hexText
   position: absolute
@@ -25,20 +27,23 @@
    text-align: center
    color: white
 
-.centered
-  position: absolute
-  top: 50%
-  left: 50%
-  transform: translate(-50%, -50%)
+
+
+.pic-elo
+    height: 100%
+    width: 40%
 
 .profile-elo
+    display: flex
+    justify-content: space-between
     height: 100%
+    width: 100%
 
 .name-coins
     float: right
     display: flex
     height: 100%
-    width: 50%
+    width: 60%
     justify-content: center
     align-content: center
     flex-direction: column
@@ -50,16 +55,25 @@
     color: map-get($palette, mainYellow )
 
 .coins
-    position: relative
-    display: table
-    font-size: large
-    text-align: right
+    height: 30%
+    width: 100%
+    display: flex
+    justify-content: space-between
     color: map-get($palette, mainYellow )
 
 .space
     height: 0.5em
 
 .gem-image
-    position: absolute
     height: 100%
-    transform: translate(50%, -50%)
+
+.money-icon
+    height: 100%
+    width: 40%
+
+.money-text
+    border: solid black
+    text-align: right
+    height: 100%
+    width: 60%
+    font-size: large
