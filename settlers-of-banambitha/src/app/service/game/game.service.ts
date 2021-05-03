@@ -13,7 +13,7 @@ import { UserCardInfo } from '../room/room.service';
  * Ej: posibles_camino????
  */
 enum MessageKeys {
-  MENSAJE                         = "Mensaje",
+  MENSAJE                         = "Message",
   EXIT_STATUS                     = "exit_status", 
   TAB_INFO                        = "Tab_inf", 
   TAB_INFO_HEXAGONOS              = "hexagono",
@@ -37,6 +37,13 @@ enum MessageKeys {
   PLAYER_2                        = "Player_2",
   PLAYER_3                        = "Player_3",
   PLAYER_4                        = "Player_4",
+  PUERTO_MADERA                   = "puertoMadera",
+  PUERTO_LANA                     = "puertoLana",
+  PUERTO_PIEDRA                   = "puertoMineral",
+  PUERTO_CEREAL                   = "puertoCereales",
+  PUERTO_LADRILLO                 = "puertoArcilla",
+  PUERTOS_BASICOS                 = "puertosBasicos",
+  CLOCK                           = "Clock"
 }
 
 /**
@@ -167,9 +174,17 @@ export interface Hexagonos {
  */
 export interface Vertices {
   asentamiento: Array<TipoAsentamiento>, 
-  posible_asentamiento: Array<Boolean>
+  posible_asentamiento: Array<Array<Boolean>>
 }
 
+export interface Puertos {
+  madera:   number, 
+  piedra:   number, 
+  ladrillo: number, 
+  lana:     number, 
+  cereal:   number
+  basico:   Array<Number>
+}
 
 /**
  * Información sobre TODAS las aristas
@@ -177,8 +192,8 @@ export interface Vertices {
  */
 export interface Aristas {
   camino:         Array<TipoCamino>, 
-  posible_camino: Array<Boolean>,
-  puerto:         Array<number>
+  posible_camino: Array<Array<Boolean>>,
+  puertos:        Puertos
 }
 
 
@@ -202,7 +217,8 @@ export interface Partida {
   tablero:         Tablero,
   resultadoTirada: number, 
   jugadores:       Array<Jugador>,
-  mensajes:        Array<Mensaje>
+  mensajes:        Array<Mensaje>, 
+  clock:           number
 }
 
 
@@ -215,8 +231,13 @@ export interface Partida {
 export class GameService implements Connectable{
 
   private static readonly coloresPorId: Array<Color> = [Color.AZUL, Color.ROJO, Color.AMARILLO, Color.VERDE]
+  private static readonly numAristas:   number = 72
+  private static readonly numVertices:  number = 52
+  private static readonly numHexagonos: number = 19
+  private static readonly numJugadores: number = 4 //si se cambia este valor se tiene que cambiar buena parte del código
 
   public partida: Partida
+  private count: number = 0
 
   //Identificadores de los topics a los que se suscribe 
   //el jugador
@@ -291,15 +312,16 @@ export class GameService implements Connectable{
     
     console.log("Iniciando partida...")
     let miTurno: number = jugadores.indexOf(this.userService.getUsername())
-    if ( jugadores.length == 4 && miTurno >= 0){
+    if ( jugadores.length == GameService.numJugadores && miTurno >= 0){
       this.partida = {
         miTurno: miTurno + 1,
         id: idPartida, 
         jugadores: this.inicializarJugadores(jugadores),
         turnoActual: 0, 
-        tablero: null, 
+        tablero: this.tableroVacio(), 
         resultadoTirada: 0, 
-        mensajes: []
+        mensajes: [],
+        clock: -1
       }
 
       this.subscribeToTopics()
@@ -310,6 +332,56 @@ export class GameService implements Connectable{
     return false
   }
 
+
+  /**
+   * Devuelve un tablero vacío
+   * 
+   * @Return un tablero vacío
+   */
+  private tableroVacio(): Tablero {
+    return {
+      hexagonos: {
+        valor: [],
+        tipo: [],
+        ladron: 0
+      }, 
+      vertices: {
+        asentamiento: [],
+        posible_asentamiento: this.falseArray(GameService.numJugadores, GameService.numVertices),
+      }, 
+      aristas: {
+        camino: [], 
+        posible_camino: this.falseArray(GameService.numJugadores, GameService.numAristas),
+        puertos: {
+          ladrillo: 0,
+          lana: 0, 
+          cereal: 0, 
+          basico: [], 
+          piedra: 0,
+          madera: 0
+        }
+      }
+    }
+  }
+
+
+  /**
+   * Devuelve una matriz de nxm componentes con valor falso
+   * 
+   * @param n filas
+   * @param m columnas
+   * @return array de booleanos nxm con todos los valores a falso
+   */
+  private falseArray(n: number, m: number): Array<Array<Boolean>> {
+    let mainArray: Array<Array<Boolean>> = new Array<Array<Boolean>>(n)
+    for ( let i = 0; i < n; i++ ){
+      mainArray[i] = new Array<Boolean>(m)
+      for ( let j = 0; j < m; j++ ){
+        mainArray[i][j] = false
+      }
+    }
+    return mainArray
+  }
 
   /**
    * Inicializa los jugadores de una partida suponiendo que la partida 
@@ -377,6 +449,61 @@ export class GameService implements Connectable{
     }
   }
 
+
+  /**
+   * Procesa un mensaje de partida (con información del tablero)
+   * 
+   * @param msg mensaje recibido
+   */
+  private procesarMensajePartida(msg: Object): void{
+      //Actualizar la partida con la nueva información
+      this.actualizarPartida(msg)
+      console.log("ServerResponse: " + this.count )
+      console.log(this.partida)
+      this.count++
+
+      if (msg[MessageKeys.GANADOR] > 0) {
+        //Finalizar la partida y mostrar estadísticas
+        this.finalizarpartida()
+      }
+  }
+
+
+  /**
+   * Procesa un mensaje del chat de la partida
+   * 
+   * @param msg mensaje recibido
+   */
+  private procesarMensajeChat(msg: Object): void{
+    console.log(msg)
+  }
+
+
+  /**
+   * Procesa un mensaje de comercio
+   * 
+   * @param msg 
+   */
+  private procesarMensajeComercio(msg: Object): void{
+    console.log(msg)
+  }
+
+
+  /**
+   * Finaliza la partida actual (solo en el lado del cliente)
+   */
+  private finalizarpartida() {
+    this.partida = null
+    this.partida_act_topic_id.unsubscribe()
+    this.partida_com_topic_id.unsubscribe()
+    this.partida_chat_topic_id.unsubscribe()
+  }
+
+
+  /************************************************************
+   * FUNCIONES AUXILIARES PARA TRADUCIR EL MENSAJE DEL
+   * TABLERO A LAS ESTRUCTURAS DE DATOS INTERNAS
+   ************************************************************/
 
   /**
    * Actualiza los recursos del jugador dado, con la información en recursos.
@@ -495,28 +622,28 @@ export class GameService implements Connectable{
    */
   private actualizarPuntuacionJugadores(puntuacion: Object){
     
-    if ( puntuacion[MessageKeys.PLAYER_1] ){
+    if ( puntuacion[MessageKeys.PLAYER_1] != null){
       this.partida.jugadores[0].puntos = puntuacion[MessageKeys.PLAYER_1]
     }else{
       console.log("Falta la puntuación del jugador 1")
     }
 
-    if ( puntuacion[MessageKeys.PLAYER_2] ){
+    if ( puntuacion[MessageKeys.PLAYER_2] != null){
       this.partida.jugadores[1].puntos = puntuacion[MessageKeys.PLAYER_2]
     }else{
       console.log("Falta la puntuación del jugador 2")
     }
 
-    if ( puntuacion[MessageKeys.PLAYER_3] ){
+    if ( puntuacion[MessageKeys.PLAYER_3] != null){
       this.partida.jugadores[2].puntos = puntuacion[MessageKeys.PLAYER_3]
     }else{
-      console.log("Falta la puntuación del jugador 1")
+      console.log("Falta la puntuación del jugador 3")
     }
 
-    if ( puntuacion[MessageKeys.PLAYER_4] ){
+    if ( puntuacion[MessageKeys.PLAYER_4] != null){
       this.partida.jugadores[3].puntos = puntuacion[MessageKeys.PLAYER_4]
     }else{
-      console.log("Falta la puntuación del jugador 1")
+      console.log("Falta la puntuación del jugador 4")
     }
   }
 
@@ -596,9 +723,9 @@ export class GameService implements Connectable{
     }
 
     if ( Vertices[MessageKeys.VERTICES_POSIBLES_ASENTAMIENTOS] ){
-      let posiblesAsentamientos: Array<String> = Vertices[MessageKeys.VERTICES_POSIBLES_ASENTAMIENTOS]
+      let posiblesAsentamientos: Array<Array<boolean>> = Vertices[MessageKeys.VERTICES_POSIBLES_ASENTAMIENTOS]
       for (let i = 0; i < posiblesAsentamientos.length; i++){
-        this.partida.tablero.vertices.posible_asentamiento[i] = posiblesAsentamientos[i] == 'true' 
+          this.partida.tablero.vertices.posible_asentamiento[i] = posiblesAsentamientos[i] 
       }
     }else{
       console.log("Falta la información sobre posibles asentamientos")
@@ -622,16 +749,22 @@ export class GameService implements Connectable{
     }
 
     if ( Aristas[MessageKeys.ARISTAS_POSIBLES_CAMINOS] ){
-      let posiblesCaminos: Array<String> = Aristas[MessageKeys.ARISTAS_POSIBLES_CAMINOS]
+      let posiblesCaminos: Array<Array<boolean>> = Aristas[MessageKeys.ARISTAS_POSIBLES_CAMINOS]
       for (let i = 0; i < posiblesCaminos.length; i++){
-        this.partida.tablero.aristas.posible_camino[i] = posiblesCaminos[i] == 'true' 
+        this.partida.tablero.aristas.posible_camino[i] = posiblesCaminos[i]
       }
     }else{
       console.log("Falta la información sobre posibles caminos")
     }
 
     if ( Aristas[MessageKeys.ARISTAS_PUERTOS] ){
-      this.partida.tablero.aristas.puerto = Aristas[MessageKeys.ARISTAS_PUERTOS]
+      let puertos: Object = Aristas[MessageKeys.ARISTAS_PUERTOS]
+      this.partida.tablero.aristas.puertos.basico   = puertos[MessageKeys.PUERTOS_BASICOS]
+      this.partida.tablero.aristas.puertos.madera   = puertos[MessageKeys.PUERTO_MADERA]
+      this.partida.tablero.aristas.puertos.piedra   = puertos[MessageKeys.PUERTO_PIEDRA]
+      this.partida.tablero.aristas.puertos.ladrillo = puertos[MessageKeys.PUERTO_LADRILLO]
+      this.partida.tablero.aristas.puertos.lana     = puertos[MessageKeys.PUERTO_LANA]
+      this.partida.tablero.aristas.puertos.cereal   = puertos[MessageKeys.PUERTO_CEREAL]
     }else{
       console.log("Falta información sobre los puertos")
     }
@@ -672,60 +805,38 @@ export class GameService implements Connectable{
    * @param msg mensaje con la nueva información de la partida
    */
   private actualizarPartida(msg: Object): void {
-    this.partida.turnoActual = msg[MessageKeys.TURNO]
-    this.partida.resultadoTirada = msg[MessageKeys.RESULTADO_TIRADA]
-    this.actualizarJugadores(msg)
-    this.actualizarTablero(msg[MessageKeys.TAB_INFO])
-  }
 
+    if (msg[MessageKeys.CLOCK] != null &&
+        msg[MessageKeys.CLOCK] > this.partida.clock &&
+        msg[MessageKeys.EXIT_STATUS] == 0){
 
-  /**
-   * Procesa un mensaje de partida (con información del tablero)
-   * 
-   * @param msg mensaje recibido
-   */
-  private procesarMensajePartida(msg: Object): void{
-    if (msg[MessageKeys.EXIT_STATUS] == 0) {
+      this.partida.clock = msg[MessageKeys.CLOCK]
 
-      //Actualizar la partida con la nueva información
-      this.actualizarPartida(msg)
-
-      if (msg[MessageKeys.GANADOR]) {
-        //Finalizar la partida y mostrar estadísticas
-        this.finalizarpartida()
+      if ( msg[MessageKeys.TURNO] != null){
+        this.partida.turnoActual = msg[MessageKeys.TURNO]
+      }else{
+        console.log("Falta el turno de la jugada")
       }
+
+      if ( msg[MessageKeys.RESULTADO_TIRADA] != null ){
+        this.partida.resultadoTirada = msg[MessageKeys.RESULTADO_TIRADA]
+      } else {
+        console.log("Falta el resultado de la tirada")
+      }
+
+      if ( msg[MessageKeys.TAB_INFO] ){
+        this.actualizarTablero(msg[MessageKeys.TAB_INFO])
+      }else{
+        console.log("Falta la información del tablero")
+      }
+
+      this.actualizarJugadores(msg)
+
+    } else  if (msg[MessageKeys.CLOCK] != null &&
+        msg[MessageKeys.CLOCK] > this.partida.clock){
+          console.log("Mensaje desordenado, se ignora")
     }
   }
 
-
-  /**
-   * Procesa un mensaje del chat de la partida
-   * 
-   * @param msg mensaje recibido
-   */
-  private procesarMensajeChat(msg: Object): void{
-    console.log(msg)
-  }
-
-
-  /**
-   * Procesa un mensaje de comercio
-   * 
-   * @param msg 
-   */
-  private procesarMensajeComercio(msg: Object): void{
-    console.log(msg)
-  }
-
-
-  /**
-   * Finaliza la partida actual (solo en el lado del cliente)
-   */
-  private finalizarpartida() {
-    this.partida = null
-    this.partida_act_topic_id.unsubscribe()
-    this.partida_com_topic_id.unsubscribe()
-    this.partida_chat_topic_id.unsubscribe()
-  }
 
 }
