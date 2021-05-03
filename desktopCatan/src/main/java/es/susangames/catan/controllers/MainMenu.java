@@ -5,6 +5,7 @@ import es.susangames.catan.controllers.Instructions;
 import es.susangames.catan.service.UserService;
 import es.susangames.catan.service.LangService;
 import es.susangames.catan.service.ws;
+import es.susangames.catan.service.ws;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -31,6 +32,8 @@ import javafx.event.ActionEvent;
 import com.jfoenix.controls.JFXTextArea;
 import javafx.scene.control.TextField;
 import org.json.*;
+import java.util.ArrayList;
+
 
 
 /**
@@ -156,6 +159,11 @@ public class MainMenu {
         chatContent.setMouseTransparent(true);
         chatContent.setFocusTraversable(false);   
 
+        ArrayList<JSONObject> itemsList = ws.msgs.get("f");
+        for(JSONObject aux : itemsList) {
+            System.out.println(aux);
+        }
+        
         
         // Chat input
         TextField chatInput = new TextField();
