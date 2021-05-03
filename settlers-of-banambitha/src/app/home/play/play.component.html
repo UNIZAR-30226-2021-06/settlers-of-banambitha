@@ -36,6 +36,11 @@
                    {{this.roomService.soyLider() ? "Expulsar invitados" : "Abandonar sala"}}
                 </button>
             </div>
+            <div class="button-row">
+                <button mat-raised-button (click)="this.gameService.comenzarPartidaPrueba()">
+                    Simular partida
+                </button>
+            </div>
         </section>
     </div>
     <ng-template #buscando>

@@ -122,6 +122,7 @@ public class GameControllerThread implements Runnable {
 			synchronized (listaJugadas) {
 				
 				jugada = listaJugadas.get(0);
+				listaJugadas.remove(0);
 			}
 			
 			System.out.print(jugada.toString());

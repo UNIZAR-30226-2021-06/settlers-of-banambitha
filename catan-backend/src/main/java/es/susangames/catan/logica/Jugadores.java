@@ -1,5 +1,6 @@
 package es.susangames.catan.logica;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -310,20 +311,20 @@ public class Jugadores {
 	/**
      * Método que envia informacion de los recursos del jugador.
      */
-	public JSONObject recursosJugadorToJSON () throws JSONException {
-		return new JSONObject ("\"Player_" + this.color.numeroColor() + 1 + "\": [" + this.madera + "," + 
+	public JSONArray recursosJugadorToJSON () throws JSONException {
+		return new JSONArray("[" + this.madera + "," + 
 				this.lana + "," + this.cereales + "," + this.arcilla + "," + this.mineral + "]");
 	}
 	
 	/**
      * Método que envia informacion del jugador.
      */
-	public JSONObject cartasJugadorToJSON () throws JSONException {
+	public JSONArray cartasJugadorToJSON () throws JSONException {
 		Integer numGranEjecitoCaballeria = 1;
 		if (this.granEjecitoCaballeria) numGranEjecitoCaballeria = 0;
 		Integer numGranRutaComercial = 1;
 		if (this.granRutaComercial) numGranRutaComercial = 0;
-		return new JSONObject ("\"Player_" + this.color.numeroColor() + 1 + "\": [" + this.numCartasCaballeros + "," +
+		return new JSONArray ("[" + this.numCartasCaballeros + "," +
 				this.numCartasPuntoVictoria + "," +this.numCartasContruccionCarreteras + "," + this.numCartasDescubrimiento +
 				"," + this.numCartasMonopolio + "," + numGranEjecitoCaballeria + "," + numGranRutaComercial + "]");
 	}

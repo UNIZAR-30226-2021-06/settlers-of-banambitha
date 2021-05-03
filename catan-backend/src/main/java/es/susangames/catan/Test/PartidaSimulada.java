@@ -30,6 +30,7 @@ public class PartidaSimulada implements Runnable{
      * @param mch MoveHeapCarrier del servidor
      */
     public PartidaSimulada(String idPartida, MoveCarrierHeap mch){
+        System.out.println("ID_partida_PRUEBA: " + idPartida); 
         this.mch = mch; 
         this.idPartida = idPartida; 
     }
@@ -53,7 +54,12 @@ public class PartidaSimulada implements Runnable{
 
                     Thread.sleep(tiempoEsperaMs);
 
-                    mch.newJugada(idPartida, new JSONObject(jugada));
+                    JSONObject jugadaJSON =  new JSONObject(jugada);
+                     
+                    System.out.println("---> Simulando jugada"); 
+                    System.out.println(jugadaJSON); 
+
+                    mch.newJugada(idPartida,jugadaJSON);
                 }
             }
             //Esperar antes de cerrar la partida
