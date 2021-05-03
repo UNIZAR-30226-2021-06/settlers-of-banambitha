@@ -5,12 +5,9 @@ import { PlayComponent } from './play/play.component';
 import { ProfileComponent } from './profile/profile.component';
 import { RulesComponent } from './rules/rules.component';
 import { ShopComponent } from './shop/shop.component';
+import { MainHomeComponent } from './main-home/main-home.component'
 
 const routes: Routes = [
-  {path: 'play', component: PlayComponent },
-  {path: 'profile', component: ProfileComponent},
-  {path: 'rules', component: RulesComponent},
-  {path: 'shop', component: ShopComponent}
 ];
 
 @NgModule({

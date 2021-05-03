@@ -1,0 +1,67 @@
+<h1 mat-dialog-title class="cards-info-title">Comercie con rivales:</h1>
+
+
+<form name="myform">
+  <div mat-dialog-content >
+    <mat-form-field appearance="fill" fxLayout="column" fxLayoutAlign="center stretch">
+      <mat-label>Selecciona un jugador</mat-label>
+      <mat-select [(ngModel)]="offerPlayer" name="player" required>
+        <mat-option *ngFor="let player of players" [value]="player.value">
+          {{player.viewValue}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+
+    <p> Material ofrecido </p>
+    <mat-form-field appearance="fill" fxLayout="column" fxLayoutAlign="center stretch">
+      <mat-label>Selecciona un material</mat-label>
+      <mat-select [(ngModel)]="offerMaterial" name="material" required>
+        <mat-option *ngFor="let material of materials" [value]="material.value">
+          {{material.viewValue}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    
+
+    
+    <p> Unidades {{offerMaterial}} para comerciar </p>
+    <mat-slider fxLayout="column" fxLayoutAlign="center stretch"
+    thumbLabel
+    required
+    [displayWith]="formatLabelOffer"
+    tickInterval="1"
+    min="1"
+    max="250"></mat-slider>
+
+
+    <p> Material solicitado </p>
+    <mat-form-field appearance="fill" fxLayout="column" fxLayoutAlign="center stretch">
+      <mat-label>Selecciona un material</mat-label>
+      <mat-select [(ngModel)]="receiveMaterial" name="material" required >
+        <mat-option *ngFor="let material of materials" [value]="material.value">
+          {{material.viewValue}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    
+    <p> Unidades {{receiveMaterial}} solicitadas a {{offerPlayer}} </p>
+    <mat-slider fxLayout="column" fxLayoutAlign="center stretch"
+    thumbLabel
+    required
+    [displayWith]="formatLabelReceive"
+    tickInterval="1"
+    min="1"
+    max="250"></mat-slider>
+
+    <div class="boton" fxLayout="column" fxLayoutAlign="center stretch">
+      <button mat-stroked-button mat-dialog-close 
+              (click)="onSubmit()"
+              [disabled]="offerPlayer == null || offerMaterial == null || receiveMaterial == null"
+              color="accent"  class="btn-block">
+        <p class="nombre"> Enviar  </p>
+      </button>
+    </div>
+
+  </div>
+</form>

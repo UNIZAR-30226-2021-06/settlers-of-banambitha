@@ -1,0 +1,190 @@
+<div class="container">
+    <div class="board">
+        <ol class="even">
+            <li class='hex spacer'></li>
+            <li class='hex water'></li>
+            <li class='hex water'>
+                <div class='harbor two-one wood'>
+                    <div class='harbor-piece br'></div>
+                </div>
+            </li>
+            <li class='hex water'></li>
+            <li class='hex water'>
+                <div class='harbor three-one wood'>
+                    <div class='harbor-piece bl'></div>
+                </div>
+            </li>
+        </ol>
+        <ol class="odd">
+            <li class='hex spacer'></li>
+            <li class='hex water'>
+                <div class='harbor three-one sheep'>
+                    <div class='harbor-piece br'></div>
+                </div>
+            </li>
+            <li class='hex wheat'>
+                <div class='house target tl'></div>
+                <div class='house target t'></div>
+                <div class='house target '></div>
+                <div class='road tl'></div>
+                <div class='road target l' [ngStyle]="{'background-color': 'black'}"></div>
+                <div class='road target tr'></div>
+                <div class='number two'></div>
+            </li>
+            <li class='hex wood'>
+                <div class='house target tl'></div>
+                <div class='house target t'></div>
+                <div class='house target '></div>
+                <div class='road target tl'></div>
+                <div class='road target l'></div>
+                <div class='road target tr'></div>
+                <div class='number three'></div>
+            </li>
+            <li class='hex wheat'>
+                <div class='house target tl'></div>
+                <div class='house target t'></div>
+                <div class='road target tl r5 r2'></div>
+                <div class='road target l r9 r5'></div>
+                <div class='road target tr r2 r6'></div>
+                <div class='number three'></div>
+
+            </li>
+            <li class='hex water'>
+            </li>
+        </ol>
+
+        <ol class="even">
+            <li class='hex water'></li>
+            <li class='hex coal'>
+                <div class='road target tl r11 r7'></div>
+                <div class='road target l r11 r16'></div>
+                <div class='road target tr r7 r12'></div>
+                <div class='number four'></div>
+            </li>
+            <li class='hex sheep'>
+                <div class='number four'></div>
+            </li>
+            <li class='hex wood'>
+                <div class='number five'></div>
+            </li>
+            <li class='hex sheep'>
+                <div class='number five'></div>
+            </li>
+            <li class='hex water'>
+                <div class='harbor three-one brick'>
+                    <div class='harbor-piece l'></div>
+                </div>
+            </li>
+        </ol>
+
+        <ol class="odd">
+            <li class='hex water'>
+                <div class='harbor three-one sheep'>
+                    <div class='harbor-piece r'></div>
+                </div>
+            </li>
+            <li class='hex sheep'>
+                <div class='number six'></div>
+            </li>
+            <li class='hex wheat'>
+                <div class='number six'></div>
+            </li>
+            <li class='hex wood'>
+                <div class='number eight robber'></div>
+            </li>
+            <li class='hex brick'>
+                <div class='number eight'></div>
+            </li>
+            <li class='hex brick'>
+                <div class='number nine'></div>
+            </li>
+            <li class='hex water'>
+
+            </li>
+        </ol>
+        <ol class="even">
+            <li class='hex water'></li>
+            <li class='hex coal'>
+                <!-- ROAD TARGETS -->
+                <div class='number nine'></div>
+            </li>
+            <li class='hex brick'>
+                <div class='number ten'></div>
+            </li>
+            <li class='hex wood'>
+                <!-- HOUSE TARGETS -->
+                <div class='house t target'></div>
+                <div class='number ten'></div>
+            </li>
+            <li class='hex sheep'>
+                <div class='number eleven'></div>
+
+            </li>
+            <li class='hex water'>
+                <div class='harbor three-one brick'>
+                    <div class='harbor-piece l'></div>
+                </div>
+            </li>
+        </ol>
+        <ol class="odd">
+            <li class='hex spacer'></li>
+            <li class='hex water'>
+                <div class='harbor two-one any'>
+                    <div class='harbor-piece tr'></div>
+                </div>
+            </li>
+            <li class='hex sand'></li>
+            <li class='hex coal'>
+                <div class='number twelve'></div>
+            </li>
+            <li class='hex wheat'>
+                <div class='number eight'></div>
+            </li>
+            <li class='hex water'>
+            </li>
+        </ol>
+        <ol class="even">
+            <li class='hex spacer'></li>
+            <li class='hex water'></li>
+            <li class='hex water'>
+                <div class='harbor two-one any'>
+                    <div class='harbor-piece tr'></div>
+                </div>
+            </li>
+            <li class='hex water'></li>
+            <li class='hex water'>
+                <div class='harbor three-one wood'>
+                    <div class='harbor-piece tl'></div>
+                </div>
+            </li>
+        </ol>
+    </div>
+
+    <!-- Botones -->
+
+    <div fxLayout="row" fxLayoutAlign="center center">
+        <button class="dice-button" mat-fab color="primary">
+          <p class="dice"> 
+          Pasar turno
+          </p>
+        </button>
+
+        <button class="dice-button" mat-fab color="primary">
+          <p class="dice"> 
+          Turno: World_champion
+          </p>
+        </button>
+
+        <button class="dice-button" mat-fab color="primary">
+          <p class="dice"> 
+          Dados: 8
+          </p>
+        </button>
+
+        <button class="dice-button" mat-fab color="primary" (click)="openSettingsDialog()">
+          <p class="dice"> 
+          Ajustes
+          </p>
+        </button>
+    </div>
+</div>

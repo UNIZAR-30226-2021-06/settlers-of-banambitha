@@ -10,6 +10,8 @@ export class PlayerCardComponent implements OnInit {
   @Input() playerName: string
   @Input() playerELO: bigint
   @Input() playerNumber: number
+  @Input() profilePictureUrl: string
+
   number_icons = ["looks_one", "looks_two", "looks_3", "looks_4"]
   player_color = ["white", "white", "white", "white"]
 
@@ -18,6 +20,9 @@ export class PlayerCardComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+    if ( this.profilePictureUrl == null){
+      this.profilePictureUrl = "/assets/images/shop/user/user_profile_image_original.png"
+    }
   }
 
 }

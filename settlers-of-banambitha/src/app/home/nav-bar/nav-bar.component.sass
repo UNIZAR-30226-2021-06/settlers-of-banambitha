@@ -1,5 +1,9 @@
 /* Style the header with a grey background and some padding
 @import '../../../styles'
+@import '~@angular/material/theming'
+
+.example-spacer
+  margin-lef: 20px
 
 .nav-bar
   width: 100%
@@ -8,9 +12,8 @@
 .header
   overflow: hidden
   background-color: map-get($palette, mainRed)    
-  padding: 30px 0px
-  height: 70px
-  position: relative
+  padding: 15px 0px
+  height: 50px
   display: flex
   align-items: center
   justify-content: space-between
@@ -43,8 +46,9 @@
 .logo
 
   height: 100%
+  margin-left: 25px
   float: left
-  padding: 0 20px
+  padding: 0 0px
     
 .header-right
   float: right

@@ -1,0 +1,50 @@
+<h1 mat-dialog-title class="cards-info-title">Comercio marítimo:</h1>
+
+
+<form name="myform">
+  <div mat-dialog-content >
+
+    <p> Ratio de intercambio </p>
+    <mat-form-field appearance="fill" fxLayout="column" fxLayoutAlign="center stretch">
+      <mat-label>Selecciona una ratio</mat-label>
+      <mat-select [(ngModel)]="ratioSelected" name="ratio" required >
+        <mat-option *ngFor="let ratio of ratios" [value]="ratio.value">
+          {{ratio.viewValue}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+
+    <p> Material ofrecido </p>
+    <mat-form-field appearance="fill" fxLayout="column" fxLayoutAlign="center stretch">
+      <mat-label>Selecciona un material</mat-label>
+      <mat-select [(ngModel)]="offerMaterial" name="material" required
+                  [disabled]="ratioSelected == null">
+        <mat-option *ngFor="let material of materials" [value]="material.value">
+          {{material.viewValue}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    
+    <p> Material solicitado </p>
+    <mat-form-field appearance="fill" fxLayout="column" fxLayoutAlign="center stretch">
+      <mat-label>Selecciona un material</mat-label>
+      <mat-select [(ngModel)]="receiveMaterial" name="material" required
+                  [disabled]="ratioSelected == null" >
+        <mat-option *ngFor="let material of materials" [value]="material.value">
+          {{material.viewValue}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <div class="boton" fxLayout="column" fxLayoutAlign="center stretch">
+      <button mat-stroked-button mat-dialog-close
+              [disabled]="ratioSelected == null || offerMaterial == null || receiveMaterial == null" 
+              (click)="onSubmit()"
+              color="accent"  class="btn-block">
+        <p class="nombre"> Enviar  </p>
+      </button>
+    </div>
+
+  </div>
+</form>

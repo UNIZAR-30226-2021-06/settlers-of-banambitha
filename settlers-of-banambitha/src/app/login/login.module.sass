@@ -24,7 +24,7 @@ body
   float: left
   padding: 60px 50px 40px 50px
   width: 100%
-  background: map-get($palette,mainRed )
+  background: map-get($palette,secondDark )
   border-radius: 10px
   transform: scale(1)
   -webkit-transform: scale(1)
@@ -62,12 +62,8 @@ body
   line-height: 54px
   background: #534e52
 
-.mat-form-field-appearance-legacy .mat-form-field-infix
-  padding: 0.8375em 0
-
 .btn-block
   justify-content: flex-end
-
 
 .boton
   float: right
@@ -76,4 +72,5 @@ body
   text-decoration: none
   font-style: italic
 
-  
+:host ::ng-deep .mat-progress-spinner circle, .mat-spinner circle
+    stroke: map-get($palette,mainRed )

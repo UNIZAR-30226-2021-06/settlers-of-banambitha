@@ -1,0 +1,169 @@
+{
+    "jugadas": [{
+            "player": 1,
+            "game": "PartidaDePrueba",
+            "move": {
+                "name": "primer asentamiento",
+                "param": 2
+            }
+        },
+        {
+            "player": 1,
+            "game": "PartidaDePrueba",
+            "move": {
+                "name": "primer camino",
+                "param": 1
+            }
+        },
+        {
+            "player": 1,
+            "game": "PartidaDePrueba",
+            "move": {
+                "name": "primer asentamiento",
+                "param": 8
+            }
+        },
+        {
+            "player": 1,
+            "game": "PartidaDePrueba",
+            "move": {
+                "name": "primer camino",
+                "param": 7
+            }
+        },
+        {
+            "player": 1,
+            "game": "PartidaDePrueba",
+            "move": {
+                "name": "finalizar turno",
+                "param": ""
+            }
+        },
+
+
+        {
+            "player": 2,
+            "game": "PartidaDePrueba",
+            "move": {
+                "name": "primer asentamiento",
+                "param": 15
+            }
+        },
+        {
+            "player": 2,
+            "game": "PartidaDePrueba",
+            "move": {
+                "name": "primer camino",
+                "param": 17
+            }
+        },
+        {
+            "player": 2,
+            "game": "PartidaDePrueba",
+            "move": {
+                "name": "primer asentamiento",
+                "param": 24
+            }
+        },
+        {
+            "player": 2,
+            "game": "PartidaDePrueba",
+            "move": {
+                "name": "primer camino",
+                "param": 29
+            }
+        },
+        {
+            "player": 2,
+            "game": "PartidaDePrueba",
+            "move": {
+                "name": "finalizar turno",
+                "param": ""
+            }
+        },
+
+
+        {
+            "player": 3,
+            "game": "PartidaDePrueba",
+            "move": {
+                "name": "primer asentamiento",
+                "param": 25
+            }
+        },
+        {
+            "player": 3,
+            "game": "PartidaDePrueba",
+            "move": {
+                "name": "primer camino",
+                "param": 38
+            }
+        },
+        {
+            "player": 3,
+            "game": "PartidaDePrueba",
+            "move": {
+                "name": "primer asentamiento",
+                "param": 32
+            }
+        },
+        {
+            "player": 3,
+            "game": "PartidaDePrueba",
+            "move": {
+                "name": "primer camino",
+                "param": 40
+            }
+        },
+        {
+            "player": 3,
+            "game": "PartidaDePrueba",
+            "move": {
+                "name": "finalizar turno",
+                "param": ""
+            }
+        },
+
+
+        {
+            "player": 4,
+            "game": "PartidaDePrueba",
+            "move": {
+                "name": "primer asentamiento",
+                "param": 39
+            }
+        },
+        {
+            "player": 4,
+            "game": "PartidaDePrueba",
+            "move": {
+                "name": "primer camino",
+                "param": 50
+            }
+        },
+        {
+            "player": 4,
+            "game": "PartidaDePrueba",
+            "move": {
+                "name": "primer asentamiento",
+                "param": 50
+            }
+        },
+        {
+            "player": 4,
+            "game": "PartidaDePrueba",
+            "move": {
+                "name": "primer camino",
+                "param": 66
+            }
+        },
+        {
+            "player": 4,
+            "game": "PartidaDePrueba",
+            "move": {
+                "name": "finalizar turno",
+                "param": ""
+            }
+        }
+    ]
+}

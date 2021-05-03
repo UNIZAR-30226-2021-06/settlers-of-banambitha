@@ -1,13 +1,17 @@
-@import '~@angular/material/theming'
 @import '../../../../styles'
 
 html
-    display: flex
+    background-color: map-get($palette, mainDark)
+
+.content 
+    padding: 26px
     justify-content: center
     align-items: center
+    height: fit-content
     box-sizing: border-box
-    padding: 3%
-    height: 80vh
+
+.content > mat-card
+    width: 100px
 
 mat-card
   background-color: map-get($palette, mainRed)
@@ -16,7 +20,8 @@ mat-card
   border-bottom-left-radius: 0%
   border-bottom-right-radius: 0%
   margin: 0
-  padding: 1% 3% 3% 3%
+  padding: 5% 3% 10% 3%
+  overflow: hidden
 
 mat-card-content
     font-size: 30px
@@ -27,17 +32,14 @@ mat-card-content
     margin-right: 1%
 
 .user-image
-  display: inline-block
-  width: 250px
+  width: 400px
   height: 250px
-  border-radius: 10%
   margin-top: 10%
-
+  border-radius: 5%
   background-repeat: no-repeat
   background-position: center center
   background-size: cover
-
+  object-fit: cover
 
 button  
     background-color: map-get($palette, mainOrange )
-

@@ -1,0 +1,226 @@
+{
+    "lobby_play": {
+        "eng": "Play",
+        "esp": "Jugar"
+    },
+
+    "lobby_shop": {
+        "eng": "Shop",
+        "esp": "Tienda"
+    },
+
+    "lobby_options": {
+        "eng": "Profile",
+        "esp": "Perfil"
+    },
+
+    "lobby_instructions": {
+        "eng": "Instructions",
+        "esp": "Instrucciones"
+    },
+
+    "instructions_menu": {
+        "eng": "Menu",
+        "esp": "Menú"
+    },
+
+    "instructions_rules_instructions": {
+        "eng": "Rules and instructions",
+        "esp": "Reglas e instrucciones"
+    },
+
+    "instructions_basics": {
+        "eng": "Basics",
+        "esp": "Aspectos básicos"
+    },
+
+    "instructions_figures": {
+        "eng": "Figures and resources",
+        "esp": "Figuras y recursos"
+    },
+
+    "instructions_development": {
+        "eng": "Development cards",
+        "esp": "Cartas de desarrollo"
+    },
+
+    "instructions_development_paragraph1": {
+        "eng": "Available soon",
+        "esp": "Si un jugador juega en su turno la carta de desarrollo “caballero” (la puede jugar también antes de tirar los dados), debe mover inmediatamente el ladrón.El jugador que ha jugado la carta de caballero tiene que tomar el ladrón y moverlo a otro terreno a su elección."
+    },
+
+    "instructions_development_paragraph2": {
+        "eng": "Available soon",
+        "esp": "Después, puede robar 1 carta de materia prima (y quedársela) al jugadorque tenga algún poblado o ciudad adyacente a ese terreno. Si hay dos o más jugadores que hayan construido en ese terreno, entonces puede elegir a quién le quiere robar."
+    },
+
+    "instructions_development_paragraph3": {
+        "eng": "Available soon",
+        "esp": "Las cartas de progreso son uno de los tipos de las cartas de desarrollo. Durante su turno, un jugador sólo puede jugar una carta de desarrollo. De cada carta de progreso hay dos copias:"
+    },
+
+    "instructions_development_paragraph4": {
+        "eng": "Available soon",
+        "esp": "Construcción de carreteras: el jugador que juega esta carta puede, sin pagarninguna materia prima, construir 2 nuevas carreteras en el tablero. Para ellose tienen en cuenta las reglas habituales de construcción de carreteras."
+    },
+
+    "instructions_development_paragraph5": {
+        "eng": "Available soon",
+        "esp": "Descubrimiento: el jugador que juega esta carta puede tomar dos cartas demateria prima de las pilas de la reserva. Si el jugador aún no ha resuelto sufase de construcción, puede usar estas cartas de materia prima para construir."
+    },
+
+    "instructions_development_paragraph6": {
+        "eng": "Available soon",
+        "esp": "Monopolio: el jugador que juega esta carta elige una materia prima. Todoslos demás jugadores le tienen que entregar las cartas de materia prima de esetipo que tengan. Si algún jugador no tiene cartas de esa materia prima, notiene que entregar nada."
+    },
+
+
+    "instructions_basics_info_paragraph1": {
+        "eng": "Available soon",
+        "esp": "El juego Colonos de Catán se trata de un juego de mesa por turnos para 3 o 4 jugadores. El objetivo de este juego es reunir recursos para poder construir asentamientos, carreteras y cartas de desarrollo y con esta ganar punto de victoria. El primero en llegar a 10 puntos de victoria habrá ganado la partida. El tablero se encuentra dividido en 19 hexágonos de terreno y de 6 marcos de mar. Cada uno        de los hexágonos de terreno tiene asociados un bioma, estos son: Bosque, Pasto, Sembrado,        Cerro, Montaña, Desierto. El número de hexágonos de terreno por cada bioma varía según        el bioma, el Bosque, Prado y Sembrado tienen 4 hexágonos, el Cerro y la Montaña tienen 3 y el Desierto 1. El bioma marca cual va a ser el recurso que se va a producir en esa zona:"
+    },
+
+    "instructions_basics_info_paragraph2": {
+        "eng": "Available soon",
+        "esp": "Como se puede observar, el desierto es el único terreno que no produce ninguna materia prima. En el desierto vive el ladrón y empieza la partida colocado en el. Los jugadores que construyan poblados o ciudades adyacentes al desierto, han de tener en cuenta que sólo podrán recibir la producción de dos hexágonos de terreno. Además sobre cada uno de los hexágonos (excepto el hexágono del desierto) se coloca una ficha numerada. Esta ficha indica que número que debe de salir en los dados para que ese hexágono produzca recursos. Cuanto más grande esté impreso el número de una ficha, mayor será la probabilidad de que el hexágono de terreno correspondiente produzca materias primas. Los números impresos más grandes son aquellos que tienen la probabilidad de salir más a menudo al tirar los dos dados.Así pues, un terreno con un “6” ´o un “8” tiene más probabilidades de producir materias        primas, que otro terreno con un “2” ´o un “12”. En los marcos del mar encontraremos los puertos. Los puertos tienen la ventaja de que en        ellos se puede comerciar de forma más favorable con las materias primas. Para tener un puerto, un jugador debe construir uno de sus poblados en la costa (→), en una de las dos        encrucijadas que pertenecen a un puerto. Importante:        cuando un jugador consigue un puerto, no puede utilizarlo hasta su siguiente turno, es decir,hasta su siguiente fase de comercio"
+    },
+
+    "instructions_figures_info_paragraph1": {
+        "eng": "Available soon",
+        "esp": "Un poblado vale 1 punto de victoria, y su propietario puede recibir la producción de materia prima de todos los hexágonos de terreno adyacentes. Importante: Al construir un poblado se debe tener en cuenta la regla de la distancia: en ninguna de las tres  encrucijadas adyacentes puede haber ya un poblado (no importa de qué jugador). Si un jugador ya ha construido sus 5 poblados, antes de poder construir más poblados primero debe ampliar a ciudad alguno de ellos. Con ello, recupera su poblado, que queda sustituido por una ciudad. Ahora el jugador puede construir un nuevo poblado."
+    },
+
+    "instructions_figures_info_paragraph2": {
+        "eng": "Available soon",
+        "esp": "Sólo se puede construir una ciudad ampliando un poblado ya existente. Cada ciudad  vale 2 puntos de victoria, y su propietario obtiene por cada hexágono de terreno adyacente el doble de materias primas (2 cartas de materia prima, si sale el número  del terreno). Los poblados que quedan disponibles (al haber sido ampliados a ciudad), se pueden usar otra vez para fundar nuevos poblados."
+    },
+
+    "instructions_figures_info_paragraph3": {
+        "eng": "Available soon",
+        "esp": "Las carreteras son las conexiones entre los poblados y ciudades propias. Las carreteras se construyen sobre los caminos. En cada camino (también a lo largo de la costa), sólo se puede construir una carretera. Las carreteras se pueden construir a continuación de una encrucijada en la que haya un poblado o una ciudad propia, o bien a continuacion  de una encrucijada no ocupada (es decir, libre) a la que llegue una carretera propia. Si no se construyen nuevas carreteras, tampoco se podrán construir nuevos poblados. Las carreteras, por si solas, tan sólo dan puntos de victoria en el único caso de conseguir  la carta especial Gran ruta comercial"
+    },
+
+    "instructions_figures_info_paragraph4": {
+        "eng": "Available soon",
+        "esp": "Al principio de la partida, el ladrón se coloca en el desierto. Sólo se mueve cuando al tirar los dados sale el “7” o cuando un jugador juega una carta de caballero. Mientras  el ladrón esté en un hexágono de terreno, anula la producción de materias primas de  ese hexágono. Todos los jugadores que tengan poblados y/o ciudades adyacentes no recibirán ninguna materia prima de este terreno mientras el ladrón se encuentre en el"
+    },
+
+
+    "play_button" : {
+        "eng":"Play",
+        "esp": "Jugar"
+    },
+
+    "play_skin_space": {
+        "eng":"Space",
+        "esp": "Espacial"
+    },
+
+    "play_skin_computer": {
+        "eng":"Computers",
+        "esp": "Informatico"
+    },
+
+    "play_game_public": {
+        "eng":"Public",
+        "esp": "Publica"
+    },
+
+    "play_game_private": {
+        "eng":"Private",
+        "esp": "Privada"
+    },
+
+    "shop_buy": {
+        "eng":"Buy now!",
+        "esp": "Comprar ahora!"
+    },
+
+    "shop_user_skins": {
+        "eng":"User skins",
+        "esp": "Aspectos de usuario"
+    },
+
+    "shop_game_aspects": {
+        "eng":"Game aspects",
+        "esp": "Aspectos de juego"
+    },
+
+    "friends_invite": {
+        "eng": "Invite",
+        "esp": "Invitar"
+    },
+
+    "gameplay_cards" : {
+        "eng": "Available cards",
+        "esp": "Cartas disponibles"  
+    },
+
+    "knight_card": {
+        "eng": "Knight: ",
+        "esp": "Caballero: "
+    },
+
+    "road_cons_card": {
+        "eng": "Road construction: ",
+        "esp": "Construcción   carreteras: "
+    },
+
+    "discovery_card": {
+        "eng": "Discovery: ",
+        "esp": "Descrubrimiento: "
+    },
+
+    "victory_points" : {
+        "eng": "Victory points: ",
+        "esp": "Puntos de victoria: "
+    },
+
+
+    "internal_trade" : {
+        "eng": "Internal trade",
+        "esp": "Comercio interior"
+    },
+
+    "external_trade": {
+        "eng": "Maritime trade",
+        "esp": "Comercio maritimo"
+    },
+
+    "next_turn": {
+        "eng": "Pass turn",
+        "esp": "Pasar turno"
+    },
+
+    "settings": {
+        "eng": "Settings",
+        "esp": "Ajustes"
+    },
+
+    "new_mail": {
+        "eng": "Change your email",
+        "esp": "Cambie su correo"
+    },
+
+    "accept": {
+        "eng": "Accept",
+        "esp": "Aceptar"
+    },
+
+    "new_psw": {
+        "eng": "Change your password",
+        "esp": "Cambie su contraseña"
+    },
+
+    "set_icon": {
+        "eng": "Use this icon",
+        "esp": "Usar este icono"
+    }
+
+    
+    
+
+
+
+}
+ 

@@ -10,8 +10,13 @@
     justify-content: center
     align-items: center
 
+h1, h2
+    margin: 0 auto
+    text-align: center
+    color: white
+
 app-player-card
-    margin-right: 16%
+    margin-right: 4%
 
 button  
     width: 150px
@@ -86,3 +91,6 @@ body
 // mat-label error style
 ::ng-deep .mat-form-field.mat-form-field-invalid .mat-form-field-label 
     color: map-get($palette,mainRed)!important
+
+:host ::ng-deep .mat-progress-spinner circle, .mat-spinner circle
+    stroke: map-get($palette,mainRed )

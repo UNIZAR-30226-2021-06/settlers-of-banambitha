@@ -19,8 +19,6 @@ import { HomeRoutingModule } from './home-routing.module';
 import { ProfileCardComponent } from './nav-bar/profile-card/profile-card.component';
 import { FriendBrowserComponent } from './social-bar/friend-browser/friend-browser.component';
 import { FriendCardComponent } from './social-bar/friend-card/friend-card.component';
-import { FirstComponent } from './first/first.component';
-import { SecongComponent } from './secong/secong.component';
 import {MatTabsModule} from '@angular/material/tabs';
 import { ProfilePicturesComponent } from './shop/profile-pictures/profile-pictures.component';
 import { BoardSkinsComponent } from './shop/board-skins/board-skins.component'; 
@@ -34,10 +32,16 @@ import { DevelopmentCardComponent } from './rules/development-card/development-c
 import { ActionsComponent } from './rules/actions/actions.component';
 import { IngameComponent } from './rules/ingame/ingame.component';
 import { StadisticCardComponent } from './profile/stadistic-card/stadistic-card.component';
+import { MainHomeComponent } from './main-home/main-home.component';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner'; 
 
 
 @NgModule({
-  declarations: [NavBarComponent, SocialBarComponent, PlayComponent, PlayerCardComponent, ShopComponent, SettingsComponent, ProfileComponent, RulesComponent, ProfilePicturesComponent, BoardSkinsComponent, TerrainComponent, ResourcesComponent, DevelopmentCardComponent, ActionsComponent, IngameComponent, ProfileCardComponent, FriendBrowserComponent, FriendCardComponent, StadisticCardComponent],
+  declarations: [NavBarComponent, SocialBarComponent, PlayComponent,
+    PlayerCardComponent, ShopComponent, SettingsComponent, ProfileComponent,
+    RulesComponent, ProfilePicturesComponent, BoardSkinsComponent, TerrainComponent,
+    ResourcesComponent, DevelopmentCardComponent, ActionsComponent, IngameComponent,
+    ProfileCardComponent, FriendBrowserComponent, FriendCardComponent, MainHomeComponent, StadisticCardComponent],
   imports: [
     CommonModule, 
     MatCardModule, 
@@ -52,7 +56,9 @@ import { StadisticCardComponent } from './profile/stadistic-card/stadistic-card.
     MatSidenavModule,
     MatToolbarModule,
     MatListModule,
-    MatIconModule
+    MatIconModule, 
+    MatProgressSpinnerModule, 
+    StadisticCardComponent
   ],
   exports: [
     NavBarComponent, SocialBarComponent, PlayComponent, ShopComponent, ProfileComponent ,RulesComponent
