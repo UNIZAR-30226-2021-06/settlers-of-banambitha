@@ -46,6 +46,23 @@ enum MessageKeys {
   CLOCK                           = "Clock"
 }
 
+
+/**
+ * Jugadas posibles
+ */
+enum jugadas {
+  CONSTRUIR_POBLADO   = "construir poblado",
+  MEJORAR_POBLADO     = "mejorar poblado",
+  CONSTRUIR_CARRETERA = "crear carretera", 
+  MOVER_LADRON        = "mover ladron", 
+  PASAR_TURNO         = "finalizar turno",
+  PRIMER_ASENTAMIENTO = "primer asentamiento", 
+  PRIMER_CAMINO       = "primer camino",
+  COMERCIAR           = "comerciar",
+  COMERCIAR_PUERTO    = "comerciar con puerto"
+}
+
+
 /**
  * Colores de los jugadores
  */
@@ -56,6 +73,17 @@ export enum Color {
   AZUL     = "Azul"
 }
 
+
+/**
+ * 
+ */
+export enum Recurso {
+  MADERA, 
+  PIEDRA, 
+  LANA, 
+  CEREAL, 
+  LADRILLO
+}
 
 /**
  * Tipos de asentamientos (valores para un 
@@ -276,19 +304,25 @@ export class GameService implements Connectable{
 
 
   /**
-   * Inicia una partida de prueba
+   * Inicia una partida de prueba, donde el único jugador
+   * es el usuario loggeado.
    * Solo útil para test
+   * 
+   * @param simulateMoves ordenar al servidor simular jugadas en 
+   * la partida de prueba
    */
-  public comenzarPartidaPrueba(){
+  public comenzarPartidaPrueba( simulateMoves: boolean){
     
     let that = this
-    this.test_partida_topic_id = this.stompClient.subscribe(WsService.partida_test_topic + this.userService.getUsername(),
-    function (message) {
+    this.test_partida_topic_id = this.stompClient.subscribe(WsService.partida_test_topic +
+      this.userService.getUsername(), function (message) {
       if (message.body){
         let msg: Object = JSON.parse(message.body)
         console.log(msg)
         console.log("Comenzando partida de prueba...")
-        that.comenzarPartida(msg["game"], [that.userService.getUsername(), "Some1" ,"Some2", "Some3"])
+        that.comenzarPartida(msg["game"],
+                            [that.userService.getUsername(),
+                            "Some1" ,"Some2", "Some3"])
 
       }else{
         console.log("Error crítico")
@@ -296,7 +330,8 @@ export class GameService implements Connectable{
     });
 
     //Solicitar inicio de partida
-    this.stompClient.send(WsService.partidaTestComenzar, {}, JSON.stringify({from: this.userService.getUsername()}) )
+    this.stompClient.send(WsService.partidaTestComenzar, {},
+      JSON.stringify({from: this.userService.getUsername(), simulate: simulateMoves}) )
   }
 
 
@@ -330,80 +365,6 @@ export class GameService implements Connectable{
     }
 
     return false
-  }
-
-
-  /**
-   * Devuelve un tablero vacío
-   * 
-   * @Return un tablero vacío
-   */
-  private tableroVacio(): Tablero {
-    return {
-      hexagonos: {
-        valor: [],
-        tipo: [],
-        ladron: 0
-      }, 
-      vertices: {
-        asentamiento: [],
-        posible_asentamiento: this.falseArray(GameService.numJugadores, GameService.numVertices),
-      }, 
-      aristas: {
-        camino: [], 
-        posible_camino: this.falseArray(GameService.numJugadores, GameService.numAristas),
-        puertos: {
-          ladrillo: 0,
-          lana: 0, 
-          cereal: 0, 
-          basico: [], 
-          piedra: 0,
-          madera: 0
-        }
-      }
-    }
-  }
-
-
-  /**
-   * Devuelve una matriz de nxm componentes con valor falso
-   * 
-   * @param n filas
-   * @param m columnas
-   * @return array de booleanos nxm con todos los valores a falso
-   */
-  private falseArray(n: number, m: number): Array<Array<Boolean>> {
-    let mainArray: Array<Array<Boolean>> = new Array<Array<Boolean>>(n)
-    for ( let i = 0; i < n; i++ ){
-      mainArray[i] = new Array<Boolean>(m)
-      for ( let j = 0; j < m; j++ ){
-        mainArray[i][j] = false
-      }
-    }
-    return mainArray
-  }
-
-  /**
-   * Inicializa los jugadores de una partida suponiendo que la partida 
-   * está en el estado inicial (nadie ha jugado todavía). 
-   * 
-   * @param jugadores nombres de los jugadores, en orden de turno
-   * PRE: jugadores.length = 4
-   */
-  private inicializarJugadores(jugadores: Array<String>): Array<Jugador>{
-    
-    let jugadoresPartida: Array<Jugador> = []
-    for (let i = 0; i < jugadores.length; i++){
-      jugadoresPartida[i] = {
-        nombre: jugadores[i],
-        turno: i + 1, 
-        color: GameService.coloresPorId[i],
-        puntos: 0, 
-        recursos: { madera: 0, ladrillo: 0, cereales: 0, lana: 0, piedra: 0 },
-        cartas: { D1: 0, D2: 0, D3: 0, D4: 0, D5: 0, E1: 0, E2: 0}
-      }
-    }
-    return jugadoresPartida
   }
 
 
@@ -500,10 +461,196 @@ export class GameService implements Connectable{
   }
 
 
-  /************************************************************
+  /****************************************************************
+  *                     ACCIONES POSIBLES
+  *****************************************************************/
+
+
+  /**
+   * Crea un poblado en el vértice con el identificador dado. 
+   * Solo creará el poblado si el vértice está vacío.
+   * 
+   * @param vertice arista del vértice en el que se construirá el
+   * poblado
+   */ 
+  public crearPoblado( vertice: number ): void { }
+
+
+  /**
+   * Crea un camino en la arista con el identificador dado. 
+   * Solo creará el camino si la arista está vacía. 
+   * 
+   * @param arista arista en la que se construirá el camino
+   */
+  public crearCamino( arista: number): void { }
+
+
+  /**
+   * Crea el primer poblado en el vértice dado. Solo 
+   * creará el poblado si el vértice está vacío.
+   * 
+   * @param vertice vértice en el que se construirá el poblado
+   */
+  public crearPrimerPoblado( vertice: number): void { }
+
+
+  /**
+   * Crea el primer camino en la arista con el identificador dado. 
+   * Solo creará el camino si la arista está vacía. 
+   * 
+   * @param arista arista en la que se construirá el camino
+   */
+  public crearPrimerCamino( arista: number ): void { }
+
+
+  /**
+   * Mejora el pueblo dado a una ciudad. Solo se puede realizar
+   * esta acción si es el turno del usuario, dispone de los
+   * recursos suficientes como para mejorar el pueblo y existe un pueblo
+   * del usuario en el vértice dado
+   * 
+   * @param vertice vertice del pueblo a mejorar
+   */
+  public mejorarPueblo(vertice: number): void { }
+
+
+  /**
+   * Mueve el ladrón al hexágono dado. Solo se podrá mover al 
+   * ladrón si es el turno del usuario y el resultado de la
+   * tirada es un 7.
+   * 
+   * @param hexagono hexágono al que se moverá el ladrón
+   */
+  public moverLadron( hexagono: number): void { }
+
+
+  /**
+   * Finaliza el turno del usuario. Solo tiene efecto si el 
+   * turno actual es efectivamente el turno del usuario.
+   */
+  public pasarTurno(): void { }
+
+
+  /**
+   * Envía una petición de comercio al jugador dado, solicitando el 
+   * intercambio de recursos detallado.
+   * Solo se enviará la petición si el turno actual es el turno del
+   * usuario y además las cantidades a intercambiar son factibles (los
+   * usuarios disponen de recursos suficientes para realizar el intercambio)
+   * 
+   * @param jugador jugador al que se solicita el intercambio
+   * @param recursoOfrecido tipo de recurso ofrecido
+   * @param recursoSolicitado tipo de recurso solicitado
+   * @param cantidadOfrecida cantidad de recursos ofrecida
+   * @param cantidadSolicitada cantidad de recursos solicitada
+   */
+  public comerciarConJugador(jugador: number, recursoOfrecido: Recurso, recursoSolicitado: Recurso, 
+                            cantidadOfrecida: Number, cantidadSolicitada: Number): void { }
+
+
+  /**
+   * Realiza un intercambio con el puerto dado por aristaPuerto. Solo se efectuará el 
+   * intercambio si el jugador dispone de los recursos suficientes. Y el puerto es del 
+   * tipo correcto (ofrece el recurso solicitado y acepta el recurso ofrecido)
+   * 
+   * @param aristaPuerto puerto con el que se realizará el intercambio
+   * @param recursoOfrecido tipo de recurso ofrecido
+   * @param recursoSolicitado tipo de recurso solicitado
+   * @param cantidadOfrecida  cantidad de recursos ofrecida
+   * @param cantidadSolicitada cantidad de recursos solicitada
+   */
+  public comerciarConPuerto(aristaPuerto: number, recursoOfrecido: Recurso, recursoSolicitado: Recurso, 
+                            cantidadOfrecida: Number, cantidadSolicitada: Number): void { }
+
+
+  /**
+   * Envía un mensaje al chat de la partida
+   * 
+   * @param mensaje cuerpo del mensaje
+   */
+  public enviarMensaje(mensaje: String){ }
+
+
+  /****************************************************************
    * FUNCIONES AUXILIARES PARA TRADUCIR EL MENSAJE DEL
-   * TABLERO A LAS ESTRUCTURAS DE DATOS INTERNAS
-   ************************************************************/
+   * TABLERO A LAS ESTRUCTURAS DE DATOS INTERNAS E INICIALIZARLAS
+   ***************************************************************/
+
+
+  /**
+   * Devuelve un tablero vacío
+   * 
+   * @Return un tablero vacío
+   */
+  private tableroVacio(): Tablero {
+    return {
+      hexagonos: {
+        valor: [],
+        tipo: [],
+        ladron: 0
+      }, 
+      vertices: {
+        asentamiento: [],
+        posible_asentamiento: this.falseArray(GameService.numJugadores, GameService.numVertices),
+      }, 
+      aristas: {
+        camino: [], 
+        posible_camino: this.falseArray(GameService.numJugadores, GameService.numAristas),
+        puertos: {
+          ladrillo: 0,
+          lana: 0, 
+          cereal: 0, 
+          basico: [], 
+          piedra: 0,
+          madera: 0
+        }
+      }
+    }
+  }
+
+
+  /**
+   * Devuelve una matriz de nxm componentes con valor falso
+   * 
+   * @param n filas
+   * @param m columnas
+   * @return array de booleanos nxm con todos los valores a falso
+   */
+  private falseArray(n: number, m: number): Array<Array<Boolean>> {
+    let mainArray: Array<Array<Boolean>> = new Array<Array<Boolean>>(n)
+    for ( let i = 0; i < n; i++ ){
+      mainArray[i] = new Array<Boolean>(m)
+      for ( let j = 0; j < m; j++ ){
+        mainArray[i][j] = false
+      }
+    }
+    return mainArray
+  }
+
+
+  /**
+   * Inicializa los jugadores de una partida suponiendo que la partida 
+   * está en el estado inicial (nadie ha jugado todavía). 
+   * 
+   * @param jugadores nombres de los jugadores, en orden de turno
+   * PRE: jugadores.length = 4
+   */
+  private inicializarJugadores(jugadores: Array<String>): Array<Jugador>{
+    
+    let jugadoresPartida: Array<Jugador> = []
+    for (let i = 0; i < jugadores.length; i++){
+      jugadoresPartida[i] = {
+        nombre: jugadores[i],
+        turno: i + 1, 
+        color: GameService.coloresPorId[i],
+        puntos: 0, 
+        recursos: { madera: 0, ladrillo: 0, cereales: 0, lana: 0, piedra: 0 },
+        cartas: { D1: 0, D2: 0, D3: 0, D4: 0, D5: 0, E1: 0, E2: 0}
+      }
+    }
+    return jugadoresPartida
+  }
+
 
   /**
    * Actualiza los recursos del jugador dado, con la información en recursos.
@@ -521,6 +668,7 @@ export class GameService implements Connectable{
     this.partida.jugadores[playerIndex].recursos.lana     = recursos[3]
     this.partida.jugadores[playerIndex].recursos.cereales = recursos[4]
   }
+
 
   /**
    * Actualiza los recursos de los jugadores con los datos recibidos.

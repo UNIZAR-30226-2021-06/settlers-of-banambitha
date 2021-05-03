@@ -64,7 +64,14 @@ public class GameControllerThread implements Runnable {
 	 * 								            [ "true" | "false" ] -> length = 72, //Asentamientos posibles j3
 	 * 								            [ "true" | "false" ] -> length = 72  //Asentamientos posibles j4
 	 * 								           ]
-	 * 						"puertos": [<id_arista>] length -> 9
+	 * 						"puertos": {
+	 *							puertoMadera: <id_arista> 
+	 *							puertoArcilla: <id_arista> 
+	 *							puertoMineral: <id_arista> 
+	 *							puertoLana: <id_arista> 
+	 *							puertoCereales: <id_arista>
+	 *							puertosBasicos: [<id_arista>] -> length = 4
+	 * 						}
 	 * 					}
 	 * 				},
 	 * 
@@ -93,6 +100,7 @@ public class GameControllerThread implements Runnable {
 	 * 
 	 * 				"Turno": 1 | 2 | 3 | 4
 	 *				"Ganador": N | 1 | 2 | 3 | 4
+	 *				"Clock": N -> número de jugadas ejecutadas (útil para descartar mensajes antiguos)
 	 * 			}
 	****************************************************** */
 	@Override
