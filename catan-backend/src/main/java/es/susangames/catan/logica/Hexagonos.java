@@ -355,9 +355,9 @@ public class Hexagonos {
 			aux = it.next();
 			id = aux.getIdentificador();
 			listAsentamiento[id] = aux.getAsentamientoJugador();
+			jsArray.put(listAsentamiento[id]);
 		}
 		
-		jsArray.put(listAsentamiento);
 		
 		return jsArray;
 	}
@@ -395,9 +395,9 @@ public class Hexagonos {
 			aux = it.next();
 			id = aux.getIdentificador();
 			caminos[id] = aux.getCaminoJugador();
+			jsArray.put(caminos[id]);
 		}
 		
-		jsArray.put(caminos);
 		
 		return jsArray;
 	}
