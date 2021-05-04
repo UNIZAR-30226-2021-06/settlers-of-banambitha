@@ -78,10 +78,10 @@ public class GameControllerThread implements Runnable {
 	 * 				"Resultado_Tirada": 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12,
 	 * 
 	 * 				"Recursos": {
-	 * 					"Player_1": [num_madera, num_piedra, num_ladrillo, num_lana, num_cereales], // integer array
-	 * 					"Player_2": [num_madera, num_piedra, num_ladrillo, num_lana, num_cereales], // integer array
-	 * 					"Player_3": [num_madera, num_piedra, num_ladrillo, num_lana, num_cereales], // integer array
-	 * 					"Player_4": [num_madera, num_piedra, num_ladrillo, num_lana, num_cereales]  // integer array
+	 * 					"Player_1": [num_madera, num_mineral, num_arcilla, num_lana, num_cereales], // integer array
+	 * 					"Player_2": [num_madera, num_mineral, num_arcilla, num_lana, num_cereales], // integer array
+	 * 					"Player_3": [num_madera, num_mineral, num_arcilla, num_lana, num_cereales], // integer array
+	 * 					"Player_4": [num_madera, num_mineral, num_arcilla, num_lana, num_cereales], // integer array
 	 * 				},
 	 * 
 	 * 				"Cartas": { 

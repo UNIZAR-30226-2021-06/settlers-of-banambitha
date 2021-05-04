@@ -39,9 +39,9 @@ enum MessageKeys {
   PLAYER_4                        = "Player_4",
   PUERTO_MADERA                   = "puertoMadera",
   PUERTO_LANA                     = "puertoLana",
-  PUERTO_PIEDRA                   = "puertoMineral",
+  PUERTO_MINERAL                  = "puertoMineral",
   PUERTO_CEREAL                   = "puertoCereales",
-  PUERTO_LADRILLO                 = "puertoArcilla",
+  PUERTO_ARCILLA                  = "puertoArcilla",
   PUERTOS_BASICOS                 = "puertosBasicos",
   CLOCK                           = "Clock"
 }
@@ -50,10 +50,10 @@ enum MessageKeys {
 /**
  * Jugadas posibles
  */
-enum jugadas {
+enum Jugada {
   CONSTRUIR_POBLADO   = "construir poblado",
   MEJORAR_POBLADO     = "mejorar poblado",
-  CONSTRUIR_CARRETERA = "crear carretera", 
+  CONSTRUIR_CAMINO    = "crear carretera", 
   MOVER_LADRON        = "mover ladron", 
   PASAR_TURNO         = "finalizar turno",
   PRIMER_ASENTAMIENTO = "primer asentamiento", 
@@ -79,10 +79,10 @@ export enum Color {
  */
 export enum Recurso {
   MADERA, 
-  PIEDRA, 
+  MINERAL, 
   LANA, 
   CEREAL, 
-  LADRILLO
+  ARCILLA
 }
 
 /**
@@ -90,15 +90,15 @@ export enum Recurso {
  * posible asentamiento del tablero)
  */
 export enum TipoAsentamiento {
-  NADA = "Nada", 
-  POBLADO_AMARILLO = "PobladoAmarillo", 
-  POBLADO_AZUL     = "PobladoAzul", 
-  POBLADO_VERDE    = "PobladoVerde", 
-  POBLADO_ROJO     = "PobladoRojo", 
-  CIUDAD_AMARILLO  = "CiudadAmarillo", 
-  CIUDAD_AZUL      = "CiudadAzul", 
-  CIUDAD_VERDE     = "CiudadVerde", 
-  CIUDAD_ROJO      = "CiudadRojo", 
+  NADA             = "Nada", 
+  POBLADO_PLAYER_1 = "PobladoAzul", 
+  POBLADO_PLAYER_2 = "PobladoRojo", 
+  POBLADO_PLAYER_3 = "PobladoAmarillo", 
+  POBLADO_PLAYER_4 = "PobladoVerde", 
+  CIUDAD_PLAYER_1  = "CiudadAzul", 
+  CIUDAD_PLAYER_2  = "CiudadRojo", 
+  CIUDAD_PLAYER_3  = "CiudadAmarillo", 
+  CIUDAD_PLAYER_4  = "CiudadVerde", 
 }
 
 
@@ -122,10 +122,10 @@ export enum TipoTerreno {
  */
 export enum TipoCamino {
   NADA     = "Nada", 
-  ROJO     = "CaminoRojo", 
-  VERDE    = "CaminoVerde", 
-  AZUL     = "CaminoAzul", 
-  AMARILLO = "CaminoAmarillo"
+  PLAYER_1 = "CaminoAzul", 
+  PLAYER_2 = "CaminoRojo", 
+  PLAYER_3 = "CaminoAmarillo",
+  PLAYER_4 = "CaminoVerde"
 }
 
 
@@ -134,6 +134,19 @@ export enum TipoCamino {
  * TODO: implementar códigos de error
  */
 enum CodigoError {
+}
+
+
+/**
+ * Mensaje de solicitud de jugada
+ */
+interface MsgJugada {
+  player: number, 
+  game: String, 
+  move: {
+    name: Jugada,
+    param: Object
+  }
 }
 
 
@@ -156,8 +169,8 @@ export interface CartasJugador {
  */
 export interface RecursosJugador {
   madera:   number, 
-  piedra:   number, 
-  ladrillo: number, 
+  mineral:   number, 
+  arcilla: number, 
   lana:     number, 
   cereales: number
 }
@@ -181,7 +194,8 @@ export interface Jugador {
  */
 export interface Mensaje {
   remitente: String, 
-  body:      String
+  body:      String, 
+  timeStamp: String
 }
 
 
@@ -207,8 +221,8 @@ export interface Vertices {
 
 export interface Puertos {
   madera:   number, 
-  piedra:   number, 
-  ladrillo: number, 
+  mineral:   number, 
+  arcilla: number, 
   lana:     number, 
   cereal:   number
   basico:   Array<Number>
@@ -437,6 +451,15 @@ export class GameService implements Connectable{
    */
   private procesarMensajeChat(msg: Object): void{
     console.log(msg)
+    let mensajeNuevo: Mensaje = {
+      remitente: msg["from"], 
+      body: msg["body"],
+      timeStamp: msg["time"]
+    }
+
+    //TODO: ordenar los mensajes por timestamp, habrá que 
+    //cambiar el tipo de dato de simeStamp
+    this.partida.mensajes.push(mensajeNuevo)
   }
 
 
@@ -447,6 +470,7 @@ export class GameService implements Connectable{
    */
   private procesarMensajeComercio(msg: Object): void{
     console.log(msg)
+    //TODO: informar sobre comercio entrante
   }
 
 
@@ -468,21 +492,53 @@ export class GameService implements Connectable{
 
   /**
    * Crea un poblado en el vértice con el identificador dado. 
-   * Solo creará el poblado si el vértice está vacío.
+   * Solo creará el poblado si el vértice está vacío y el usuario 
+   * dispone de los recursos necesarios.
    * 
    * @param vertice arista del vértice en el que se construirá el
    * poblado
+   * @return true si ha podido enviar la petición, false en caso 
+   * contrario
    */ 
-  public crearPoblado( vertice: number ): void { }
+  public construirPoblado( vertice: number ): boolean {
+
+    if ( this.esMiTurno() &&
+         this.verticeValido(vertice) &&
+         this.partida.tablero.vertices.asentamiento[vertice] == TipoAsentamiento.NADA && 
+         this.puedeConstruirPoblado() ){
+
+      let msg = this.construirJugada(Jugada.CONSTRUIR_POBLADO, vertice)
+
+      this.stompClient.send(WsService.partidaJugada, {}, JSON.stringify(msg) )
+      return true
+    }
+    return false
+  }
 
 
   /**
    * Crea un camino en la arista con el identificador dado. 
-   * Solo creará el camino si la arista está vacía. 
+   * Solo creará el camino si la arista está vacía y el usuario 
+   * dispone de los recursos necesarios. 
    * 
    * @param arista arista en la que se construirá el camino
+   * @return true si ha podido enviar la petición, false en caso 
+   * contrario
    */
-  public crearCamino( arista: number): void { }
+  public construirCamino( arista: number): boolean {
+
+    if ( this.esMiTurno() &&
+         this.aristaValida(arista) &&
+         this.partida.tablero.aristas.camino[arista] == TipoCamino.NADA && 
+         this.puedeConstruirCamino() ) {
+
+      let msg = this.construirJugada(Jugada.CONSTRUIR_CAMINO, arista)
+
+      this.stompClient.send(WsService.partidaJugada, {}, JSON.stringify(msg) )
+      return true
+    }
+    return false
+  }
 
 
   /**
@@ -490,8 +546,22 @@ export class GameService implements Connectable{
    * creará el poblado si el vértice está vacío.
    * 
    * @param vertice vértice en el que se construirá el poblado
+   * @return true si ha podido enviar la petición, false en caso 
+   * contrario
    */
-  public crearPrimerPoblado( vertice: number): void { }
+  public construirPrimerPoblado( vertice: number): boolean {
+
+    if ( this.esMiTurno() &&
+         this.verticeValido(vertice) &&
+         this.partida.tablero.vertices.asentamiento[vertice] == TipoAsentamiento.NADA){
+
+      let msg = this.construirJugada(Jugada.PRIMER_ASENTAMIENTO, vertice)
+      
+      this.stompClient.send(WsService.partidaJugada, {}, JSON.stringify(msg) )
+      return true
+    }
+    return false
+  }
 
 
   /**
@@ -499,8 +569,23 @@ export class GameService implements Connectable{
    * Solo creará el camino si la arista está vacía. 
    * 
    * @param arista arista en la que se construirá el camino
+   * @return true si ha podido enviar la petición, false en caso 
+   * contrario
    */
-  public crearPrimerCamino( arista: number ): void { }
+  public cconstruirPrimerCamino( arista: number ): boolean {
+    
+    if ( this.esMiTurno() &&
+         this.aristaValida(arista) &&
+         this.partida.tablero.aristas.camino[arista] == TipoCamino.NADA ) {
+
+      let msg = this.construirJugada(Jugada.PRIMER_CAMINO, arista)
+      
+      this.stompClient.send(WsService.partidaJugada, {}, JSON.stringify(msg) )
+      return true
+    }
+    return false
+
+  }
 
 
   /**
@@ -510,8 +595,23 @@ export class GameService implements Connectable{
    * del usuario en el vértice dado
    * 
    * @param vertice vertice del pueblo a mejorar
+   * @return true si ha podido enviar la petición, false en caso 
+   * contrario
    */
-  public mejorarPueblo(vertice: number): void { }
+  public mejorarPueblo(vertice: number): boolean {
+
+    if ( this.esMiTurno() &&
+         this.verticeValido(vertice) && 
+         this.partida.tablero.vertices.asentamiento[vertice] == this.miTipoPueblo() &&
+         this.puedeConstruirPoblado() ){ 
+      
+      let msg = this.construirJugada(Jugada.MEJORAR_POBLADO, vertice)
+
+      this.stompClient.send(WsService.partidaJugada, {}, JSON.stringify(msg) )
+      return true
+    }
+    return false
+  }
 
 
   /**
@@ -520,15 +620,39 @@ export class GameService implements Connectable{
    * tirada es un 7.
    * 
    * @param hexagono hexágono al que se moverá el ladrón
+   * @return true si ha podido enviar la petición, false en caso 
+   * contrario
    */
-  public moverLadron( hexagono: number): void { }
+  public moverLadron( hexagono: number): boolean {
+
+    if ( this.esMiTurno() &&
+         this.partida.resultadoTirada == 7 ){
+
+      let msg = this.construirJugada(Jugada.MOVER_LADRON, hexagono)
+
+      this.stompClient.send(WsService.partidaJugada, {}, JSON.stringify(msg) )
+      return true
+    }
+    return false
+  }
 
 
   /**
    * Finaliza el turno del usuario. Solo tiene efecto si el 
    * turno actual es efectivamente el turno del usuario.
+   * @return true si ha podido enviar la petición, false en caso 
+   * contrario
    */
-  public pasarTurno(): void { }
+  public pasarTurno(): boolean {
+
+    if ( this.esMiTurno() ){
+      let msg = this.construirJugada(Jugada.PASAR_TURNO, "")
+
+      this.stompClient.send(WsService.partidaJugada, {}, JSON.stringify(msg) )
+      return true
+    }
+    return false
+  }
 
 
   /**
@@ -543,6 +667,8 @@ export class GameService implements Connectable{
    * @param recursoSolicitado tipo de recurso solicitado
    * @param cantidadOfrecida cantidad de recursos ofrecida
    * @param cantidadSolicitada cantidad de recursos solicitada
+   * @return true si ha podido enviar la petición, false en caso 
+   * contrario
    */
   public comerciarConJugador(jugador: number, recursoOfrecido: Recurso, recursoSolicitado: Recurso, 
                             cantidadOfrecida: Number, cantidadSolicitada: Number): void { }
@@ -558,9 +684,29 @@ export class GameService implements Connectable{
    * @param recursoSolicitado tipo de recurso solicitado
    * @param cantidadOfrecida  cantidad de recursos ofrecida
    * @param cantidadSolicitada cantidad de recursos solicitada
+   * @return true si ha podido enviar la petición, false en caso 
+   * contrario
    */
   public comerciarConPuerto(aristaPuerto: number, recursoOfrecido: Recurso, recursoSolicitado: Recurso, 
                             cantidadOfrecida: Number, cantidadSolicitada: Number): void { }
+
+                    
+  /**
+   * Acepta la petición de comercio enviada por el jugador dado. 
+   * Solo se pueden aceptar peticiones fuera del turno del jugador
+   * 
+   * @param jugador jugador que solicita el comercio
+   */
+  public aceptarComercioJugador(jugador: number): void { }              
+
+
+  /**
+   * Rechaza la petición de comercio enviada por el jugador dado. 
+   * Solo se pueden rechazar peticiones fuera del turno de partida
+   * 
+   * @param jugador jugador que solicitó el comercio
+   */
+  public rechazarComercioJugador(jugador: number): void { }
 
 
   /**
@@ -568,13 +714,199 @@ export class GameService implements Connectable{
    * 
    * @param mensaje cuerpo del mensaje
    */
-  public enviarMensaje(mensaje: String){ }
+  public enviarMensaje(mensaje: String): void{
+    let msg = {
+      from: this.userService.getUsername,
+      game: this.partida.id, 
+      body: mensaje
+    }
+    this.stompClient.send(WsService.enviarMensajePartida, {}, JSON.stringify(msg) )
+  }
 
 
   /****************************************************************
-   * FUNCIONES AUXILIARES PARA TRADUCIR EL MENSAJE DEL
-   * TABLERO A LAS ESTRUCTURAS DE DATOS INTERNAS E INICIALIZARLAS
-   ***************************************************************/
+  * FUNCIONES AUXILIARES PARA TRADUCIR EL MENSAJE DEL
+  * TABLERO A LAS ESTRUCTURAS DE DATOS INTERNAS E INICIALIZARLAS
+  *****************************************************************/
+
+
+  /**
+   * @return True si es el turno del usuario, false en caso 
+   * contrario
+   */
+  private esMiTurno(): boolean{
+    return this.partida.miTurno == this.partida.turnoActual
+  }
+
+  /**
+   * @return true si el usuario tiene los recursos 
+   * suficientes como para construir un poblado
+   */
+  private puedeConstruirPoblado(): boolean {
+    let arcilla: number = this.partida.jugadores[this.partida.miTurno - 1].recursos.arcilla
+    let madera:  number = this.partida.jugadores[this.partida.miTurno - 1].recursos.madera
+    let lana:    number = this.partida.jugadores[this.partida.miTurno - 1].recursos.lana
+    let cereal:  number = this.partida.jugadores[this.partida.miTurno - 1].recursos.cereales
+    return arcilla > 0 && cereal > 0 && lana > 0 && madera > 0
+  }
+
+
+  /**
+   * @return true si el usuario tiene los recursos 
+   * suficientes como para construir una ciudad
+   */
+  private puedeConstruirCiudad(): boolean {
+    let cereal:   number = this.partida.jugadores[this.partida.miTurno - 1].recursos.cereales
+    let mineral:  number = this.partida.jugadores[this.partida.miTurno - 1].recursos.mineral
+    return mineral > 2 && cereal > 1
+  }
+
+
+  /**
+   * @return true si el usuario tiene los recursos 
+   * suficientes como para construir un camino
+   */
+  private puedeConstruirCamino(): boolean {
+    let arcilla: number = this.partida.jugadores[this.partida.miTurno - 1].recursos.arcilla
+    let madera:  number = this.partida.jugadores[this.partida.miTurno - 1].recursos.madera
+    return arcilla > 0 && madera > 0
+  }
+
+  /**
+   * Deveuvle el tipo de pueblo correspondiente al 
+   * jugador
+   * 
+   * @return Tipo de asentamiento correspondente a un pueblo
+   * del jugador
+   */
+  private miTipoPueblo(): TipoAsentamiento {
+    switch(this.partida.miTurno){
+      case 1: 
+        return TipoAsentamiento.POBLADO_PLAYER_1
+
+      case 2: 
+        return TipoAsentamiento.POBLADO_PLAYER_2
+
+      case 3: 
+        return TipoAsentamiento.POBLADO_PLAYER_3
+
+      case 4: 
+        return TipoAsentamiento.POBLADO_PLAYER_4
+
+      default: 
+        return TipoAsentamiento.NADA
+    }
+  }
+
+
+  /**
+   * Deveuvle el tipo de ciudad correspondiente al 
+   * jugador
+   * 
+   * @return Tipo de asentamiento correspondente a una ciudad
+   * del jugador
+   */
+  private miTipoCiudad(): TipoAsentamiento {
+    switch(this.partida.miTurno){
+      case 1: 
+        return TipoAsentamiento.CIUDAD_PLAYER_1
+
+      case 2: 
+        return TipoAsentamiento.CIUDAD_PLAYER_2
+
+      case 3: 
+        return TipoAsentamiento.CIUDAD_PLAYER_3
+
+      case 4: 
+        return TipoAsentamiento.CIUDAD_PLAYER_4
+
+      default: 
+        return TipoAsentamiento.NADA
+    }
+  }
+
+
+  /**
+   * Deveuvle el tipo de camino correspondiente al 
+   * jugador
+   * 
+   * @return Tipo de camino correspondente a una camino
+   * del jugador
+   */
+  private miTipoCamino(): TipoCamino {
+    switch(this.partida.miTurno){
+      case 1: 
+        return TipoCamino.PLAYER_1
+
+      case 2: 
+        return TipoCamino.PLAYER_2
+
+      case 3: 
+        return TipoCamino.PLAYER_3
+
+      case 4: 
+        return TipoCamino.PLAYER_4
+
+      default: 
+        return TipoCamino.NADA
+    }
+  }
+
+
+  /**
+   * General el mensaje de petición de una jugada
+   * 
+   * @param jugada 
+   * @param param 
+   * @return el objeto a enviar al servidor para solicitar la jugada 
+   * deseada
+   */
+  private construirJugada(jugada: Jugada, param: Object): MsgJugada {
+    return {
+      player: this.partida.miTurno,
+      game: this.partida.id, 
+      move: {
+        name: jugada, 
+        param: param,
+      }
+    }
+  }
+
+  
+  /**
+   * Devuelve true si el identificador del vértice es válido
+   * 
+   * @param vertice identificador del vértice a comprobar
+   * @return true si el identificador del vértice es válido, 
+   * false en caso contrario
+   */
+  private verticeValido(vertice: number): boolean{
+    return vertice >= 0 && vertice < GameService.numVertices
+  }
+
+
+  /**
+   * Devuelve true si el identificador de la arista es válido
+   * 
+   * @param arista identificador de la arista a comprobar
+   * @return true si el identificador de la arista es válido, 
+   * false en caso contrario
+   */
+  private aristaValida(arista: number): boolean {
+    return arista >= 0 && arista < GameService.numAristas
+  }
+
+
+  /**
+   * Devuelve true si el hexágono es válido
+   * 
+   * @param hexagono identificador del hexágono a comprobar
+   * @return true si el identificador del hexágono es válido, 
+   * false en caso contrario
+   */
+  private hexagonoValido(hexagono: number): boolean {
+    return hexagono >= 0 && hexagono < GameService.numHexagonos
+  }
 
 
   /**
@@ -597,11 +929,11 @@ export class GameService implements Connectable{
         camino: [], 
         posible_camino: this.falseArray(GameService.numJugadores, GameService.numAristas),
         puertos: {
-          ladrillo: 0,
+          arcilla: 0,
           lana: 0, 
           cereal: 0, 
           basico: [], 
-          piedra: 0,
+          mineral: 0,
           madera: 0
         }
       }
@@ -644,7 +976,7 @@ export class GameService implements Connectable{
         turno: i + 1, 
         color: GameService.coloresPorId[i],
         puntos: 0, 
-        recursos: { madera: 0, ladrillo: 0, cereales: 0, lana: 0, piedra: 0 },
+        recursos: { madera: 0, arcilla: 0, cereales: 0, lana: 0, mineral: 0 },
         cartas: { D1: 0, D2: 0, D3: 0, D4: 0, D5: 0, E1: 0, E2: 0}
       }
     }
@@ -656,15 +988,15 @@ export class GameService implements Connectable{
    * Actualiza los recursos del jugador dado, con la información en recursos.
    * 
    * @param recursos array de 5 componentes enteras tal que: 
-   * [num_madera, num_piedra, num_ladrillo, num_lana, num_cereales]
+   * [num_madera, num_MINERAL, num_ARCILLA, num_lana, num_cereales]
    * @param playerIndex indice del jugador cuyos recursos se van a actualizar dentro
    * del vector de jugadores de la partida. 
    */
   private actualizarRecursosJugador(recursos: Array<number>, playerIndex: number){
     
     this.partida.jugadores[playerIndex].recursos.madera   = recursos[0]
-    this.partida.jugadores[playerIndex].recursos.piedra   = recursos[1]
-    this.partida.jugadores[playerIndex].recursos.ladrillo = recursos[2]
+    this.partida.jugadores[playerIndex].recursos.mineral  = recursos[1]
+    this.partida.jugadores[playerIndex].recursos.arcilla  = recursos[2]
     this.partida.jugadores[playerIndex].recursos.lana     = recursos[3]
     this.partida.jugadores[playerIndex].recursos.cereales = recursos[4]
   }
@@ -909,8 +1241,8 @@ export class GameService implements Connectable{
       let puertos: Object = Aristas[MessageKeys.ARISTAS_PUERTOS]
       this.partida.tablero.aristas.puertos.basico   = puertos[MessageKeys.PUERTOS_BASICOS]
       this.partida.tablero.aristas.puertos.madera   = puertos[MessageKeys.PUERTO_MADERA]
-      this.partida.tablero.aristas.puertos.piedra   = puertos[MessageKeys.PUERTO_PIEDRA]
-      this.partida.tablero.aristas.puertos.ladrillo = puertos[MessageKeys.PUERTO_LADRILLO]
+      this.partida.tablero.aristas.puertos.mineral  = puertos[MessageKeys.PUERTO_MINERAL]
+      this.partida.tablero.aristas.puertos.arcilla  = puertos[MessageKeys.PUERTO_ARCILLA]
       this.partida.tablero.aristas.puertos.lana     = puertos[MessageKeys.PUERTO_LANA]
       this.partida.tablero.aristas.puertos.cereal   = puertos[MessageKeys.PUERTO_CEREAL]
     }else{
