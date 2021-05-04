@@ -279,7 +279,10 @@ export interface Partida {
   resultadoTirada: number, 
   jugadores:       Array<Jugador>,
   mensajes:        Array<Mensaje>, 
-  clock:           number
+  clock:           number,
+  PobladoDisponible: boolean,
+  CaminoDisponible: boolean, 
+  CiudadDisponible: boolean
 }
 
 
@@ -325,16 +328,7 @@ export class GameService implements Connectable{
     }
 
     //Solo para pruebas
-    this.partida = {
-      miTurno: 1,
-      id: "", 
-      jugadores: this.inicializarJugadores([this.userService.username, "Some1", "Some2", "Some3"]),
-      turnoActual: 1, 
-      tablero: this.tableroPrueba(), 
-      resultadoTirada: 0, 
-      mensajes: [],
-      clock: -1
-    }
+    this.initPartidaPrueba()
 
   }
 
@@ -402,7 +396,10 @@ export class GameService implements Connectable{
         tablero: this.tableroVacio(), 
         resultadoTirada: 0, 
         mensajes: [],
-        clock: -1
+        clock: -1,
+        PobladoDisponible: false,
+        CiudadDisponible: false, 
+        CaminoDisponible: false
       }
 
       this.subscribeToTopics()
@@ -813,7 +810,7 @@ export class GameService implements Connectable{
    * @return true si el usuario tiene los recursos 
    * suficientes como para construir un poblado
    */
-  private puedeConstruirPoblado(): boolean {
+  public puedeConstruirPoblado(): boolean {
     let arcilla: number = this.partida.jugadores[this.partida.miTurno - 1].recursos.arcilla
     let madera:  number = this.partida.jugadores[this.partida.miTurno - 1].recursos.madera
     let lana:    number = this.partida.jugadores[this.partida.miTurno - 1].recursos.lana
@@ -826,7 +823,7 @@ export class GameService implements Connectable{
    * @return true si el usuario tiene los recursos 
    * suficientes como para construir una ciudad
    */
-  private puedeConstruirCiudad(): boolean {
+  public puedeConstruirCiudad(): boolean {
     let cereal:   number = this.partida.jugadores[this.partida.miTurno - 1].recursos.cereales
     let mineral:  number = this.partida.jugadores[this.partida.miTurno - 1].recursos.mineral
     return mineral > 2 && cereal > 1
@@ -837,7 +834,7 @@ export class GameService implements Connectable{
    * @return true si el usuario tiene los recursos 
    * suficientes como para construir un camino
    */
-  private puedeConstruirCamino(): boolean {
+  public puedeConstruirCamino(): boolean {
     let arcilla: number = this.partida.jugadores[this.partida.miTurno - 1].recursos.arcilla
     let madera:  number = this.partida.jugadores[this.partida.miTurno - 1].recursos.madera
     return arcilla > 0 && madera > 0
@@ -1011,6 +1008,23 @@ export class GameService implements Connectable{
     }
   }
 
+
+  private initPartidaPrueba(){
+    this.partida = {
+      miTurno: 1,
+      id: "", 
+      jugadores: this.inicializarJugadores([this.userService.username, "Some1", "Some2", "Some3"]),
+      turnoActual: 1, 
+      tablero: this.tableroPrueba(), 
+      resultadoTirada: 0, 
+      mensajes: [],
+      clock: -1,
+      PobladoDisponible: true,
+      CiudadDisponible: true, 
+      CaminoDisponible: true
+    }
+  }
+
   /**
    * @return un tablero de prueba para probar euncionamiento 
    * de la interfaz
@@ -1038,7 +1052,7 @@ export class GameService implements Connectable{
                        TipoAsentamiento.NADA,TipoAsentamiento.NADA,TipoAsentamiento.NADA,TipoAsentamiento.NADA,TipoAsentamiento.NADA,
                        TipoAsentamiento.NADA,TipoAsentamiento.NADA,TipoAsentamiento.NADA,TipoAsentamiento.NADA],
         posible_asentamiento: [
-                                [false,false,false,false,false,false,false,false,false,false,
+                                [false,false,false,false,false,true,false,false,false,false,
                                  false,false,false,false,false,false,false,false,false,false,
                                  false,false,false,false,false,false,false,false,false,false,
                                  false,false,false,false,false,false,false,false,false,false,
@@ -1222,6 +1236,10 @@ export class GameService implements Connectable{
     } else {
       console.log("Faltan los recursos del jugador 4")
     }
+
+    this.partida.CaminoDisponible = this.puedeConstruirCamino()
+    this.partida.CiudadDisponible = this.puedeConstruirCiudad()
+    this.partida.PobladoDisponible = this.puedeConstruirPoblado()
 
   }
 

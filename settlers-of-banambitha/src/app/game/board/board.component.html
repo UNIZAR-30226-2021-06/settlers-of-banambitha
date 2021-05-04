@@ -10,7 +10,13 @@
                 <div class='road target tl'></div>
                 <div class='road target l'></div>
                 <div class='road target tr'></div>
-                <div class='number three'></div> -->
+                <div class='number three'></div>
+                <div class='house target tl' [matMenuTriggerFor]="menu"></div>
+                <mat-menu #menu="matMenu">
+                    <button mat-menu-item>Item 1</button>
+                    <button mat-menu-item>Item 2</button>
+                </mat-menu>
+            -->
 <div class="container">
 
     <!-- TABLERO -->
@@ -62,9 +68,38 @@
             </li>
 
             <!--TERRENOS FILA 1-->
+
+            <!--HEXAGONO 1-->
             <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[0])">
-                <div *ngIf="this.gameService.partida.tablero.hexagonos.tipo[0] != tipoTerreno().DESIERTO" class='number' [ngClass]="this.numberNames[this.gameService.partida.tablero.hexagonos.valor[0]]" [class.robber]="this.gameService.partida.tablero.hexagonos.ladron == 0"></div>
-                <div class='house target t'></div>
+                <div *ngIf="this.gameService.partida.tablero.hexagonos.tipo[0] != tipoTerreno().DESIERTO"
+                class='number'
+                [ngClass]="this.numberNames[this.gameService.partida.tablero.hexagonos.valor[0]]"
+                [class.robber]="this.gameService.partida.tablero.hexagonos.ladron == 0"></div>
+
+                <!--ASENTAMIENTO 5-->
+                <div *ngIf="this.gameService.partida.tablero.vertices.asentamiento[5] == this.tipoAsentamiento().NADA">
+                    <div *ngIf="this.gameService.partida.tablero.vertices.posible_asentamiento[this.gameService.partida.miTurno - 1][5]"
+                    class='house target t'
+                    [matMenuTriggerFor]="construirPoblado5"
+                    [style.pointer-events]="(this.gameService.partida.turnoActual == this.gameService.partida.miTurno) ? 'auto' : 'none'"></div>
+                    <mat-menu  #construirPoblado5 >
+                        <button mat-menu-item [disabled]="(!this.gameService.partida.PobladoDisponible)" (click)="this.poblar()">Construir poblado</button>
+                    </mat-menu>
+                </div>
+                <div *ngIf="this.gameService.partida.tablero.vertices.asentamiento[5] != this.tipoAsentamiento().NADA">
+                    <div [ngClass]="this.settlementTipeMapping.get(this.gameService.partida.tablero.vertices.asentamiento[5])"
+                    class='t'
+                    [style.background-color]="this.settlementColorMapping.get(this.gameService.partida.tablero.vertices.asentamiento[5])"
+                    [matMenuTriggerFor]="mejorarPoblado5"
+                    [style.pointer-events]="((this.settlementProp.get(this.gameService.partida.tablero.vertices.asentamiento[5]) == this.gameService.partida.miTurno) &&
+                    (this.settlementTipeMapping.get(this.gameService.partida.tablero.vertices.asentamiento[5]) == this.CSSPoblado) &&
+                    (this.gameService.partida.turnoActual == this.gameService.partida.miTurno)) ? 'auto' : 'none'"></div>
+                    <mat-menu #mejorarPoblado5>
+                        <button mat-menu-item [disabled]="(!this.gameService.partida.CiudadDisponible)" (click)="this.ciudar()">Mejorar poblado</button>
+                    </mat-menu>
+                </div>
+                <!--FIN ASENTAMIENTO 5-->
+
                 <div class='house target tl'></div>
 
                 <div class='road target tl'></div>
@@ -73,7 +108,10 @@
             </li>
 
             <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[1])">
-                <div *ngIf="this.gameService.partida.tablero.hexagonos.tipo[1] != tipoTerreno().DESIERTO" class='number' [ngClass]="this.numberNames[this.gameService.partida.tablero.hexagonos.valor[1]]" [class.robber]="this.gameService.partida.tablero.hexagonos.ladron == 1"></div>
+                <div *ngIf="this.gameService.partida.tablero.hexagonos.tipo[1] != tipoTerreno().DESIERTO"
+                class='number'
+                [ngClass]="this.numberNames[this.gameService.partida.tablero.hexagonos.valor[1]]"
+                [class.robber]="this.gameService.partida.tablero.hexagonos.ladron == 1"></div>
                 <div class='house target t'></div>
                 <div class='house target tl'></div>
 

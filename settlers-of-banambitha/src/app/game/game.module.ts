@@ -18,6 +18,8 @@ import {MatSliderModule} from '@angular/material/slider';
 import { FormsModule } from '@angular/forms';
 import { MatDialogModule } from '@angular/material/dialog';
 import { AppComponent } from '../app.component';
+import {MatMenuModule} from '@angular/material/menu';
+import {MatButtonModule} from '@angular/material/button'; 
 
 
 
@@ -45,7 +47,8 @@ import { AppComponent } from '../app.component';
     MatSelectModule,
     MatSliderModule,
     FormsModule,
-    MatDialogModule
+    MatDialogModule,
+    MatMenuModule, 
   ],
   exports: [GameplayComponent],
   entryComponents: [InternalTradeDialog,ExternalTradeDialog],
