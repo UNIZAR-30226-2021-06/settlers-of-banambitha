@@ -304,6 +304,19 @@ export class GameService implements Connectable{
     if ( ! wsService.atatchConnectable(this)){
       this.onConnect();
     }
+
+    //Solo para pruebas
+    this.partida = {
+      miTurno: 1,
+      id: "", 
+      jugadores: this.inicializarJugadores([this.userService.username, "Some1", "Some2", "Some3"]),
+      turnoActual: 1, 
+      tablero: this.tableroPrueba(), 
+      resultadoTirada: 0, 
+      mensajes: [],
+      clock: -1
+    }
+
   }
 
 
@@ -935,6 +948,124 @@ export class GameService implements Connectable{
           basico: [], 
           mineral: 0,
           madera: 0
+        }
+      }
+    }
+  }
+
+  /**
+   * @return un tablero de prueba para probar euncionamiento 
+   * de la interfaz
+   */
+  private tableroPrueba(): Tablero {
+    return {
+      hexagonos: {
+        valor: [4,10,3,-1,6,5,6,12,11,4,8,9,3,2,9,10,11,5,8],
+        tipo: [TipoTerreno.MONTANYA,TipoTerreno.BOSQUE,TipoTerreno.PASTO,TipoTerreno.DESIERTO,TipoTerreno.CERRO,
+               TipoTerreno.SEMBRADO,TipoTerreno.PASTO,TipoTerreno.BOSQUE,TipoTerreno.PASTO,TipoTerreno.SEMBRADO,
+               TipoTerreno.MONTANYA,TipoTerreno.BOSQUE,TipoTerreno.SEMBRADO,TipoTerreno.BOSQUE,TipoTerreno.SEMBRADO,
+               TipoTerreno.CERRO,TipoTerreno.CERRO,TipoTerreno.PASTO,TipoTerreno.MONTANYA],
+        ladron: 5
+      }, 
+      vertices: {
+        asentamiento: [TipoAsentamiento.NADA,TipoAsentamiento.NADA,TipoAsentamiento.NADA,TipoAsentamiento.NADA,TipoAsentamiento.NADA,
+                       TipoAsentamiento.NADA,TipoAsentamiento.NADA,TipoAsentamiento.NADA,TipoAsentamiento.NADA,TipoAsentamiento.NADA,
+                       TipoAsentamiento.NADA,TipoAsentamiento.NADA,TipoAsentamiento.NADA,TipoAsentamiento.NADA,TipoAsentamiento.NADA,
+                       TipoAsentamiento.NADA,TipoAsentamiento.NADA,TipoAsentamiento.NADA,TipoAsentamiento.NADA,TipoAsentamiento.NADA,
+                       TipoAsentamiento.NADA,TipoAsentamiento.NADA,TipoAsentamiento.NADA,TipoAsentamiento.NADA,TipoAsentamiento.NADA,
+                       TipoAsentamiento.NADA,TipoAsentamiento.NADA,TipoAsentamiento.NADA,TipoAsentamiento.NADA,TipoAsentamiento.NADA,
+                       TipoAsentamiento.NADA,TipoAsentamiento.NADA,TipoAsentamiento.NADA,TipoAsentamiento.NADA,TipoAsentamiento.NADA,
+                       TipoAsentamiento.NADA,TipoAsentamiento.NADA,TipoAsentamiento.NADA,TipoAsentamiento.NADA,TipoAsentamiento.NADA,
+                       TipoAsentamiento.NADA,TipoAsentamiento.NADA,TipoAsentamiento.NADA,TipoAsentamiento.NADA,TipoAsentamiento.NADA,
+                       TipoAsentamiento.NADA,TipoAsentamiento.NADA,TipoAsentamiento.NADA,TipoAsentamiento.NADA,TipoAsentamiento.NADA,
+                       TipoAsentamiento.NADA,TipoAsentamiento.NADA,TipoAsentamiento.NADA,TipoAsentamiento.NADA],
+        posible_asentamiento: [
+                                [false,false,false,false,false,false,false,false,false,false,
+                                 false,false,false,false,false,false,false,false,false,false,
+                                 false,false,false,false,false,false,false,false,false,false,
+                                 false,false,false,false,false,false,false,false,false,false,
+                                 false,false,false,false,false,false,false,false,false,false,
+                                 false,false,false,false],
+
+                                [false,false,false,false,false,false,false,false,false,false,
+                                 false,false,false,false,false,false,false,false,false,false,
+                                 false,false,false,false,false,false,false,false,false,false,
+                                 false,false,false,false,false,false,false,false,false,false,
+                                 false,false,false,false,false,false,false,false,false,false,
+                                 false,false,false,false],
+                                 
+                                [false,false,false,false,false,false,false,false,false,false,
+                                 false,false,false,false,false,false,false,false,false,false,
+                                 false,false,false,false,false,false,false,false,false,false,
+                                 false,false,false,false,false,false,false,false,false,false,
+                                 false,false,false,false,false,false,false,false,false,false,
+                                 false,false,false,false],
+                                 
+                                [false,false,false,false,false,false,false,false,false,false,
+                                 false,false,false,false,false,false,false,false,false,false,
+                                 false,false,false,false,false,false,false,false,false,false,
+                                 false,false,false,false,false,false,false,false,false,false,
+                                 false,false,false,false,false,false,false,false,false,false,
+                                 false,false,false,false]
+                              ]
+      }, 
+      aristas: {
+        camino: [TipoCamino.NADA,TipoCamino.NADA,TipoCamino.NADA,TipoCamino.NADA,TipoCamino.NADA,
+                 TipoCamino.NADA,TipoCamino.NADA,TipoCamino.NADA,TipoCamino.NADA,TipoCamino.NADA,
+                 TipoCamino.NADA,TipoCamino.NADA,TipoCamino.NADA,TipoCamino.NADA,TipoCamino.NADA,
+                 TipoCamino.NADA,TipoCamino.NADA,TipoCamino.NADA,TipoCamino.NADA,TipoCamino.NADA,
+                 TipoCamino.NADA,TipoCamino.NADA,TipoCamino.NADA,TipoCamino.NADA,TipoCamino.NADA,
+                 TipoCamino.NADA,TipoCamino.NADA,TipoCamino.NADA,TipoCamino.NADA,TipoCamino.NADA,
+                 TipoCamino.NADA,TipoCamino.NADA,TipoCamino.NADA,TipoCamino.NADA,TipoCamino.NADA,
+                 TipoCamino.NADA,TipoCamino.NADA,TipoCamino.NADA,TipoCamino.NADA,TipoCamino.NADA,
+                 TipoCamino.NADA,TipoCamino.NADA,TipoCamino.NADA,TipoCamino.NADA,TipoCamino.NADA,
+                 TipoCamino.NADA,TipoCamino.NADA,TipoCamino.NADA,TipoCamino.NADA,TipoCamino.NADA,
+                 TipoCamino.NADA,TipoCamino.NADA,TipoCamino.NADA,TipoCamino.NADA,TipoCamino.NADA,
+                 TipoCamino.NADA,TipoCamino.NADA,TipoCamino.NADA,TipoCamino.NADA,TipoCamino.NADA,
+                 TipoCamino.NADA,TipoCamino.NADA,TipoCamino.NADA,TipoCamino.NADA,TipoCamino.NADA,
+                 TipoCamino.NADA,TipoCamino.NADA,TipoCamino.NADA,TipoCamino.NADA,TipoCamino.NADA,
+                 TipoCamino.NADA,TipoCamino.NADA], 
+        posible_camino:[
+                        [false,false,false,false,false,false,false,false,false,false,
+                         false,false,false,false,false,false,false,false,false,false,
+                         false,false,false,false,false,false,false,false,false,false,
+                         false,false,false,false,false,false,false,false,false,false,
+                         false,false,false,false,false,false,false,false,false,false,
+                         false,false,false,false,false,false,false,false,false,false,
+                         false,false,false,false,false,false,false,false,false,false,
+                         false,false],
+                        [false,false,false,false,false,false,false,false,false,false,
+                         false,false,false,false,false,false,false,false,false,false,
+                         false,false,false,false,false,false,false,false,false,false,
+                         false,false,false,false,false,false,false,false,false,false,
+                         false,false,false,false,false,false,false,false,false,false,
+                         false,false,false,false,false,false,false,false,false,false,
+                         false,false,false,false,false,false,false,false,false,false,
+                         false,false],
+                        [false,false,false,false,false,false,false,false,false,false,
+                         false,false,false,false,false,false,false,false,false,false,
+                         false,false,false,false,false,false,false,false,false,false,
+                         false,false,false,false,false,false,false,false,false,false,
+                         false,false,false,false,false,false,false,false,false,false,
+                         false,false,false,false,false,false,false,false,false,false,
+                         false,false,false,false,false,false,false,false,false,false,
+                         false,false],
+                        [false,false,false,false,false,false,false,false,false,false,
+                         false,false,false,false,false,false,false,false,false,false,
+                         false,false,false,false,false,false,false,false,false,false,
+                         false,false,false,false,false,false,false,false,false,false,
+                         false,false,false,false,false,false,false,false,false,false,
+                         false,false,false,false,false,false,false,false,false,false,
+                         false,false,false,false,false,false,false,false,false,false,
+                         false,false]
+                      ],
+        puertos: {
+          arcilla: 69,
+          lana: 68, 
+          cereal: 11, 
+          basico: [34, 60, 48, 3], 
+          mineral: 15,
+          madera: 20
         }
       }
     }

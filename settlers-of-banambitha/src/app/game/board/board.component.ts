@@ -1,6 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialog,MAT_DIALOG_DATA,MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { GameService, TipoTerreno } from 'src/app/service/game/game.service';
 
 
 @Component({
@@ -10,7 +11,23 @@ import { Router } from '@angular/router';
 })
 export class BoardComponent implements OnInit {
 
-  constructor(public dialog: MatDialog) { }
+
+  terrenoDesierto = TipoTerreno.DESIERTO
+
+
+  public hexMapping: Map<TipoTerreno, String> = new Map<TipoTerreno,String>([
+   [TipoTerreno.BOSQUE,   "wood"], 
+   [TipoTerreno.CERRO ,   "coal"], 
+   [TipoTerreno.DESIERTO, "sand"], 
+   [TipoTerreno.MONTANYA, "brick"], 
+   [TipoTerreno.PASTO,    "sheep"], 
+   [TipoTerreno.SEMBRADO, "wheat"], 
+  ]
+  )
+
+  public numberNames: Array<String> = ["", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve"]
+
+  constructor(public dialog: MatDialog, public gameService: GameService) { }
 
   ngOnInit(): void {
   }
@@ -18,6 +35,10 @@ export class BoardComponent implements OnInit {
   openSettingsDialog() {
     this.dialog.open(SettingsDialog);
 
+  }
+
+  public tipoTerreno(): typeof TipoTerreno {
+    return TipoTerreno
   }
 
 }
@@ -29,15 +50,15 @@ export class BoardComponent implements OnInit {
   styleUrls: ['settings-dialog.sass']
 })
 export class SettingsDialog {
-  constructor(@Inject(MAT_DIALOG_DATA) public data: SettingsDialog, private router:Router) {
+
+
+
+  constructor(@Inject(MAT_DIALOG_DATA) public data: SettingsDialog, private router:Router, public gameService: GameService) {
     
   }
 
   goHome() {
-    //<a routerLink="/home/play" routerLinkActive="active">Jugar</a>
-
     this.router.navigate(['/home/play'])
-
   }
 
 }
