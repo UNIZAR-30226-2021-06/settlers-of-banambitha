@@ -75,7 +75,7 @@ export enum Color {
 
 
 /**
- * 
+ * Tipos de recursos
  */
 export enum Recurso {
   MADERA, 
@@ -84,6 +84,20 @@ export enum Recurso {
   CEREAL, 
   ARCILLA
 }
+
+
+/**
+ * Tipos de puertos
+ */
+export enum TipoPuerto {
+  MADERA, 
+  MINERAL, 
+  LANA, 
+  ARCILLA, 
+  CEREAL, 
+  BASICO,
+}
+
 
 /**
  * Tipos de asentamientos (valores para un 
@@ -219,6 +233,10 @@ export interface Vertices {
   posible_asentamiento: Array<Array<Boolean>>
 }
 
+
+/**
+ * Puertos del tablero
+ */
 export interface Puertos {
   madera:   number, 
   mineral:   number, 
@@ -227,6 +245,7 @@ export interface Puertos {
   cereal:   number
   basico:   Array<Number>
 }
+
 
 /**
  * Información sobre TODAS las aristas
@@ -744,6 +763,45 @@ export class GameService implements Connectable{
 
 
   /**
+   * Devuelve el tipo de puerto que se encuentra en una arista
+   * Si la arista no tiene puerto devuelve null
+   * 
+   * @param Arista arista cuyo tipo de puerto se quiere comprobar
+   * @return tipo de puerto de la arista o null si no tenía puerto 
+   */
+  public TipoPuerto(Arista: number): TipoPuerto {
+
+    if ( this.partida.tablero.aristas.puertos.arcilla == Arista){
+      return TipoPuerto.ARCILLA
+    }
+
+    if ( this.partida.tablero.aristas.puertos.madera == Arista){
+      return TipoPuerto.MADERA
+    }
+
+    if ( this.partida.tablero.aristas.puertos.mineral == Arista){
+      return TipoPuerto.MINERAL
+    }
+
+    if ( this.partida.tablero.aristas.puertos.lana == Arista){
+      return TipoPuerto.LANA
+    }
+
+    if ( this.partida.tablero.aristas.puertos.cereal == Arista){
+      return TipoPuerto.CEREAL
+    }
+
+    for ( let i = 0; i < this.partida.tablero.aristas.puertos.basico.length; i++){
+      if (this.partida.tablero.aristas.puertos.basico[i] == Arista){
+        return TipoPuerto.BASICO
+      }
+    }
+
+    return null
+  }
+
+
+  /**
    * @return True si es el turno del usuario, false en caso 
    * contrario
    */
@@ -1060,12 +1118,12 @@ export class GameService implements Connectable{
                          false,false]
                       ],
         puertos: {
-          arcilla: 69,
-          lana: 68, 
-          cereal: 11, 
-          basico: [34, 60, 48, 3], 
-          mineral: 15,
-          madera: 20
+          arcilla: 14,
+          lana: 27, 
+          cereal: 20, 
+          basico: [34, 45, 63, 77], 
+          mineral: 46,
+          madera: 5
         }
       }
     }
