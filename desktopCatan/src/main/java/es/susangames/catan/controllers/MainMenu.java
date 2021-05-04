@@ -5,7 +5,6 @@ import es.susangames.catan.controllers.Instructions;
 import es.susangames.catan.service.UserService;
 import es.susangames.catan.service.LangService;
 import es.susangames.catan.service.ws;
-import es.susangames.catan.service.ws;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -33,6 +32,7 @@ import com.jfoenix.controls.JFXTextArea;
 import javafx.scene.control.TextField;
 import org.json.*;
 import java.util.ArrayList;
+
 
 
 
@@ -88,6 +88,7 @@ public class MainMenu {
     private ImageView catanLogo;
 
     private static Text _numberCoins;
+    private static JFXListView<AnchorPane> _playerList;
 
 
     private Image goldImg;
@@ -96,18 +97,21 @@ public class MainMenu {
 
     // Atributos busqueda de amigos
 
-    private Circle circleUserSearch;
-    private Button addFriend;
-    private Text userSearchName;
+    private static Circle circleUserSearch;
+    private static Button addFriend;
+    private static Text userSearchName;
+    private static String userSearched;
+    public static Boolean chatOpenned;
 
 
     public MainMenu() {
         goldImg = new Image("/img/gold_icon.png");
         userImage = new Image("/img/users/user_profile_image_original.png");
         catanLog = new Image("/img/catan-logo.png");
+        chatOpenned = false;
 
     }
-
+    
 
     /**
      * Método que actualiza los strings de esta pantalla.
@@ -143,9 +147,9 @@ public class MainMenu {
         }
     }
 
-    private void loadChat() {
-        playerList.getItems().clear();
-        playerList.getStylesheets().add("/css/shop.css"); 
+    private static void loadChat(String friendname) {
+        _playerList.getItems().clear();
+        _playerList.getStylesheets().add("/css/shop.css"); 
         AnchorPane anchorPane = new AnchorPane();
         anchorPane.setPrefSize(265, 818);
         anchorPane.setStyle("-fx-background-color: #965d62; -fx-background-radius: 12px");
@@ -159,10 +163,17 @@ public class MainMenu {
         chatContent.setMouseTransparent(true);
         chatContent.setFocusTraversable(false);   
 
-        ArrayList<JSONObject> itemsList = ws.msgs.get("f");
-        for(JSONObject aux : itemsList) {
-            System.out.println(aux);
+        ArrayList<JSONObject> itemsList = ws.msgs.get(friendname);
+        if(itemsList != null) {
+            if (itemsList.size() > 0 ){
+                for(JSONObject aux : itemsList) {
+                    chatContent.appendText(aux.getString("from") + ": "  + 
+                                            aux.getString("body") + "\n");
+                }
+            }
         }
+        
+       
         
         
         // Chat input
@@ -185,7 +196,10 @@ public class MainMenu {
 
         sendButton.setOnAction((ActionEvent event) -> {
             if(chatInput.getText().toString().length() > 0 ) {
-                chatContent.appendText("User: " + chatInput.getText().toString() + "\n"); 
+                chatContent.appendText(UserService.getUsername()  + ": " + 
+                                        chatInput.getText().toString() + "\n"); 
+                ws.sendPrivateMsg(friendname,chatInput.getText().toString());
+
             }
             chatInput.clear();  
          });
@@ -199,13 +213,9 @@ public class MainMenu {
         
 
         leaveButton.setOnAction((ActionEvent event) -> {
-            playerList.getItems().clear();
-            loadFriend("Bigotes", "/img/users/user_profile_image_5.png");
-            loadFriend("Laura", "/img/users/user_profile_image_6.png");
-            loadFriend("David", "/img/users/user_profile_image_7.png");
-            loadFriend("Developer", "/img/users/user_profile_image_8.png");
-            loadFriend("Agente secreto", "/img/users/user_profile_image_9.png");
-            loadFriend("World_champion", "/img/users/user_profile_image_10.png");
+            _playerList.getItems().clear();
+            getFriends();
+            chatOpenned = true;
          });
 
 
@@ -215,12 +225,12 @@ public class MainMenu {
         anchorPane.getChildren().add(sendButton);
         anchorPane.getChildren().add(leaveButton);
 
-        playerList.getItems().add(anchorPane);
+        _playerList.getItems().add(anchorPane);
 
     }
 
 
-    private void loadUserSearch() {
+    private static void loadUserSearch() {
         AnchorPane anchorPane = new AnchorPane();
         anchorPane.setPrefSize(5, 150);
         anchorPane.setStyle("-fx-background-color: #965d62");
@@ -244,7 +254,8 @@ public class MainMenu {
         searchButton.setEffect(shadow);
 
         searchButton.setOnAction((ActionEvent event) -> {
-            if(chatInput.getText().toString().length() > 0 ) {
+            if(chatInput.getText().toString().length() > 0 && 
+               !chatInput.getText().toString().equals(UserService.getUsername())) {
                 anchorPane.getChildren().remove(circleUserSearch);
                 anchorPane.getChildren().remove(addFriend);
                 anchorPane.getChildren().remove(userSearchName);
@@ -268,8 +279,10 @@ public class MainMenu {
                     addFriend.setEffect(shadow);
 
                     addFriend.setOnAction((ActionEvent event_add) -> {
-                            // TODO: Peticion de amistad
-                            System.out.println("holaaa");
+                            ws.sendFriendRequest(userSearched);
+                            anchorPane.getChildren().remove(circleUserSearch);
+                            anchorPane.getChildren().remove(addFriend);
+                            anchorPane.getChildren().remove(userSearchName);
                     });
                     anchorPane.getChildren().add(addFriend);
 
@@ -279,6 +292,7 @@ public class MainMenu {
                     userSearchName.setLayoutX(anchorPane.getLayoutX() + 105 );
                     userSearchName.setLayoutY(anchorPane.getLayoutY() + 50);
                     userSearchName.setFill(Color.WHITE);
+                    userSearched =  user.get("nombre").toString();
                     anchorPane.getChildren().add(userSearchName);
 
 
@@ -292,20 +306,19 @@ public class MainMenu {
                 }
                 
             }
-            chatInput.clear();  
-
+            chatInput.clear();
         });
 
 
 
         anchorPane.getChildren().add(chatInput);
         anchorPane.getChildren().add(searchButton);
-        playerList.getItems().add(anchorPane);
+        _playerList.getItems().add(anchorPane);
 
     }
 
 
-    private Circle createCircleUserImg( JSONObject user) {
+    private static Circle createCircleUserImg( JSONObject user) {
         Circle circle = new Circle();
         circle.setCenterX(10.0f);
         circle.setCenterY(10.0f);
@@ -317,7 +330,7 @@ public class MainMenu {
     }
 
 
-    private void loadFriend(String username, String imgURL) {
+    private static void loadFriend(String username, String imgURL) {
         AnchorPane anchorPane = new AnchorPane();
         anchorPane.setPrefSize(5, 150);
         anchorPane.setStyle("-fx-background-color: #965d62");
@@ -353,7 +366,8 @@ public class MainMenu {
         chatButton.setEffect(shadow);
 
         chatButton.setOnAction((ActionEvent event) -> {
-           loadChat();
+           loadChat(username);
+           chatOpenned = true;
          });
 
 
@@ -372,7 +386,53 @@ public class MainMenu {
 
         anchorPane.getChildren().add(chatButton);
         anchorPane.getChildren().add(inviteButton);
-        playerList.getItems().add(anchorPane);
+        _playerList.getItems().add(anchorPane);
+    }
+
+
+
+    public static void loadPendingReq(String username, String imgURL) {
+        AnchorPane anchorPane = new AnchorPane();
+        anchorPane.setPrefSize(5, 150);
+        anchorPane.setStyle("-fx-background-color: #965d62");
+
+        // Image usuario
+        Circle circle = new Circle();
+        circle.setCenterX(10.0f);
+        circle.setCenterY(10.0f);
+        circle.setRadius(45.0f);
+        circle.setLayoutX(anchorPane.getLayoutX() + 45);
+        circle.setLayoutY(anchorPane.getLayoutY() + 45);
+        Image imgSkin = new Image(imgURL);
+        circle.setFill(new ImagePattern(imgSkin));
+        anchorPane.getChildren().add(circle);
+
+        // Nombre usuario
+        Text tName = new Text(10, 10, username);
+        tName.setFont(new Font(15));
+        tName.setLayoutX(anchorPane.getLayoutX() + 85 );
+        tName.setLayoutY(anchorPane.getLayoutY() + 15);
+        tName.setFill(Color.WHITE);
+        anchorPane.getChildren().add(tName);
+
+
+        // Boton aceptar invitacion 
+        Button chatButton = new Button();
+        chatButton.setPrefSize(80,15);
+        chatButton.setLayoutX(anchorPane.getLayoutX() + 120);
+        chatButton.setLayoutY(anchorPane.getLayoutY() + 65);
+        chatButton.setStyle("-fx-background-color: #c7956d; -fx-background-radius: 12px");
+        chatButton.setText(LangService.getMapping("accept_friend"));
+        DropShadow shadow = new DropShadow();
+        chatButton.setEffect(shadow);
+
+        chatButton.setOnAction((ActionEvent event) -> {
+           ws.acceptFriendRequest(username);
+         });
+
+
+        anchorPane.getChildren().add(chatButton);
+        _playerList.getItems().add(anchorPane);
     }
 
 
@@ -384,6 +444,31 @@ public class MainMenu {
         _numberCoins.setText(UserService.getSaldo().toString());
     }
 
+    
+    public static void getFriends() {
+        _playerList.getItems().clear();
+        loadUserSearch();
+
+        JSONArray pendingReqs = UserService.pendingFriendReq();
+        for (int i = 0; i < pendingReqs.length(); i++) {
+            JSONObject object = pendingReqs.getJSONObject(i);
+            String nombreAmigo = object.getString("from").toString();
+            String urlAvatar = UserService.getUserImg(nombreAmigo);
+            loadPendingReq(nombreAmigo, urlAvatar);
+        }
+
+
+
+        JSONArray friends = UserService.getFriends();
+        for (int i = 0; i < friends.length(); i++) {
+            JSONObject object = friends.getJSONObject(i);
+            String nombreAmigo = object.getString("usuario2_id").toString();
+            String urlAvatar = UserService.getUserImg(nombreAmigo);
+            loadFriend(nombreAmigo, urlAvatar);
+        }
+
+    }
+    
     /**
      * Inicializa la scene del menu principal.
      */
@@ -391,7 +476,8 @@ public class MainMenu {
     public void initialize(){
         updateStrings();
         _numberCoins = numberCoins;
-        playerList.getStylesheets().add("/css/shop.css"); 
+        _playerList = playerList;
+        _playerList.getStylesheets().add("/css/shop.css"); 
 
         mainMenuBP.prefHeightProperty().bind(mainMenu.heightProperty());
         mainMenuBP.prefWidthProperty().bind(mainMenu.widthProperty());
@@ -402,15 +488,10 @@ public class MainMenu {
         goldImage.setImage(goldImg);
         userImg.setFill(new ImagePattern(userImage));
 
-        loadUserSearch();
+       
 
         //TODO: Cargar amigos. (Ejemplo de prueba)
-        loadFriend("Bigotes", "/img/users/user_profile_image_5.png");
-        loadFriend("Laura", "/img/users/user_profile_image_6.png");
-        loadFriend("David", "/img/users/user_profile_image_7.png");
-        loadFriend("Developer", "/img/users/user_profile_image_8.png");
-        loadFriend("Agente secreto", "/img/users/user_profile_image_9.png");
-        loadFriend("World_champion", "/img/users/user_profile_image_10.png");
+        getFriends();
 
 
         // Actualizar informacion del

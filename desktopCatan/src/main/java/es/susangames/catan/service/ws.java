@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
+import es.susangames.catan.controllers.MainMenu;
 
 import org.json.JSONObject;
 import org.springframework.messaging.converter.StringMessageConverter;
@@ -21,11 +22,18 @@ import org.springframework.web.socket.sockjs.client.SockJsClient;
 import org.springframework.web.socket.sockjs.client.Transport;
 import org.springframework.web.socket.sockjs.client.WebSocketTransport;
 import org.json.*;
+import javafx.application.Platform;
 
 
 public class ws {
 
     public static Map<String,ArrayList<JSONObject>> msgs;
+    private static final String  wsUrl = "http://localhost:8080/catan-stomp-ws-ep";
+    private static final String chatUrl = "/chat/";
+    private static final String newFriendReqUrl = "/peticion/";
+    private static final String sendFriendRequestUrl = "/app/enviar/peticion";
+    private static final String acceptFriendRequestUrl = "/app/aceptar/peticion";
+    public static final StompSession session;
 
 
     static {
@@ -38,30 +46,18 @@ public class ws {
         WebSocketStompClient stompClient = new WebSocketStompClient(sockJsClient);
         stompClient.setMessageConverter(new StringMessageConverter());
 
-        StompSession session;
         try {
             session = stompClient
                     .connect(
-                        "http://localhost:8080/catan-stomp-ws-ep", 
+                        wsUrl, 
                         new StompSessionHandlerAdapter() {})
                     .get();
         } catch (InterruptedException | ExecutionException e) {
             throw new RuntimeException(e);
         }
-
-        Map<String,String> map = new HashMap<String,String>(); 
-        map.put("from", "f"); 
-        map.put("to", "f");
-        map.put("body", "Greeting sir!"); 
-
-        Map<String,String> map2 = new HashMap<String,String>(); 
-        map2.put("from", "f"); 
-        map2.put("to", "f");
-        map2.put("body", "Bye!"); 
-        
-        
+              
         // Chat
-        session.subscribe("/chat/" + UserService.getUsername(), new StompFrameHandler() {
+        session.subscribe( chatUrl + UserService.getUsername(), new StompFrameHandler() {
             @Override
             public Type getPayloadType(StompHeaders headers) {
                 return String.class;
@@ -71,9 +67,18 @@ public class ws {
                 msgReceived( payload);
             }
         });
-        for(int i = 0;i < 1000000000; ++i) {}
-        session.send("/app/enviar/privado", new JSONObject(map).toString()); 
-        session.send("/app/enviar/privado", new JSONObject(map2).toString()); 
+       
+        // New friend request
+       session.subscribe( newFriendReqUrl + UserService.getUsername(), new StompFrameHandler() {
+            @Override
+            public Type getPayloadType(StompHeaders headers) {
+                return String.class;
+            }
+            @Override
+            public void handleFrame(StompHeaders headers, Object payload) {
+                handlePetition(payload.toString());
+            }
+        });
     }
 
     public static void initialize () {}
@@ -81,7 +86,6 @@ public class ws {
 
     private static void msgReceived(Object msgContent) {
         JSONObject object = new JSONObject((String) msgContent);
-        
         ArrayList<JSONObject> itemsList = msgs.get(object.getString("from"));
         
         if(itemsList == null) {
@@ -91,6 +95,57 @@ public class ws {
         } else {
              itemsList.add(object);
         }
+    }
+
+
+    public static void sendFriendRequest(String friendName) {
+        JSONObject myObject = new JSONObject();
+        myObject.put("from", UserService.getUsername());
+        myObject.put("to", friendName);
+        session.send(sendFriendRequestUrl, myObject.toString());
+    }
+
+    private static void handlePetition(String msgContent) {
+        JSONObject object = new JSONObject(msgContent);
+        String type = object.getString("type");
+
+        if(!MainMenu.chatOpenned && type.equals("REQUEST")) {
+            Platform.runLater(
+            () -> {
+               MainMenu.getFriends();
+            }
+            );
+        }
+    }
+
+    public static void acceptFriendRequest(String friendName) {
+        JSONObject myObject = new JSONObject();
+        myObject.put("from", UserService.getUsername());
+        myObject.put("to", friendName);
+        session.send(acceptFriendRequestUrl, myObject.toString());
+        Platform.runLater(
+            () -> {
+               MainMenu.getFriends();
+            }
+        );
+    }
+
+    public static void sendPrivateMsg(String friend, String body) {
+        JSONObject object = new JSONObject();
+        object.put("from", UserService.getUsername());
+        object.put("to", friend);
+        object.put("body", body); 
+
+       ArrayList<JSONObject> itemsList = msgs.get(friend);
+        
+        if(itemsList == null) {
+            itemsList = new ArrayList<JSONObject>();
+            itemsList.add(object);
+            msgs.put(friend, itemsList);
+        } else {
+            itemsList.add(object);
+        }
+        session.send("/app/enviar/privado", object.toString()); 
     }
 
 }

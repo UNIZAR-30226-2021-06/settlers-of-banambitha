@@ -10,6 +10,10 @@ public class UserService {
     private static final String addUrl = baseUrl + "/add";
     private static final String validateUrl = baseUrl + "/validate";
     private static final String updateUrl = baseUrl + "/update";
+    private static final String findUrl = baseUrl + "/find";
+    private static final String baseFriendUrl = "http://localhost:8080/amigo";
+    private static final String friendsListUrl = baseFriendUrl + "/list";
+    private static final String pendigReqUrl = baseFriendUrl + "/pending-r";
 
     private static String username;
     private static String mail;
@@ -123,4 +127,36 @@ public class UserService {
         } catch(Exception e) {}
     }
     
+    public static JSONArray getFriends() {
+        JSONArray response;
+        try {
+            response = netService.getArr(friendsListUrl + "/" + username);
+        } catch(Exception e) {
+            return null;
+        }
+        return response;
+    }
+
+
+    // Name debe ser el nombre de un usuario valido
+    public static String getUserImg(String name) {
+        JSONObject myObject;
+        try {
+            myObject = netService.get(findUrl + "/" + name);
+        } catch(Exception e) {
+            return null;
+        }
+        return "/img/users/" + myObject.getString("avatar").toString();
+    }
+
+
+    public static JSONArray pendingFriendReq() {
+        JSONArray response;
+        try {
+            response = netService.getArr(pendigReqUrl + "/" + username);
+        } catch(Exception e) {
+            return null;
+        }
+        return response;
+    }
 }

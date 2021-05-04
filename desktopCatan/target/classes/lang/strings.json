@@ -207,6 +207,11 @@
         "esp": "Aceptar"
     },
 
+    "accept_friend": {
+        "eng": "Add",
+        "esp": "Añadir"
+    },
+
     "new_psw": {
         "eng": "Change your password",
         "esp": "Cambie su contraseña"
