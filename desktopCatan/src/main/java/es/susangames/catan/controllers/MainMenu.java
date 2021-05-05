@@ -88,7 +88,7 @@ public class MainMenu {
     private ImageView catanLogo;
 
     private static Text _numberCoins;
-    private static JFXListView<AnchorPane> _playerList;
+    public static JFXListView<AnchorPane> _playerList;
 
 
     private Image goldImg;
@@ -102,6 +102,8 @@ public class MainMenu {
     private static Text userSearchName;
     private static String userSearched;
     public static Boolean chatOpenned;
+    public static String userChatOpenned;
+    public static JFXTextArea _chatContent;
 
 
     public MainMenu() {
@@ -109,7 +111,7 @@ public class MainMenu {
         userImage = new Image("/img/users/user_profile_image_original.png");
         catanLog = new Image("/img/catan-logo.png");
         chatOpenned = false;
-
+        userChatOpenned ="";
     }
     
 
@@ -148,6 +150,7 @@ public class MainMenu {
     }
 
     private static void loadChat(String friendname) {
+        userChatOpenned = friendname;
         _playerList.getItems().clear();
         _playerList.getStylesheets().add("/css/shop.css"); 
         AnchorPane anchorPane = new AnchorPane();
@@ -162,6 +165,7 @@ public class MainMenu {
         chatContent.setEditable(false);
         chatContent.setMouseTransparent(true);
         chatContent.setFocusTraversable(false);   
+        _chatContent = chatContent;
 
         ArrayList<JSONObject> itemsList = ws.msgs.get(friendname);
         if(itemsList != null) {
@@ -215,7 +219,7 @@ public class MainMenu {
         leaveButton.setOnAction((ActionEvent event) -> {
             _playerList.getItems().clear();
             getFriends();
-            chatOpenned = true;
+            chatOpenned = false;
          });
 
 
@@ -224,7 +228,6 @@ public class MainMenu {
         anchorPane.getChildren().add(chatInput);
         anchorPane.getChildren().add(sendButton);
         anchorPane.getChildren().add(leaveButton);
-
         _playerList.getItems().add(anchorPane);
 
     }
@@ -431,7 +434,21 @@ public class MainMenu {
          });
 
 
+         Button declineButton = new Button();
+         declineButton.setPrefSize(80,15);
+         declineButton.setLayoutX(anchorPane.getLayoutX() + 120);
+         declineButton.setLayoutY(anchorPane.getLayoutY() + 105);
+         declineButton.setStyle("-fx-background-color: #c7956d; -fx-background-radius: 12px");
+         declineButton.setText(LangService.getMapping("accept_friend"));
+         declineButton.setEffect(shadow);
+ 
+         declineButton.setOnAction((ActionEvent event) -> {
+            ws.declineFriendRequest(username);
+          });
+
+
         anchorPane.getChildren().add(chatButton);
+        anchorPane.getChildren().add(declineButton);
         _playerList.getItems().add(anchorPane);
     }
 
@@ -474,6 +491,7 @@ public class MainMenu {
      */
     @FXML
     public void initialize(){
+        
         updateStrings();
         _numberCoins = numberCoins;
         _playerList = playerList;

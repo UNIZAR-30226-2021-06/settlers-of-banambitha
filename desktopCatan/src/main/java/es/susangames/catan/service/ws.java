@@ -33,6 +33,7 @@ public class ws {
     private static final String newFriendReqUrl = "/peticion/";
     private static final String sendFriendRequestUrl = "/app/enviar/peticion";
     private static final String acceptFriendRequestUrl = "/app/aceptar/peticion";
+    private static final String declineFriendRequestUrl = "/app/rechazar/peticion";
     public static final StompSession session;
 
 
@@ -95,6 +96,18 @@ public class ws {
         } else {
              itemsList.add(object);
         }
+
+        if(MainMenu.chatOpenned) {
+            if(MainMenu.userChatOpenned.equals(object.getString("from"))) {
+                Platform.runLater(new Runnable() {
+                    @Override public void run() {
+                        MainMenu._chatContent.appendText(object.getString("from") + 
+                                                        ": "  + 
+                                                        object.getString("body") + "\n");
+                    }
+                  });               
+            }
+        }
     }
 
 
@@ -108,14 +121,15 @@ public class ws {
     private static void handlePetition(String msgContent) {
         JSONObject object = new JSONObject(msgContent);
         String type = object.getString("type");
+        String from = object.getString("from");
 
-        if(!MainMenu.chatOpenned && type.equals("REQUEST")) {
-            Platform.runLater(
-            () -> {
-               MainMenu.getFriends();
-            }
-            );
-        }
+        if(!MainMenu.chatOpenned) {
+            Platform.runLater(new Runnable() {
+                @Override public void run() {
+                    MainMenu.getFriends();
+                }
+              });
+        } 
     }
 
     public static void acceptFriendRequest(String friendName) {
@@ -123,12 +137,35 @@ public class ws {
         myObject.put("from", UserService.getUsername());
         myObject.put("to", friendName);
         session.send(acceptFriendRequestUrl, myObject.toString());
-        Platform.runLater(
-            () -> {
-               MainMenu.getFriends();
-            }
-        );
+        try{
+            Thread.sleep(500); // Esperamos a que se procese 
+            Platform.runLater(new Runnable() {
+                @Override public void run() {
+                    MainMenu.getFriends();
+                }
+              });
+        } catch(Exception e){}
+       
+        
+       
     }
+
+    public static void declineFriendRequest(String friendName) {
+        JSONObject myObject = new JSONObject();
+        myObject.put("from", UserService.getUsername());
+        myObject.put("to", friendName);
+        session.send(declineFriendRequestUrl, myObject.toString());
+        try{
+            Thread.sleep(500); // Esperamos a que se procese 
+            Platform.runLater(new Runnable() {
+                @Override public void run() {
+                    MainMenu.getFriends();
+                }
+              });
+        } catch(Exception e){}
+    }
+
+
 
     public static void sendPrivateMsg(String friend, String body) {
         JSONObject object = new JSONObject();
