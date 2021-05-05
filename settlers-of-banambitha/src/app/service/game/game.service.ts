@@ -105,10 +105,10 @@ export enum TipoPuerto {
  */
 export enum TipoAsentamiento {
   NADA             = "Nada", 
-  POBLADO_PLAYER_1 = "PobladoAzul", 
-  POBLADO_PLAYER_2 = "PobladoRojo", 
-  POBLADO_PLAYER_3 = "PobladoAmarillo", 
-  POBLADO_PLAYER_4 = "PobladoVerde", 
+  POBLADO_PLAYER_1 = "PuebloAzul", 
+  POBLADO_PLAYER_2 = "PuebloRojo", 
+  POBLADO_PLAYER_3 = "PuebloAmarillo", 
+  POBLADO_PLAYER_4 = "PuebloVerde", 
   CIUDAD_PLAYER_1  = "CiudadAzul", 
   CIUDAD_PLAYER_2  = "CiudadRojo", 
   CIUDAD_PLAYER_3  = "CiudadAmarillo", 
@@ -314,7 +314,6 @@ export class GameService implements Connectable{
   //Cliente de stomp
   private stompClient: any
 
-
   /**
    * Constructor. Se suscribe a los topics necesarios para poder gestionar
    * toda la dinámica juego.
@@ -353,7 +352,7 @@ export class GameService implements Connectable{
    * la partida de prueba
    */
   public comenzarPartidaPrueba( simulateMoves: boolean){
-    
+
     let that = this
     this.test_partida_topic_id = this.stompClient.subscribe(WsService.partida_test_topic +
       this.userService.getUsername(), function (message) {
@@ -369,7 +368,7 @@ export class GameService implements Connectable{
         console.log("Error crítico")
       }
     });
-
+    this.router.navigate(["/board"])
     //Solicitar inicio de partida
     this.stompClient.send(WsService.partidaTestComenzar, {},
       JSON.stringify({from: this.userService.getUsername(), simulate: simulateMoves}) )
@@ -761,6 +760,9 @@ export class GameService implements Connectable{
   *****************************************************************/
 
 
+  /**
+   * Actualiza los atributos precalculados de la clase
+   */
   private actualizarPrecalculos(): void {
     this.partida.CaminoDisponible  = this.puedeConstruirCamino()
     this.partida.CiudadDisponible  = this.puedeConstruirCiudad()
@@ -1060,7 +1062,7 @@ export class GameService implements Connectable{
     this.partida = {
       miTurno: 1,
       id: "", 
-      jugadores: this.inicializarJugadores([this.userService.username, "Some1", "Some2", "Some3"]),
+      jugadores: this.inicializarJugadores(["Me!", "Some1", "Some2", "Some3"]),
       turnoActual: 1, 
       tablero: this.tableroPrueba(), 
       resultadoTirada: 0, 

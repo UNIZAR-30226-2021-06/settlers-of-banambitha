@@ -318,8 +318,8 @@ ol.odd {
     width: $number-size;
     border-radius: $number-size;
     border: 1px solid black;
-    top: 42px;
-    left: 18px;
+    top: 37px;
+    left: 13px;
     transform: rotate(90deg);
     background-color: #f9e4c6;
 }
@@ -574,21 +574,4 @@ ol.odd {
 
 .hex .house.blue {
     background-color: #0000ff;
-}
-
-.dice {
-    font-size: 16px;
-    color: white;
-    font-weight: bold;
-}
-
-.dice-button {
-    background-color: #965d62;
-    border-radius: 12px;
-    margin-left: 10px;
-    margin-right: 10px;
-}
-
-.dice-container {
-    background-color: #414147f1;
 }

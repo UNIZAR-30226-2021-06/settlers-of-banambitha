@@ -1,5 +1,8 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { MatDialog,MAT_DIALOG_DATA,MatDialogRef } from '@angular/material/dialog';
+import {MatAccordion} from '@angular/material/expansion';
+import { GameService } from 'src/app/service/game/game.service';
+import { BoardComponent } from '../board/board.component';
 
 
 @Component({
@@ -9,10 +12,21 @@ import { MatDialog,MAT_DIALOG_DATA,MatDialogRef } from '@angular/material/dialog
 })
 export class PlayerInfoComponent implements OnInit {
 
-  constructor(public dialog: MatDialog) { }
+
+  public readonly playerColors: Array<String> = [BoardComponent.player1Color,
+                                                 BoardComponent.player2Color,
+                                                 BoardComponent.player3Color,
+                                                 BoardComponent.player4Color]
+
+  constructor(public dialog: MatDialog, public gameService: GameService) { }
 
   ngOnInit(): void {
   }
+
+  public Comerciar(jugador: number): void {
+    console.log("comerciar con el jugador" + jugador)
+  }
+
   openCardsDialog() {
     this.dialog.open(DialogData);
   }

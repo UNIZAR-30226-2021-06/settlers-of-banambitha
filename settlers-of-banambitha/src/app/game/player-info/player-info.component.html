@@ -1,6 +1,5 @@
-
-<div fxLayout="column" fxLayoutGap="12px">
-    <br>
+<div class="info" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="12px">
+    <!-- <br>
     <mat-card class="info_1"> 
         <p class="nombre"> World_champion </p> 
     </mat-card>
@@ -25,7 +24,104 @@
         </button>
         <button class ="button_settings" mat-icon-button (click)="openExternalTradeDialog()">
             <p class="nombre_menus">Comercio marítimo</p>
-        </button>  
+        </button>   -->
+
+<mat-accordion>
+
+  <mat-expansion-panel *ngFor="let user of this.gameService.partida.jugadores; index as i">
+    <mat-expansion-panel-header>
+      <mat-panel-title [style.font-weight]="i != this.gameService.partida.miTurno - 1 ? 'normal' : 'bold'">
+        <mat-icon aria-hidden="false" aria-label="Example home icon" [style.color]="playerColors[i]">panorama_wide_angle_select</mat-icon> &nbsp;
+        {{user.nombre}}
+      </mat-panel-title>
+      <mat-panel-description>
+        {{user.puntos}} puntos
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+    <button mat-raised-button *ngIf="i != this.gameService.partida.miTurno - 1"
+    (click)="Comerciar(i + 1)"> Comerciar </button>
+    <mat-tab-group mat-align-tabs="center">
+        <mat-tab label="Materiales">
+            <table class="mat-table center" >
+                <tr class="mat-header-row">
+                    <th class="mat-header-cell">Material</th>
+                    <th class="mat-header-cell">Cantidad</th>
+                </tr>
+                <tr class="mat-row">
+                    <td class="mat-cell">Madera</td>
+                    <td class="mat-cell center_td">{{user.recursos.madera}}</td>
+                </tr>
+                <tr class="mat-row">
+                    <td class="mat-cell">Mineral</td>
+                    <td class="mat-cell center_td">{{user.recursos.mineral}}</td>
+                </tr>
+                <tr class="mat-row">
+                    <td class="mat-cell">Arcilla</td>
+                    <td class="mat-cell center_td">{{user.recursos.arcilla}}</td>
+                </tr>
+                <tr class="mat-row">
+                    <td class="mat-cell">Lana</td>
+                    <td class="mat-cell center_td">{{user.recursos.lana}}</td>
+                </tr>
+                <tr class="mat-row">
+                    <td class="mat-cell">Cereal</td>
+                    <td class="mat-cell center_td">{{user.recursos.cereales}}</td>
+                </tr>
+            </table>
+        </mat-tab>
+        <mat-tab label="Cartas">
+            <mat-grid-list cols="2">
+                <mat-grid-tile>
+                    <table class="mat-table" >
+                        <tr class="mat-header-row">
+                            <th class="mat-header-cell">Carta</th>
+                            <th class="mat-header-cell">Cantidad</th>
+                        </tr>
+                        <tr class="mat-row">
+                            <td class="mat-cell">D1</td>
+                            <td class="mat-cell center_td">{{user.cartas.D1}}</td>
+                        </tr>
+                        <tr class="mat-row">
+                            <td class="mat-cell">D2</td>
+                            <td class="mat-cell center_td">{{user.cartas.D2}}</td>
+                        </tr>
+                        <tr class="mat-row">
+                            <td class="mat-cell">D3</td>
+                            <td class="mat-cell center_td">{{user.cartas.D3}}</td>
+                        </tr>
+                        <tr class="mat-row">
+                            <td class="mat-cell">D4</td>
+                            <td class="mat-cell center_td">{{user.cartas.D4}}</td>
+                        </tr>
+                        <tr class="mat-row">
+                            <td class="mat-cell">D5</td>
+                            <td class="mat-cell center_td">{{user.cartas.D5}}</td>
+                        </tr>
+                    </table>
+                </mat-grid-tile>
+                <mat-grid-tile>
+                    <table class="mat-table" >
+                        <tr class="mat-header-row">
+                            <th class="mat-header-cell">Carta</th>
+                            <th class="mat-header-cell">Cantidad</th>
+                        </tr>
+                        <tr class="mat-row">
+                            <td class="mat-cell">E1</td>
+                            <td class="mat-cell center_td">{{user.cartas.E1}}</td>
+                        </tr>
+                        <tr class="mat-row">
+                            <td class="mat-cell">E2</td>
+                            <td class="mat-cell center_td">{{user.cartas.E2}}</td>
+                        </tr>
+                    </table>
+                </mat-grid-tile>
+            </mat-grid-list>
+        </mat-tab>
+    </mat-tab-group>
+  </mat-expansion-panel>
+
+</mat-accordion>
+
 
 </div>
 

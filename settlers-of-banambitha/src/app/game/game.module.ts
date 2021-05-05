@@ -22,8 +22,10 @@ import {MatMenuModule} from '@angular/material/menu';
 import {MatButtonModule} from '@angular/material/button';
 import { SettlementComponent } from './board/settlement/settlement.component';
 import { RoadComponent } from './board/road/road.component'; 
-
-
+import {MatGridListModule} from '@angular/material/grid-list'
+import {MatExpansionModule} from '@angular/material/expansion';
+import {MatTabsModule} from '@angular/material/tabs';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
 
 
 
@@ -53,6 +55,11 @@ import { RoadComponent } from './board/road/road.component';
     FormsModule,
     MatDialogModule,
     MatMenuModule, 
+    MatGridListModule,
+    MatExpansionModule, 
+    MatTabsModule,
+    MatButtonModule,
+    MatProgressBarModule
   ],
   exports: [GameplayComponent],
   entryComponents: [InternalTradeDialog,ExternalTradeDialog],

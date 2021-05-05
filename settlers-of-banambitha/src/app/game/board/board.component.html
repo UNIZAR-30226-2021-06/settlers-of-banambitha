@@ -126,7 +126,6 @@
                     <div *ngIf="this.gameService.TipoPuerto(11) != null" class='harbor-piece l'></div>
                     <div *ngIf="this.gameService.TipoPuerto(30) != null" class='harbor-piece bl'></div>
                 </div>
-                <div class='house target tl'></div>
 
                 <board-settlement vertice=10  posicion="tl"></board-settlement>
                 <board-road arista=11  posicion="l"></board-road>
@@ -552,32 +551,5 @@
             </li>
 
         </ol>
-    </div>
-
-    <!-- Botones -->
-    <div fxLayout="row" fxLayoutAlign="center center">
-        <button class="dice-button" mat-fab color="primary">
-          <p class="dice"> 
-          Pasar turno
-          </p>
-        </button>
-
-        <button class="dice-button" mat-fab color="primary">
-          <p class="dice"> 
-          Turno: World_champion
-          </p>
-        </button>
-
-        <button class="dice-button" mat-fab color="primary">
-          <p class="dice"> 
-          Dados: 8
-          </p>
-        </button>
-
-        <button class="dice-button" mat-fab color="primary" (click)="openSettingsDialog()">
-          <p class="dice"> 
-          Ajustes
-          </p>
-        </button>
     </div>
 </div>
