@@ -53,9 +53,10 @@ public class Gameplay {
     private static double horizontal_right_gap = 115;
     private static double horizontal_left_gap = 60;
     private static double vertical_gap = 120;
+    private static int numberRoads = 72;
 
-    private Polygon[] hexagons;
-    private ToggleButton[] roads;
+    private static Polygon[] hexagons;
+    public static ToggleButton[] roads;
     private Image imgSea, imgDes, imgMou, imgFie, imgFor, imgHil; 
  
     @FXML
@@ -140,7 +141,7 @@ public class Gameplay {
 
     public Gameplay() {
         hexagons = new Polygon[37];
-        roads = new ToggleButton[57];
+        roads = new ToggleButton[numberRoads];
         imgSea = new Image("/img/sea.png");
         imgDes = new Image("/img/sand-desert.jpg"); 
         imgMou = new Image("/img/mountain.png");  
@@ -247,66 +248,143 @@ public class Gameplay {
                  (i > 28 && i <= 31));  
     }
 
-    private ToggleButton createRoadN(Polygon pol) {
+    private ToggleButton createRoadN(Polygon pol, int pos) {
         ToggleButton _road = new ToggleButton();
         _road.setPrefSize(1,30);
         _road.setLayoutX(pol.getLayoutX() - 65);
         _road.setLayoutY(pol.getLayoutY() - 15);
-        setColorButonOnClick(_road);
+        roads[pos] =  _road;
+        setColorButonOnClick(_road, pos);
         return _road;
     }
 
-    private ToggleButton createRoadSE(Polygon pol) {
+    private ToggleButton createRoadSE(Polygon pol, int pos) {
         ToggleButton _roadSE = new ToggleButton();
         _roadSE.setPrefSize(1,30);
         _roadSE.setLayoutX(pol.getLayoutX() + 23);
         _roadSE.setLayoutY(pol.getLayoutY() - 66);
         _roadSE.setRotate(120);
-        setColorButonOnClick(_roadSE);
+        roads[pos] =  _roadSE;
+        setColorButonOnClick(_roadSE, pos);
         return _roadSE;
     }
 
-    private ToggleButton createRoadNE(Polygon pol) {
+    private ToggleButton createRoadNE(Polygon pol,  int pos) {
         ToggleButton _roadNE = new ToggleButton();
         _roadNE.setPrefSize(1,30);
         _roadNE.setLayoutX(pol.getLayoutX() - 40);
         _roadNE.setLayoutY(pol.getLayoutY() - 70);
         _roadNE.setRotate(60);
-        setColorButonOnClick(_roadNE);
+        roads[pos] =  _roadNE;
+        setColorButonOnClick(_roadNE, pos);
         return _roadNE;
 
     }
 
-    private void setColorButonOnClick(ToggleButton button) {
+    private void setColorButonOnClick(ToggleButton button, int pos) {
         button.setOnAction((ActionEvent event) -> {
             button.setStyle("-fx-background-color: red");
+            System.out.println("Pulsado: " + pos);
         });
     }
 
     private void assignRoads(Polygon pol , Integer i) {
+        int nRoadN,nRoadNE,nRoadSE;
+
         if (hasRoads(i)) {
-            mainAnchor.getChildren().add(createRoadN(pol)); 
-            mainAnchor.getChildren().add(createRoadNE(pol)); 
-            mainAnchor.getChildren().add(createRoadSE(pol)); 
-        } else if (i == 8  || i == 14 || i == 21) {
-            mainAnchor.getChildren().add(createRoadN(pol));
-        } else if (i == 22) {
-            mainAnchor.getChildren().add(createRoadSE(pol)); 
+            switch (i) {
+                case 5:
+                    nRoadN = 3;  nRoadNE = 4;    nRoadSE = 5;
+                    break;
+                case 6:
+                    nRoadN = 0;  nRoadNE = 9;    nRoadSE = 10;
+                    break;
+                case 7:
+                    nRoadN = 6;  nRoadNE = 14;   nRoadSE = 15;
+                    break;
+                case 10:
+                    nRoadN = 19; nRoadNE = 20;   nRoadSE = 2;
+                    break;
+                case 11:
+                    nRoadN = 16; nRoadNE = 1;    nRoadSE = 8;
+                    break;
+                case 12:
+                    nRoadN = 21; nRoadNE = 7;    nRoadSE = 13;
+                    break;
+                case 13:
+                    nRoadN = 24; nRoadNE = 12;   nRoadSE = 30;
+                    break;
+                case 16:
+                    nRoadN = 34; nRoadNE = 35;   nRoadSE = 18;
+                    break;
+                case 17:
+                    nRoadN = 31; nRoadNE = 17;   nRoadSE = 23;
+                    break;
+                case 18:
+                    nRoadN = 36; nRoadNE = 22;   nRoadSE = 26;
+                    break;
+                case 19:
+                    nRoadN = 39; nRoadNE = 25;   nRoadSE = 29;
+                    break;
+                case 20:
+                    nRoadN = 42; nRoadNE = 28;   nRoadSE = 48;
+                    break;
+                case 23:
+                    nRoadN = 52; nRoadNE = 32;   nRoadSE = 38;
+                    break;
+                case 24:
+                    nRoadN = 49; nRoadNE = 37;   nRoadSE = 41;
+                    break;
+                case 25:
+                    nRoadN = 53; nRoadNE = 40;   nRoadSE = 44;
+                    break;
+                case 26:
+                    nRoadN = 56; nRoadNE = 43;   nRoadSE = 47;
+                    break;
+                case 29:
+                    nRoadN = 65; nRoadNE = 50;   nRoadSE = 55;
+                    break;
+                case 30:
+                    nRoadN = 62; nRoadNE = 54;   nRoadSE = 58;
+                    break;
+                case 31:
+                    nRoadN = 66; nRoadNE = 57;   nRoadSE = 61;
+                    break;
+                default:
+                    nRoadN = -1; nRoadNE = -1;   nRoadSE = -1;
+                    break;
+            }
+            mainAnchor.getChildren().add(createRoadN(pol,nRoadN)); 
+            mainAnchor.getChildren().add(createRoadNE(pol,nRoadNE)); 
+            mainAnchor.getChildren().add(createRoadSE(pol,nRoadSE)); 
+        } else if (i == 8) {
+            mainAnchor.getChildren().add(createRoadN(pol, 11));
+        } else if (i == 14) {
+            mainAnchor.getChildren().add(createRoadN(pol, 27));
+        } else if (i == 21) {
+            mainAnchor.getChildren().add(createRoadN(pol, 45));
+        }
+        
+        else if (i == 22) {
+            mainAnchor.getChildren().add(createRoadSE(pol, 33)); 
         } else if (i == 27) {
-            mainAnchor.getChildren().add(createRoadN(pol)); 
-            mainAnchor.getChildren().add(createRoadNE(pol));
+            mainAnchor.getChildren().add(createRoadN(pol, 59)); 
+            mainAnchor.getChildren().add(createRoadNE(pol, 46));
         } else if (i == 28) {
-            mainAnchor.getChildren().add(createRoadSE(pol)); 
-        } else if (i == 34 || i == 35 ) {
-            mainAnchor.getChildren().add(createRoadNE(pol));
-            mainAnchor.getChildren().add(createRoadSE(pol));
+            mainAnchor.getChildren().add(createRoadSE(pol, 51)); 
+        } else if (i == 34) {
+            mainAnchor.getChildren().add(createRoadNE(pol, 63));
+            mainAnchor.getChildren().add(createRoadSE(pol, 68));
+        } else if (i == 35 ) {
+            mainAnchor.getChildren().add(createRoadNE(pol, 67));
+            mainAnchor.getChildren().add(createRoadSE(pol, 71));
         } else if (i == 32) {
-            mainAnchor.getChildren().add(createRoadN(pol));
-            mainAnchor.getChildren().add(createRoadNE(pol));
+            mainAnchor.getChildren().add(createRoadN(pol, 69));
+            mainAnchor.getChildren().add(createRoadNE(pol, 60));
         } else if (i == 33) {
-            mainAnchor.getChildren().add(createRoadSE(pol)); 
+            mainAnchor.getChildren().add(createRoadSE(pol, 64)); 
         } else if (i == 36) {
-            mainAnchor.getChildren().add(createRoadNE(pol));
+            mainAnchor.getChildren().add(createRoadNE(pol, 70));
         }
     }
 
@@ -787,17 +865,11 @@ public class Gameplay {
                 mainAnchor.getChildren().add(t); 
             }
 
-           // Text t = new Text(10, 50, "");
-           // t.setLayoutX(mainAnchor.getLayoutX() + 1150);
-           // t.setLayoutY(mainAnchor.getLayoutY() + 200);
-           // mainAnchor.getChildren().add(t); 
             assignRoads(pol, i);
             assignSettlements(pol,i);
             hexagons[i] = pol;
         }
+
     } 
-
-    
-
 }
 
