@@ -245,13 +245,13 @@
                 [class.robber]="this.gameService.partida.tablero.hexagonos.ladron == 7"></div>
 
                 <!--ASENTAMIENTOS-->
-                <board-settlement vertice=12 posicion="tl"></board-settlement>
-                <board-settlement vertice=11  posicion="t"></board-settlement>
+                <board-settlement vertice=28 posicion="tl"></board-settlement>
+                <board-settlement vertice=16  posicion="t"></board-settlement>
 
                 <!--CAMINOS-->
-                <board-road arista=24 posicion="l"></board-road>
-                <board-road arista=12 posicion="tl"></board-road>
-                <board-road arista=30 posicion="tr"></board-road>
+                <board-road arista=34 posicion="l"></board-road>
+                <board-road arista=35 posicion="tl"></board-road>
+                <board-road arista=18 posicion="tr"></board-road>
 
             </li>
 
@@ -262,13 +262,13 @@
                 [class.robber]="this.gameService.partida.tablero.hexagonos.ladron == 8"></div>
 
                 <!--ASENTAMIENTOS-->
-                <board-settlement vertice=28 posicion="tl"></board-settlement>
-                <board-settlement vertice=16  posicion="t"></board-settlement>
+                <board-settlement vertice=15 posicion="tl"></board-settlement>
+                <board-settlement vertice=14  posicion="t"></board-settlement>
 
                 <!--CAMINOS-->
-                <board-road arista=34 posicion="l"></board-road>
-                <board-road arista=35 posicion="tl"></board-road>
-                <board-road arista=18 posicion="tr"></board-road>
+                <board-road arista=31 posicion="l"></board-road>
+                <board-road arista=17 posicion="tl"></board-road>
+                <board-road arista=23 posicion="tr"></board-road>
 
             </li>
 
@@ -296,7 +296,7 @@
                 [class.robber]="this.gameService.partida.tablero.hexagonos.ladron == 10"></div>
 
                 <!--ASENTAMIENTOS-->
-                <board-settlement vertice=27 posicion="tl"></board-settlement>
+                <board-settlement vertice=21 posicion="tl"></board-settlement>
                 <board-settlement vertice=20 posicion="t"></board-settlement>
 
                 <!--CAMINOS-->
@@ -341,6 +341,8 @@
                     <div *ngIf="this.gameService.TipoPuerto(33) != null" class='harbor-piece tr'></div>
                     <div *ngIf="this.gameService.TipoPuerto(52) != null" class='harbor-piece r'></div>
                 </div>
+                <board-settlement vertice=27 posicion="t"></board-settlement>
+                <board-road arista=33 posicion="tr"></board-road>
             </li>
 
             <!--TERRENOS FILA 4-->
@@ -350,6 +352,16 @@
                 <div *ngIf="this.gameService.partida.tablero.hexagonos.tipo[12] != tipoTerreno().DESIERTO"
                 class='number' [ngClass]="this.numberNames[this.gameService.partida.tablero.hexagonos.valor[12]]"
                 [class.robber]="this.gameService.partida.tablero.hexagonos.ladron == 12"></div>
+
+                <!--ASENTAMIENTOS-->
+                <board-settlement vertice=26 posicion="tl"></board-settlement>
+                <board-settlement vertice=25 posicion="t"></board-settlement>
+
+                <!--CAMINOS-->
+                <board-road arista=52 posicion="l"></board-road>
+                <board-road arista=32 posicion="tl"></board-road>
+                <board-road arista=38 posicion="tr"></board-road>
+
             </li>
 
             <!--HEXAGONO 13-->
@@ -357,6 +369,16 @@
                 <div *ngIf="this.gameService.partida.tablero.hexagonos.tipo[13] != tipoTerreno().DESIERTO"
                 class='number' [ngClass]="this.numberNames[this.gameService.partida.tablero.hexagonos.valor[13]]"
                 [class.robber]="this.gameService.partida.tablero.hexagonos.ladron == 13"></div>
+
+                <!--ASENTAMIENTOS-->
+                <board-settlement vertice=30 posicion="tl"></board-settlement>
+                <board-settlement vertice=29 posicion="t"></board-settlement>
+
+                <!--CAMINOS-->
+                <board-road arista=49 posicion="l"></board-road>
+                <board-road arista=37 posicion="tl"></board-road>
+                <board-road arista=41 posicion="tr"></board-road>
+
             </li>
 
             <!--HEXAGONO 14-->
@@ -364,6 +386,16 @@
                 <div *ngIf="this.gameService.partida.tablero.hexagonos.tipo[14] != tipoTerreno().DESIERTO"
                 class='number' [ngClass]="this.numberNames[this.gameService.partida.tablero.hexagonos.valor[14]]"
                 [class.robber]="this.gameService.partida.tablero.hexagonos.ladron == 14"></div>
+
+                <!--ASENTAMIENTOS-->
+                <board-settlement vertice=32 posicion="tl"></board-settlement>
+                <board-settlement vertice=31 posicion="t"></board-settlement>
+
+                <!--CAMINOS-->
+                <board-road arista=53 posicion="l"></board-road>
+                <board-road arista=40 posicion="tl"></board-road>
+                <board-road arista=44 posicion="tr"></board-road>
+
             </li>
 
             <!--HEXAGONO 15-->
@@ -371,6 +403,16 @@
                 <div *ngIf="this.gameService.partida.tablero.hexagonos.tipo[15] != tipoTerreno().DESIERTO"
                 class='number' [ngClass]="this.numberNames[this.gameService.partida.tablero.hexagonos.valor[15]]"
                 [class.robber]="this.gameService.partida.tablero.hexagonos.ladron == 15"></div>
+
+                <!--ASENTAMIENTOS-->
+                <board-settlement vertice=34 posicion="tl"></board-settlement>
+                <board-settlement vertice=33 posicion="t"></board-settlement>
+
+                <!--CAMINOS-->
+                <board-road arista=56 posicion="l"></board-road>
+                <board-road arista=43 posicion="tl"></board-road>
+                <board-road arista=47 posicion="tr"></board-road>
+
             </li>
             <!--FIN TERRENOS FILA 4-->
 
@@ -379,6 +421,10 @@
                     <div *ngIf="this.gameService.TipoPuerto(46) != null" class='harbor-piece tl'></div>
                     <div *ngIf="this.gameService.TipoPuerto(59) != null" class='harbor-piece l'></div>
                 </div>
+                <board-settlement vertice=37 posicion="tl"></board-settlement>
+                <board-settlement vertice=36 posicion="t"></board-settlement>
+                <board-road arista=59 posicion="l"></board-road>
+                <board-road arista=46 posicion="tl"></board-road>
             </li>
         </ol>
 
@@ -391,6 +437,8 @@
                     <div *ngIf="this.gameService.TipoPuerto(51) != null" class='harbor-piece tr'></div>
                     <div *ngIf="this.gameService.TipoPuerto(65) != null" class='harbor-piece r'></div>
                 </div>
+                <board-settlement vertice=40 posicion="t"></board-settlement>
+                <board-road arista=51 posicion="tr"></board-road>
             </li>
 
             <!--TERRENOS FILA 5-->
@@ -400,6 +448,16 @@
                 <div *ngIf="this.gameService.partida.tablero.hexagonos.tipo[16] != tipoTerreno().DESIERTO"
                 class='number' [ngClass]="this.numberNames[this.gameService.partida.tablero.hexagonos.valor[16]]"
                 [class.robber]="this.gameService.partida.tablero.hexagonos.ladron == 16"></div>
+
+                <!--ASENTAMIENTOS-->
+                <board-settlement vertice=39 posicion="tl"></board-settlement>
+                <board-settlement vertice=38 posicion="t"></board-settlement>
+
+                <!--CAMINOS-->
+                <board-road arista=65 posicion="l"></board-road>
+                <board-road arista=50 posicion="tl"></board-road>
+                <board-road arista=55 posicion="tr"></board-road>
+
             </li>
 
             <!--HEXAGONO 17-->
@@ -407,6 +465,16 @@
                 <div *ngIf="this.gameService.partida.tablero.hexagonos.tipo[17] != tipoTerreno().DESIERTO"
                 class='number' [ngClass]="this.numberNames[this.gameService.partida.tablero.hexagonos.valor[17]]"
                 [class.robber]="this.gameService.partida.tablero.hexagonos.ladron == 17"></div>
+
+                <!--ASENTAMIENTOS-->
+                <board-settlement vertice=42 posicion="tl"></board-settlement>
+                <board-settlement vertice=41 posicion="t"></board-settlement>
+
+                <!--CAMINOS-->
+                <board-road arista=62 posicion="l"></board-road>
+                <board-road arista=54 posicion="tl"></board-road>
+                <board-road arista=58 posicion="tr"></board-road>
+
             </li>
 
             <!--HEXAGONO 18-->
@@ -414,6 +482,16 @@
                 <div *ngIf="this.gameService.partida.tablero.hexagonos.tipo[18] != tipoTerreno().DESIERTO"
                 class='number' [ngClass]="this.numberNames[this.gameService.partida.tablero.hexagonos.valor[18]]"
                 [class.robber]="this.gameService.partida.tablero.hexagonos.ladron == 18"></div>
+
+                <!--ASENTAMIENTOS-->
+                <board-settlement vertice=44 posicion="tl"></board-settlement>
+                <board-settlement vertice=43 posicion="t"></board-settlement>
+
+                <!--CAMINOS-->
+                <board-road arista=66 posicion="l"></board-road>
+                <board-road arista=57 posicion="tl"></board-road>
+                <board-road arista=61 posicion="tr"></board-road>
+
             </li>
             <!--FIN TERRENOS FILA 5-->
 
@@ -422,6 +500,10 @@
                     <div *ngIf="this.gameService.TipoPuerto(60) != null" class='harbor-piece tl'></div>
                     <div *ngIf="this.gameService.TipoPuerto(69) != null" class='harbor-piece l'></div>
                 </div>
+                <board-settlement vertice=46 posicion="tl"></board-settlement>
+                <board-settlement vertice=45 posicion="t"></board-settlement>
+                <board-road arista=69 posicion="l"></board-road>
+                <board-road arista=60 posicion="tl"></board-road>
             </li>
         </ol>
 
@@ -434,6 +516,8 @@
                 <div class='harbor'>
                     <div *ngIf="this.gameService.TipoPuerto(64) != null" class='harbor-piece tr'></div>
                 </div>
+                <board-settlement vertice=49 posicion="t"></board-settlement>
+                <board-road arista=64 posicion="tr"></board-road>
             </li>
 
             <li class='hex water'>
@@ -441,6 +525,10 @@
                     <div *ngIf="this.gameService.TipoPuerto(63) != null" class='harbor-piece tl'></div>
                     <div *ngIf="this.gameService.TipoPuerto(68) != null" class='harbor-piece tr'></div>
                 </div>
+                <board-settlement vertice=48 posicion="tl"></board-settlement>
+                <board-settlement vertice=47 posicion="t"></board-settlement>
+                <board-road arista=63 posicion="tl"></board-road>
+                <board-road arista=68 posicion="tr"></board-road>
             </li>
 
             <li class='hex water'>
@@ -448,12 +536,19 @@
                     <div *ngIf="this.gameService.TipoPuerto(67) != null" class='harbor-piece tl'></div>
                     <div *ngIf="this.gameService.TipoPuerto(77) != null" class='harbor-piece tr'></div>
                 </div>
+                <board-settlement vertice=51 posicion="tl"></board-settlement>
+                <board-settlement vertice=50 posicion="t"></board-settlement>
+                <board-road arista=67 posicion="tl"></board-road>
+                <board-road arista=71 posicion="tr"></board-road>
             </li>
 
             <li class='hex water'>
                 <div class='harbor'>
                     <div *ngIf="this.gameService.TipoPuerto(70) != null" class='harbor-piece tl'></div>
                 </div>
+                <board-settlement vertice=53 posicion="tl"></board-settlement>
+                <board-settlement vertice=52 posicion="t"></board-settlement>
+                <board-road arista=70 posicion="tl"></board-road>
             </li>
 
         </ol>
