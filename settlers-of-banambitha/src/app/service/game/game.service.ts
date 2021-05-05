@@ -282,7 +282,8 @@ export interface Partida {
   clock:           number,
   PobladoDisponible: boolean,
   CaminoDisponible: boolean, 
-  CiudadDisponible: boolean
+  CiudadDisponible: boolean, 
+  PrimerTurno: boolean
 }
 
 
@@ -399,7 +400,8 @@ export class GameService implements Connectable{
         clock: -1,
         PobladoDisponible: false,
         CiudadDisponible: false, 
-        CaminoDisponible: false
+        CaminoDisponible: false,
+        PrimerTurno: false
       }
 
       this.subscribeToTopics()
@@ -759,6 +761,48 @@ export class GameService implements Connectable{
   *****************************************************************/
 
 
+  private actualizarPrecalculos(): void {
+    this.partida.CaminoDisponible  = this.puedeConstruirCamino()
+    this.partida.CiudadDisponible  = this.puedeConstruirCiudad()
+    this.partida.PobladoDisponible = this.puedeConstruirPoblado()
+  }
+
+
+  /**
+   * 
+   * @return el número de poblados construidos por el jugador
+   */
+  private contarMisPoblados(): number{
+    let n: number = 0
+    let tipoAsentamiento: TipoAsentamiento = this.miTipoPueblo()
+    for (let i = 0; i < this.partida.tablero.vertices.asentamiento.length; i++){
+      if ( this.partida.tablero.vertices.asentamiento[i] == tipoAsentamiento ){
+        n++
+      }
+    }
+
+    return n
+  }
+
+
+  /**
+   * 
+   * @return el número de caminos construidos por el jugador
+   */
+  private contarMisCaminos(): number{
+    let n: number = 0
+    let tipoCamino: TipoCamino = this.miTipoCamino()
+    for (let i = 0; i < this.partida.tablero.aristas.camino.length; i++){
+      if ( this.partida.tablero.aristas.camino[i] == tipoCamino ){
+        n++
+      }
+    }
+
+    return n
+  }
+
+
+
   /**
    * Devuelve el tipo de puerto que se encuentra en una arista
    * Si la arista no tiene puerto devuelve null
@@ -815,7 +859,8 @@ export class GameService implements Connectable{
     let madera:  number = this.partida.jugadores[this.partida.miTurno - 1].recursos.madera
     let lana:    number = this.partida.jugadores[this.partida.miTurno - 1].recursos.lana
     let cereal:  number = this.partida.jugadores[this.partida.miTurno - 1].recursos.cereales
-    return arcilla > 0 && cereal > 0 && lana > 0 && madera > 0
+    return (this.partida.PrimerTurno && this.contarMisPoblados() < 2) ||
+           arcilla > 0 && cereal > 0 && lana > 0 && madera > 0
   }
 
 
@@ -837,8 +882,10 @@ export class GameService implements Connectable{
   public puedeConstruirCamino(): boolean {
     let arcilla: number = this.partida.jugadores[this.partida.miTurno - 1].recursos.arcilla
     let madera:  number = this.partida.jugadores[this.partida.miTurno - 1].recursos.madera
-    return arcilla > 0 && madera > 0
+    return (this.partida.PrimerTurno && this.contarMisCaminos() < 2) ||
+            arcilla > 0 && madera > 0
   }
+
 
   /**
    * Deveuvle el tipo de pueblo correspondiente al 
@@ -1021,7 +1068,8 @@ export class GameService implements Connectable{
       clock: -1,
       PobladoDisponible: true,
       CiudadDisponible: true, 
-      CaminoDisponible: true
+      CaminoDisponible: true,
+      PrimerTurno: true
     }
   }
 
@@ -1098,14 +1146,14 @@ export class GameService implements Connectable{
                  TipoCamino.NADA,TipoCamino.NADA,TipoCamino.NADA,TipoCamino.NADA,TipoCamino.NADA,
                  TipoCamino.NADA,TipoCamino.NADA], 
         posible_camino:[
-                        [false,false,false,false,false,false,false,false,false,false,
-                         false,false,false,false,false,false,false,false,false,false,
-                         false,false,false,false,false,false,false,false,false,false,
-                         false,false,false,false,false,false,false,false,false,false,
-                         false,false,false,false,false,false,false,false,false,false,
-                         false,false,false,false,false,false,false,false,false,false,
-                         false,false,false,false,false,false,false,false,false,false,
-                         false,false],
+                        [true,true,true,true,true,true,true,true,true,true,
+                         true,true,true,true,true,true,true,true,true,true,
+                         true,true,true,true,true,true,true,true,true,true,
+                         true,true,true,true,true,true,true,true,true,true,
+                         true,true,true,true,true,true,true,true,true,true,
+                         true,true,true,true,true,true,true,true,true,true,
+                         true,true,true,true,true,true,true,true,true,true,
+                         true,true],
                         [false,false,false,false,false,false,false,false,false,false,
                          false,false,false,false,false,false,false,false,false,false,
                          false,false,false,false,false,false,false,false,false,false,
@@ -1236,11 +1284,6 @@ export class GameService implements Connectable{
     } else {
       console.log("Faltan los recursos del jugador 4")
     }
-
-    this.partida.CaminoDisponible = this.puedeConstruirCamino()
-    this.partida.CiudadDisponible = this.puedeConstruirCiudad()
-    this.partida.PobladoDisponible = this.puedeConstruirPoblado()
-
   }
 
 
@@ -1518,6 +1561,7 @@ export class GameService implements Connectable{
       }
 
       this.actualizarJugadores(msg)
+      this.actualizarPrecalculos()
 
     } else  if (msg[MessageKeys.CLOCK] != null &&
         msg[MessageKeys.CLOCK] > this.partida.clock){

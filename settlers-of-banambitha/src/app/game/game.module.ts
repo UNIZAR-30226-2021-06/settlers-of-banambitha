@@ -19,7 +19,9 @@ import { FormsModule } from '@angular/forms';
 import { MatDialogModule } from '@angular/material/dialog';
 import { AppComponent } from '../app.component';
 import {MatMenuModule} from '@angular/material/menu';
-import {MatButtonModule} from '@angular/material/button'; 
+import {MatButtonModule} from '@angular/material/button';
+import { SettlementComponent } from './board/settlement/settlement.component';
+import { RoadComponent } from './board/road/road.component'; 
 
 
 
@@ -33,7 +35,9 @@ import {MatButtonModule} from '@angular/material/button';
     StatsComponent, 
     PlayerInfoComponent,
     InternalTradeDialog,
-    ExternalTradeDialog],
+    ExternalTradeDialog,
+    SettlementComponent,
+    RoadComponent],
   imports: [
     CommonModule,
     BrowserModule,
