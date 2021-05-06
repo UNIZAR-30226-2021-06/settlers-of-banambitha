@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { MatDialog,MAT_DIALOG_DATA,MatDialogRef } from '@angular/material/dialog';
 import {MatAccordion} from '@angular/material/expansion';
-import { GameService } from 'src/app/service/game/game.service';
+import { GameService, Jugador } from 'src/app/service/game/game.service';
 import { BoardComponent } from '../board/board.component';
 
 
@@ -23,16 +23,8 @@ export class PlayerInfoComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  public Comerciar(jugador: number): void {
-    console.log("comerciar con el jugador" + jugador)
-  }
-
-  openCardsDialog() {
-    this.dialog.open(DialogData);
-  }
-
-  openInternalTradeDialog() {
-    this.dialog.open(InternalTradeDialog);
+  openInternalTradeDialog(playerId: number) {
+    this.dialog.open(InternalTradeDialog, { data: { player: playerId}})
   }
 
   openExternalTradeDialog() {
@@ -40,30 +32,6 @@ export class PlayerInfoComponent implements OnInit {
   }
 }
 
-
-
-@Component({
-  selector: 'cards-dialog',
-  templateUrl: 'cards-dialog.html',
-  styleUrls: ['./player-info.component.sass']
-})
-
-
-export class DialogData {
-  constructor(@Inject(MAT_DIALOG_DATA) public data: DialogData) {}
-
-  cartasCaballero=2
-  cartasCarretera=5
-  cartasDescubrimiento=1
-  puntosVictoria=8
-}
-
-
-
-interface Player {
-  value: string;
-  viewValue: string;
-}
 
 interface Material {
   value: string;
@@ -77,35 +45,31 @@ interface Material {
   styleUrls: ['./trade.dialog.sass']
 })
 export class InternalTradeDialog implements OnInit {
-  offerMaterial: string;
-  offerPlayer: string;
-  receiveMaterial: string;
-  ammountGiven:number;
-  ammountReceived:number;
 
-  constructor(public dialogRef: MatDialogRef<InternalTradeDialog>,
-    @Inject(MAT_DIALOG_DATA) public data: DialogData) {
+  public offerPlayer:     Jugador;
+  public offerMaterial:   string;
+  public receiveMaterial: string;
+  public ammountGiven:    number;
+  public ammountReceived: number;
+
+  constructor(public dialogRef: MatDialogRef<InternalTradeDialog>, public gameService: GameService, 
+    @Inject(MAT_DIALOG_DATA) public data: any) {
     this.formatLabelOffer = this.formatLabelOffer.bind(this);
     this.formatLabelReceive = this.formatLabelReceive.bind(this);
-   }
+    this.offerPlayer = this.gameService.partida.jugadores[data["player"]]
+  }
 
    ngOnInit(): void {
   }
 
    materials: Material[] = [
-    { value: 'Madera', viewValue: 'Madera'},
-    { value: 'Lana', viewValue: 'Lana'},
-    { value: 'Cereales', viewValue: 'Cereales'},
-    { value: 'Arcilla', viewValue: 'Arcilla'},
-    { value: 'Mineral', viewValue: 'Mineral'}
+    { value: 'madera', viewValue: 'Madera'},
+    { value: 'lana', viewValue: 'Lana'},
+    { value: 'cereales', viewValue: 'Cereales'},
+    { value: 'arcilla', viewValue: 'Arcilla'},
+    { value: 'mineral', viewValue: 'Mineral'}
   ];
 
-
-  players: Player[] = [
-    {value: 'player-2', viewValue: 'Player2'},
-    {value: 'player-3', viewValue: 'Player3'},
-    {value: 'player-4', viewValue: 'Player4'}
-  ];
 
   formatLabelOffer(value: number) {
     this.ammountGiven = value;
@@ -144,8 +108,7 @@ export class ExternalTradeDialog {
   ratioSelected: string;
 
 
-  constructor(public dialogRef: MatDialogRef<InternalTradeDialog>,
-    @Inject(MAT_DIALOG_DATA) public data: DialogData) {}
+  constructor(public dialogRef: MatDialogRef<InternalTradeDialog>) {}
 
 
    materials: Material[] = [

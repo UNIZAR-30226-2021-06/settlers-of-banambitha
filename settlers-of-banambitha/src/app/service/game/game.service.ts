@@ -1073,6 +1073,22 @@ export class GameService implements Connectable{
       CaminoDisponible: true,
       PrimerTurno: true
     }
+
+    this.partida.jugadores[0].recursos = {
+      madera: 3,
+      arcilla: 5,
+      mineral: 5, 
+      lana: 3, 
+      cereales:10
+    }
+
+    this.partida.jugadores[1].recursos = {
+      madera: 7,
+      arcilla: 3,
+      mineral: 2, 
+      lana: 1, 
+      cereales: 8
+    }
   }
 
   /**

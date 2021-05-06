@@ -39,7 +39,7 @@
       </mat-panel-description>
     </mat-expansion-panel-header>
     <button mat-raised-button *ngIf="i != this.gameService.partida.miTurno - 1"
-    (click)="Comerciar(i + 1)"> Comerciar </button>
+    (click)="openInternalTradeDialog(i)"> Comerciar </button>
     <mat-tab-group mat-align-tabs="center">
         <mat-tab label="Materiales">
             <table class="mat-table center" >
