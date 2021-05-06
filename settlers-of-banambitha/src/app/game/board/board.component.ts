@@ -26,8 +26,6 @@ export class BoardComponent implements OnInit {
   ]
   );
 
-  public numberNames: Array<String> = ["", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve"]
-
   constructor(public dialog: MatDialog, public gameService: GameService) { }
 
   ngOnInit(): void {

@@ -29,29 +29,21 @@
             <li class='hex spacer'></li>
 
             <li class='hex water'>
-                <div class='harbor'>
-                    <div *ngIf="this.gameService.TipoPuerto(4) != null" class='harbor-piece br'></div>
-                </div>
+                <board-harbor posicion='br' arista=4></board-harbor>
             </li>
 
             <li class='hex water'>
-                <div class='harbor'>
-                    <div *ngIf="this.gameService.TipoPuerto(5) != null" class='harbor-piece bl'></div>
-                    <div *ngIf="this.gameService.TipoPuerto(9) != null" class='harbor-piece br'></div>
-                </div>
+                <board-harbor posicion='bl' arista=5></board-harbor>
+                <board-harbor posicion='br' arista=9></board-harbor>
             </li>
 
             <li class='hex water'>
-                <div class='harbor'>
-                    <div *ngIf="this.gameService.TipoPuerto(10) != null" class='harbor-piece bl'></div>
-                    <div *ngIf="this.gameService.TipoPuerto(14) != null" class='harbor-piece br'></div>
-                </div>
+                <board-harbor posicion='bl' arista=10></board-harbor>
+                <board-harbor posicion='br' arista=14></board-harbor>
             </li>
 
             <li class='hex water'>
-                <div class='harbor'>
-                    <div *ngIf="this.gameService.TipoPuerto(15) != null" class='harbor-piece bl'></div>
-                </div>
+                <board-harbor posicion='bl' arista=15></board-harbor>
             </li>
         </ol>
 
@@ -61,20 +53,15 @@
             <li class='hex spacer'></li>
 
             <li class='hex water'>
-                <div class='harbor'>
-                    <div *ngIf="this.gameService.TipoPuerto(3) != null" class='harbor-piece r'></div>
-                    <div *ngIf="this.gameService.TipoPuerto(20) != null" class='harbor-piece br'></div>
-                </div>
+                <board-harbor posicion='r' arista=3></board-harbor>
+                <board-harbor posicion='br' arista=20></board-harbor>
             </li>
 
             <!--TERRENOS FILA 1-->
 
             <!--HEXAGONO 0-->
             <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[0])">
-                <div *ngIf="this.gameService.partida.tablero.hexagonos.tipo[0] != tipoTerreno().DESIERTO"
-                class='number'
-                [ngClass]="this.numberNames[this.gameService.partida.tablero.hexagonos.valor[0]]"
-                [class.robber]="this.gameService.partida.tablero.hexagonos.ladron == 0"></div>
+                <board-hex-number hexagono=0></board-hex-number>
 
                 <!--ASENTAMIENTOS-->
                 <board-settlement vertice=4 posicion="tl"></board-settlement>
@@ -89,10 +76,7 @@
 
             <!--HEXAGONO 1-->
             <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[1])">
-                <div *ngIf="this.gameService.partida.tablero.hexagonos.tipo[1] != tipoTerreno().DESIERTO"
-                class='number'
-                [ngClass]="this.numberNames[this.gameService.partida.tablero.hexagonos.valor[1]]"
-                [class.robber]="this.gameService.partida.tablero.hexagonos.ladron == 1"></div>
+                <board-hex-number hexagono=1></board-hex-number>
 
                 <!--ASENTAMIENTOS-->
                 <board-settlement vertice=0 posicion="tl"></board-settlement>
@@ -106,9 +90,7 @@
 
             <!--HEXAGONO 2-->
             <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[2])">
-                <div *ngIf="this.gameService.partida.tablero.hexagonos.tipo[2] != tipoTerreno().DESIERTO"
-                class='number' [ngClass]="this.numberNames[this.gameService.partida.tablero.hexagonos.valor[2]]"
-                [class.robber]="this.gameService.partida.tablero.hexagonos.ladron == 2"></div>
+                <board-hex-number hexagono=2></board-hex-number>
 
                 <!--ASENTAMIENTOS-->
                 <board-settlement vertice=6  posicion="tl"></board-settlement>
@@ -122,10 +104,8 @@
             <!--FIN TERRENOS FILA 1-->
 
             <li class='hex water'>
-                <div class='harbor'>
-                    <div *ngIf="this.gameService.TipoPuerto(11) != null" class='harbor-piece l'></div>
-                    <div *ngIf="this.gameService.TipoPuerto(30) != null" class='harbor-piece bl'></div>
-                </div>
+                <board-harbor posicion='l' arista=11></board-harbor>
+                <board-harbor posicion='bl' arista=30></board-harbor>
 
                 <board-settlement vertice=10  posicion="tl"></board-settlement>
                 <board-road arista=11  posicion="l"></board-road>
@@ -136,10 +116,8 @@
         <!-- FILA 2 -->
         <ol class="even">
             <li class='hex water'>
-                <div class='harbor'>
-                    <div *ngIf="this.gameService.TipoPuerto(19) != null" class='harbor-piece r'></div>
-                    <div *ngIf="this.gameService.TipoPuerto(35) != null" class='harbor-piece br'></div>
-                </div>
+                <board-harbor posicion='r' arista=19></board-harbor>
+                <board-harbor posicion='br' arista=35></board-harbor>
             </li>
 
 
@@ -147,9 +125,7 @@
 
             <!--HEXAGONO 3-->
             <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[3])">
-                <div *ngIf="this.gameService.partida.tablero.hexagonos.tipo[3] != tipoTerreno().DESIERTO"
-                class='number' [ngClass]="this.numberNames[this.gameService.partida.tablero.hexagonos.valor[3]]"
-                [class.robber]="this.gameService.partida.tablero.hexagonos.ladron == 3"></div>
+                <board-hex-number hexagono=3></board-hex-number>
 
                 <!--ASENTAMIENTOS-->
                 <board-settlement vertice=17 posicion="tl"></board-settlement>
@@ -163,9 +139,7 @@
 
             <!--HEXAGONO 4-->
             <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[4])">
-                <div *ngIf="this.gameService.partida.tablero.hexagonos.tipo[4] != tipoTerreno().DESIERTO"
-                class='number' [ngClass]="this.numberNames[this.gameService.partida.tablero.hexagonos.valor[4]]"
-                [class.robber]="this.gameService.partida.tablero.hexagonos.ladron == 4"></div>
+                <board-hex-number hexagono=4></board-hex-number>
 
                 <!--ASENTAMIENTOS-->
                 <board-settlement vertice=2 posicion="tl"></board-settlement>
@@ -180,9 +154,7 @@
 
             <!--HEXAGONO 5-->
             <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[5])">
-                <div *ngIf="this.gameService.partida.tablero.hexagonos.tipo[5] != tipoTerreno().DESIERTO"
-                class='number' [ngClass]="this.numberNames[this.gameService.partida.tablero.hexagonos.valor[5]]"
-                [class.robber]="this.gameService.partida.tablero.hexagonos.ladron == 5"></div>
+                <board-hex-number hexagono=5></board-hex-number>
 
                 <!--ASENTAMIENTOS-->
                 <board-settlement vertice=8 posicion="tl"></board-settlement>
@@ -197,9 +169,7 @@
 
             <!--HEXAGONO 6-->
             <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[6])">
-                <div *ngIf="this.gameService.partida.tablero.hexagonos.tipo[6] != tipoTerreno().DESIERTO"
-                class='number' [ngClass]="this.numberNames[this.gameService.partida.tablero.hexagonos.valor[6]]"
-                [class.robber]="this.gameService.partida.tablero.hexagonos.ladron == 6"></div>
+                <board-hex-number hexagono=6></board-hex-number>
 
                 <!--ASENTAMIENTOS-->
                 <board-settlement vertice=12 posicion="tl"></board-settlement>
@@ -215,10 +185,8 @@
 
 
             <li class='hex water'>
-                <div class='harbor'>
-                    <div *ngIf="this.gameService.TipoPuerto(27) != null" class='harbor-piece l'></div>
-                    <div *ngIf="this.gameService.TipoPuerto(49) != null" class='harbor-piece bl'></div>
-                </div>
+                <board-harbor posicion='l' arista=27></board-harbor>
+                <board-harbor posicion='bl' arista=48></board-harbor>
 
                 <board-settlement vertice=22 posicion="tl"></board-settlement>
                 <board-road arista=27 posicion="l"></board-road>
@@ -230,18 +198,14 @@
         <ol class="odd">
 
             <li class='hex water'>
-                <div class='harbor'>
-                    <div *ngIf="this.gameService.TipoPuerto(34) != null" class='harbor-piece r'></div>
-                </div>
+                <board-harbor posicion='r' arista=34></board-harbor>
             </li>
 
             <!--TERRENOS FILA 3-->
 
             <!--HEXAGONO 7-->
             <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[7])">
-                <div *ngIf="this.gameService.partida.tablero.hexagonos.tipo[7] != tipoTerreno().DESIERTO"
-                class='number' [ngClass]="this.numberNames[this.gameService.partida.tablero.hexagonos.valor[7]]"
-                [class.robber]="this.gameService.partida.tablero.hexagonos.ladron == 7"></div>
+                <board-hex-number hexagono=7></board-hex-number>
 
                 <!--ASENTAMIENTOS-->
                 <board-settlement vertice=28 posicion="tl"></board-settlement>
@@ -256,9 +220,7 @@
 
             <!--HEXAGONO 8-->
             <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[8])">
-                <div *ngIf="this.gameService.partida.tablero.hexagonos.tipo[8] != tipoTerreno().DESIERTO"
-                class='number' [ngClass]="this.numberNames[this.gameService.partida.tablero.hexagonos.valor[8]]"
-                [class.robber]="this.gameService.partida.tablero.hexagonos.ladron == 8"></div>
+                <board-hex-number hexagono=8></board-hex-number>
 
                 <!--ASENTAMIENTOS-->
                 <board-settlement vertice=15 posicion="tl"></board-settlement>
@@ -273,9 +235,7 @@
 
             <!--HEXAGONO 9-->
             <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[9])">
-                <div *ngIf="this.gameService.partida.tablero.hexagonos.tipo[9] != tipoTerreno().DESIERTO"
-                class='number' [ngClass]="this.numberNames[this.gameService.partida.tablero.hexagonos.valor[9]]"
-                [class.robber]="this.gameService.partida.tablero.hexagonos.ladron == 9"></div>
+                <board-hex-number hexagono=9></board-hex-number>
 
                 <!--ASENTAMIENTOS-->
                 <board-settlement vertice=19 posicion="tl"></board-settlement>
@@ -290,9 +250,7 @@
 
             <!--HEXAGONO 10-->
             <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[10])">
-                <div *ngIf="this.gameService.partida.tablero.hexagonos.tipo[10] != tipoTerreno().DESIERTO"
-                class='number' [ngClass]="this.numberNames[this.gameService.partida.tablero.hexagonos.valor[10]]"
-                [class.robber]="this.gameService.partida.tablero.hexagonos.ladron == 10"></div>
+                <board-hex-number hexagono=10></board-hex-number>
 
                 <!--ASENTAMIENTOS-->
                 <board-settlement vertice=21 posicion="tl"></board-settlement>
@@ -307,9 +265,7 @@
 
             <!--HEXAGONO 11-->
             <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[11])">
-                <div *ngIf="this.gameService.partida.tablero.hexagonos.tipo[11] != tipoTerreno().DESIERTO"
-                class='number' [ngClass]="this.numberNames[this.gameService.partida.tablero.hexagonos.valor[11]]"
-                [class.robber]="this.gameService.partida.tablero.hexagonos.ladron == 11"></div>
+                <board-hex-number hexagono=11></board-hex-number>
 
                 <!--ASENTAMIENTOS-->
                 <board-settlement vertice=24 posicion="tl"></board-settlement>
@@ -324,9 +280,8 @@
             <!--FIN TERRENOS FILA 3-->
 
             <li class='hex water'>
-                <div class='harbor'>
-                    <div *ngIf="this.gameService.TipoPuerto(45) != null" class='harbor-piece l'></div>
-                </div>
+                <board-harbor posicion='l' arista=45></board-harbor>
+
                 <board-settlement vertice=35 posicion="tl"></board-settlement>
                 <board-road arista=45 posicion="l"></board-road>
             </li>
@@ -336,10 +291,9 @@
         <!-- FILA 4 -->
         <ol class="even">
             <li class='hex water'>
-                <div class='harbor'>
-                    <div *ngIf="this.gameService.TipoPuerto(33) != null" class='harbor-piece tr'></div>
-                    <div *ngIf="this.gameService.TipoPuerto(52) != null" class='harbor-piece r'></div>
-                </div>
+                <board-harbor posicion='tr' arista=33></board-harbor>
+                <board-harbor posicion='r' arista=52></board-harbor>
+
                 <board-settlement vertice=27 posicion="t"></board-settlement>
                 <board-road arista=33 posicion="tr"></board-road>
             </li>
@@ -348,9 +302,7 @@
 
             <!--HEXAGONO 12-->
             <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[12])">
-                <div *ngIf="this.gameService.partida.tablero.hexagonos.tipo[12] != tipoTerreno().DESIERTO"
-                class='number' [ngClass]="this.numberNames[this.gameService.partida.tablero.hexagonos.valor[12]]"
-                [class.robber]="this.gameService.partida.tablero.hexagonos.ladron == 12"></div>
+                <board-hex-number hexagono=12></board-hex-number>
 
                 <!--ASENTAMIENTOS-->
                 <board-settlement vertice=26 posicion="tl"></board-settlement>
@@ -365,9 +317,7 @@
 
             <!--HEXAGONO 13-->
             <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[13])">
-                <div *ngIf="this.gameService.partida.tablero.hexagonos.tipo[13] != tipoTerreno().DESIERTO"
-                class='number' [ngClass]="this.numberNames[this.gameService.partida.tablero.hexagonos.valor[13]]"
-                [class.robber]="this.gameService.partida.tablero.hexagonos.ladron == 13"></div>
+                <board-hex-number hexagono=13></board-hex-number>
 
                 <!--ASENTAMIENTOS-->
                 <board-settlement vertice=30 posicion="tl"></board-settlement>
@@ -382,9 +332,7 @@
 
             <!--HEXAGONO 14-->
             <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[14])">
-                <div *ngIf="this.gameService.partida.tablero.hexagonos.tipo[14] != tipoTerreno().DESIERTO"
-                class='number' [ngClass]="this.numberNames[this.gameService.partida.tablero.hexagonos.valor[14]]"
-                [class.robber]="this.gameService.partida.tablero.hexagonos.ladron == 14"></div>
+                <board-hex-number hexagono=14></board-hex-number>
 
                 <!--ASENTAMIENTOS-->
                 <board-settlement vertice=32 posicion="tl"></board-settlement>
@@ -399,9 +347,7 @@
 
             <!--HEXAGONO 15-->
             <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[15])">
-                <div *ngIf="this.gameService.partida.tablero.hexagonos.tipo[15] != tipoTerreno().DESIERTO"
-                class='number' [ngClass]="this.numberNames[this.gameService.partida.tablero.hexagonos.valor[15]]"
-                [class.robber]="this.gameService.partida.tablero.hexagonos.ladron == 15"></div>
+                <board-hex-number hexagono=15></board-hex-number>
 
                 <!--ASENTAMIENTOS-->
                 <board-settlement vertice=34 posicion="tl"></board-settlement>
@@ -416,10 +362,9 @@
             <!--FIN TERRENOS FILA 4-->
 
             <li class='hex water'>
-                <div class='harbor'>
-                    <div *ngIf="this.gameService.TipoPuerto(46) != null" class='harbor-piece tl'></div>
-                    <div *ngIf="this.gameService.TipoPuerto(59) != null" class='harbor-piece l'></div>
-                </div>
+                <board-harbor posicion='tl' arista=46></board-harbor>
+                <board-harbor posicion='l' arista=59></board-harbor>
+
                 <board-settlement vertice=37 posicion="tl"></board-settlement>
                 <board-settlement vertice=36 posicion="t"></board-settlement>
                 <board-road arista=59 posicion="l"></board-road>
@@ -431,11 +376,11 @@
         <!-- FILA 5 -->
         <ol class="odd">
             <li class='hex spacer'></li>
+
             <li class='hex water'>
-                <div class='harbor'>
-                    <div *ngIf="this.gameService.TipoPuerto(51) != null" class='harbor-piece tr'></div>
-                    <div *ngIf="this.gameService.TipoPuerto(65) != null" class='harbor-piece r'></div>
-                </div>
+                <board-harbor posicion='tr' arista=51></board-harbor>
+                <board-harbor posicion='r' arista=65></board-harbor>
+
                 <board-settlement vertice=40 posicion="t"></board-settlement>
                 <board-road arista=51 posicion="tr"></board-road>
             </li>
@@ -444,9 +389,7 @@
 
             <!--HEXAGONO 16-->
             <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[16])">
-                <div *ngIf="this.gameService.partida.tablero.hexagonos.tipo[16] != tipoTerreno().DESIERTO"
-                class='number' [ngClass]="this.numberNames[this.gameService.partida.tablero.hexagonos.valor[16]]"
-                [class.robber]="this.gameService.partida.tablero.hexagonos.ladron == 16"></div>
+                <board-hex-number hexagono=16></board-hex-number>
 
                 <!--ASENTAMIENTOS-->
                 <board-settlement vertice=39 posicion="tl"></board-settlement>
@@ -461,9 +404,7 @@
 
             <!--HEXAGONO 17-->
             <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[17])">
-                <div *ngIf="this.gameService.partida.tablero.hexagonos.tipo[17] != tipoTerreno().DESIERTO"
-                class='number' [ngClass]="this.numberNames[this.gameService.partida.tablero.hexagonos.valor[17]]"
-                [class.robber]="this.gameService.partida.tablero.hexagonos.ladron == 17"></div>
+                <board-hex-number hexagono=17></board-hex-number>
 
                 <!--ASENTAMIENTOS-->
                 <board-settlement vertice=42 posicion="tl"></board-settlement>
@@ -478,9 +419,7 @@
 
             <!--HEXAGONO 18-->
             <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[18])">
-                <div *ngIf="this.gameService.partida.tablero.hexagonos.tipo[18] != tipoTerreno().DESIERTO"
-                class='number' [ngClass]="this.numberNames[this.gameService.partida.tablero.hexagonos.valor[18]]"
-                [class.robber]="this.gameService.partida.tablero.hexagonos.ladron == 18"></div>
+                <board-hex-number hexagono=18></board-hex-number>
 
                 <!--ASENTAMIENTOS-->
                 <board-settlement vertice=44 posicion="tl"></board-settlement>
@@ -495,10 +434,9 @@
             <!--FIN TERRENOS FILA 5-->
 
             <li class='hex water'>
-                <div class='harbor'>
-                    <div *ngIf="this.gameService.TipoPuerto(60) != null" class='harbor-piece tl'></div>
-                    <div *ngIf="this.gameService.TipoPuerto(69) != null" class='harbor-piece l'></div>
-                </div>
+                <board-harbor posicion='tl' arista=60></board-harbor>
+                <board-harbor posicion='l' arista=69></board-harbor>
+
                 <board-settlement vertice=46 posicion="tl"></board-settlement>
                 <board-settlement vertice=45 posicion="t"></board-settlement>
                 <board-road arista=69 posicion="l"></board-road>
@@ -512,18 +450,16 @@
             <li class='hex spacer'></li>
 
             <li class='hex water'>
-                <div class='harbor'>
-                    <div *ngIf="this.gameService.TipoPuerto(64) != null" class='harbor-piece tr'></div>
-                </div>
+                <board-harbor posicion='tr' arista=64></board-harbor>
+
                 <board-settlement vertice=49 posicion="t"></board-settlement>
                 <board-road arista=64 posicion="tr"></board-road>
             </li>
 
             <li class='hex water'>
-                <div class='harbor'>
-                    <div *ngIf="this.gameService.TipoPuerto(63) != null" class='harbor-piece tl'></div>
-                    <div *ngIf="this.gameService.TipoPuerto(68) != null" class='harbor-piece tr'></div>
-                </div>
+                <board-harbor posicion='tl' arista=63></board-harbor>
+                <board-harbor posicion='tr' arista=68></board-harbor>
+
                 <board-settlement vertice=48 posicion="tl"></board-settlement>
                 <board-settlement vertice=47 posicion="t"></board-settlement>
                 <board-road arista=63 posicion="tl"></board-road>
@@ -531,10 +467,9 @@
             </li>
 
             <li class='hex water'>
-                <div class='harbor'>
-                    <div *ngIf="this.gameService.TipoPuerto(67) != null" class='harbor-piece tl'></div>
-                    <div *ngIf="this.gameService.TipoPuerto(77) != null" class='harbor-piece tr'></div>
-                </div>
+                <board-harbor posicion='tl' arista=67></board-harbor>
+                <board-harbor posicion='tr' arista=71></board-harbor>
+
                 <board-settlement vertice=51 posicion="tl"></board-settlement>
                 <board-settlement vertice=50 posicion="t"></board-settlement>
                 <board-road arista=67 posicion="tl"></board-road>
@@ -542,9 +477,8 @@
             </li>
 
             <li class='hex water'>
-                <div class='harbor'>
-                    <div *ngIf="this.gameService.TipoPuerto(70) != null" class='harbor-piece tl'></div>
-                </div>
+                <board-harbor posicion='tl' arista=70></board-harbor>
+                
                 <board-settlement vertice=53 posicion="tl"></board-settlement>
                 <board-settlement vertice=52 posicion="t"></board-settlement>
                 <board-road arista=70 posicion="tl"></board-road>

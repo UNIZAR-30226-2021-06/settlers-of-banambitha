@@ -26,6 +26,8 @@ import {MatGridListModule} from '@angular/material/grid-list'
 import {MatExpansionModule} from '@angular/material/expansion';
 import {MatTabsModule} from '@angular/material/tabs';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
+import { HexNumberComponent } from './board/hex-number/hex-number.component';
+import { HarborComponent } from './board/harbor/harbor.component';
 
 
 
@@ -39,7 +41,9 @@ import {MatProgressBarModule} from '@angular/material/progress-bar';
     InternalTradeDialog,
     ExternalTradeDialog,
     SettlementComponent,
-    RoadComponent],
+    RoadComponent,
+    HexNumberComponent,
+    HarborComponent],
   imports: [
     CommonModule,
     BrowserModule,

@@ -1065,7 +1065,7 @@ export class GameService implements Connectable{
       jugadores: this.inicializarJugadores(["Me!", "Some1", "Some2", "Some3"]),
       turnoActual: 1, 
       tablero: this.tableroPrueba(), 
-      resultadoTirada: 0, 
+      resultadoTirada: 7, 
       mensajes: [],
       clock: -1,
       PobladoDisponible: true,
@@ -1182,12 +1182,12 @@ export class GameService implements Connectable{
                          false,false]
                       ],
         puertos: {
-          arcilla: 14,
-          lana: 27, 
-          cereal: 20, 
-          basico: [34, 45, 63, 77], 
-          mineral: 46,
-          madera: 5
+          arcilla: 0,
+          lana: 0, 
+          cereal: 0, 
+          basico: [3, 4, 5, 9, 10, 14, 15, 11, 20, 19, 30, 27, 34, 35, 48, 45, 33, 52, 51, 46, 59, 60, 65, 64, 63, 68, 69, 67, 71, 70], 
+          mineral: 0,
+          madera: 0
         }
       }
     }
