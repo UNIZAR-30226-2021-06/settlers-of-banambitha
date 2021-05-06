@@ -36,6 +36,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import java.io.IOException;
+import javafx.scene.input.MouseButton;
 
 
 
@@ -54,6 +55,7 @@ public class Gameplay {
     private static double horizontal_left_gap = 60;
     private static double vertical_gap = 120;
     private static int numberRoads = 72;
+    private static int settleSize = 12;
 
     private static Polygon[] hexagons;
     public static ToggleButton[] roads;
@@ -282,9 +284,13 @@ public class Gameplay {
     }
 
     private void setColorButonOnClick(ToggleButton button, int pos) {
-        button.setOnAction((ActionEvent event) -> {
-            button.setStyle("-fx-background-color: red");
-            System.out.println("Pulsado: " + pos);
+        button.setOnMouseClicked( event -> {
+            if (event.getButton().equals(MouseButton.PRIMARY)) {
+                button.setStyle("-fx-background-color: red");
+                System.out.println("Pulsado: " + pos);
+            }   else if (event.getButton() == MouseButton.SECONDARY) {
+                button.setStyle("-fx-background-color: yellow; -fx-border-color:blue;-fx-border-width: 3 3 3 3;");
+            }     
         });
     }
 
@@ -389,23 +395,23 @@ public class Gameplay {
     }
 
     private void assignSettlementNO(Polygon pol, Integer i) {
-        Circle circle = new Circle();
-        circle.setCenterX(100.0f);
-        circle.setCenterY(100.0f);
-        circle.setRadius(12.0f);
-        circle.setLayoutX(pol.getLayoutX() - 158);
-        circle.setLayoutY(pol.getLayoutY() - 135);
+        Button circle = new Button();
+        circle.setShape(new Circle(settleSize));
+        circle.setMinSize(2*settleSize, 2*settleSize);
+        circle.setMaxSize(2*settleSize, 2*settleSize);
+        circle.setLayoutX(pol.getLayoutX() - 68);
+        circle.setLayoutY(pol.getLayoutY() - 45);
         onClickSettlement(circle);
         mainAnchor.getChildren().add(circle);
     }
 
     private void assignSettlementN(Polygon pol, Integer i) {
-            Circle circle = new Circle();
-            circle.setCenterX(100.0f);
-            circle.setCenterY(100.0f);
-            circle.setRadius(12.0f);
-            circle.setLayoutX(pol.getLayoutX() - 101);
-            circle.setLayoutY(pol.getLayoutY() - 170);
+            Button circle = new Button();
+            circle.setShape(new Circle(settleSize));
+            circle.setMinSize(2*settleSize, 2*settleSize);
+            circle.setMaxSize(2*settleSize, 2*settleSize);
+            circle.setLayoutX(pol.getLayoutX() - 12);
+            circle.setLayoutY(pol.getLayoutY() - 88);
             onClickSettlement(circle);
             mainAnchor.getChildren().add(circle);
     }
@@ -422,13 +428,13 @@ public class Gameplay {
     }
 
     // Click sobre una carretera
-    private void onClickSettlement(Circle circle) {
-        circle.setFill(Color.WHITE);
-        circle.setOnMouseClicked(
-        new EventHandler<MouseEvent>(){
-            public void handle(MouseEvent e){
-                circle.setFill(Color.RED);
-            }
+    private void onClickSettlement(Button circle) {
+        circle.setOnMouseClicked( event -> {
+            if (event.getButton().equals(MouseButton.PRIMARY)) {
+                circle.setStyle("-fx-background-color: red");
+            }   else if (event.getButton() == MouseButton.SECONDARY) {
+                circle.setStyle("-fx-background-color: yellow;");
+            }     
         });
     }
 
