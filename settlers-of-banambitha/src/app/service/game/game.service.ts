@@ -78,11 +78,11 @@ export enum Color {
  * Tipos de recursos
  */
 export enum Recurso {
-  MADERA, 
-  MINERAL, 
-  LANA, 
-  CEREAL, 
-  ARCILLA
+  MADERA  = "madera", 
+  MINERAL = "mineral", 
+  LANA    = "lana", 
+  CEREAL  = "cereal", 
+  ARCILLA = "arcilla"
 }
 
 
@@ -896,7 +896,7 @@ export class GameService implements Connectable{
    * @return Tipo de asentamiento correspondente a un pueblo
    * del jugador
    */
-  private miTipoPueblo(): TipoAsentamiento {
+  public miTipoPueblo(): TipoAsentamiento {
     switch(this.partida.miTurno){
       case 1: 
         return TipoAsentamiento.POBLADO_PLAYER_1
@@ -923,7 +923,7 @@ export class GameService implements Connectable{
    * @return Tipo de asentamiento correspondente a una ciudad
    * del jugador
    */
-  private miTipoCiudad(): TipoAsentamiento {
+  public miTipoCiudad(): TipoAsentamiento {
     switch(this.partida.miTurno){
       case 1: 
         return TipoAsentamiento.CIUDAD_PLAYER_1
@@ -950,7 +950,7 @@ export class GameService implements Connectable{
    * @return Tipo de camino correspondente a una camino
    * del jugador
    */
-  private miTipoCamino(): TipoCamino {
+  public miTipoCamino(): TipoCamino {
     switch(this.partida.miTurno){
       case 1: 
         return TipoCamino.PLAYER_1
@@ -1198,10 +1198,10 @@ export class GameService implements Connectable{
                          false,false]
                       ],
         puertos: {
-          arcilla: 0,
+          arcilla: 3,
           lana: 0, 
           cereal: 0, 
-          basico: [3, 4, 5, 9, 10, 14, 15, 11, 20, 19, 30, 27, 34, 35, 48, 45, 33, 52, 51, 46, 59, 60, 65, 64, 63, 68, 69, 67, 71, 70], 
+          basico: [ 4, 5, 9, 10, 14, 15, 11, 20, 19, 30, 27, 34, 35, 48, 45, 33, 52, 51, 46, 59, 60, 65, 64, 63, 68, 69, 67, 71, 70], 
           mineral: 0,
           madera: 0
         }

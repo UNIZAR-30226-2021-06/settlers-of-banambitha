@@ -1,0 +1,100 @@
+<h1 mat-dialog-title class="cards-info-title">
+    {{nombrePuerto}}<br/>
+    {{recursosRequeridos}}:1
+</h1>
+
+
+<form name="myform">
+  <div mat-dialog-content >
+
+    <mat-grid-list cols="6" rowHeight="80px">
+      <mat-grid-tile colspan=1>
+        Madera
+      </mat-grid-tile>
+      <mat-grid-tile colspan=5>
+        <mat-slider fxLayout="column" fxLayoutAlign="center stretch"
+        thumbLabel
+        required
+        [displayWith]="formatLabelMadera"
+        tickInterval="1"
+        min="0"
+        [max]="recursosRequeridos - numArcilla - numCereal - numMineral - numLana"></mat-slider>
+      </mat-grid-tile>
+
+      <mat-grid-tile colspan=1>
+        Mineral
+      </mat-grid-tile>
+      <mat-grid-tile colspan=5>
+        <mat-slider fxLayout="column" fxLayoutAlign="center stretch"
+        thumbLabel
+        required
+        [displayWith]="formatLabelMineral"
+        tickInterval="1"
+        min="0"
+        [max]="recursosRequeridos - numArcilla - numCereal - numMadera - numLana"></mat-slider>
+      </mat-grid-tile>
+
+      <mat-grid-tile colspan=1>
+        Lana
+      </mat-grid-tile>
+      <mat-grid-tile colspan=5>
+        <mat-slider fxLayout="column" fxLayoutAlign="center stretch"
+        thumbLabel
+        required
+        [displayWith]="formatLabelLana"
+        tickInterval="1"
+        min="0"
+        [max]="recursosRequeridos - numArcilla - numCereal - numMineral - numMadera"></mat-slider>
+      </mat-grid-tile>
+
+      <mat-grid-tile colspan=1>
+        Arcilla
+      </mat-grid-tile>
+      <mat-grid-tile colspan=5>
+        <mat-slider fxLayout="column" fxLayoutAlign="center stretch"
+        thumbLabel
+        required
+        [displayWith]="formatLabelArcilla"
+        tickInterval="1"
+        min="0"
+        [max]="recursosRequeridos - numMadera - numCereal - numMineral - numLana"></mat-slider>
+      </mat-grid-tile>
+
+      <mat-grid-tile colspan=1>
+        Cereal
+      </mat-grid-tile>
+      <mat-grid-tile colspan=5>
+        <mat-slider fxLayout="column" fxLayoutAlign="center stretch"
+        thumbLabel
+        required
+        [displayWith]="formatLabelCereal"
+        tickInterval="1"
+        min="0"
+        [max]="recursosRequeridos - numArcilla - numMadera - numMineral - numLana"></mat-slider>
+      </mat-grid-tile>
+    </mat-grid-list>
+
+
+    <div *ngIf="tipoPuerto == tiposPuerto().BASICO">
+      <p> Material solicitado </p>
+      <mat-form-field appearance="fill" fxLayout="column" fxLayoutAlign="center stretch">
+        <mat-label>Selecciona un material</mat-label>
+        <mat-select [(ngModel)]="materialSolicitado" name="material" required >
+          <mat-option *ngFor="let material of materials" [value]="material.value">
+            {{material.viewValue}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div fxLayout="column" fxLayoutAlign="center stretch">
+      <button class="boton" mat-raised-button mat-dialog-close
+              (click)="onSubmit()"
+              [disabled] = "numMadera + numArcilla + numCereal
+              + numLana + numMineral != recursosRequeridos" >
+         Comerciar
+      </button>
+    </div>
+
+  </div>
+</form> 
