@@ -16,6 +16,10 @@ public class PeticionPK implements Serializable{
 	private String usuario1_id;
 	private String usuario2_id;
 
+	public PeticionPK(String remitente, String destinatario) {
+		usuario1_id = remitente;
+		usuario2_id = destinatario;
+	}
 	public String getFrom() {
 		return usuario1_id;
 	}

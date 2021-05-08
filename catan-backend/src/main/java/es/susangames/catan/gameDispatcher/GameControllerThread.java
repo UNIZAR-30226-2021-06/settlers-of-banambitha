@@ -3,7 +3,6 @@ package es.susangames.catan.gameDispatcher;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 

@@ -62,6 +62,17 @@ public class Usuario implements Serializable {
 		this.apariencia = apariencia;
 	}
 
+	public Usuario(String nombre, String contrasenya) {
+		this.nombre = nombre;
+		this.email = null;
+		this.contrasenya = contrasenya;
+		this.saldo = null;
+		this.idioma = null;
+		this.partida = null;
+		this.avatar = null;
+		this.apariencia = null;
+	}
+
 	public String getNombre() {
 		return nombre;
 	}

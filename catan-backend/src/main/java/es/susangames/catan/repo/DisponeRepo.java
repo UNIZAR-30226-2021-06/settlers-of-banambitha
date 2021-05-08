@@ -2,7 +2,10 @@ package es.susangames.catan.repo;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -18,4 +21,8 @@ public interface DisponeRepo extends JpaRepository<Dispone, DisponePK>{
 	@Query(value = "SELECT u.saldo >= p.precio FROM usuario u, producto p WHERE u.usuario_id = :usuarioId AND p.producto_id = :productoId", nativeQuery = true)
 	public String transaccionFactible(@Param("usuarioId") String usuarioId, @Param("productoId") String productoId);
 
+	@Modifying
+	@Transactional
+	@Query(value = "DELETE FROM dispone WHERE usuario_id = :usuarioId", nativeQuery = true)
+	public void eliminarProductos(@Param("usuarioId") String usuarioId);
 }

@@ -24,14 +24,12 @@ public class SalaController {
 	private static Matchmaker matchmaker;
 	private static Cola cola = new Cola();
 	private static SimpMessagingTemplate template;
-	private static UsuarioService usuarioService;
 	private static Map<String,Sala> salas = new HashMap<String, Sala>();
 	
 	@Autowired
 	public SalaController(SimpMessagingTemplate template, UsuarioService usuarioService) {
 
 		SalaController.template = template;
-		SalaController.usuarioService = usuarioService;
 		
 		SalaController.matchmaker = new Matchmaker(template, usuarioService);
 		
