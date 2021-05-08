@@ -1,6 +1,7 @@
 package es.susangames.catan.WSController;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
 import es.susangames.catan.WebSocketConfig;
+import es.susangames.catan.Test.PartidaSimulada;
 import es.susangames.catan.gameDispatcher.MoveCarrierHeap;
 import es.susangames.catan.service.UsuarioService;
 
@@ -235,5 +237,51 @@ public class PartidaController {
 		template.convertAndSend(WebSocketConfig.TOPIC_PARTIDA_COM + "/" + partida + "/" + destinatario, new_message.toString());
 	}
 	
+
+	/* ******************************************************
+	 * Maps:	single player match
+	 * 
+	 * Expects: -JSON Message
+	 * 			-Mapped point: 		/app/partida/test
+	 * 			-Format:
+	 * 				{
+	 * 					"from"	: <id_jugador>
+	 * 					"simulate": true | false
+	 *				}
+	 * 
+	 * Returns: -JSON Message
+	 * 			-Broadcast point:	/test-partida/<from>
+	 * 			-Format:
+	 * 				{
+	 * 					"game": id_partida
+	 *				}
+	****************************************************** */
+	@MessageMapping("/partida/test")
+	public void comenzarPartidaSimulada(String mensaje){
+
+		JSONObject message = new JSONObject(mensaje);
+		String remitente = message.getString("from");
+		ArrayList<String> jugadores = new ArrayList<String>(); 
+		jugadores.add(remitente); 
+		jugadores.add("Faker1"); 
+		jugadores.add("Faker2"); 
+		jugadores.add("Faker3"); 
+
+		//Generar partida
+		String idPartida = this.moveCarrierHeap.newGame(jugadores); 
+
+		//Enviar el identificador de la partida al remitente
+		JSONObject new_message = new JSONObject();
+		new_message.put("game", idPartida);
+		template.convertAndSend(WebSocketConfig.TOPIC_TEST_PARTIDA + "/" + remitente, new_message.toString());
+
+		//Comenzar simulación
+		Boolean simulate = message.getBoolean("simulate"); 
+		if ( simulate ){
+			PartidaSimulada partidaSimulada = new PartidaSimulada(idPartida, moveCarrierHeap); 
+			Thread simulacion = new Thread(partidaSimulada); 
+			simulacion.start();
+		}
+	}
 	
 }

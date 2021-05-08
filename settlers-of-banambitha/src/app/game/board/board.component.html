@@ -1,190 +1,489 @@
-<div class="container">
-    <div class="board">
-        <ol class="even">
-            <li class='hex spacer'></li>
-            <li class='hex water'></li>
-            <li class='hex water'>
-                <div class='harbor two-one wood'>
-                    <div class='harbor-piece br'></div>
-                </div>
-            </li>
-            <li class='hex water'></li>
-            <li class='hex water'>
-                <div class='harbor three-one wood'>
-                    <div class='harbor-piece bl'></div>
-                </div>
-            </li>
-        </ol>
-        <ol class="odd">
-            <li class='hex spacer'></li>
-            <li class='hex water'>
-                <div class='harbor three-one sheep'>
-                    <div class='harbor-piece br'></div>
-                </div>
-            </li>
-            <li class='hex wheat'>
-                <div class='house target tl'></div>
+<!-- <div class='house target tl'></div>
                 <div class='house target t'></div>
                 <div class='house target '></div>
                 <div class='road tl'></div>
                 <div class='road target l' [ngStyle]="{'background-color': 'black'}"></div>
-                <div class='road target tr'></div>
-                <div class='number two'></div>
-            </li>
-            <li class='hex wood'>
-                <div class='house target tl'></div>
+                <div class='road target tr'></div> -->
+<!-- <div class='house target tl'></div>
                 <div class='house target t'></div>
                 <div class='house target '></div>
                 <div class='road target tl'></div>
                 <div class='road target l'></div>
                 <div class='road target tr'></div>
                 <div class='number three'></div>
-            </li>
-            <li class='hex wheat'>
-                <div class='house target tl'></div>
-                <div class='house target t'></div>
-                <div class='road target tl r5 r2'></div>
-                <div class='road target l r9 r5'></div>
-                <div class='road target tr r2 r6'></div>
-                <div class='number three'></div>
+                <div class='house target tl' [matMenuTriggerFor]="menu"></div>
+                <mat-menu #menu="matMenu">
+                    <button mat-menu-item>Item 1</button>
+                    <button mat-menu-item>Item 2</button>
+                </mat-menu>
+            -->
+<div class="container">
 
-            </li>
-            <li class='hex water'>
-            </li>
-        </ol>
+    <!-- TABLERO -->
 
+    <div class="board">
+
+        <!-- PRIMERA FILA DE MAR -->
         <ol class="even">
-            <li class='hex water'></li>
-            <li class='hex coal'>
-                <div class='road target tl r11 r7'></div>
-                <div class='road target l r11 r16'></div>
-                <div class='road target tr r7 r12'></div>
-                <div class='number four'></div>
-            </li>
-            <li class='hex sheep'>
-                <div class='number four'></div>
-            </li>
-            <li class='hex wood'>
-                <div class='number five'></div>
-            </li>
-            <li class='hex sheep'>
-                <div class='number five'></div>
-            </li>
+
+            <li class='hex spacer'></li>
+
             <li class='hex water'>
-                <div class='harbor three-one brick'>
-                    <div class='harbor-piece l'></div>
-                </div>
+                <board-harbor posicion='br' arista=4></board-harbor>
+            </li>
+
+            <li class='hex water'>
+                <board-harbor posicion='bl' arista=5></board-harbor>
+                <board-harbor posicion='br' arista=9></board-harbor>
+            </li>
+
+            <li class='hex water'>
+                <board-harbor posicion='bl' arista=10></board-harbor>
+                <board-harbor posicion='br' arista=14></board-harbor>
+            </li>
+
+            <li class='hex water'>
+                <board-harbor posicion='bl' arista=15></board-harbor>
             </li>
         </ol>
 
-        <ol class="odd">
-            <li class='hex water'>
-                <div class='harbor three-one sheep'>
-                    <div class='harbor-piece r'></div>
-                </div>
-            </li>
-            <li class='hex sheep'>
-                <div class='number six'></div>
-            </li>
-            <li class='hex wheat'>
-                <div class='number six'></div>
-            </li>
-            <li class='hex wood'>
-                <div class='number eight robber'></div>
-            </li>
-            <li class='hex brick'>
-                <div class='number eight'></div>
-            </li>
-            <li class='hex brick'>
-                <div class='number nine'></div>
-            </li>
-            <li class='hex water'>
 
-            </li>
-        </ol>
-        <ol class="even">
-            <li class='hex water'></li>
-            <li class='hex coal'>
-                <!-- ROAD TARGETS -->
-                <div class='number nine'></div>
-            </li>
-            <li class='hex brick'>
-                <div class='number ten'></div>
-            </li>
-            <li class='hex wood'>
-                <!-- HOUSE TARGETS -->
-                <div class='house t target'></div>
-                <div class='number ten'></div>
-            </li>
-            <li class='hex sheep'>
-                <div class='number eleven'></div>
-
-            </li>
-            <li class='hex water'>
-                <div class='harbor three-one brick'>
-                    <div class='harbor-piece l'></div>
-                </div>
-            </li>
-        </ol>
+        <!-- FILA 1 -->
         <ol class="odd">
             <li class='hex spacer'></li>
+
             <li class='hex water'>
-                <div class='harbor two-one any'>
-                    <div class='harbor-piece tr'></div>
-                </div>
+                <board-harbor posicion='r' arista=3></board-harbor>
+                <board-harbor posicion='br' arista=20></board-harbor>
             </li>
-            <li class='hex sand'></li>
-            <li class='hex coal'>
-                <div class='number twelve'></div>
+
+            <!--TERRENOS FILA 1-->
+
+            <!--HEXAGONO 0-->
+            <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[0])">
+                <board-hex-number hexagono=0></board-hex-number>
+
+                <!--ASENTAMIENTOS-->
+                <board-settlement vertice=4 posicion="tl"></board-settlement>
+                <board-settlement vertice=5 posicion="t"></board-settlement>
+
+                <!--CAMINOS-->
+                <board-road arista=3 posicion="l"></board-road>
+                <board-road arista=4 posicion="tl"></board-road>
+                <board-road arista=5 posicion="tr"></board-road>
+
             </li>
-            <li class='hex wheat'>
-                <div class='number eight'></div>
+
+            <!--HEXAGONO 1-->
+            <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[1])">
+                <board-hex-number hexagono=1></board-hex-number>
+
+                <!--ASENTAMIENTOS-->
+                <board-settlement vertice=0 posicion="tl"></board-settlement>
+                <board-settlement vertice=9 posicion="t"></board-settlement>
+
+                <!--CAMINOS-->
+                <board-road arista=0  posicion="l"></board-road>
+                <board-road arista=9  posicion="tl"></board-road>
+                <board-road arista=10 posicion="tr"></board-road>
             </li>
+
+            <!--HEXAGONO 2-->
+            <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[2])">
+                <board-hex-number hexagono=2></board-hex-number>
+
+                <!--ASENTAMIENTOS-->
+                <board-settlement vertice=6  posicion="tl"></board-settlement>
+                <board-settlement vertice=13 posicion="t"></board-settlement>
+
+                <!--CAMINOS-->
+                <board-road arista=6  posicion="l"></board-road>
+                <board-road arista=14 posicion="tl"></board-road>
+                <board-road arista=15 posicion="tr"></board-road>
+            </li>
+            <!--FIN TERRENOS FILA 1-->
+
             <li class='hex water'>
+                <board-harbor posicion='l' arista=11></board-harbor>
+                <board-harbor posicion='bl' arista=30></board-harbor>
+
+                <board-settlement vertice=10  posicion="tl"></board-settlement>
+                <board-road arista=11  posicion="l"></board-road>
             </li>
         </ol>
+
+
+        <!-- FILA 2 -->
+        <ol class="even">
+            <li class='hex water'>
+                <board-harbor posicion='r' arista=19></board-harbor>
+                <board-harbor posicion='br' arista=35></board-harbor>
+            </li>
+
+
+            <!--TERRENOS FILA 2-->
+
+            <!--HEXAGONO 3-->
+            <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[3])">
+                <board-hex-number hexagono=3></board-hex-number>
+
+                <!--ASENTAMIENTOS-->
+                <board-settlement vertice=17 posicion="tl"></board-settlement>
+                <board-settlement vertice=3  posicion="t"></board-settlement>
+
+                <!--CAMINOS-->
+                <board-road arista=19 posicion="l"></board-road>
+                <board-road arista=20 posicion="tl"></board-road>
+                <board-road arista=2  posicion="tr"></board-road>
+            </li>
+
+            <!--HEXAGONO 4-->
+            <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[4])">
+                <board-hex-number hexagono=4></board-hex-number>
+
+                <!--ASENTAMIENTOS-->
+                <board-settlement vertice=2 posicion="tl"></board-settlement>
+                <board-settlement vertice=1  posicion="t"></board-settlement>
+
+                <!--CAMINOS-->
+                <board-road arista=16 posicion="l"></board-road>
+                <board-road arista=1  posicion="tl"></board-road>
+                <board-road arista=8 posicion="tr"></board-road>
+
+            </li>
+
+            <!--HEXAGONO 5-->
+            <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[5])">
+                <board-hex-number hexagono=5></board-hex-number>
+
+                <!--ASENTAMIENTOS-->
+                <board-settlement vertice=8 posicion="tl"></board-settlement>
+                <board-settlement vertice=7  posicion="t"></board-settlement>
+
+                <!--CAMINOS-->
+                <board-road arista=21 posicion="l"></board-road>
+                <board-road arista=7   posicion="tl"></board-road>
+                <board-road arista=13 posicion="tr"></board-road>
+
+            </li>
+
+            <!--HEXAGONO 6-->
+            <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[6])">
+                <board-hex-number hexagono=6></board-hex-number>
+
+                <!--ASENTAMIENTOS-->
+                <board-settlement vertice=12 posicion="tl"></board-settlement>
+                <board-settlement vertice=11  posicion="t"></board-settlement>
+
+                <!--CAMINOS-->
+                <board-road arista=24 posicion="l"></board-road>
+                <board-road arista=12 posicion="tl"></board-road>
+                <board-road arista=30 posicion="tr"></board-road>
+
+            </li>
+            <!--FIN TERRENOS FILA 2-->
+
+
+            <li class='hex water'>
+                <board-harbor posicion='l' arista=27></board-harbor>
+                <board-harbor posicion='bl' arista=48></board-harbor>
+
+                <board-settlement vertice=22 posicion="tl"></board-settlement>
+                <board-road arista=27 posicion="l"></board-road>
+            </li>
+        </ol>
+
+
+        <!-- FILA 3 -->
+        <ol class="odd">
+
+            <li class='hex water'>
+                <board-harbor posicion='r' arista=34></board-harbor>
+            </li>
+
+            <!--TERRENOS FILA 3-->
+
+            <!--HEXAGONO 7-->
+            <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[7])">
+                <board-hex-number hexagono=7></board-hex-number>
+
+                <!--ASENTAMIENTOS-->
+                <board-settlement vertice=28 posicion="tl"></board-settlement>
+                <board-settlement vertice=16  posicion="t"></board-settlement>
+
+                <!--CAMINOS-->
+                <board-road arista=34 posicion="l"></board-road>
+                <board-road arista=35 posicion="tl"></board-road>
+                <board-road arista=18 posicion="tr"></board-road>
+
+            </li>
+
+            <!--HEXAGONO 8-->
+            <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[8])">
+                <board-hex-number hexagono=8></board-hex-number>
+
+                <!--ASENTAMIENTOS-->
+                <board-settlement vertice=15 posicion="tl"></board-settlement>
+                <board-settlement vertice=14  posicion="t"></board-settlement>
+
+                <!--CAMINOS-->
+                <board-road arista=31 posicion="l"></board-road>
+                <board-road arista=17 posicion="tl"></board-road>
+                <board-road arista=23 posicion="tr"></board-road>
+
+            </li>
+
+            <!--HEXAGONO 9-->
+            <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[9])">
+                <board-hex-number hexagono=9></board-hex-number>
+
+                <!--ASENTAMIENTOS-->
+                <board-settlement vertice=19 posicion="tl"></board-settlement>
+                <board-settlement vertice=18 posicion="t"></board-settlement>
+
+                <!--CAMINOS-->
+                <board-road arista=36 posicion="l"></board-road>
+                <board-road arista=22 posicion="tl"></board-road>
+                <board-road arista=26 posicion="tr"></board-road>
+
+            </li>
+
+            <!--HEXAGONO 10-->
+            <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[10])">
+                <board-hex-number hexagono=10></board-hex-number>
+
+                <!--ASENTAMIENTOS-->
+                <board-settlement vertice=21 posicion="tl"></board-settlement>
+                <board-settlement vertice=20 posicion="t"></board-settlement>
+
+                <!--CAMINOS-->
+                <board-road arista=39 posicion="l"></board-road>
+                <board-road arista=25 posicion="tl"></board-road>
+                <board-road arista=29 posicion="tr"></board-road>
+
+            </li>
+
+            <!--HEXAGONO 11-->
+            <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[11])">
+                <board-hex-number hexagono=11></board-hex-number>
+
+                <!--ASENTAMIENTOS-->
+                <board-settlement vertice=24 posicion="tl"></board-settlement>
+                <board-settlement vertice=23 posicion="t"></board-settlement>
+
+                <!--CAMINOS-->
+                <board-road arista=42 posicion="l"></board-road>
+                <board-road arista=28 posicion="tl"></board-road>
+                <board-road arista=48 posicion="tr"></board-road>
+
+            </li>
+            <!--FIN TERRENOS FILA 3-->
+
+            <li class='hex water'>
+                <board-harbor posicion='l' arista=45></board-harbor>
+
+                <board-settlement vertice=35 posicion="tl"></board-settlement>
+                <board-road arista=45 posicion="l"></board-road>
+            </li>
+        </ol>
+
+
+        <!-- FILA 4 -->
+        <ol class="even">
+            <li class='hex water'>
+                <board-harbor posicion='tr' arista=33></board-harbor>
+                <board-harbor posicion='r' arista=52></board-harbor>
+
+                <board-settlement vertice=27 posicion="t"></board-settlement>
+                <board-road arista=33 posicion="tr"></board-road>
+            </li>
+
+            <!--TERRENOS FILA 4-->
+
+            <!--HEXAGONO 12-->
+            <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[12])">
+                <board-hex-number hexagono=12></board-hex-number>
+
+                <!--ASENTAMIENTOS-->
+                <board-settlement vertice=26 posicion="tl"></board-settlement>
+                <board-settlement vertice=25 posicion="t"></board-settlement>
+
+                <!--CAMINOS-->
+                <board-road arista=52 posicion="l"></board-road>
+                <board-road arista=32 posicion="tl"></board-road>
+                <board-road arista=38 posicion="tr"></board-road>
+
+            </li>
+
+            <!--HEXAGONO 13-->
+            <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[13])">
+                <board-hex-number hexagono=13></board-hex-number>
+
+                <!--ASENTAMIENTOS-->
+                <board-settlement vertice=30 posicion="tl"></board-settlement>
+                <board-settlement vertice=29 posicion="t"></board-settlement>
+
+                <!--CAMINOS-->
+                <board-road arista=49 posicion="l"></board-road>
+                <board-road arista=37 posicion="tl"></board-road>
+                <board-road arista=41 posicion="tr"></board-road>
+
+            </li>
+
+            <!--HEXAGONO 14-->
+            <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[14])">
+                <board-hex-number hexagono=14></board-hex-number>
+
+                <!--ASENTAMIENTOS-->
+                <board-settlement vertice=32 posicion="tl"></board-settlement>
+                <board-settlement vertice=31 posicion="t"></board-settlement>
+
+                <!--CAMINOS-->
+                <board-road arista=53 posicion="l"></board-road>
+                <board-road arista=40 posicion="tl"></board-road>
+                <board-road arista=44 posicion="tr"></board-road>
+
+            </li>
+
+            <!--HEXAGONO 15-->
+            <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[15])">
+                <board-hex-number hexagono=15></board-hex-number>
+
+                <!--ASENTAMIENTOS-->
+                <board-settlement vertice=34 posicion="tl"></board-settlement>
+                <board-settlement vertice=33 posicion="t"></board-settlement>
+
+                <!--CAMINOS-->
+                <board-road arista=56 posicion="l"></board-road>
+                <board-road arista=43 posicion="tl"></board-road>
+                <board-road arista=47 posicion="tr"></board-road>
+
+            </li>
+            <!--FIN TERRENOS FILA 4-->
+
+            <li class='hex water'>
+                <board-harbor posicion='tl' arista=46></board-harbor>
+                <board-harbor posicion='l' arista=59></board-harbor>
+
+                <board-settlement vertice=37 posicion="tl"></board-settlement>
+                <board-settlement vertice=36 posicion="t"></board-settlement>
+                <board-road arista=59 posicion="l"></board-road>
+                <board-road arista=46 posicion="tl"></board-road>
+            </li>
+        </ol>
+
+
+        <!-- FILA 5 -->
+        <ol class="odd">
+            <li class='hex spacer'></li>
+
+            <li class='hex water'>
+                <board-harbor posicion='tr' arista=51></board-harbor>
+                <board-harbor posicion='r' arista=65></board-harbor>
+
+                <board-settlement vertice=40 posicion="t"></board-settlement>
+                <board-road arista=51 posicion="tr"></board-road>
+            </li>
+
+            <!--TERRENOS FILA 5-->
+
+            <!--HEXAGONO 16-->
+            <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[16])">
+                <board-hex-number hexagono=16></board-hex-number>
+
+                <!--ASENTAMIENTOS-->
+                <board-settlement vertice=39 posicion="tl"></board-settlement>
+                <board-settlement vertice=38 posicion="t"></board-settlement>
+
+                <!--CAMINOS-->
+                <board-road arista=65 posicion="l"></board-road>
+                <board-road arista=50 posicion="tl"></board-road>
+                <board-road arista=55 posicion="tr"></board-road>
+
+            </li>
+
+            <!--HEXAGONO 17-->
+            <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[17])">
+                <board-hex-number hexagono=17></board-hex-number>
+
+                <!--ASENTAMIENTOS-->
+                <board-settlement vertice=42 posicion="tl"></board-settlement>
+                <board-settlement vertice=41 posicion="t"></board-settlement>
+
+                <!--CAMINOS-->
+                <board-road arista=62 posicion="l"></board-road>
+                <board-road arista=54 posicion="tl"></board-road>
+                <board-road arista=58 posicion="tr"></board-road>
+
+            </li>
+
+            <!--HEXAGONO 18-->
+            <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[18])">
+                <board-hex-number hexagono=18></board-hex-number>
+
+                <!--ASENTAMIENTOS-->
+                <board-settlement vertice=44 posicion="tl"></board-settlement>
+                <board-settlement vertice=43 posicion="t"></board-settlement>
+
+                <!--CAMINOS-->
+                <board-road arista=66 posicion="l"></board-road>
+                <board-road arista=57 posicion="tl"></board-road>
+                <board-road arista=61 posicion="tr"></board-road>
+
+            </li>
+            <!--FIN TERRENOS FILA 5-->
+
+            <li class='hex water'>
+                <board-harbor posicion='tl' arista=60></board-harbor>
+                <board-harbor posicion='l' arista=69></board-harbor>
+
+                <board-settlement vertice=46 posicion="tl"></board-settlement>
+                <board-settlement vertice=45 posicion="t"></board-settlement>
+                <board-road arista=69 posicion="l"></board-road>
+                <board-road arista=60 posicion="tl"></board-road>
+            </li>
+        </ol>
+
+
+        <!-- ULTIMA FILA DE MAR-->
         <ol class="even">
             <li class='hex spacer'></li>
-            <li class='hex water'></li>
+
             <li class='hex water'>
-                <div class='harbor two-one any'>
-                    <div class='harbor-piece tr'></div>
-                </div>
+                <board-harbor posicion='tr' arista=64></board-harbor>
+
+                <board-settlement vertice=49 posicion="t"></board-settlement>
+                <board-road arista=64 posicion="tr"></board-road>
             </li>
-            <li class='hex water'></li>
+
             <li class='hex water'>
-                <div class='harbor three-one wood'>
-                    <div class='harbor-piece tl'></div>
-                </div>
+                <board-harbor posicion='tl' arista=63></board-harbor>
+                <board-harbor posicion='tr' arista=68></board-harbor>
+
+                <board-settlement vertice=48 posicion="tl"></board-settlement>
+                <board-settlement vertice=47 posicion="t"></board-settlement>
+                <board-road arista=63 posicion="tl"></board-road>
+                <board-road arista=68 posicion="tr"></board-road>
             </li>
+
+            <li class='hex water'>
+                <board-harbor posicion='tl' arista=67></board-harbor>
+                <board-harbor posicion='tr' arista=71></board-harbor>
+
+                <board-settlement vertice=51 posicion="tl"></board-settlement>
+                <board-settlement vertice=50 posicion="t"></board-settlement>
+                <board-road arista=67 posicion="tl"></board-road>
+                <board-road arista=71 posicion="tr"></board-road>
+            </li>
+
+            <li class='hex water'>
+                <board-harbor posicion='tl' arista=70></board-harbor>
+                
+                <board-settlement vertice=53 posicion="tl"></board-settlement>
+                <board-settlement vertice=52 posicion="t"></board-settlement>
+                <board-road arista=70 posicion="tl"></board-road>
+            </li>
+
         </ol>
-    </div>
-
-    <!-- Botones -->
-
-    <div fxLayout="row" fxLayoutAlign="center center">
-        <button class="dice-button" mat-fab color="primary">
-          <p class="dice"> 
-          Pasar turno
-          </p>
-        </button>
-
-        <button class="dice-button" mat-fab color="primary">
-          <p class="dice"> 
-          Turno: World_champion
-          </p>
-        </button>
-
-        <button class="dice-button" mat-fab color="primary">
-          <p class="dice"> 
-          Dados: 8
-          </p>
-        </button>
-
-        <button class="dice-button" mat-fab color="primary" (click)="openSettingsDialog()">
-          <p class="dice"> 
-          Ajustes
-          </p>
-        </button>
     </div>
 </div>
