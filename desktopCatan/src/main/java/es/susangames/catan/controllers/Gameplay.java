@@ -37,6 +37,8 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import java.io.IOException;
 import javafx.scene.input.MouseButton;
+import javafx.scene.image.ImageView;
+
 
 
 
@@ -48,7 +50,27 @@ import javafx.scene.input.MouseButton;
 
 
 public class Gameplay {
- 
+    public static String  MENSAJE                         = "Message";
+    public static String  EXIT_STATUS                     = "exit_status";
+    public static String  TAB_INFO                        = "Tab_inf";
+    public static String  TAB_INFO_HEXAGONOS              = "hexagono";
+    public static String  HEXAGONOS_TIPOS                 = "tipo";
+    public static String  HEXAGONOS_VALORES               = "valor";
+    public static String  HEXAGONOS_LADRON                = "ladron";
+    public static String  TAB_INFO_VERTICES               = "vertices";
+    public static String  VERTICES_ASENTAMIENTOS          = "asentamiento";
+    public static String  VERTICES_POSIBLES_ASENTAMIENTOS = "posibles_asentamiento";
+    public static String  TAB_INFO_ARISTAS                = "aristas";
+    public static String  ARISTAS_CAMINOS                 = "camino";
+    public static String  ARISTAS_POSIBLES_CAMINOS        = "posibles_camino";
+    public static String  ARISTAS_PUERTOS                 = "puertos";
+    public static String  RESULTADO_TIRADA                = "Resultado_Tirada";
+    public static String  RECURSOS                        = "Recursos";
+
+
+
+    
+    
     private static double start_X_position = 250.0;
     private static double start_Y_position = 110.0;
     private static double horizontal_right_gap = 115;
@@ -56,8 +78,12 @@ public class Gameplay {
     private static double vertical_gap = 120;
     private static int numberRoads = 72;
     private static int settleSize = 12;
+    private static int numberSize = 18;
+    private static int numberSettlements = 54;
 
     private static Polygon[] hexagons;
+    private static Button[] numberOverHexagon;
+    private static Button[] settlements;
     public static ToggleButton[] roads;
     private Image imgSea, imgDes, imgMou, imgFie, imgFor, imgHil; 
  
@@ -142,8 +168,10 @@ public class Gameplay {
 
 
     public Gameplay() {
-        hexagons = new Polygon[37];
+        hexagons = new Polygon[19];
+        settlements = new Button[numberSettlements];
         roads = new ToggleButton[numberRoads];
+        numberOverHexagon = new Button[19];
         imgSea = new Image("/img/sea.png");
         imgDes = new Image("/img/sand-desert.jpg"); 
         imgMou = new Image("/img/mountain.png");  
@@ -221,22 +249,22 @@ public class Gameplay {
         i == 15 || i == 21 || i == 22 || i == 27 ||
         i == 28 || i >= 32) {
 
-            pol.setFill(new ImagePattern(imgSea));
+            pol.setFill(Color.DEEPSKYBLUE);
         } 
         else {
             int var = i % 5;
             //TODO: Modificar para rellenar segun codigo backend
             // Version estatica para frontend
             if (var == 0) {
-                pol.setFill(new ImagePattern(imgDes));
+                pol.setFill(Color.BLANCHEDALMOND);
             } else if (var == 1) {
-                pol.setFill(new ImagePattern(imgMou));
+                pol.setFill(Color.ORANGERED);
             } else if (var == 2) {
-                pol.setFill(new ImagePattern(imgFie));
+                pol.setFill(Color.GREEN);
             } else if (var == 3) {
-                pol.setFill(new ImagePattern(imgFor));
+                pol.setFill(Color.MAROON);
             } else {
-                pol.setFill(new ImagePattern(imgHil));
+                pol.setFill(Color.GRAY);
             }
         }
 
@@ -287,9 +315,8 @@ public class Gameplay {
         button.setOnMouseClicked( event -> {
             if (event.getButton().equals(MouseButton.PRIMARY)) {
                 button.setStyle("-fx-background-color: red");
-                System.out.println("Pulsado: " + pos);
             }   else if (event.getButton() == MouseButton.SECONDARY) {
-                button.setStyle("-fx-background-color: yellow; -fx-border-color:blue;-fx-border-width: 3 3 3 3;");
+                button.setStyle("-fx-background-color: yellow;");
             }     
         });
     }
@@ -394,46 +421,139 @@ public class Gameplay {
         }
     }
 
-    private void assignSettlementNO(Polygon pol, Integer i) {
+    private void assignSettlementNO(Polygon pol, Integer position) {
         Button circle = new Button();
         circle.setShape(new Circle(settleSize));
         circle.setMinSize(2*settleSize, 2*settleSize);
         circle.setMaxSize(2*settleSize, 2*settleSize);
         circle.setLayoutX(pol.getLayoutX() - 68);
         circle.setLayoutY(pol.getLayoutY() - 45);
-        onClickSettlement(circle);
+        settlements[position] = circle;
+        onClickSettlement(circle,position);
         mainAnchor.getChildren().add(circle);
     }
 
-    private void assignSettlementN(Polygon pol, Integer i) {
+    private void assignSettlementN(Polygon pol, Integer position) {
             Button circle = new Button();
+            //Image image = new Image("/img/city_RED.png", 20, 20, true, true);
+            //ImageView imageView = new ImageView(image);            
+            //circle.setGraphic(imageView);
+            //circle.setStyle("-fx-background-color:#414147f1;");
             circle.setShape(new Circle(settleSize));
             circle.setMinSize(2*settleSize, 2*settleSize);
             circle.setMaxSize(2*settleSize, 2*settleSize);
             circle.setLayoutX(pol.getLayoutX() - 12);
             circle.setLayoutY(pol.getLayoutY() - 88);
-            onClickSettlement(circle);
+            settlements[position] = circle;
+            onClickSettlement(circle,position);
             mainAnchor.getChildren().add(circle);
     }
 
     private void assignSettlements(Polygon pol, Integer i) {
+        int settleN, settleNO;
         if(hasRoads(i) || i == 32) {
-            assignSettlementN(pol, i);
-            assignSettlementNO(pol, i);
-        } else if (i == 8 || i == 14) {
-            assignSettlementNO(pol, i);
-        } else if (i == 22 || i == 27 || i == 28 || i > 32) {
-            assignSettlementN(pol, i);
-        } 
+            switch (i) {
+                case 5:
+                    settleN = 5;  settleNO = 4;    
+                    break;
+                case 6:
+                    settleN = 9;  settleNO = 0;    
+                    break;
+                case 7:
+                    settleN = 13;  settleNO = 6;   
+                    break;
+                case 10:
+                    settleN = 3; settleNO = 17;   
+                    break;
+                case 11:
+                    settleN = 1; settleNO = 2;    
+                    break;
+                case 12:
+                    settleN = 7; settleNO = 8;    
+                    break;
+                case 13:
+                    settleN = 11; settleNO = 12;   
+                    break;
+                case 16:
+                    settleN = 16; settleNO = 28;   
+                    break;
+                case 17:
+                    settleN = 14; settleNO = 15;   
+                    break;
+                case 18:
+                    settleN = 18; settleNO = 19;   
+                    break;
+                case 19:
+                    settleN = 20; settleNO = 21;   
+                    break;
+                case 20:
+                    settleN = 23; settleNO = 24;   
+                    break;
+                case 23:
+                    settleN = 25; settleNO = 26;   
+                    break;
+                case 24:
+                    settleN = 29; settleNO = 30;   
+                    break;
+                case 25:
+                    settleN = 31; settleNO = 32;   
+                    break;
+                case 26:
+                    settleN = 33; settleNO = 34;   
+                    break;
+                case 29:
+                    settleN = 38; settleNO = 39;  
+                    break;
+                case 30:
+                    settleN = 41; settleNO = 42;   
+                    break;
+                case 31:
+                    settleN = 43; settleNO = 44;   
+                    break;
+                case 32:
+                    settleN = 45; settleNO = 46; 
+                    break;
+                default:
+                    settleN = -1; settleNO = -1;   
+                    break;
+            }
+            assignSettlementN(pol, settleN);
+            assignSettlementNO(pol, settleNO);
+        } else if (i == 8) {
+            assignSettlementNO(pol, 10);
+        } else if(i == 14) {
+            assignSettlementNO(pol, 22);
+        } else if(i == 21) {
+            assignSettlementNO(pol, 35);
+        }
+        else if (i == 22) {
+            assignSettlementN(pol, 27);
+        } else if(i == 27) {
+            assignSettlementN(pol, 36);
+            assignSettlementNO(pol, 37);
+        } else if(i == 28) {
+            assignSettlementN(pol, 40);
+        } else if(i == 33) {
+            assignSettlementN(pol, 49);
+        } else if(i == 34) {
+            assignSettlementN(pol, 47);
+            assignSettlementNO(pol, 48);
+        } else if(i == 35) {
+            assignSettlementN(pol, 50);
+            assignSettlementNO(pol, 51);
+        } else if(i == 36) {
+            assignSettlementN(pol, 52);
+            assignSettlementNO(pol, 53);
+        }
     }
 
     // Click sobre una carretera
-    private void onClickSettlement(Button circle) {
+    private void onClickSettlement(Button circle,Integer position) {
         circle.setOnMouseClicked( event -> {
             if (event.getButton().equals(MouseButton.PRIMARY)) {
                 circle.setStyle("-fx-background-color: red");
             }   else if (event.getButton() == MouseButton.SECONDARY) {
-                circle.setStyle("-fx-background-color: yellow;");
+                circle.setStyle("-fx-background-color: yellow; -fx-border-color:blue;-fx-border-width: 3 3 3 3;");
             }     
         });
     }
@@ -857,23 +977,42 @@ public class Gameplay {
         
        
         // Crear hexagonos
-        for(Integer i =0; i < hexagons.length; i++) {
+        Integer numberHexagonAux = 0;
+        for(Integer i =0; i < 37; i++) {
             Polygon pol = createHexagon(i);
             fillHexagon(pol, i);    
             mainAnchor.getChildren().add(pol);
             if(hasRoads(i)) {
-                Text t = new Text(10, 50, i.toString());
-                t.setBoundsType(TextBoundsType.VISUAL); 
-                t.setFont(new Font(20));
-                t.setLayoutX(pol.getLayoutX() - 25);
-                t.setLayoutY(pol.getLayoutY() - 49);
-                t.setFill(Color.WHITE);
-                mainAnchor.getChildren().add(t); 
+                Button circle = new Button();
+                circle.setShape(new Circle(numberSize));
+                circle.setMinSize(2*numberSize, 2*numberSize);
+                circle.setMaxSize(2*numberSize, 2*numberSize);
+                circle.setLayoutX(pol.getLayoutX() - 18);
+                circle.setLayoutY(pol.getLayoutY() - 20);
+                circle.setText(numberHexagonAux.toString());
+                
+                
+                circle.setOnMouseClicked( event -> {
+                    if (event.getButton().equals(MouseButton.PRIMARY)) {
+                        circle.setDisable(true);
+                        for(Button aux : numberOverHexagon) {
+                            if(aux != circle) {
+                                aux.setDisable(false);
+                            }
+                        }
+                    }   
+                });
+
+                
+                mainAnchor.getChildren().add(circle); 
+                hexagons[numberHexagonAux] = pol;
+                numberOverHexagon[numberHexagonAux] = circle;
+                numberHexagonAux++;
             }
 
             assignRoads(pol, i);
             assignSettlements(pol,i);
-            hexagons[i] = pol;
+            
         }
 
     } 

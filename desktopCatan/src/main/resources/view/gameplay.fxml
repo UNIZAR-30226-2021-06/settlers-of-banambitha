@@ -192,12 +192,29 @@
                            <VBox.margin>
                               <Insets bottom="15.0" top="15.0" />
                            </VBox.margin></JFXTextArea>
-                        <TextField fx:id="chatInput" style="-fx-background-color: #965d62; -fx-background-radius: 12px;">
-                           <font>
-                              <Font size="17.0" />
-                           </font>
-                        </TextField>
-                        <Button mnemonicParsing="false" onAction="#send_msg" textFill="RED" />
+                        <HBox>
+                           <children>
+                              <TextField fx:id="chatInput" style="-fx-background-color: #965d62; -fx-background-radius: 12px;" HBox.hgrow="ALWAYS">
+                                 <font>
+                                    <Font size="17.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets />
+                                 </HBox.margin>
+                              </TextField>
+                              <Button mnemonicParsing="false" onAction="#send_msg" style="-fx-background-radius: 12px;" textFill="RED">
+                                 <HBox.margin>
+                                    <Insets left="5.0" top="5.0" />
+                                 </HBox.margin>
+                                 <effect>
+                                    <DropShadow />
+                                 </effect>
+                              </Button>
+                           </children>
+                           <VBox.margin>
+                              <Insets bottom="5.0" />
+                           </VBox.margin>
+                        </HBox>
                      </children>
                      <HBox.margin>
                         <Insets left="50.0" right="15.0" />
