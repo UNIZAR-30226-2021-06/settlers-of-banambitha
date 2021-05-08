@@ -18,6 +18,8 @@ export class PlayerInfoComponent implements OnInit {
                                                  BoardComponent.player3Color,
                                                  BoardComponent.player4Color]
 
+  public Mymessage: string 
+
   constructor(public dialog: MatDialog, public gameService: GameService) { }
 
   ngOnInit(): void {
@@ -25,6 +27,11 @@ export class PlayerInfoComponent implements OnInit {
 
   openInternalTradeDialog(playerId: number) {
     this.dialog.open(InternalTradeDialog, { data: { player: playerId}})
+  }
+
+  sendMessage(message: any){
+    console.log("called")
+    console.log(this.Mymessage)
   }
 
 }

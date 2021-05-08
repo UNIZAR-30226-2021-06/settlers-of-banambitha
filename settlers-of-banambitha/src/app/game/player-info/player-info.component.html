@@ -1,31 +1,4 @@
 <div class="info" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="12px">
-    <!-- <br>
-    <mat-card class="info_1"> 
-        <p class="nombre"> World_champion </p> 
-    </mat-card>
-    <mat-card class="info_2"> 
-        <p class="nombre"> Player 2 </p> 
-    </mat-card>
-    <mat-card class="info_3">
-        <p class="nombre"> Player 3 </p>  
-    </mat-card>
-    <mat-card class="info_4"> 
-        <p class="nombre"> Player 4 </p> 
-    </mat-card>
-    <br>
-    <div class="resources" fxLayout="column" fxLayoutAlign="center stretch">
-        <app-stats></app-stats> 
-    </div>
-        <button class ="button_cards" mat-icon-button (click)="openCardsDialog()">
-            <p class="nombre_menus">Cartas disponibles</p> 
-        </button> 
-        <button class ="button_trade" mat-icon-button (click)="openInternalTradeDialog()">
-           <p class="nombre_menus">Comercio interior</p>
-        </button>
-        <button class ="button_settings" mat-icon-button (click)="openExternalTradeDialog()">
-            <p class="nombre_menus">Comercio marítimo</p>
-        </button>   -->
-
 <mat-accordion>
 
   <mat-expansion-panel *ngFor="let user of this.gameService.partida.jugadores; index as i">
@@ -118,6 +91,32 @@
             </mat-grid-list>
         </mat-tab>
     </mat-tab-group>
+  </mat-expansion-panel>
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title style="text-align: center;">
+        <mat-icon>chat</mat-icon> &nbsp;
+          Chat
+      </mat-panel-title>
+      <mat-panel-description>
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+        <br/>
+        <br/>
+        <br/>
+        <mat-divider></mat-divider>
+        <form class="example-form">
+            <mat-form-field class="example-full-width">
+                <mat-label>Message</mat-label>
+                <input matInput #message maxlength="256"
+                placeholder="Ex. I need help with..."
+                autocomplete="off"
+                (keyup.enter)="sendMessage(message.value)">
+                <mat-hint align="start"><strong>Sé educado con el resto de jugadores</strong> </mat-hint>
+                <mat-hint align="end">{{message.value.length}} / 256</mat-hint>
+            </mat-form-field>
+        </form>
+
   </mat-expansion-panel>
 
 </mat-accordion>
