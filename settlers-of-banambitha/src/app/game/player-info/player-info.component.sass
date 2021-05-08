@@ -37,3 +37,30 @@ mat-panel-description
 .center_td
   text-align: center
   vertical-align: middle
+
+.gameMessage
+  color: map-get($palette, mainYellow ) 
+
+.gameErrorMessage
+  color: red
+
+::ng-deep .mat-focused .mat-form-field-label 
+  /*change color of label*/
+  color: map-get($palette, mainYellow ) !important
+ 
+
+::ng-deep.mat-form-field-underline 
+
+
+::ng-deep.mat-form-field-ripple 
+ /*change color of underline when focused*/
+ background-color: map-get($palette, mainYellow ) !important
+
+#chatbox
+    width: 350px
+    height: 350px
+    word-wrap: break-word
+    overflow: scroll
+
+.chatMessage
+    margin-bottom: 2%
