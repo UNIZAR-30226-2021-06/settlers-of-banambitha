@@ -1,6 +1,6 @@
 import { Component, Inject, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatDialog,MAT_DIALOG_DATA,MatDialogRef } from '@angular/material/dialog';
-import { GameService, Recurso, TipoPuerto } from 'src/app/service/game/game.service';
+import { GameService, Jugador, Recurso, TipoPuerto } from 'src/app/service/game/game.service';
 import { BoardComponent } from '../board.component';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 
@@ -83,9 +83,8 @@ export class HarborComponent implements OnInit {
     return puertoString
 
   }
-
-
 }
+
 
 interface Material {
   value: Recurso;
@@ -101,9 +100,10 @@ interface Material {
 export class ExternalTradeDialog {
 
   public tipoPuerto:         TipoPuerto
+  public me:                 Jugador
   public recursosRequeridos: number
   public nombrePuerto:       string
-  public materialSolicitado: string
+  public materialSolicitado: Recurso
   public numMadera:  number = 0
   public numArcilla: number = 0
   public numCereal:  number = 0
@@ -114,10 +114,13 @@ export class ExternalTradeDialog {
   options: FormGroup;
   colorControl = new FormControl('primary');
 
-  constructor(public dialogRef: MatDialogRef<ExternalTradeDialog>, @Inject(MAT_DIALOG_DATA) public data: any, fb: FormBuilder) {
+  constructor(public dialogRef: MatDialogRef<ExternalTradeDialog>, @Inject(MAT_DIALOG_DATA) public data: any,
+             fb: FormBuilder ,public gameService: GameService) {
     this.recursosRequeridos = data["requeridos"]
     this.tipoPuerto = data["tipo"]
     this.nombrePuerto = data["nombre"]
+    this.me = this.gameService.partida.jugadores[this.gameService.partida.miTurno - 1]
+    this.checkRecursoPuerto()
     this.formatLabelMadera  = this.formatLabelMadera.bind(this);
     this.formatLabelLana    = this.formatLabelLana.bind(this);
     this.formatLabelCereal  = this.formatLabelCereal.bind(this);
@@ -137,34 +140,64 @@ export class ExternalTradeDialog {
     console.log(this.materialSolicitado)
   }
 
+  public checkRecursoPuerto(): void{
+    switch (this.tipoPuerto){
+      case TipoPuerto.ARCILLA:
+        this.materialSolicitado = Recurso.ARCILLA
+        break
+
+      case TipoPuerto.MADERA:
+        this.materialSolicitado = Recurso.MADERA
+        break
+
+      case TipoPuerto.MINERAL:
+        this.materialSolicitado = Recurso.MINERAL
+        break
+
+      case TipoPuerto.LANA:
+        this.materialSolicitado = Recurso.LANA
+        break
+
+      case TipoPuerto.CEREAL:
+        this.materialSolicitado = Recurso.CEREAL
+        break
+
+      default: 
+        this.materialSolicitado = null
+    }
+  }
+
   public tiposPuerto(): typeof TipoPuerto{
     return TipoPuerto
   }
 
-  formatLabelMadera(value: number) {
+  public formatLabelMadera(value: number): number {
     this.numMadera = value;
     return value;
   }
 
-  formatLabelArcilla(value: number) {
+  public formatLabelArcilla(value: number): number {
     this.numArcilla = value;
     return value;
   }
 
-  formatLabelLana(value: number) {
+  public formatLabelLana(value: number): number {
     this.numLana = value;
     return value;
   }
 
-  formatLabelMineral(value: number) {
+  public formatLabelMineral(value: number): number {
     this.numMineral = value;
     return value;
   }
 
-  formatLabelCereal(value: number) {
+  public formatLabelCereal(value: number): number {
     this.numCereal = value;
     return value;
   }
 
+  public min(x: number, y:number):number{
+    return x < y ? x : y
+  }
 
 }

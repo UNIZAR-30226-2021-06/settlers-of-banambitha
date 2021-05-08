@@ -18,7 +18,7 @@
         [displayWith]="formatLabelMadera"
         tickInterval="1"
         min="0"
-        [max]="recursosRequeridos - numArcilla - numCereal - numMineral - numLana"></mat-slider>
+        [max]="min(recursosRequeridos - numArcilla - numCereal - numMineral - numLana, me.recursos.madera)"></mat-slider>
       </mat-grid-tile>
 
       <mat-grid-tile colspan=1>
@@ -31,7 +31,7 @@
         [displayWith]="formatLabelMineral"
         tickInterval="1"
         min="0"
-        [max]="recursosRequeridos - numArcilla - numCereal - numMadera - numLana"></mat-slider>
+        [max]="min(recursosRequeridos - numArcilla - numCereal - numMadera - numLana, me.recursos.mineral)"></mat-slider>
       </mat-grid-tile>
 
       <mat-grid-tile colspan=1>
@@ -44,7 +44,7 @@
         [displayWith]="formatLabelLana"
         tickInterval="1"
         min="0"
-        [max]="recursosRequeridos - numArcilla - numCereal - numMineral - numMadera"></mat-slider>
+        [max]="min(recursosRequeridos - numArcilla - numCereal - numMineral - numMadera, me.recursos.lana)"></mat-slider>
       </mat-grid-tile>
 
       <mat-grid-tile colspan=1>
@@ -57,7 +57,7 @@
         [displayWith]="formatLabelArcilla"
         tickInterval="1"
         min="0"
-        [max]="recursosRequeridos - numMadera - numCereal - numMineral - numLana"></mat-slider>
+        [max]="min(recursosRequeridos - numMadera - numCereal - numMineral - numLana, me.recursos.arcilla)"></mat-slider>
       </mat-grid-tile>
 
       <mat-grid-tile colspan=1>
@@ -70,7 +70,7 @@
         [displayWith]="formatLabelCereal"
         tickInterval="1"
         min="0"
-        [max]="recursosRequeridos - numArcilla - numMadera - numMineral - numLana"></mat-slider>
+        [max]="min(recursosRequeridos - numArcilla - numMadera - numMineral - numLana, me.recursos.cereales)"></mat-slider>
       </mat-grid-tile>
     </mat-grid-list>
 
@@ -91,7 +91,7 @@
       <button class="boton" mat-raised-button mat-dialog-close
               (click)="onSubmit()"
               [disabled] = "numMadera + numArcilla + numCereal
-              + numLana + numMineral != recursosRequeridos" >
+              + numLana + numMineral != recursosRequeridos || materialSolicitado == null" >
          Comerciar
       </button>
     </div>
