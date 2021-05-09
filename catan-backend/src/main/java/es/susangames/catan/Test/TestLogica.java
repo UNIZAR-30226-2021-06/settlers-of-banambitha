@@ -1,6 +1,6 @@
 package es.susangames.catan.Test;
 
-import logica.*;
+import es.susangames.catan.logica.*;
 
 public class TestLogica {
 	
