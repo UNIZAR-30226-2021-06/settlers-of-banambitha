@@ -1,4 +1,4 @@
-package es.susangames.catan.logica;
+package logica;
 
 /*
  * La clase coordenadas representa las coordenadas en un plano.
