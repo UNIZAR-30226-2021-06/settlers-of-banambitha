@@ -469,7 +469,7 @@
     </div>
 
     <!-- BOTONES -->
-    <button mat-raised-button [disabled]="gameService.partida.turnoActual != gameService.partida.miTurno">
+    <button class="botonTurno" mat-raised-button [disabled]="gameService.partida.turnoActual != gameService.partida.miTurno">
         <span *ngIf="gameService.partida.turnoActual == gameService.partida.miTurno">
             Pasar turno
         </span>
