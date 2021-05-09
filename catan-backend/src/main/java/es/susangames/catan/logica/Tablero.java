@@ -1,4 +1,4 @@
-package logica;
+package es.susangames.catan.logica;
 
 import java.util.Map;
 import java.util.stream.Collectors;
