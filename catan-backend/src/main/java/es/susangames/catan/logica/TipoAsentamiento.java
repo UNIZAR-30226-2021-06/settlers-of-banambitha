@@ -1,4 +1,4 @@
-package logica;
+package es.susangames.catan.logica;
 
 /**
  * Esta clase define un enumerador de los distintos tipos de asentamientos del juego
