@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { MatDialog,MAT_DIALOG_DATA,MatDialogRef } from '@angular/material/dialog';
 import {MatAccordion} from '@angular/material/expansion';
-import { GameService, Jugador } from 'src/app/service/game/game.service';
+import { GameService, Jugador, Recurso } from 'src/app/service/game/game.service';
 import { BoardComponent } from '../board/board.component';
 
 
@@ -37,7 +37,7 @@ export class PlayerInfoComponent implements OnInit {
 
   public scrollDown(): void {
     let objDiv = document.getElementById("chatbox")
-    objDiv.scrollTop = objDiv.scrollHeight
+    objDiv.scrollTop = objDiv.scrollHeight + 1
   }
 
 }
@@ -81,6 +81,15 @@ export class InternalTradeDialog implements OnInit {
   ];
 
 
+  private static readonly materialRecurso: Map<string, Recurso> = new Map<string, Recurso>([
+    ['madera', Recurso.MADERA],
+    ['lana', Recurso.LANA], 
+    ['cereales', Recurso.CEREAL],
+    ['mineral', Recurso.MINERAL],
+    ['arcilla', Recurso.ARCILLA]
+  ])
+
+
   formatLabelOffer(value: number) {
     this.ammountGiven = value;
     return value;
@@ -91,11 +100,17 @@ export class InternalTradeDialog implements OnInit {
     return value;
   }
 
+  /**
+   * Comerciar
+   */
   onSubmit() {
     console.log(this.offerMaterial);  
     console.log(this.offerPlayer);  
     console.log(this.receiveMaterial);
     console.log(this.ammountGiven);
     console.log(this.ammountReceived);
+    this.gameService.comerciarConJugador(this.offerPlayer.turno, InternalTradeDialog.materialRecurso.get(this.offerMaterial), 
+                                         InternalTradeDialog.materialRecurso.get(this.receiveMaterial),
+                                         this.ammountGiven, this.ammountReceived )
   }
 }

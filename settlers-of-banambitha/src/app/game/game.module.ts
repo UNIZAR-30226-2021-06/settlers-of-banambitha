@@ -31,6 +31,7 @@ import { HarborComponent } from './board/harbor/harbor.component';
 import { MatDividerModule} from '@angular/material/divider';
 import { MatInputModule } from '@angular/material/input';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner'; 
+import {MatSnackBarModule} from '@angular/material/snack-bar'; 
 
 
 
@@ -69,7 +70,8 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
     MatDividerModule, 
     ReactiveFormsModule,
     MatInputModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatSnackBarModule
   ],
   exports: [GameplayComponent],
   entryComponents: [InternalTradeDialog, ExternalTradeDialog],

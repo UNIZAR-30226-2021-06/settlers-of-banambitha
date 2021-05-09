@@ -476,6 +476,14 @@
         </ol>
     </div>
 
+    <!-- RESULTADO TIRADA -->
+    <div class="resultadoTirada">
+        {{( gameService.partida.totalTurnos > 3 ) ?
+            "Resultado de la tirada de " + gameService.partida.jugadores[gameService.partida.turnoActual - 1].nombre + ": " + gameService.partida.resultadoTirada : 
+            "Fase de posicionamiento inicial" }}
+    </div>
+
+    <br/>
     <!-- BOTONES -->
     <button class="botonTurno" mat-raised-button [disabled]="gameService.partida.turnoActual != gameService.partida.miTurno" (click)="gameService.pasarTurno()">
         <span *ngIf="gameService.partida.turnoActual == gameService.partida.miTurno">
@@ -485,4 +493,5 @@
             Turno de {{gameService.partida.jugadores[gameService.partida.turnoActual - 1].nombre}}
         </span>
     </button>
+
 </div>

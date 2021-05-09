@@ -1,4 +1,5 @@
-<div class="info" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="12px">
+<div *ngIf="!gameService.cargandoPartida"
+class="info" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="12px">
 <mat-accordion>
 
   <mat-expansion-panel *ngFor="let user of this.gameService.partida.jugadores; index as i">

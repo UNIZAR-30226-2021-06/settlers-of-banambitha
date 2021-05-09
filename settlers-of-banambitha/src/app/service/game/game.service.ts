@@ -51,6 +51,16 @@ enum MessageKeys {
 
 
 /**
+ * Estados posibles de un mensaje de comercio
+ */
+enum MsgComercioStatus {
+  REQUEST = "REQUEST",
+  ACCEPT  = "ACCEPT",
+  DECLINE = "DECLINE"
+}
+
+
+/**
  * Jugadas posibles
  */
 enum Jugada {
@@ -62,7 +72,7 @@ enum Jugada {
   PRIMER_ASENTAMIENTO = "primer asentamiento", 
   PRIMER_CAMINO       = "primer camino",
   COMERCIAR           = "comerciar",
-  COMERCIAR_PUERTO    = "comerciar con puerto"
+  COMERCIAR_PUERTO    = "comerciar maritimo"
 }
 
 
@@ -143,14 +153,6 @@ export enum TipoCamino {
   PLAYER_2 = "CaminoRojo", 
   PLAYER_3 = "CaminoAmarillo",
   PLAYER_4 = "CaminoVerde"
-}
-
-
-/**
- * Códigos de error
- * TODO: implementar códigos de error
- */
-enum CodigoError {
 }
 
 
@@ -275,6 +277,27 @@ export interface Tablero {
 
 
 /**
+ * Interfaz auxiliar para gestionar una petición 
+ * de comercio
+ */
+export interface ProductoComercio {
+  type: Recurso, 
+  cuan: number
+}
+
+
+/**
+ * Solicitud de comercio
+ */
+export interface SolicitudComercio {
+  from: string,
+  res1: ProductoComercio, 
+  res2: ProductoComercio,
+  timeStamp: string
+}
+
+
+/**
  * Almacena toda la información necesaria de una partida
  */
 export interface Partida {
@@ -289,7 +312,7 @@ export interface Partida {
   clock:                 number,
   PobladoDisponible:     boolean,
   CaminoDisponible:      boolean, 
-  CiudadDisponible:      boolean 
+  CiudadDisponible:      boolean, 
 }
 
 
@@ -323,6 +346,7 @@ export class GameService implements Connectable{
     }
 
   public cargandoPartida: boolean = false
+  public ultimaSolicitudComercio: SolicitudComercio
 
   //Identificadores de los topics a los que se suscribe 
   //el jugador
@@ -350,7 +374,7 @@ export class GameService implements Connectable{
     this.cargandoPartida = true
 
     //Solo para pruebas
-    //this.initPartidaPrueba()
+    this.initPartidaPrueba()
 
   }
 
@@ -514,7 +538,35 @@ export class GameService implements Connectable{
    */
   private procesarMensajeComercio(msg: Object): void{
     console.log(msg)
-    //TODO: informar sobre comercio entrante
+    let infoMsg: string
+    switch (msg["type"]){
+
+      case MsgComercioStatus.REQUEST: 
+        if ( this.partida.turnoActual != this.partida.miTurno ){
+          this.ultimaSolicitudComercio = {
+            from: msg["from"],
+            res1: msg["res1"],
+            res2: msg["res2"],
+            timeStamp: msg["time"]
+          }
+          //Abrir pop up
+          infoMsg = "¡" + msg["from"] + " quiere comerciar contigo!"
+          this.generarMensajePartida(infoMsg)
+        }
+        break
+
+      case MsgComercioStatus.ACCEPT: 
+        infoMsg = "¡" + msg["from"] + " ha ACEPTADO tu solicitud de comercio!"
+        this.generarMensajePartida(infoMsg)
+        break
+
+      case MsgComercioStatus.DECLINE: 
+        infoMsg = "¡" + msg["from"] + " ha RECHAZADO tu solicitud de comercio!"
+        this.generarMensajePartida(infoMsg)
+        break
+
+      default: 
+    }
   }
 
 
@@ -716,7 +768,20 @@ export class GameService implements Connectable{
    */
   public comerciarConJugador(jugador: number, recursoOfrecido: Recurso, recursoSolicitado: Recurso, 
                             cantidadOfrecida: Number, cantidadSolicitada: Number): void {
-  //TODO: completar
+    let msg = {
+      from: this.partida.miTurno, 
+      to:   jugador,
+      game: this.partida.id,
+      res1: {
+        type: recursoOfrecido,
+        cuan: cantidadOfrecida
+      },
+      res2: {
+        type: recursoSolicitado, 
+        cuan: cantidadSolicitada
+      }
+    }
+    this.stompClient.send(WsService.proponerComercio, {}, JSON.stringify(msg) )
   }
 
 
@@ -726,38 +791,64 @@ export class GameService implements Connectable{
    * tipo correcto (ofrece el recurso solicitado y acepta el recurso ofrecido)
    * 
    * @param aristaPuerto puerto con el que se realizará el intercambio
-   * @param recursoOfrecido tipo de recurso ofrecido
    * @param recursoSolicitado tipo de recurso solicitado
-   * @param cantidadOfrecida  cantidad de recursos ofrecida
-   * @param cantidadSolicitada cantidad de recursos solicitada
-   * @return true si ha podido enviar la petición, false en caso 
-   * contrario
    */
-  public comerciarConPuerto(aristaPuerto: number, recursoOfrecido: Recurso, recursoSolicitado: Recurso, 
-                            cantidadOfrecida: Number, cantidadSolicitada: Number): void {
-  //TODO: completar
+  public comerciarConPuerto(aristaPuerto: number, recursoSolicitado: Recurso, 
+                            numMadera: number, numArcilla: number, numMineral: number, 
+                            numCereales: number, numLana: number): void {
+    let solicitud: Object = {
+      id_puerto: aristaPuerto, 
+      materiales: {
+        madera:   numMadera,
+        lana:     numLana, 
+        arcilla:  numArcilla, 
+        mineral:  numMineral, 
+        cereales: numCereales 
+      },
+      material_que_recibe: recursoSolicitado
+    }
+    let msg = this.construirJugada(Jugada.COMERCIAR_PUERTO, solicitud)
+    this.stompClient.send(WsService.partidaJugada, {}, JSON.stringify(msg) )
   }
 
                     
   /**
-   * Acepta la petición de comercio enviada por el jugador dado. 
+   * Acepta la última petición de comercio recibida
    * Solo se pueden aceptar peticiones fuera del turno del jugador
    * 
-   * @param jugador jugador que solicita el comercio
    */
-  public aceptarComercioJugador(jugador: number): void {
-  //TODO: completar
+  public aceptarComercioJugador(): void {
+    if ( this.partida.turnoActual != this.partida.miTurno ){
+      let msg = {
+        from: this.partida.miTurno, 
+        to:   this.ultimaSolicitudComercio.from,
+        game: this.partida.id,
+        res1: {
+          type: this.ultimaSolicitudComercio.res1.type,
+          cuan: this.ultimaSolicitudComercio.res1.cuan
+        },
+        res2: {
+          type: this.ultimaSolicitudComercio.res2.type,
+          cuan: this.ultimaSolicitudComercio.res2.cuan
+        }
+      }
+      this.stompClient.send(WsService.aceptarComercio, {}, JSON.stringify(msg) )
+    }
   }              
 
 
   /**
-   * Rechaza la petición de comercio enviada por el jugador dado. 
+   * Rechaza la última petición de comercio
    * Solo se pueden rechazar peticiones fuera del turno de partida
    * 
-   * @param jugador jugador que solicitó el comercio
    */
-  public rechazarComercioJugador(jugador: number): void {
-  //TODO: completar
+  public rechazarComercioJugador(): void {
+    let msg = {
+      from: this.partida.miTurno, 
+      to:   this.ultimaSolicitudComercio.from,
+      game: this.partida.id
+    }
+    this.stompClient.send(WsService.rechazarComercio, {}, JSON.stringify(msg) )
   }
 
 
@@ -1081,7 +1172,11 @@ export class GameService implements Connectable{
   }
 
 
+  /**
+   * Funcion de prueba no la uses
+   */
   private initPartidaPrueba(){
+    this.cargandoPartida = false
     this.partida = {
       miTurno: 1,
       id: "", 
