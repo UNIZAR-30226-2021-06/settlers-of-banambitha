@@ -23,6 +23,7 @@ import org.springframework.web.socket.sockjs.client.Transport;
 import org.springframework.web.socket.sockjs.client.WebSocketTransport;
 import org.json.*;
 import javafx.application.Platform;
+import es.susangames.catan.service.RoomServices;
 
 
 public class ws {
@@ -34,8 +35,11 @@ public class ws {
     private static final String sendFriendRequestUrl = "/app/enviar/peticion";
     private static final String acceptFriendRequestUrl = "/app/aceptar/peticion";
     private static final String declineFriendRequestUrl = "/app/rechazar/peticion";
+    private static final String invitationRequestUrl = "/invitacion/";
+    private static final String createRoomRequestUrl = "/sala-crear/";
     public static final StompSession session;
 
+    public static final String crearSala = "/app/sala/crear";
 
     static {
         msgs = new HashMap<String, ArrayList<JSONObject>>();
@@ -80,6 +84,32 @@ public class ws {
                 handlePetition(payload.toString());
             }
         });
+
+        // invitacion
+        session.subscribe( invitationRequestUrl + UserService.getUsername(), new StompFrameHandler() {
+            @Override
+            public Type getPayloadType(StompHeaders headers) {
+                return String.class;
+            }
+            @Override
+            public void handleFrame(StompHeaders headers, Object payload) {
+                handlePetition(payload.toString());
+            }
+        });
+
+        // sala crear createRoomRequestUrl
+        session.subscribe( createRoomRequestUrl + UserService.getUsername(), new StompFrameHandler() {
+            @Override
+            public Type getPayloadType(StompHeaders headers) {
+                return String.class;
+            }
+            @Override
+            public void handleFrame(StompHeaders headers, Object payload) {
+                RoomServices.procesarMensajeCreacionSala (payload.toString());
+            }
+        });
+
+        RoomServices.crearSala();
     }
 
     public static void initialize () {}
