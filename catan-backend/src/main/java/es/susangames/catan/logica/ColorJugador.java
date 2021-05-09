@@ -1,4 +1,4 @@
-package es.susangames.catan.logica;
+package logica;
 
 /**
  * Esta clase define un enumerador de los colores que identifican a los jugadores de la partida
