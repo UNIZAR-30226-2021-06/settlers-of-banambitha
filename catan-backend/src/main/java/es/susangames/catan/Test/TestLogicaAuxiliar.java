@@ -1,4 +1,4 @@
-package Test;
+package es.susangames.catan.Test;
 
 import logica.*;
 
