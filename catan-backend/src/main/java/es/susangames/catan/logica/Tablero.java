@@ -1107,6 +1107,7 @@ public class Tablero {
 						// Compribar que no existan construcciones adyacentes
 						if (!this.exitenConstruccionesAdyacentes(v)) {
 							this.construirPrimerAsentamiento(v, jug);
+							jug.construirPrimerAsentamiento();
 							this.message = "Se ha construido un primer poblado del jugador correctamente";
 							this.exit_status = 0;
 						} else {
@@ -1136,6 +1137,7 @@ public class Tablero {
 					if (!a.tieneCamino()) {
 						if (a.getPosibleCaminoDeJugador(jug.getColor().numeroColor())) {
 							construirPrimerCamino(a,jug);
+							jug.construirPrimerCamino();
 							this.message = "Se ha construido un primer camino del jugador correctamente";
 							this.exit_status = 0;
 						} else {

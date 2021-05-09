@@ -199,6 +199,20 @@ public class Jugadores {
 		}
 	}
 	
+	public void construirPrimerAsentamiento () {
+		this.numPobladosConstruidos++;
+		if (numPobladosConstruidos >= 2) {
+			primerosAsentamientosConstruidos = true;
+		}
+	}
+	
+	public void construirPrimerCamino () {
+		this.numCaminosConstruidos++;
+		if (numCaminosConstruidos >= 2) {
+			primerosCaminosConstruidos = true;
+		}
+	}
+	
 	/**
      * Método que elimina los recusos empleados en mejorar un asentamiento y actualiza al numero de ciudades.
      */
