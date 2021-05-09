@@ -18,20 +18,26 @@ export class PlayerInfoComponent implements OnInit {
                                                  BoardComponent.player3Color,
                                                  BoardComponent.player4Color]
 
-  public Mymessage: string 
+  public MyMessage: string = ""
 
   constructor(public dialog: MatDialog, public gameService: GameService) { }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
   }
 
-  openInternalTradeDialog(playerId: number) {
+  public openInternalTradeDialog(playerId: number): void {
     this.dialog.open(InternalTradeDialog, { data: { player: playerId}})
   }
 
-  sendMessage(message: any){
-    console.log("called")
-    console.log(this.Mymessage)
+  public sendMessage(message: any): void{
+    this.gameService.enviarMensaje(message.value)
+    message.value = ""
+    this.scrollDown()
+  }
+
+  public scrollDown(): void {
+    let objDiv = document.getElementById("chatbox")
+    objDiv.scrollTop = objDiv.scrollHeight
   }
 
 }

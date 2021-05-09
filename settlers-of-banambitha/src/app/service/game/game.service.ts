@@ -207,7 +207,8 @@ export interface Jugador {
  * Mensaje que se puede recibir durante una partida
  */
 export interface Mensaje {
-  remitente: String, 
+  esError: boolean
+  remitente: Jugador, 
   body:      String, 
   timeStamp: String
 }
@@ -482,9 +483,10 @@ export class GameService implements Connectable{
   private procesarMensajeChat(msg: Object): void{
     console.log(msg)
     let mensajeNuevo: Mensaje = {
-      remitente: msg["from"], 
+      remitente: this.partida.jugadores[msg["from"] - 1], 
       body: msg["body"],
-      timeStamp: msg["time"]
+      timeStamp: msg["time"],
+      esError: false
     }
 
     //TODO: ordenar los mensajes por timestamp, habrá que 
@@ -701,7 +703,9 @@ export class GameService implements Connectable{
    * contrario
    */
   public comerciarConJugador(jugador: number, recursoOfrecido: Recurso, recursoSolicitado: Recurso, 
-                            cantidadOfrecida: Number, cantidadSolicitada: Number): void { }
+                            cantidadOfrecida: Number, cantidadSolicitada: Number): void {
+  //TODO: completar
+  }
 
 
   /**
@@ -718,7 +722,9 @@ export class GameService implements Connectable{
    * contrario
    */
   public comerciarConPuerto(aristaPuerto: number, recursoOfrecido: Recurso, recursoSolicitado: Recurso, 
-                            cantidadOfrecida: Number, cantidadSolicitada: Number): void { }
+                            cantidadOfrecida: Number, cantidadSolicitada: Number): void {
+  //TODO: completar
+  }
 
                     
   /**
@@ -727,7 +733,9 @@ export class GameService implements Connectable{
    * 
    * @param jugador jugador que solicita el comercio
    */
-  public aceptarComercioJugador(jugador: number): void { }              
+  public aceptarComercioJugador(jugador: number): void {
+  //TODO: completar
+  }              
 
 
   /**
@@ -736,7 +744,9 @@ export class GameService implements Connectable{
    * 
    * @param jugador jugador que solicitó el comercio
    */
-  public rechazarComercioJugador(jugador: number): void { }
+  public rechazarComercioJugador(jugador: number): void {
+  //TODO: completar
+  }
 
 
   /**
@@ -746,7 +756,7 @@ export class GameService implements Connectable{
    */
   public enviarMensaje(mensaje: String): void{
     let msg = {
-      from: this.userService.getUsername,
+      from: this.partida.miTurno,
       game: this.partida.id, 
       body: mensaje
     }
@@ -1089,6 +1099,12 @@ export class GameService implements Connectable{
       lana: 1, 
       cereales: 8
     }
+
+    this.partida.mensajes.push({ esError:false, remitente: this.partida.jugadores[1], timeStamp: "17:49", body:"Hola a todos!" })
+    this.partida.mensajes.push({ esError:false, remitente: this.partida.jugadores[2], timeStamp: "17:49", body:"Hola tío!" })
+    this.partida.mensajes.push({ esError:false, remitente: this.partida.jugadores[3], timeStamp: "17:49", body:"Seré el rey de los piratas!" })
+    this.partida.mensajes.push({ esError:false, remitente: null, timeStamp: "17:49", body:"Alguien ha hecho algo!" })
+    this.partida.mensajes.push({ esError:true, remitente: null, timeStamp: "17:49", body:"Alguien ha hecho algo mu malo nooooo!" })
   }
 
   /**

@@ -92,7 +92,7 @@
         </mat-tab>
     </mat-tab-group>
   </mat-expansion-panel>
-  <mat-expansion-panel>
+  <mat-expansion-panel (click)="this.scrollDown()">
     <mat-expansion-panel-header>
       <mat-panel-title style="text-align: center;">
         <mat-icon>chat</mat-icon> &nbsp;
@@ -101,18 +101,24 @@
       <mat-panel-description>
       </mat-panel-description>
     </mat-expansion-panel-header>
-        <br/>
-        <br/>
+        <div id=chatbox>
+            <div class="chatMessage" *ngFor="let msg of gameService.partida.mensajes">
+                <span *ngIf="msg.remitente != null">
+                    <span [style.color]="playerColors[msg.remitente.turno - 1]">{{msg.remitente.nombre}} ({{msg.timeStamp}}):</span> {{msg.body}}
+                </span>
+                <span *ngIf="msg.remitente == null" [ngClass]="msg.esError? 'gameErrorMessage' : 'gameMessage'">{{msg.body}}</span>
+            </div>
+        </div>
         <br/>
         <mat-divider></mat-divider>
+        <br/>
         <form class="example-form">
             <mat-form-field class="example-full-width">
-                <mat-label>Message</mat-label>
+                <mat-label>Escribe tu mensaje</mat-label>
                 <input matInput #message maxlength="256"
-                placeholder="Ex. I need help with..."
                 autocomplete="off"
-                (keyup.enter)="sendMessage(message.value)">
-                <mat-hint align="start"><strong>Sé educado con el resto de jugadores</strong> </mat-hint>
+                (keyup.enter)="sendMessage(message)">
+                <mat-hint align="start"><strong></strong> </mat-hint>
                 <mat-hint align="end">{{message.value.length}} / 256</mat-hint>
             </mat-form-field>
         </form>
