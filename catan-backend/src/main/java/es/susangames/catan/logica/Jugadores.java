@@ -1,4 +1,4 @@
-package logica;
+package es.susangames.catan.logica;
 
 import org.json.JSONArray;
 import org.json.JSONException;
