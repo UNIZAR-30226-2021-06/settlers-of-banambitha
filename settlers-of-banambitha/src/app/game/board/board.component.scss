@@ -585,3 +585,22 @@ ol.odd {
     display: block;
     background-color: #965d62;
 }
+
+:host ::ng-deep .mat-progress-spinner circle, .mat-spinner circle{
+    stroke:#965d62;
+}
+
+.loading {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+
+
+.centerSpinner{
+    margin: 0 auto;
+    width: fit-content;
+    display: block;
+}

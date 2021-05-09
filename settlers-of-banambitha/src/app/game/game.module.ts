@@ -30,6 +30,7 @@ import { HexNumberComponent } from './board/hex-number/hex-number.component';
 import { HarborComponent } from './board/harbor/harbor.component';
 import { MatDividerModule} from '@angular/material/divider';
 import { MatInputModule } from '@angular/material/input';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner'; 
 
 
 
@@ -67,7 +68,8 @@ import { MatInputModule } from '@angular/material/input';
     MatProgressBarModule,
     MatDividerModule, 
     ReactiveFormsModule,
-    MatInputModule
+    MatInputModule,
+    MatProgressSpinnerModule
   ],
   exports: [GameplayComponent],
   entryComponents: [InternalTradeDialog, ExternalTradeDialog],
