@@ -1,5 +1,4 @@
 package es.susangames.catan.logica;
-
 /**
  * Esta clase define un enumerador de los distintos terrenos del juego
  * @author: Fabian Conde Lafuente

@@ -1,5 +1,4 @@
 package es.susangames.catan.logica;
-
 /*
  * 
  * */
@@ -17,26 +16,24 @@ public class Aristas {
 	
 	private Integer numJugadores;
 	
-	Aristas(CoordenadasAristas coord, int id, Integer numJugadores) {
+	Aristas(CoordenadasAristas coord) {
 		this.coord = coord;
 		this.tieneCamino = false;
 		this.propietario = null;
 		this.puerto = TipoPuerto.Nada;
-		this.id = id;
-		this.numJugadores = numJugadores;
+		this.numJugadores = 4;
 		this.puedeConstruirJugador = new Boolean[numJugadores];
 		for ( int i = 0; i < numJugadores; ++i) {
 			this.puedeConstruirJugador[i] = false;
 		}
 	}
 	
-	Aristas(CoordenadasAristas coord, TipoPuerto puerto, Integer numJugadores, Jugadores propietario, int id) {
+	Aristas(CoordenadasAristas coord, TipoPuerto puerto, Jugadores propietario) {
 		this.coord = coord;
 		this.puerto = puerto;
 		this.tieneCamino = true;
 		this.propietario = propietario;
-		this.id = id;
-		this.numJugadores = numJugadores;
+		this.numJugadores = 4;
 		this.puedeConstruirJugador = new Boolean[numJugadores];
 		for ( int i = 0; i < numJugadores; ++i) {
 			this.puedeConstruirJugador[i] = false;
@@ -47,12 +44,20 @@ public class Aristas {
 		return this.id;
 	}
 	
+	public void setIdentificador (int id) {
+		this.id = id;
+	}
+
 	public CoordenadasAristas getCoordenadasAristas () {
 		return this.coord;
 	}
 	
 	public TipoPuerto getTipoPuerto () {
 		return this.puerto;
+	}
+	
+	public Boolean tienePuerto () {
+		return this.getTipoPuerto().esBasico() || this.getTipoPuerto().esEspecial();
 	}
 	
 	public Boolean tieneCamino () {

@@ -41,6 +41,9 @@ public class Jugadores {
 	private int numCiudadesConstruidos;
 	private int numCaminosConstruidos;
 	
+	private Boolean primerosAsentamientosConstruidos;
+	private Boolean primerosCaminosConstruidos;
+	
 	/**
      * Constructor de jugador
      */
@@ -61,6 +64,9 @@ public class Jugadores {
 		this.numPobladosConstruidos = 0;
 		this.numCiudadesConstruidos = 0;
 		this.numCaminosConstruidos = 0;
+		
+		this.primerosAsentamientosConstruidos = false;
+		this.primerosCaminosConstruidos = false;
 	}
 	
 	/**
@@ -177,6 +183,7 @@ public class Jugadores {
 		// Material: lana x1, mineral x1, cereales x1
 		return lana>=1 && mineral >=1 && cereales>=1;
 	}
+	
 	/**
      * Método que elimina los recusos empleados en construir un asentamiento y lo añade al numero de asentamientos del jugador
      */
@@ -187,6 +194,9 @@ public class Jugadores {
 		this.cereales--;
 		this.arcilla--;
 		this.numPobladosConstruidos++;
+		if (numPobladosConstruidos >= 2) {
+			primerosAsentamientosConstruidos = true;
+		}
 	}
 	
 	/**
@@ -207,6 +217,9 @@ public class Jugadores {
 		this.madera--;
 		this.arcilla--;
 		this.numCaminosConstruidos++;
+		if (numCaminosConstruidos >= 2) {
+			primerosCaminosConstruidos = true;
+		}
 	}
 	
 	/**
@@ -321,9 +334,9 @@ public class Jugadores {
      */
 	public JSONArray cartasJugadorToJSON () throws JSONException {
 		Integer numGranEjecitoCaballeria = 1;
-		if (this.granEjecitoCaballeria) numGranEjecitoCaballeria = 0;
+		if (!this.granEjecitoCaballeria) numGranEjecitoCaballeria = 0;
 		Integer numGranRutaComercial = 1;
-		if (this.granRutaComercial) numGranRutaComercial = 0;
+		if (!this.granRutaComercial) numGranRutaComercial = 0;
 		return new JSONArray ("[" + this.numCartasCaballeros + "," +
 				this.numCartasPuntoVictoria + "," +this.numCartasContruccionCarreteras + "," + this.numCartasDescubrimiento +
 				"," + this.numCartasMonopolio + "," + numGranEjecitoCaballeria + "," + numGranRutaComercial + "]");
@@ -379,6 +392,14 @@ public class Jugadores {
 
 	public Boolean hayCartasCartasCaballeros () {
 		return this.numCartasCaballeros > 0;
+	}
+
+	public Boolean getPrimerosAsentamientosConstruidos() {
+		return primerosAsentamientosConstruidos;
+	}
+
+	public Boolean getPrimerosCaminosConstruidos() {
+		return primerosCaminosConstruidos;
 	}
 
 } //Cierre de la clase
