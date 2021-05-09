@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, of, throwError } from 'rxjs';
 import { catchError, retry, map } from 'rxjs/operators';
+import { environment } from '../../../environments/environment';
 
 
 @Injectable({
@@ -15,7 +16,7 @@ import { catchError, retry, map } from 'rxjs/operators';
  */
 export class UserService {
 
-  private static readonly baseUrl = "http://localhost:8080/usuario"
+  private static readonly baseUrl = environment.baseUrl + "/usuario"
   private static readonly addUrl = UserService.baseUrl + "/add"
   private static readonly validae = UserService.baseUrl + "/validate"
   private static readonly httpOptions = {
