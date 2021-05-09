@@ -64,21 +64,25 @@ export class SettlementComponent implements OnInit {
     return TipoTerreno
   }
 
+
   public tipoAsentamiento(): typeof TipoAsentamiento {
     return TipoAsentamiento
   }
 
 
-  public func(): void {
-
-  }
-
   public build(): void{
     console.log("Construido poblado")
+    if ( this.gameService.partida.jugadores[this.gameService.partida.miTurno - 1].primerosAsentamientos ){
+      this.gameService.construirPoblado(this.vertice)
+    }else{
+      this.gameService.construirPrimerPoblado(this.vertice)
+    }
   }
 
+  
   public improve(): void{
     console.log("Mejorar poblado")
+    this.gameService.mejorarPueblo(this.vertice)
   }
 
 

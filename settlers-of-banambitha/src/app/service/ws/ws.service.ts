@@ -2,6 +2,7 @@ import * as Stomp from 'stompjs';
 import * as SockJS from 'sockjs-client';
 import { Injectable, OnDestroy } from '@angular/core';
 import { UserService } from '../user/user.service';
+import { environment } from 'src/environments/environment';
 
 
 export interface Connectable{
@@ -20,7 +21,7 @@ export interface Connectable{
 export class WsService implements OnDestroy{
 
   //Websocket Urls
-  private static readonly webSocketEndPoint:   string = 'http://localhost:8080/catan-stomp-ws-ep'
+  private static readonly webSocketEndPoint:   string = environment.baseUrl + '/catan-stomp-ws-ep'
   private static readonly appPrefix:           String = "/app"
 
   public static readonly salaCrear:            String = WsService.appPrefix + "/sala/crear" 
