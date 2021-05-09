@@ -703,7 +703,9 @@ export class GameService implements Connectable{
    * contrario
    */
   public comerciarConJugador(jugador: number, recursoOfrecido: Recurso, recursoSolicitado: Recurso, 
-                            cantidadOfrecida: Number, cantidadSolicitada: Number): void { }
+                            cantidadOfrecida: Number, cantidadSolicitada: Number): void {
+  //TODO: completar
+  }
 
 
   /**
@@ -720,7 +722,9 @@ export class GameService implements Connectable{
    * contrario
    */
   public comerciarConPuerto(aristaPuerto: number, recursoOfrecido: Recurso, recursoSolicitado: Recurso, 
-                            cantidadOfrecida: Number, cantidadSolicitada: Number): void { }
+                            cantidadOfrecida: Number, cantidadSolicitada: Number): void {
+  //TODO: completar
+  }
 
                     
   /**
@@ -729,7 +733,9 @@ export class GameService implements Connectable{
    * 
    * @param jugador jugador que solicita el comercio
    */
-  public aceptarComercioJugador(jugador: number): void { }              
+  public aceptarComercioJugador(jugador: number): void {
+  //TODO: completar
+  }              
 
 
   /**
@@ -738,7 +744,9 @@ export class GameService implements Connectable{
    * 
    * @param jugador jugador que solicitó el comercio
    */
-  public rechazarComercioJugador(jugador: number): void { }
+  public rechazarComercioJugador(jugador: number): void {
+  //TODO: completar
+  }
 
 
   /**

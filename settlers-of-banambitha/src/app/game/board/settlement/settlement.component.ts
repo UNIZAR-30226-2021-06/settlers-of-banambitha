@@ -75,12 +75,10 @@ export class SettlementComponent implements OnInit {
 
   public build(): void{
     console.log("Construido poblado")
-    this.gameService.partida.tablero.vertices.asentamiento[this.vertice] = TipoAsentamiento.POBLADO_PLAYER_1
-    console.log(this.gameService.partida.tablero.vertices.asentamiento[this.vertice])
   }
 
   public improve(): void{
-    this.gameService.partida.tablero.vertices.asentamiento[this.vertice] = TipoAsentamiento.CIUDAD_PLAYER_1
+    console.log("Mejorar poblado")
   }
 
 

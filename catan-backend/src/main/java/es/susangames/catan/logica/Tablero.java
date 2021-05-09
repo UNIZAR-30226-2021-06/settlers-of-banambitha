@@ -1162,6 +1162,7 @@ public class Tablero {
 			this.dados = generarNumero();
 			turno++;
 			this.message = "Se ha finalizado el turno correctamente";
+			this.turno_jugador = (this.turno_jugador + 1) % 4; 
 			this.exit_status = 0;
 			this.haComerciado = false;
 			Boolean finalizadoPrimerasConstrucciones = 
