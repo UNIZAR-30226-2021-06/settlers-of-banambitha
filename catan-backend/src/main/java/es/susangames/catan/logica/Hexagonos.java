@@ -1,4 +1,4 @@
-package logica;
+package es.susangames.catan.logica;
 
 import java.util.Arrays;
 import java.util.Collection;

@@ -1,4 +1,4 @@
-package logica;
+package es.susangames.catan.logica;
 
 /*
  * Clase hija de Coordenadas.
