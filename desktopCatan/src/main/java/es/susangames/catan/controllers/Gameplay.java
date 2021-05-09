@@ -38,11 +38,23 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import java.io.IOException;
 import javafx.scene.input.MouseButton;
 import javafx.scene.image.ImageView;
-
-
-
-
-
+import org.json.*;
+import es.susangames.catan.service.UserService;
+import java.util.Arrays;
+import org.springframework.messaging.converter.StringMessageConverter;
+import org.springframework.messaging.simp.stomp.StompFrameHandler;
+import org.springframework.messaging.simp.stomp.StompHeaders;
+import org.springframework.messaging.simp.stomp.StompSession;
+import org.springframework.messaging.simp.stomp.StompSessionHandlerAdapter;
+import org.springframework.web.socket.client.WebSocketClient;
+import org.springframework.web.socket.client.standard.StandardWebSocketClient;
+import org.springframework.web.socket.messaging.WebSocketStompClient;
+import org.springframework.web.socket.sockjs.client.SockJsClient;
+import org.springframework.web.socket.sockjs.client.Transport;
+import org.springframework.web.socket.sockjs.client.WebSocketTransport;
+import es.susangames.catan.service.ws;
+import java.lang.reflect.Type;
+import es.susangames.catan.App;
 
 
 
@@ -126,44 +138,27 @@ public class Gameplay {
     @FXML
     private Button passTurnButton;
 
-
+    // Elementos graficos adicionales
     private Popup popupCards;
-
     private Popup popupInternalTrade;
-
     private Popup popupExternalTrade;
-
     private Popup popupSettings;
-
-
     private ChoiceBox<String> offerMaterial;
-
     private ChoiceBox<String> offerPlayer;
-
     private ChoiceBox<String> receiveMaterial;
-
     private ChoiceBox<String> receivePlayer;
-
     private ChoiceBox<String> ratio;
-
     private Button sendTrade;
-
     private Button sendTradeExternal;
-
     private Button leaveGame;
-
     private Button stopGame;
-
-
-
-
     private Integer offerAmountInt;
-
     private Integer receiveAmountInt;
-
     private String player1,player2,player3,player4;
 
-
+    // Variables controlador partida
+    private static Boolean cargandoPartida = false;
+    private static String idPartida;
     
 
 
@@ -190,6 +185,40 @@ public class Gameplay {
 
     }
     
+
+    public static void comenzarPartidaPrueba(String msg) {
+        JSONObject message = new JSONObject(msg);
+		idPartida = message.getString("game");
+        comenzarPartida(idPartida, new String[] {UserService.getUsername(),
+                                                "Jugador_2",
+                                                "Jugador_3",
+                                                "Jugador_4"});
+    }
+
+    public static Boolean comenzarPartida(String idPartida, String[] jugadores) {
+        System.out.println(Arrays.asList(jugadores).indexOf(UserService.getUsername()));
+        subscribeToTopics();
+        return true;
+    }
+
+    private static void subscribeToTopics() {
+        // TODO: Comprobaciones partida
+        ws.session.subscribe( ws.partida_act_topic  + idPartida, new StompFrameHandler() {
+            @Override
+            public Type getPayloadType(StompHeaders headers) {
+                return String.class;
+            }
+            @Override
+            public void handleFrame(StompHeaders headers, Object payload) {
+                System.out.println(payload.toString());
+                
+            }
+        });
+        try {
+            App.nuevaPantalla("/view/gameplay.fxml");
+        } catch(Exception e) {}
+        
+    }
 
     @FXML
     void send_msg(ActionEvent event) {

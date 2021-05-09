@@ -36,6 +36,15 @@ public class ws {
     private static final String declineFriendRequestUrl = "/app/rechazar/peticion";
     public static final StompSession session;
 
+    // Partida
+    public static final String partidaTestComenzar = "/app/partida/test";
+    public static final String partida_act_topic = "/partida-act/";
+    public static final String partida_chat_topic = "/partida-chat/";
+    public static final String partida_com_topic = "/partida-com/";
+    public static final String partida_test_topicUrl = "/test-partida/";
+
+
+
 
     static {
         msgs = new HashMap<String, ArrayList<JSONObject>>();
