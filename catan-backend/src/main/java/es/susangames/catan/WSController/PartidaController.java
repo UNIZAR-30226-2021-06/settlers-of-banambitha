@@ -125,7 +125,7 @@ public class PartidaController {
 		JSONObject message = new JSONObject(mensaje);
 		
 		int destinatario = message.getInt("to");
-		int partida = message.getInt("game");
+		String partida = message.getString("game");
 		
 		message.remove("to");
 		message.remove("game");
@@ -241,7 +241,7 @@ public class PartidaController {
 		
 		int remitente = message.getInt("from");
 		int destinatario = message.getInt("to");
-		int partida = message.getInt("game");
+		String partida = message.getString("game");
 		
 		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 		int Hours = timestamp.getHours();

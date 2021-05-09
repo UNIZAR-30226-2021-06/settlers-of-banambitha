@@ -15,6 +15,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 
 /**
  * Esta clase define el tablero de la partida
@@ -232,7 +234,8 @@ public class Tablero {
 	 * @return Devuelve n, siendo n un entero 1 <= n <= 6.
 	 * */
 	private int generarNumero () {
-		return (int) Math.floor( Math.random()*5 + 1 );
+		// return (int) Math.floor( Math.random()*5 + 1 );
+		return ThreadLocalRandom.current().nextInt(2, 13);
 	}
 	
 	//--------------------------- Partida pausada -----------------------------------------------\\

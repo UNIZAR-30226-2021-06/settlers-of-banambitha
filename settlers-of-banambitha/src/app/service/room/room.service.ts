@@ -276,7 +276,7 @@ export class RoomService implements Connectable{
 
         case RoomMsgStatus.FOUND: 
           //Se ha encontrado partida
-          this.gameService.comenzarPartida(this.room.id, msg["players"]);
+          this.gameService.comenzarPartida(msg["game"], msg["players"]);
           this.room = null
           this.buscandoPartida = false
           this.sala_act_topic_id.unsubscribe()

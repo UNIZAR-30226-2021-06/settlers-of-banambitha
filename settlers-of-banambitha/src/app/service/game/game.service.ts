@@ -1,8 +1,9 @@
-import { Injectable } from '@angular/core';
+import { Component, Inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Connectable, WsService } from '../ws/ws.service';
 import { UserService } from '../user/user.service';
 import { UserCardInfo } from '../room/room.service';
+import { MatSnackBar, MatSnackBarRef, MAT_SNACK_BAR_DATA } from '@angular/material/snack-bar';
 
 
 /**
@@ -72,7 +73,7 @@ enum Jugada {
   PRIMER_ASENTAMIENTO = "primer asentamiento", 
   PRIMER_CAMINO       = "primer camino",
   COMERCIAR           = "comerciar",
-  COMERCIAR_PUERTO    = "comerciar maritimo"
+  COMERCIAR_PUERTO    = "comerciar con puerto"
 }
 
 
@@ -365,7 +366,7 @@ export class GameService implements Connectable{
    * @param router      router de la aplicación
    * @param userService servicio de usuario a utilizar (singleton)
    */
-  constructor(private wsService: WsService, private router: Router, private userService: UserService) {
+  constructor(private wsService: WsService, private router: Router, private userService: UserService, private _snackBar: MatSnackBar) {
 
     if ( ! wsService.atatchConnectable(this)){
       this.onConnect();
@@ -374,10 +375,30 @@ export class GameService implements Connectable{
     this.cargandoPartida = true
 
     //Solo para pruebas
-    this.initPartidaPrueba()
+    // this.initPartidaPrueba()
+    // this.ultimaSolicitudComercio = {
+    //   from: "Pepito", 
+    //   res1: {
+    //     type: Recurso.MADERA,
+    //     cuan: 10
+    //   },
+    //   res2: {
+    //     type: Recurso.LANA,
+    //     cuan: 5
+    //   },
+    //   timeStamp: "12:12"
+    // }
+    // this.openSnackBar()
 
   }
 
+  public openTradeOfferSnackBar(): void {
+    this._snackBar.openFromComponent(TradeOfferSnackBar, {
+      data: { gameService: this, solicitud: this.ultimaSolicitudComercio },
+      horizontalPosition: "left",
+      verticalPosition: "top"
+    });
+  }
 
   /**
    * Función a llamar cuando la conexión websocket con el 
@@ -432,9 +453,11 @@ export class GameService implements Connectable{
   public comenzarPartida(idPartida: String, jugadores: Array<String>): boolean{
     
     console.log("Iniciando partida...")
+    console.log(jugadores)
     this.cargandoPartida = true
     let miTurno: number = jugadores.indexOf(this.userService.getUsername())
     if ( jugadores.length == GameService.numJugadores && miTurno >= 0){
+      console.log("comenzando partida")
       this.partida.miTurno = miTurno + 1
       this.partida.id = idPartida
       this.partida.jugadores = this.inicializarJugadores(jugadores)
@@ -444,6 +467,7 @@ export class GameService implements Connectable{
       this.router.navigate(["/board"])
       return true
     }
+    console.log("no se pudo comenzar la partida")
 
     return false
   }
@@ -549,7 +573,7 @@ export class GameService implements Connectable{
             res2: msg["res2"],
             timeStamp: msg["time"]
           }
-          //Abrir pop up
+          this.openTradeOfferSnackBar()
           infoMsg = "¡" + msg["from"] + " quiere comerciar contigo!"
           this.generarMensajePartida(infoMsg)
         }
@@ -1848,4 +1872,31 @@ export class GameService implements Connectable{
   }
 
 
+}
+
+
+@Component({
+  selector: 'snack-bar-component-example-snack',
+  templateUrl: '../../game/trade-snack-bar.html',
+  styleUrls: ['../../game/trade-snack-bar.sass'],
+})
+export class TradeOfferSnackBar {
+
+  public solicitud: SolicitudComercio
+  public gameService: GameService
+
+  constructor(public dialogRef: MatSnackBarRef<TradeOfferSnackBar>, @Inject(MAT_SNACK_BAR_DATA) public data: any){
+    this.solicitud = data["solicitud"]
+    this.gameService = data["gameService"]
+  }
+
+  public aceptar(){
+    this.gameService.aceptarComercioJugador()
+    this.dialogRef.dismiss()
+  }
+
+  public rechazar(){
+    this.gameService.rechazarComercioJugador()
+    this.dialogRef.dismiss()
+  }
 }
