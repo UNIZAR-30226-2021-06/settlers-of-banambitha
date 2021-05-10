@@ -110,6 +110,8 @@ public class Play {
         //Ejemplo para comprobar que se guardan la cfg de busqueda
         System.out.println(typeGameSelector.getValue());
         System.out.println(skinSelector.getValue());
+        // Buscar partida
+        // Cancelar
         App.nuevaPantalla("/view/gameplay.fxml");
     }
    
