@@ -39,12 +39,29 @@ enum MessageKeys {
   PLAYER_4                        = "Player_4",
   PUERTO_MADERA                   = "puertoMadera",
   PUERTO_LANA                     = "puertoLana",
-  PUERTO_PIEDRA                   = "puertoMineral",
+  PUERTO_MINERAL                  = "puertoMineral",
   PUERTO_CEREAL                   = "puertoCereales",
-  PUERTO_LADRILLO                 = "puertoArcilla",
+  PUERTO_ARCILLA                  = "puertoArcilla",
   PUERTOS_BASICOS                 = "puertosBasicos",
   CLOCK                           = "Clock"
 }
+
+
+/**
+ * Jugadas posibles
+ */
+enum Jugada {
+  CONSTRUIR_POBLADO   = "construir poblado",
+  MEJORAR_POBLADO     = "mejorar poblado",
+  CONSTRUIR_CAMINO    = "crear carretera", 
+  MOVER_LADRON        = "mover ladron", 
+  PASAR_TURNO         = "finalizar turno",
+  PRIMER_ASENTAMIENTO = "primer asentamiento", 
+  PRIMER_CAMINO       = "primer camino",
+  COMERCIAR           = "comerciar",
+  COMERCIAR_PUERTO    = "comerciar con puerto"
+}
+
 
 /**
  * Colores de los jugadores
@@ -58,19 +75,44 @@ export enum Color {
 
 
 /**
+ * Tipos de recursos
+ */
+export enum Recurso {
+  MADERA  = "madera", 
+  MINERAL = "mineral", 
+  LANA    = "lana", 
+  CEREAL  = "cereal", 
+  ARCILLA = "arcilla"
+}
+
+
+/**
+ * Tipos de puertos
+ */
+export enum TipoPuerto {
+  MADERA, 
+  MINERAL, 
+  LANA, 
+  ARCILLA, 
+  CEREAL, 
+  BASICO,
+}
+
+
+/**
  * Tipos de asentamientos (valores para un 
  * posible asentamiento del tablero)
  */
 export enum TipoAsentamiento {
-  NADA = "Nada", 
-  POBLADO_AMARILLO = "PobladoAmarillo", 
-  POBLADO_AZUL     = "PobladoAzul", 
-  POBLADO_VERDE    = "PobladoVerde", 
-  POBLADO_ROJO     = "PobladoRojo", 
-  CIUDAD_AMARILLO  = "CiudadAmarillo", 
-  CIUDAD_AZUL      = "CiudadAzul", 
-  CIUDAD_VERDE     = "CiudadVerde", 
-  CIUDAD_ROJO      = "CiudadRojo", 
+  NADA             = "Nada", 
+  POBLADO_PLAYER_1 = "PuebloAzul", 
+  POBLADO_PLAYER_2 = "PuebloRojo", 
+  POBLADO_PLAYER_3 = "PuebloAmarillo", 
+  POBLADO_PLAYER_4 = "PuebloVerde", 
+  CIUDAD_PLAYER_1  = "CiudadAzul", 
+  CIUDAD_PLAYER_2  = "CiudadRojo", 
+  CIUDAD_PLAYER_3  = "CiudadAmarillo", 
+  CIUDAD_PLAYER_4  = "CiudadVerde", 
 }
 
 
@@ -94,10 +136,10 @@ export enum TipoTerreno {
  */
 export enum TipoCamino {
   NADA     = "Nada", 
-  ROJO     = "CaminoRojo", 
-  VERDE    = "CaminoVerde", 
-  AZUL     = "CaminoAzul", 
-  AMARILLO = "CaminoAmarillo"
+  PLAYER_1 = "CaminoAzul", 
+  PLAYER_2 = "CaminoRojo", 
+  PLAYER_3 = "CaminoAmarillo",
+  PLAYER_4 = "CaminoVerde"
 }
 
 
@@ -106,6 +148,19 @@ export enum TipoCamino {
  * TODO: implementar códigos de error
  */
 enum CodigoError {
+}
+
+
+/**
+ * Mensaje de solicitud de jugada
+ */
+interface MsgJugada {
+  player: number, 
+  game: String, 
+  move: {
+    name: Jugada,
+    param: Object
+  }
 }
 
 
@@ -128,8 +183,8 @@ export interface CartasJugador {
  */
 export interface RecursosJugador {
   madera:   number, 
-  piedra:   number, 
-  ladrillo: number, 
+  mineral:   number, 
+  arcilla: number, 
   lana:     number, 
   cereales: number
 }
@@ -152,8 +207,10 @@ export interface Jugador {
  * Mensaje que se puede recibir durante una partida
  */
 export interface Mensaje {
-  remitente: String, 
-  body:      String
+  esError: boolean
+  remitente: Jugador, 
+  body:      String, 
+  timeStamp: String
 }
 
 
@@ -177,14 +234,19 @@ export interface Vertices {
   posible_asentamiento: Array<Array<Boolean>>
 }
 
+
+/**
+ * Puertos del tablero
+ */
 export interface Puertos {
   madera:   number, 
-  piedra:   number, 
-  ladrillo: number, 
+  mineral:   number, 
+  arcilla: number, 
   lana:     number, 
   cereal:   number
   basico:   Array<Number>
 }
+
 
 /**
  * Información sobre TODAS las aristas
@@ -218,7 +280,11 @@ export interface Partida {
   resultadoTirada: number, 
   jugadores:       Array<Jugador>,
   mensajes:        Array<Mensaje>, 
-  clock:           number
+  clock:           number,
+  PobladoDisponible: boolean,
+  CaminoDisponible: boolean, 
+  CiudadDisponible: boolean, 
+  PrimerTurno: boolean
 }
 
 
@@ -249,7 +315,6 @@ export class GameService implements Connectable{
   //Cliente de stomp
   private stompClient: any
 
-
   /**
    * Constructor. Se suscribe a los topics necesarios para poder gestionar
    * toda la dinámica juego.
@@ -262,6 +327,10 @@ export class GameService implements Connectable{
     if ( ! wsService.atatchConnectable(this)){
       this.onConnect();
     }
+
+    //Solo para pruebas
+    this.initPartidaPrueba()
+
   }
 
 
@@ -276,27 +345,34 @@ export class GameService implements Connectable{
 
 
   /**
-   * Inicia una partida de prueba
+   * Inicia una partida de prueba, donde el único jugador
+   * es el usuario loggeado.
    * Solo útil para test
+   * 
+   * @param simulateMoves ordenar al servidor simular jugadas en 
+   * la partida de prueba
    */
-  public comenzarPartidaPrueba(){
-    
+  public comenzarPartidaPrueba( simulateMoves: boolean){
+
     let that = this
-    this.test_partida_topic_id = this.stompClient.subscribe(WsService.partida_test_topic + this.userService.getUsername(),
-    function (message) {
+    this.test_partida_topic_id = this.stompClient.subscribe(WsService.partida_test_topic +
+      this.userService.getUsername(), function (message) {
       if (message.body){
         let msg: Object = JSON.parse(message.body)
         console.log(msg)
         console.log("Comenzando partida de prueba...")
-        that.comenzarPartida(msg["game"], [that.userService.getUsername(), "Some1" ,"Some2", "Some3"])
+        that.comenzarPartida(msg["game"],
+                            [that.userService.getUsername(),
+                            "Some1" ,"Some2", "Some3"])
 
       }else{
         console.log("Error crítico")
       }
     });
-
+    this.router.navigate(["/board"])
     //Solicitar inicio de partida
-    this.stompClient.send(WsService.partidaTestComenzar, {}, JSON.stringify({from: this.userService.getUsername()}) )
+    this.stompClient.send(WsService.partidaTestComenzar, {},
+      JSON.stringify({from: this.userService.getUsername(), simulate: simulateMoves}) )
   }
 
 
@@ -321,7 +397,11 @@ export class GameService implements Connectable{
         tablero: this.tableroVacio(), 
         resultadoTirada: 0, 
         mensajes: [],
-        clock: -1
+        clock: -1,
+        PobladoDisponible: false,
+        CiudadDisponible: false, 
+        CaminoDisponible: false,
+        PrimerTurno: false
       }
 
       this.subscribeToTopics()
@@ -330,80 +410,6 @@ export class GameService implements Connectable{
     }
 
     return false
-  }
-
-
-  /**
-   * Devuelve un tablero vacío
-   * 
-   * @Return un tablero vacío
-   */
-  private tableroVacio(): Tablero {
-    return {
-      hexagonos: {
-        valor: [],
-        tipo: [],
-        ladron: 0
-      }, 
-      vertices: {
-        asentamiento: [],
-        posible_asentamiento: this.falseArray(GameService.numJugadores, GameService.numVertices),
-      }, 
-      aristas: {
-        camino: [], 
-        posible_camino: this.falseArray(GameService.numJugadores, GameService.numAristas),
-        puertos: {
-          ladrillo: 0,
-          lana: 0, 
-          cereal: 0, 
-          basico: [], 
-          piedra: 0,
-          madera: 0
-        }
-      }
-    }
-  }
-
-
-  /**
-   * Devuelve una matriz de nxm componentes con valor falso
-   * 
-   * @param n filas
-   * @param m columnas
-   * @return array de booleanos nxm con todos los valores a falso
-   */
-  private falseArray(n: number, m: number): Array<Array<Boolean>> {
-    let mainArray: Array<Array<Boolean>> = new Array<Array<Boolean>>(n)
-    for ( let i = 0; i < n; i++ ){
-      mainArray[i] = new Array<Boolean>(m)
-      for ( let j = 0; j < m; j++ ){
-        mainArray[i][j] = false
-      }
-    }
-    return mainArray
-  }
-
-  /**
-   * Inicializa los jugadores de una partida suponiendo que la partida 
-   * está en el estado inicial (nadie ha jugado todavía). 
-   * 
-   * @param jugadores nombres de los jugadores, en orden de turno
-   * PRE: jugadores.length = 4
-   */
-  private inicializarJugadores(jugadores: Array<String>): Array<Jugador>{
-    
-    let jugadoresPartida: Array<Jugador> = []
-    for (let i = 0; i < jugadores.length; i++){
-      jugadoresPartida[i] = {
-        nombre: jugadores[i],
-        turno: i + 1, 
-        color: GameService.coloresPorId[i],
-        puntos: 0, 
-        recursos: { madera: 0, ladrillo: 0, cereales: 0, lana: 0, piedra: 0 },
-        cartas: { D1: 0, D2: 0, D3: 0, D4: 0, D5: 0, E1: 0, E2: 0}
-      }
-    }
-    return jugadoresPartida
   }
 
 
@@ -476,6 +482,16 @@ export class GameService implements Connectable{
    */
   private procesarMensajeChat(msg: Object): void{
     console.log(msg)
+    let mensajeNuevo: Mensaje = {
+      remitente: this.partida.jugadores[msg["from"] - 1], 
+      body: msg["body"],
+      timeStamp: msg["time"],
+      esError: false
+    }
+
+    //TODO: ordenar los mensajes por timestamp, habrá que 
+    //cambiar el tipo de dato de simeStamp
+    this.partida.mensajes.push(mensajeNuevo)
   }
 
 
@@ -486,6 +502,7 @@ export class GameService implements Connectable{
    */
   private procesarMensajeComercio(msg: Object): void{
     console.log(msg)
+    //TODO: informar sobre comercio entrante
   }
 
 
@@ -500,27 +517,775 @@ export class GameService implements Connectable{
   }
 
 
-  /************************************************************
-   * FUNCIONES AUXILIARES PARA TRADUCIR EL MENSAJE DEL
-   * TABLERO A LAS ESTRUCTURAS DE DATOS INTERNAS
-   ************************************************************/
+  /****************************************************************
+  *                     ACCIONES POSIBLES
+  *****************************************************************/
+
+
+  /**
+   * Crea un poblado en el vértice con el identificador dado. 
+   * Solo creará el poblado si el vértice está vacío y el usuario 
+   * dispone de los recursos necesarios.
+   * 
+   * @param vertice arista del vértice en el que se construirá el
+   * poblado
+   * @return true si ha podido enviar la petición, false en caso 
+   * contrario
+   */ 
+  public construirPoblado( vertice: number ): boolean {
+
+    if ( this.esMiTurno() &&
+         this.verticeValido(vertice) &&
+         this.partida.tablero.vertices.asentamiento[vertice] == TipoAsentamiento.NADA && 
+         this.puedeConstruirPoblado() ){
+
+      let msg = this.construirJugada(Jugada.CONSTRUIR_POBLADO, vertice)
+
+      this.stompClient.send(WsService.partidaJugada, {}, JSON.stringify(msg) )
+      return true
+    }
+    return false
+  }
+
+
+  /**
+   * Crea un camino en la arista con el identificador dado. 
+   * Solo creará el camino si la arista está vacía y el usuario 
+   * dispone de los recursos necesarios. 
+   * 
+   * @param arista arista en la que se construirá el camino
+   * @return true si ha podido enviar la petición, false en caso 
+   * contrario
+   */
+  public construirCamino( arista: number): boolean {
+
+    if ( this.esMiTurno() &&
+         this.aristaValida(arista) &&
+         this.partida.tablero.aristas.camino[arista] == TipoCamino.NADA && 
+         this.puedeConstruirCamino() ) {
+
+      let msg = this.construirJugada(Jugada.CONSTRUIR_CAMINO, arista)
+
+      this.stompClient.send(WsService.partidaJugada, {}, JSON.stringify(msg) )
+      return true
+    }
+    return false
+  }
+
+
+  /**
+   * Crea el primer poblado en el vértice dado. Solo 
+   * creará el poblado si el vértice está vacío.
+   * 
+   * @param vertice vértice en el que se construirá el poblado
+   * @return true si ha podido enviar la petición, false en caso 
+   * contrario
+   */
+  public construirPrimerPoblado( vertice: number): boolean {
+
+    if ( this.esMiTurno() &&
+         this.verticeValido(vertice) &&
+         this.partida.tablero.vertices.asentamiento[vertice] == TipoAsentamiento.NADA){
+
+      let msg = this.construirJugada(Jugada.PRIMER_ASENTAMIENTO, vertice)
+      
+      this.stompClient.send(WsService.partidaJugada, {}, JSON.stringify(msg) )
+      return true
+    }
+    return false
+  }
+
+
+  /**
+   * Crea el primer camino en la arista con el identificador dado. 
+   * Solo creará el camino si la arista está vacía. 
+   * 
+   * @param arista arista en la que se construirá el camino
+   * @return true si ha podido enviar la petición, false en caso 
+   * contrario
+   */
+  public cconstruirPrimerCamino( arista: number ): boolean {
+    
+    if ( this.esMiTurno() &&
+         this.aristaValida(arista) &&
+         this.partida.tablero.aristas.camino[arista] == TipoCamino.NADA ) {
+
+      let msg = this.construirJugada(Jugada.PRIMER_CAMINO, arista)
+      
+      this.stompClient.send(WsService.partidaJugada, {}, JSON.stringify(msg) )
+      return true
+    }
+    return false
+
+  }
+
+
+  /**
+   * Mejora el pueblo dado a una ciudad. Solo se puede realizar
+   * esta acción si es el turno del usuario, dispone de los
+   * recursos suficientes como para mejorar el pueblo y existe un pueblo
+   * del usuario en el vértice dado
+   * 
+   * @param vertice vertice del pueblo a mejorar
+   * @return true si ha podido enviar la petición, false en caso 
+   * contrario
+   */
+  public mejorarPueblo(vertice: number): boolean {
+
+    if ( this.esMiTurno() &&
+         this.verticeValido(vertice) && 
+         this.partida.tablero.vertices.asentamiento[vertice] == this.miTipoPueblo() &&
+         this.puedeConstruirPoblado() ){ 
+      
+      let msg = this.construirJugada(Jugada.MEJORAR_POBLADO, vertice)
+
+      this.stompClient.send(WsService.partidaJugada, {}, JSON.stringify(msg) )
+      return true
+    }
+    return false
+  }
+
+
+  /**
+   * Mueve el ladrón al hexágono dado. Solo se podrá mover al 
+   * ladrón si es el turno del usuario y el resultado de la
+   * tirada es un 7.
+   * 
+   * @param hexagono hexágono al que se moverá el ladrón
+   * @return true si ha podido enviar la petición, false en caso 
+   * contrario
+   */
+  public moverLadron( hexagono: number): boolean {
+
+    if ( this.esMiTurno() &&
+         this.partida.resultadoTirada == 7 ){
+
+      let msg = this.construirJugada(Jugada.MOVER_LADRON, hexagono)
+
+      this.stompClient.send(WsService.partidaJugada, {}, JSON.stringify(msg) )
+      return true
+    }
+    return false
+  }
+
+
+  /**
+   * Finaliza el turno del usuario. Solo tiene efecto si el 
+   * turno actual es efectivamente el turno del usuario.
+   * @return true si ha podido enviar la petición, false en caso 
+   * contrario
+   */
+  public pasarTurno(): boolean {
+
+    if ( this.esMiTurno() ){
+      let msg = this.construirJugada(Jugada.PASAR_TURNO, "")
+
+      this.stompClient.send(WsService.partidaJugada, {}, JSON.stringify(msg) )
+      return true
+    }
+    return false
+  }
+
+
+  /**
+   * Envía una petición de comercio al jugador dado, solicitando el 
+   * intercambio de recursos detallado.
+   * Solo se enviará la petición si el turno actual es el turno del
+   * usuario y además las cantidades a intercambiar son factibles (los
+   * usuarios disponen de recursos suficientes para realizar el intercambio)
+   * 
+   * @param jugador jugador al que se solicita el intercambio
+   * @param recursoOfrecido tipo de recurso ofrecido
+   * @param recursoSolicitado tipo de recurso solicitado
+   * @param cantidadOfrecida cantidad de recursos ofrecida
+   * @param cantidadSolicitada cantidad de recursos solicitada
+   * @return true si ha podido enviar la petición, false en caso 
+   * contrario
+   */
+  public comerciarConJugador(jugador: number, recursoOfrecido: Recurso, recursoSolicitado: Recurso, 
+                            cantidadOfrecida: Number, cantidadSolicitada: Number): void {
+  //TODO: completar
+  }
+
+
+  /**
+   * Realiza un intercambio con el puerto dado por aristaPuerto. Solo se efectuará el 
+   * intercambio si el jugador dispone de los recursos suficientes. Y el puerto es del 
+   * tipo correcto (ofrece el recurso solicitado y acepta el recurso ofrecido)
+   * 
+   * @param aristaPuerto puerto con el que se realizará el intercambio
+   * @param recursoOfrecido tipo de recurso ofrecido
+   * @param recursoSolicitado tipo de recurso solicitado
+   * @param cantidadOfrecida  cantidad de recursos ofrecida
+   * @param cantidadSolicitada cantidad de recursos solicitada
+   * @return true si ha podido enviar la petición, false en caso 
+   * contrario
+   */
+  public comerciarConPuerto(aristaPuerto: number, recursoOfrecido: Recurso, recursoSolicitado: Recurso, 
+                            cantidadOfrecida: Number, cantidadSolicitada: Number): void {
+  //TODO: completar
+  }
+
+                    
+  /**
+   * Acepta la petición de comercio enviada por el jugador dado. 
+   * Solo se pueden aceptar peticiones fuera del turno del jugador
+   * 
+   * @param jugador jugador que solicita el comercio
+   */
+  public aceptarComercioJugador(jugador: number): void {
+  //TODO: completar
+  }              
+
+
+  /**
+   * Rechaza la petición de comercio enviada por el jugador dado. 
+   * Solo se pueden rechazar peticiones fuera del turno de partida
+   * 
+   * @param jugador jugador que solicitó el comercio
+   */
+  public rechazarComercioJugador(jugador: number): void {
+  //TODO: completar
+  }
+
+
+  /**
+   * Envía un mensaje al chat de la partida
+   * 
+   * @param mensaje cuerpo del mensaje
+   */
+  public enviarMensaje(mensaje: String): void{
+    let msg = {
+      from: this.partida.miTurno,
+      game: this.partida.id, 
+      body: mensaje
+    }
+    this.stompClient.send(WsService.enviarMensajePartida, {}, JSON.stringify(msg) )
+  }
+
+
+  /****************************************************************
+  * FUNCIONES AUXILIARES PARA TRADUCIR EL MENSAJE DEL
+  * TABLERO A LAS ESTRUCTURAS DE DATOS INTERNAS E INICIALIZARLAS
+  *****************************************************************/
+
+
+  /**
+   * Actualiza los atributos precalculados de la clase
+   */
+  private actualizarPrecalculos(): void {
+    this.partida.CaminoDisponible  = this.puedeConstruirCamino()
+    this.partida.CiudadDisponible  = this.puedeConstruirCiudad()
+    this.partida.PobladoDisponible = this.puedeConstruirPoblado()
+  }
+
+
+  /**
+   * 
+   * @return el número de poblados construidos por el jugador
+   */
+  private contarMisPoblados(): number{
+    let n: number = 0
+    let tipoAsentamiento: TipoAsentamiento = this.miTipoPueblo()
+    for (let i = 0; i < this.partida.tablero.vertices.asentamiento.length; i++){
+      if ( this.partida.tablero.vertices.asentamiento[i] == tipoAsentamiento ){
+        n++
+      }
+    }
+
+    return n
+  }
+
+
+  /**
+   * 
+   * @return el número de caminos construidos por el jugador
+   */
+  private contarMisCaminos(): number{
+    let n: number = 0
+    let tipoCamino: TipoCamino = this.miTipoCamino()
+    for (let i = 0; i < this.partida.tablero.aristas.camino.length; i++){
+      if ( this.partida.tablero.aristas.camino[i] == tipoCamino ){
+        n++
+      }
+    }
+
+    return n
+  }
+
+
+
+  /**
+   * Devuelve el tipo de puerto que se encuentra en una arista
+   * Si la arista no tiene puerto devuelve null
+   * 
+   * @param Arista arista cuyo tipo de puerto se quiere comprobar
+   * @return tipo de puerto de la arista o null si no tenía puerto 
+   */
+  public TipoPuerto(Arista: number): TipoPuerto {
+
+    if ( this.partida.tablero.aristas.puertos.arcilla == Arista){
+      return TipoPuerto.ARCILLA
+    }
+
+    if ( this.partida.tablero.aristas.puertos.madera == Arista){
+      return TipoPuerto.MADERA
+    }
+
+    if ( this.partida.tablero.aristas.puertos.mineral == Arista){
+      return TipoPuerto.MINERAL
+    }
+
+    if ( this.partida.tablero.aristas.puertos.lana == Arista){
+      return TipoPuerto.LANA
+    }
+
+    if ( this.partida.tablero.aristas.puertos.cereal == Arista){
+      return TipoPuerto.CEREAL
+    }
+
+    for ( let i = 0; i < this.partida.tablero.aristas.puertos.basico.length; i++){
+      if (this.partida.tablero.aristas.puertos.basico[i] == Arista){
+        return TipoPuerto.BASICO
+      }
+    }
+
+    return null
+  }
+
+
+  /**
+   * @return True si es el turno del usuario, false en caso 
+   * contrario
+   */
+  private esMiTurno(): boolean{
+    return this.partida.miTurno == this.partida.turnoActual
+  }
+
+  /**
+   * @return true si el usuario tiene los recursos 
+   * suficientes como para construir un poblado
+   */
+  public puedeConstruirPoblado(): boolean {
+    let arcilla: number = this.partida.jugadores[this.partida.miTurno - 1].recursos.arcilla
+    let madera:  number = this.partida.jugadores[this.partida.miTurno - 1].recursos.madera
+    let lana:    number = this.partida.jugadores[this.partida.miTurno - 1].recursos.lana
+    let cereal:  number = this.partida.jugadores[this.partida.miTurno - 1].recursos.cereales
+    return (this.partida.PrimerTurno && this.contarMisPoblados() < 2) ||
+           arcilla > 0 && cereal > 0 && lana > 0 && madera > 0
+  }
+
+
+  /**
+   * @return true si el usuario tiene los recursos 
+   * suficientes como para construir una ciudad
+   */
+  public puedeConstruirCiudad(): boolean {
+    let cereal:   number = this.partida.jugadores[this.partida.miTurno - 1].recursos.cereales
+    let mineral:  number = this.partida.jugadores[this.partida.miTurno - 1].recursos.mineral
+    return mineral > 2 && cereal > 1
+  }
+
+
+  /**
+   * @return true si el usuario tiene los recursos 
+   * suficientes como para construir un camino
+   */
+  public puedeConstruirCamino(): boolean {
+    let arcilla: number = this.partida.jugadores[this.partida.miTurno - 1].recursos.arcilla
+    let madera:  number = this.partida.jugadores[this.partida.miTurno - 1].recursos.madera
+    return (this.partida.PrimerTurno && this.contarMisCaminos() < 2) ||
+            arcilla > 0 && madera > 0
+  }
+
+
+  /**
+   * Deveuvle el tipo de pueblo correspondiente al 
+   * jugador
+   * 
+   * @return Tipo de asentamiento correspondente a un pueblo
+   * del jugador
+   */
+  public miTipoPueblo(): TipoAsentamiento {
+    switch(this.partida.miTurno){
+      case 1: 
+        return TipoAsentamiento.POBLADO_PLAYER_1
+
+      case 2: 
+        return TipoAsentamiento.POBLADO_PLAYER_2
+
+      case 3: 
+        return TipoAsentamiento.POBLADO_PLAYER_3
+
+      case 4: 
+        return TipoAsentamiento.POBLADO_PLAYER_4
+
+      default: 
+        return TipoAsentamiento.NADA
+    }
+  }
+
+
+  /**
+   * Deveuvle el tipo de ciudad correspondiente al 
+   * jugador
+   * 
+   * @return Tipo de asentamiento correspondente a una ciudad
+   * del jugador
+   */
+  public miTipoCiudad(): TipoAsentamiento {
+    switch(this.partida.miTurno){
+      case 1: 
+        return TipoAsentamiento.CIUDAD_PLAYER_1
+
+      case 2: 
+        return TipoAsentamiento.CIUDAD_PLAYER_2
+
+      case 3: 
+        return TipoAsentamiento.CIUDAD_PLAYER_3
+
+      case 4: 
+        return TipoAsentamiento.CIUDAD_PLAYER_4
+
+      default: 
+        return TipoAsentamiento.NADA
+    }
+  }
+
+
+  /**
+   * Deveuvle el tipo de camino correspondiente al 
+   * jugador
+   * 
+   * @return Tipo de camino correspondente a una camino
+   * del jugador
+   */
+  public miTipoCamino(): TipoCamino {
+    switch(this.partida.miTurno){
+      case 1: 
+        return TipoCamino.PLAYER_1
+
+      case 2: 
+        return TipoCamino.PLAYER_2
+
+      case 3: 
+        return TipoCamino.PLAYER_3
+
+      case 4: 
+        return TipoCamino.PLAYER_4
+
+      default: 
+        return TipoCamino.NADA
+    }
+  }
+
+
+  /**
+   * General el mensaje de petición de una jugada
+   * 
+   * @param jugada 
+   * @param param 
+   * @return el objeto a enviar al servidor para solicitar la jugada 
+   * deseada
+   */
+  private construirJugada(jugada: Jugada, param: Object): MsgJugada {
+    return {
+      player: this.partida.miTurno,
+      game: this.partida.id, 
+      move: {
+        name: jugada, 
+        param: param,
+      }
+    }
+  }
+
+  
+  /**
+   * Devuelve true si el identificador del vértice es válido
+   * 
+   * @param vertice identificador del vértice a comprobar
+   * @return true si el identificador del vértice es válido, 
+   * false en caso contrario
+   */
+  private verticeValido(vertice: number): boolean{
+    return vertice >= 0 && vertice < GameService.numVertices
+  }
+
+
+  /**
+   * Devuelve true si el identificador de la arista es válido
+   * 
+   * @param arista identificador de la arista a comprobar
+   * @return true si el identificador de la arista es válido, 
+   * false en caso contrario
+   */
+  private aristaValida(arista: number): boolean {
+    return arista >= 0 && arista < GameService.numAristas
+  }
+
+
+  /**
+   * Devuelve true si el hexágono es válido
+   * 
+   * @param hexagono identificador del hexágono a comprobar
+   * @return true si el identificador del hexágono es válido, 
+   * false en caso contrario
+   */
+  private hexagonoValido(hexagono: number): boolean {
+    return hexagono >= 0 && hexagono < GameService.numHexagonos
+  }
+
+
+  /**
+   * Devuelve un tablero vacío
+   * 
+   * @Return un tablero vacío
+   */
+  private tableroVacio(): Tablero {
+    return {
+      hexagonos: {
+        valor: [],
+        tipo: [],
+        ladron: 0
+      }, 
+      vertices: {
+        asentamiento: [],
+        posible_asentamiento: this.falseArray(GameService.numJugadores, GameService.numVertices),
+      }, 
+      aristas: {
+        camino: [], 
+        posible_camino: this.falseArray(GameService.numJugadores, GameService.numAristas),
+        puertos: {
+          arcilla: 0,
+          lana: 0, 
+          cereal: 0, 
+          basico: [], 
+          mineral: 0,
+          madera: 0
+        }
+      }
+    }
+  }
+
+
+  private initPartidaPrueba(){
+    this.partida = {
+      miTurno: 1,
+      id: "", 
+      jugadores: this.inicializarJugadores(["Me!", "Some1", "Some2", "Some3"]),
+      turnoActual: 1, 
+      tablero: this.tableroPrueba(), 
+      resultadoTirada: 7, 
+      mensajes: [],
+      clock: -1,
+      PobladoDisponible: true,
+      CiudadDisponible: true, 
+      CaminoDisponible: true,
+      PrimerTurno: true
+    }
+
+    this.partida.jugadores[0].recursos = {
+      madera: 3,
+      arcilla: 5,
+      mineral: 5, 
+      lana: 3, 
+      cereales:10
+    }
+
+    this.partida.jugadores[1].recursos = {
+      madera: 7,
+      arcilla: 3,
+      mineral: 2, 
+      lana: 1, 
+      cereales: 8
+    }
+
+    this.partida.mensajes.push({ esError:false, remitente: this.partida.jugadores[1], timeStamp: "17:49", body:"Hola a todos!" })
+    this.partida.mensajes.push({ esError:false, remitente: this.partida.jugadores[2], timeStamp: "17:49", body:"Hola tío!" })
+    this.partida.mensajes.push({ esError:false, remitente: this.partida.jugadores[3], timeStamp: "17:49", body:"Seré el rey de los piratas!" })
+    this.partida.mensajes.push({ esError:false, remitente: null, timeStamp: "17:49", body:"Alguien ha hecho algo!" })
+    this.partida.mensajes.push({ esError:true, remitente: null, timeStamp: "17:49", body:"Alguien ha hecho algo mu malo nooooo!" })
+  }
+
+  /**
+   * @return un tablero de prueba para probar euncionamiento 
+   * de la interfaz
+   */
+  private tableroPrueba(): Tablero {
+    return {
+      hexagonos: {
+        valor: [4,10,3,-1,6,5,6,12,11,4,8,9,3,2,9,10,11,5,8],
+        tipo: [TipoTerreno.MONTANYA,TipoTerreno.BOSQUE,TipoTerreno.PASTO,TipoTerreno.DESIERTO,TipoTerreno.CERRO,
+               TipoTerreno.SEMBRADO,TipoTerreno.PASTO,TipoTerreno.BOSQUE,TipoTerreno.PASTO,TipoTerreno.SEMBRADO,
+               TipoTerreno.MONTANYA,TipoTerreno.BOSQUE,TipoTerreno.SEMBRADO,TipoTerreno.BOSQUE,TipoTerreno.SEMBRADO,
+               TipoTerreno.CERRO,TipoTerreno.CERRO,TipoTerreno.PASTO,TipoTerreno.MONTANYA],
+        ladron: 5
+      }, 
+      vertices: {
+        asentamiento: [TipoAsentamiento.NADA,TipoAsentamiento.NADA,TipoAsentamiento.NADA,TipoAsentamiento.NADA,TipoAsentamiento.NADA,
+                       TipoAsentamiento.NADA,TipoAsentamiento.NADA,TipoAsentamiento.NADA,TipoAsentamiento.NADA,TipoAsentamiento.NADA,
+                       TipoAsentamiento.NADA,TipoAsentamiento.NADA,TipoAsentamiento.NADA,TipoAsentamiento.NADA,TipoAsentamiento.NADA,
+                       TipoAsentamiento.NADA,TipoAsentamiento.NADA,TipoAsentamiento.NADA,TipoAsentamiento.NADA,TipoAsentamiento.NADA,
+                       TipoAsentamiento.NADA,TipoAsentamiento.NADA,TipoAsentamiento.NADA,TipoAsentamiento.NADA,TipoAsentamiento.NADA,
+                       TipoAsentamiento.NADA,TipoAsentamiento.NADA,TipoAsentamiento.NADA,TipoAsentamiento.NADA,TipoAsentamiento.NADA,
+                       TipoAsentamiento.NADA,TipoAsentamiento.NADA,TipoAsentamiento.NADA,TipoAsentamiento.NADA,TipoAsentamiento.NADA,
+                       TipoAsentamiento.NADA,TipoAsentamiento.NADA,TipoAsentamiento.NADA,TipoAsentamiento.NADA,TipoAsentamiento.NADA,
+                       TipoAsentamiento.NADA,TipoAsentamiento.NADA,TipoAsentamiento.NADA,TipoAsentamiento.NADA,TipoAsentamiento.NADA,
+                       TipoAsentamiento.NADA,TipoAsentamiento.NADA,TipoAsentamiento.NADA,TipoAsentamiento.NADA,TipoAsentamiento.NADA,
+                       TipoAsentamiento.NADA,TipoAsentamiento.NADA,TipoAsentamiento.NADA,TipoAsentamiento.NADA],
+        posible_asentamiento: [
+                                [false,false,false,false,false,true,false,false,false,false,
+                                 false,false,false,false,false,false,false,false,false,false,
+                                 false,false,false,false,false,false,false,false,false,false,
+                                 false,false,false,false,false,false,false,false,false,false,
+                                 false,false,false,false,false,false,false,false,false,false,
+                                 false,false,false,false],
+
+                                [false,false,false,false,false,false,false,false,false,false,
+                                 false,false,false,false,false,false,false,false,false,false,
+                                 false,false,false,false,false,false,false,false,false,false,
+                                 false,false,false,false,false,false,false,false,false,false,
+                                 false,false,false,false,false,false,false,false,false,false,
+                                 false,false,false,false],
+                                 
+                                [false,false,false,false,false,false,false,false,false,false,
+                                 false,false,false,false,false,false,false,false,false,false,
+                                 false,false,false,false,false,false,false,false,false,false,
+                                 false,false,false,false,false,false,false,false,false,false,
+                                 false,false,false,false,false,false,false,false,false,false,
+                                 false,false,false,false],
+                                 
+                                [false,false,false,false,false,false,false,false,false,false,
+                                 false,false,false,false,false,false,false,false,false,false,
+                                 false,false,false,false,false,false,false,false,false,false,
+                                 false,false,false,false,false,false,false,false,false,false,
+                                 false,false,false,false,false,false,false,false,false,false,
+                                 false,false,false,false]
+                              ]
+      }, 
+      aristas: {
+        camino: [TipoCamino.NADA,TipoCamino.NADA,TipoCamino.NADA,TipoCamino.NADA,TipoCamino.NADA,
+                 TipoCamino.NADA,TipoCamino.NADA,TipoCamino.NADA,TipoCamino.NADA,TipoCamino.NADA,
+                 TipoCamino.NADA,TipoCamino.NADA,TipoCamino.NADA,TipoCamino.NADA,TipoCamino.NADA,
+                 TipoCamino.NADA,TipoCamino.NADA,TipoCamino.NADA,TipoCamino.NADA,TipoCamino.NADA,
+                 TipoCamino.NADA,TipoCamino.NADA,TipoCamino.NADA,TipoCamino.NADA,TipoCamino.NADA,
+                 TipoCamino.NADA,TipoCamino.NADA,TipoCamino.NADA,TipoCamino.NADA,TipoCamino.NADA,
+                 TipoCamino.NADA,TipoCamino.NADA,TipoCamino.NADA,TipoCamino.NADA,TipoCamino.NADA,
+                 TipoCamino.NADA,TipoCamino.NADA,TipoCamino.NADA,TipoCamino.NADA,TipoCamino.NADA,
+                 TipoCamino.NADA,TipoCamino.NADA,TipoCamino.NADA,TipoCamino.NADA,TipoCamino.NADA,
+                 TipoCamino.NADA,TipoCamino.NADA,TipoCamino.NADA,TipoCamino.NADA,TipoCamino.NADA,
+                 TipoCamino.NADA,TipoCamino.NADA,TipoCamino.NADA,TipoCamino.NADA,TipoCamino.NADA,
+                 TipoCamino.NADA,TipoCamino.NADA,TipoCamino.NADA,TipoCamino.NADA,TipoCamino.NADA,
+                 TipoCamino.NADA,TipoCamino.NADA,TipoCamino.NADA,TipoCamino.NADA,TipoCamino.NADA,
+                 TipoCamino.NADA,TipoCamino.NADA,TipoCamino.NADA,TipoCamino.NADA,TipoCamino.NADA,
+                 TipoCamino.NADA,TipoCamino.NADA], 
+        posible_camino:[
+                        [true,true,true,true,true,true,true,true,true,true,
+                         true,true,true,true,true,true,true,true,true,true,
+                         true,true,true,true,true,true,true,true,true,true,
+                         true,true,true,true,true,true,true,true,true,true,
+                         true,true,true,true,true,true,true,true,true,true,
+                         true,true,true,true,true,true,true,true,true,true,
+                         true,true,true,true,true,true,true,true,true,true,
+                         true,true],
+                        [false,false,false,false,false,false,false,false,false,false,
+                         false,false,false,false,false,false,false,false,false,false,
+                         false,false,false,false,false,false,false,false,false,false,
+                         false,false,false,false,false,false,false,false,false,false,
+                         false,false,false,false,false,false,false,false,false,false,
+                         false,false,false,false,false,false,false,false,false,false,
+                         false,false,false,false,false,false,false,false,false,false,
+                         false,false],
+                        [false,false,false,false,false,false,false,false,false,false,
+                         false,false,false,false,false,false,false,false,false,false,
+                         false,false,false,false,false,false,false,false,false,false,
+                         false,false,false,false,false,false,false,false,false,false,
+                         false,false,false,false,false,false,false,false,false,false,
+                         false,false,false,false,false,false,false,false,false,false,
+                         false,false,false,false,false,false,false,false,false,false,
+                         false,false],
+                        [false,false,false,false,false,false,false,false,false,false,
+                         false,false,false,false,false,false,false,false,false,false,
+                         false,false,false,false,false,false,false,false,false,false,
+                         false,false,false,false,false,false,false,false,false,false,
+                         false,false,false,false,false,false,false,false,false,false,
+                         false,false,false,false,false,false,false,false,false,false,
+                         false,false,false,false,false,false,false,false,false,false,
+                         false,false]
+                      ],
+        puertos: {
+          arcilla: 3,
+          lana: 0, 
+          cereal: 0, 
+          basico: [ 4, 5, 9, 10, 14, 15, 11, 20, 19, 30, 27, 34, 35, 48, 45, 33, 52, 51, 46, 59, 60, 65, 64, 63, 68, 69, 67, 71, 70], 
+          mineral: 0,
+          madera: 0
+        }
+      }
+    }
+  }
+
+
+  /**
+   * Devuelve una matriz de nxm componentes con valor falso
+   * 
+   * @param n filas
+   * @param m columnas
+   * @return array de booleanos nxm con todos los valores a falso
+   */
+  private falseArray(n: number, m: number): Array<Array<Boolean>> {
+    let mainArray: Array<Array<Boolean>> = new Array<Array<Boolean>>(n)
+    for ( let i = 0; i < n; i++ ){
+      mainArray[i] = new Array<Boolean>(m)
+      for ( let j = 0; j < m; j++ ){
+        mainArray[i][j] = false
+      }
+    }
+    return mainArray
+  }
+
+
+  /**
+   * Inicializa los jugadores de una partida suponiendo que la partida 
+   * está en el estado inicial (nadie ha jugado todavía). 
+   * 
+   * @param jugadores nombres de los jugadores, en orden de turno
+   * PRE: jugadores.length = 4
+   */
+  private inicializarJugadores(jugadores: Array<String>): Array<Jugador>{
+    
+    let jugadoresPartida: Array<Jugador> = []
+    for (let i = 0; i < jugadores.length; i++){
+      jugadoresPartida[i] = {
+        nombre: jugadores[i],
+        turno: i + 1, 
+        color: GameService.coloresPorId[i],
+        puntos: 0, 
+        recursos: { madera: 0, arcilla: 0, cereales: 0, lana: 0, mineral: 0 },
+        cartas: { D1: 0, D2: 0, D3: 0, D4: 0, D5: 0, E1: 0, E2: 0}
+      }
+    }
+    return jugadoresPartida
+  }
+
 
   /**
    * Actualiza los recursos del jugador dado, con la información en recursos.
    * 
    * @param recursos array de 5 componentes enteras tal que: 
-   * [num_madera, num_piedra, num_ladrillo, num_lana, num_cereales]
+   * [num_madera, num_MINERAL, num_ARCILLA, num_lana, num_cereales]
    * @param playerIndex indice del jugador cuyos recursos se van a actualizar dentro
    * del vector de jugadores de la partida. 
    */
   private actualizarRecursosJugador(recursos: Array<number>, playerIndex: number){
     
     this.partida.jugadores[playerIndex].recursos.madera   = recursos[0]
-    this.partida.jugadores[playerIndex].recursos.piedra   = recursos[1]
-    this.partida.jugadores[playerIndex].recursos.ladrillo = recursos[2]
+    this.partida.jugadores[playerIndex].recursos.mineral  = recursos[1]
+    this.partida.jugadores[playerIndex].recursos.arcilla  = recursos[2]
     this.partida.jugadores[playerIndex].recursos.lana     = recursos[3]
     this.partida.jugadores[playerIndex].recursos.cereales = recursos[4]
   }
+
 
   /**
    * Actualiza los recursos de los jugadores con los datos recibidos.
@@ -553,7 +1318,6 @@ export class GameService implements Connectable{
     } else {
       console.log("Faltan los recursos del jugador 4")
     }
-
   }
 
 
@@ -761,8 +1525,8 @@ export class GameService implements Connectable{
       let puertos: Object = Aristas[MessageKeys.ARISTAS_PUERTOS]
       this.partida.tablero.aristas.puertos.basico   = puertos[MessageKeys.PUERTOS_BASICOS]
       this.partida.tablero.aristas.puertos.madera   = puertos[MessageKeys.PUERTO_MADERA]
-      this.partida.tablero.aristas.puertos.piedra   = puertos[MessageKeys.PUERTO_PIEDRA]
-      this.partida.tablero.aristas.puertos.ladrillo = puertos[MessageKeys.PUERTO_LADRILLO]
+      this.partida.tablero.aristas.puertos.mineral  = puertos[MessageKeys.PUERTO_MINERAL]
+      this.partida.tablero.aristas.puertos.arcilla  = puertos[MessageKeys.PUERTO_ARCILLA]
       this.partida.tablero.aristas.puertos.lana     = puertos[MessageKeys.PUERTO_LANA]
       this.partida.tablero.aristas.puertos.cereal   = puertos[MessageKeys.PUERTO_CEREAL]
     }else{
@@ -831,6 +1595,7 @@ export class GameService implements Connectable{
       }
 
       this.actualizarJugadores(msg)
+      this.actualizarPrecalculos()
 
     } else  if (msg[MessageKeys.CLOCK] != null &&
         msg[MessageKeys.CLOCK] > this.partida.clock){

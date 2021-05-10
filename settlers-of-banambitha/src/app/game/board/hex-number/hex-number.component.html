@@ -1,0 +1,9 @@
+<div *ngIf="this.gameService.partida.tablero.hexagonos.tipo[hexagono] != tipoTerreno().DESIERTO"
+class='number'
+[ngClass]="this.numberNames[this.gameService.partida.tablero.hexagonos.valor[hexagono]]"
+[class.robber]="this.gameService.partida.tablero.hexagonos.ladron == hexagono"
+[matMenuTriggerFor]="moverladron"
+[style.pointer-events]="(gameService.partida.turnoActual == gameService.partida.miTurno) ? 'auto' : 'none'"></div>
+<mat-menu  #moverladron >
+    <button mat-menu-item [disabled]="this.gameService.partida.resultadoTirada != 7" (click)="move()">Mover ladrón aquí</button>
+</mat-menu>

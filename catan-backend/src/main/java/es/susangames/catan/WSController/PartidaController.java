@@ -239,13 +239,14 @@ public class PartidaController {
 	
 
 	/* ******************************************************
-	 * Maps: 	Simmulated match request
+	 * Maps:	single player match
 	 * 
 	 * Expects: -JSON Message
 	 * 			-Mapped point: 		/app/partida/test
 	 * 			-Format:
 	 * 				{
 	 * 					"from"	: <id_jugador>
+	 * 					"simulate": true | false
 	 *				}
 	 * 
 	 * Returns: -JSON Message
@@ -275,9 +276,12 @@ public class PartidaController {
 		template.convertAndSend(WebSocketConfig.TOPIC_TEST_PARTIDA + "/" + remitente, new_message.toString());
 
 		//Comenzar simulación
-		PartidaSimulada partidaSimulada = new PartidaSimulada(idPartida, moveCarrierHeap); 
-		Thread simulacion = new Thread(partidaSimulada); 
-		simulacion.start();
+		Boolean simulate = message.getBoolean("simulate"); 
+		if ( simulate ){
+			PartidaSimulada partidaSimulada = new PartidaSimulada(idPartida, moveCarrierHeap); 
+			Thread simulacion = new Thread(partidaSimulada); 
+			simulacion.start();
+		}
 	}
 	
 }

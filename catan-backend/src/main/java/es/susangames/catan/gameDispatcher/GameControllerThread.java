@@ -64,17 +64,24 @@ public class GameControllerThread implements Runnable {
 	 * 								            [ "true" | "false" ] -> length = 72, //Asentamientos posibles j3
 	 * 								            [ "true" | "false" ] -> length = 72  //Asentamientos posibles j4
 	 * 								           ]
-	 * 						"puertos": [<id_arista>] length -> 9
+	 * 						"puertos": {
+	 *							puertoMadera: <id_arista> 
+	 *							puertoArcilla: <id_arista> 
+	 *							puertoMineral: <id_arista> 
+	 *							puertoLana: <id_arista> 
+	 *							puertoCereales: <id_arista>
+	 *							puertosBasicos: [<id_arista>] -> length = 4
+	 * 						}
 	 * 					}
 	 * 				},
 	 * 
 	 * 				"Resultado_Tirada": 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12,
 	 * 
 	 * 				"Recursos": {
-	 * 					"Player_1": [num_madera, num_piedra, num_ladrillo, num_lana, num_cereales], // integer array
-	 * 					"Player_2": [num_madera, num_piedra, num_ladrillo, num_lana, num_cereales], // integer array
-	 * 					"Player_3": [num_madera, num_piedra, num_ladrillo, num_lana, num_cereales], // integer array
-	 * 					"Player_4": [num_madera, num_piedra, num_ladrillo, num_lana, num_cereales]  // integer array
+	 * 					"Player_1": [num_madera, num_mineral, num_arcilla, num_lana, num_cereales], // integer array
+	 * 					"Player_2": [num_madera, num_mineral, num_arcilla, num_lana, num_cereales], // integer array
+	 * 					"Player_3": [num_madera, num_mineral, num_arcilla, num_lana, num_cereales], // integer array
+	 * 					"Player_4": [num_madera, num_mineral, num_arcilla, num_lana, num_cereales], // integer array
 	 * 				},
 	 * 
 	 * 				"Cartas": { 
@@ -93,6 +100,7 @@ public class GameControllerThread implements Runnable {
 	 * 
 	 * 				"Turno": 1 | 2 | 3 | 4
 	 *				"Ganador": N | 1 | 2 | 3 | 4
+	 *				"Clock": N -> número de jugadas ejecutadas (útil para descartar mensajes antiguos)
 	 * 			}
 	****************************************************** */
 	@Override
