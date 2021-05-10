@@ -201,12 +201,13 @@ public class PartidaController {
 
 		JSONArray param = new JSONArray();
 		param.put(remitente);
-		param.put(res2.getString("type"));
-		param.put(res2.getInt("cuan"));
 		param.put(res1.getString("type"));
 		param.put(res1.getInt("cuan"));
+		param.put(res2.getString("type"));
+		param.put(res2.getInt("cuan"));
 
 		move.put("param", param);
+		jugadaIntercambio.put("move", move); 
 
 		moveCarrierHeap.newJugada(partida, jugadaIntercambio);
 	}

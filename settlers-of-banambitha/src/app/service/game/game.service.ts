@@ -67,7 +67,7 @@ enum MsgComercioStatus {
 enum Jugada {
   CONSTRUIR_POBLADO   = "construir poblado",
   MEJORAR_POBLADO     = "mejorar poblado",
-  CONSTRUIR_CAMINO    = "crear carretera", 
+  CONSTRUIR_CAMINO    = "construir camino", 
   MOVER_LADRON        = "mover ladron", 
   PASAR_TURNO         = "finalizar turno",
   PRIMER_ASENTAMIENTO = "primer asentamiento", 
@@ -291,7 +291,7 @@ export interface ProductoComercio {
  * Solicitud de comercio
  */
 export interface SolicitudComercio {
-  from: string,
+  from: number,
   res1: ProductoComercio, 
   res2: ProductoComercio,
   timeStamp: string
@@ -314,6 +314,7 @@ export interface Partida {
   PobladoDisponible:     boolean,
   CaminoDisponible:      boolean, 
   CiudadDisponible:      boolean, 
+  movioLadron:           boolean
 }
 
 
@@ -327,7 +328,7 @@ export class GameService implements Connectable{
 
   private static readonly coloresPorId: Array<Color> = [Color.AZUL, Color.ROJO, Color.AMARILLO, Color.VERDE]
   private static readonly numAristas:   number = 72
-  private static readonly numVertices:  number = 52
+  private static readonly numVertices:  number = 54
   private static readonly numHexagonos: number = 19
   private static readonly numJugadores: number = 4 //si se cambia este valor se tiene que cambiar buena parte del código
 
@@ -344,6 +345,7 @@ export class GameService implements Connectable{
       PobladoDisponible: false,
       CiudadDisponible: false, 
       CaminoDisponible: false,
+      movioLadron: false
     }
 
   public cargandoPartida: boolean = false
@@ -504,7 +506,7 @@ export class GameService implements Connectable{
       });
 
       //Suscripción a las peticiones de comercio
-      this.partida_com_topic_id = this.stompClient.subscribe(WsService.partida_com_topic + this.partida.id,
+      this.partida_com_topic_id = this.stompClient.subscribe(WsService.partida_com_topic + this.partida.id + "/" + this.partida.miTurno,
       function (message) {
         if (message.body){
           that.procesarMensajeComercio(JSON.parse(message.body))
@@ -746,8 +748,10 @@ export class GameService implements Connectable{
   public moverLadron( hexagono: number): boolean {
 
     if ( this.esMiTurno() &&
-         this.partida.resultadoTirada == 7 ){
+         this.partida.resultadoTirada == 7  
+         && !this.partida.movioLadron){
 
+      this.partida.movioLadron = true
       let msg = this.construirJugada(Jugada.MOVER_LADRON, hexagono)
 
       this.stompClient.send(WsService.partidaJugada, {}, JSON.stringify(msg) )
@@ -792,6 +796,7 @@ export class GameService implements Connectable{
    */
   public comerciarConJugador(jugador: number, recursoOfrecido: Recurso, recursoSolicitado: Recurso, 
                             cantidadOfrecida: Number, cantidadSolicitada: Number): void {
+    console.log("Proponer comercio a " + jugador)
     let msg = {
       from: this.partida.miTurno, 
       to:   jugador,
@@ -904,6 +909,9 @@ export class GameService implements Connectable{
     this.partida.CaminoDisponible  = this.puedeConstruirCamino()
     this.partida.CiudadDisponible  = this.puedeConstruirCiudad()
     this.partida.PobladoDisponible = this.puedeConstruirPoblado()
+    if ( !this.esMiTurno() ){
+      this.partida.movioLadron = false
+    }
   }
 
 
@@ -1213,7 +1221,8 @@ export class GameService implements Connectable{
       clock: -1,
       PobladoDisponible: true,
       CiudadDisponible: true, 
-      CaminoDisponible: true
+      CaminoDisponible: true, 
+      movioLadron: false
     }
 
     this.partida.jugadores[0].recursos = {

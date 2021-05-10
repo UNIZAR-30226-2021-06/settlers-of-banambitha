@@ -138,7 +138,7 @@ public class GameControllerThread implements Runnable {
 				listaJugadas.remove(0);
 			}
 			
-			System.out.print(jugada.toString());
+			System.out.println(jugada.toString());
 			
 			if(jugada.has("reload")) {
 				
