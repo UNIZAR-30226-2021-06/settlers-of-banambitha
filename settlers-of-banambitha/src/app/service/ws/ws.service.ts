@@ -62,6 +62,7 @@ export class WsService implements OnDestroy{
    * Constructor: realiza la conexión con el servidor
    */
   constructor(private userService: UserService){
+    this.observers = []
   }
 
   /**
@@ -115,7 +116,7 @@ export class WsService implements OnDestroy{
           observer.onConnect()
         })
         that.connected = true
-        that.observers = null
+        that.observers = []
       }, this.errorCallBack);
     }
   }

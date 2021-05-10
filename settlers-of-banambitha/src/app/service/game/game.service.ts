@@ -461,6 +461,8 @@ export class GameService implements Connectable{
    * @param idPartida id de la partida a recargar
    */
   public recargarPartida(idPartida: string): void {
+    
+    this.finalizarpartida()
 
     this.partida.id = idPartida
 
@@ -470,7 +472,6 @@ export class GameService implements Connectable{
       reload: true
     }
 
-    this.finalizarpartida()
     let that = this
     //Topic de recargar parrida
     this.partida_com_topic_id = this.stompClient.subscribe(WsService.partida_reload_topic + this.userService.getUsername(),
@@ -620,6 +621,9 @@ export class GameService implements Connectable{
    * @param msg 
    */
   public procesarMensajeRecarga(msg: Object): void{
+
+    console.log("Ahora la partida es: " + this.partida.id)
+
     let playerNames: Array<String> = msg[MessageKeys.PLAYER_NAMES]
     let miTurno: number = playerNames.indexOf(this.userService.getUsername())
     if (  miTurno >= 0 ){
@@ -628,6 +632,8 @@ export class GameService implements Connectable{
       this.partida.clock = -1
 
       this.procesarMensajePartida(msg)
+      console.log("la partida: ")
+      console.log(this.partida.id)
       this.subscribeToTopics()
 
     }else{
