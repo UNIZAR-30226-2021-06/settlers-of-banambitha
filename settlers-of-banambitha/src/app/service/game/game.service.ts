@@ -316,6 +316,7 @@ export interface Partida {
   CaminoDisponible:      boolean, 
   CiudadDisponible:      boolean, 
   movioLadron:           boolean
+  yaComercio:            boolean
 }
 
 
@@ -346,8 +347,9 @@ export class GameService implements Connectable{
       PobladoDisponible: false,
       CiudadDisponible: false, 
       CaminoDisponible: false,
-      movioLadron: false
-    }
+      movioLadron: false,
+      yaComercio: false
+  }
 
   public cargandoPartida: boolean = false
   public ultimaSolicitudComercio: SolicitudComercio
@@ -376,7 +378,8 @@ export class GameService implements Connectable{
       this.onConnect();
     }
 
-    this.cargandoPartida = true
+    this.cargandoPartida = false
+    this.initData()
 
     // this.initPartidaPrueba()
     // this.ultimaSolicitudComercio = {
@@ -393,6 +396,29 @@ export class GameService implements Connectable{
     // }
     // this.openWinnerSnackBar(2)
 
+  }
+
+  /**
+   * Inicializa los datos de la partida (se asegura de que los valores
+   * no son nulos)
+   */
+  public initData(): void {
+    this.partida = {
+      miTurno: 0,
+      id: "",
+      jugadores: this.inicializarJugadores(["","","",""]),
+      turnoActual: 0, 
+      totalTurnos: 0,
+      tablero: this.tableroVacio(), 
+      resultadoTirada: 0, 
+      mensajes: [],
+      clock: -1,
+      PobladoDisponible: false,
+      CiudadDisponible: false, 
+      CaminoDisponible: false,
+      movioLadron: false,
+      yaComercio: false
+    }
   }
 
   /**
@@ -459,7 +485,6 @@ export class GameService implements Connectable{
     this.stompClient.send(WsService.partidaRecargar, {}, JSON.stringify(msg) )
 
     this.cargandoPartida = true
-    this.router.navigate(["/board"])
   }
 
 
@@ -675,6 +700,9 @@ export class GameService implements Connectable{
    * Finaliza la partida actual (solo en el lado del cliente)
    */
   private finalizarpartida() {
+
+    this.cargandoPartida = false
+
     this.partida = {
       miTurno: 0,
       id: "",
@@ -688,7 +716,8 @@ export class GameService implements Connectable{
       PobladoDisponible: false,
       CiudadDisponible: false, 
       CaminoDisponible: false,
-      movioLadron: false
+      movioLadron: false,
+      yaComercio: false
     }
 
     if ( this.partida_act_topic_id != null ){
@@ -1013,6 +1042,7 @@ export class GameService implements Connectable{
     this.partida.PobladoDisponible = this.puedeConstruirPoblado()
     if ( !this.esMiTurno() ){
       this.partida.movioLadron = false
+      this.partida.yaComercio  = false
     }
   }
 
@@ -1325,7 +1355,8 @@ export class GameService implements Connectable{
       PobladoDisponible: true,
       CiudadDisponible: true, 
       CaminoDisponible: true, 
-      movioLadron: false
+      movioLadron: false,
+      yaComercio: false
     }
 
     this.partida.jugadores[0].recursos = {

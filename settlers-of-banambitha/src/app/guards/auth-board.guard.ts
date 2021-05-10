@@ -8,18 +8,17 @@ import { WsService } from '../service/ws/ws.service';
 @Injectable({
   providedIn: 'root'
 })
-export class AuthHomeGuard implements CanActivate {
+export class AuthBoardGuard implements CanActivate {
 
   constructor(private router: Router, private userService: UserService, private gameService: GameService, private wsService: WsService){}
   
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-      if ( this.userService.logedUser() ){
+      if ( this.gameService.cargandoPartida ){
         return true
       }else{ 
-        return this.userService.checkSession(this.router, false, this.gameService, this.wsService)
+        return this.userService.checkLastMatch(this.router, this.gameService, this.wsService)
       }
   }
-  
 }

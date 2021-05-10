@@ -13,7 +13,7 @@ class="info" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="12px">
       </mat-panel-description>
     </mat-expansion-panel-header>
     <button mat-raised-button *ngIf="i != this.gameService.partida.miTurno - 1"
-    (click)="openInternalTradeDialog(i)" [disabled]="this.gameService.partida.miTurno != this.gameService.partida.turnoActual">
+    (click)="openInternalTradeDialog(i)" [disabled]="this.gameService.partida.miTurno != this.gameService.partida.turnoActual || this.gameService.partida.yaComercio">
         Comerciar
     </button>
     <mat-tab-group mat-align-tabs="center">
