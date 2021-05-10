@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { LangService } from 'src/app/service/lang/lang.service';
 import { ShopService } from 'src/app/service/shop/shop.service';
 import { UserService } from 'src/app/service/user/user.service';
 
@@ -9,7 +10,7 @@ import { UserService } from 'src/app/service/user/user.service';
 })
 export class BoardSkinsComponent implements OnInit {
 
-  constructor(private userService: UserService, private shopService: ShopService) { }
+  constructor(private userService: UserService, private shopService: ShopService, public langService: LangService) { }
 
 
   public empty: boolean = false

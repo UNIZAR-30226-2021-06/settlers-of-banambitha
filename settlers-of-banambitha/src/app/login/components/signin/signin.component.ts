@@ -9,6 +9,7 @@ import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
+import { LangService, Language } from 'src/app/service/lang/lang.service';
 import { UserService } from 'src/app/service/user/user.service';
 
 class usernameValidator {
@@ -38,7 +39,7 @@ export class SigninComponent implements OnInit {
     Validators.pattern("^(?=.*[0-9]*)(?=.*[a-z]*)(?=.*[A-Z]*)(?=.*[-_]*).{5,32}$")
   ]
 
-  constructor(private userService: UserService, private router: Router) {
+  constructor(private userService: UserService, private router: Router, public langService: LangService) {
 
        }
 
@@ -67,6 +68,10 @@ export class SigninComponent implements OnInit {
         this.loading = false
       }
     })()
+  }
+
+  public cl(): void {
+    this.langService.selectedLang = Language.ENG
   }
 
 }

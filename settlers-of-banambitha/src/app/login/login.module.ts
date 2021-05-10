@@ -18,7 +18,7 @@ import { MatDialogModule } from '@angular/material/dialog';
     FlexLayoutModule,
     AngularMaterialModule,
     FormsModule,
-    MatDialogModule
+    MatDialogModule,
   ],
   exports: [
     SigninComponent, 

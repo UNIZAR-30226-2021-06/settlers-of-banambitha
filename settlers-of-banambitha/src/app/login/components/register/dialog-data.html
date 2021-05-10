@@ -1,16 +1,18 @@
-<h1 mat-dialog-title>Password & name requirements</h1>
+<h1 mat-dialog-title>
+  {{langservice.get("login-requirements")}}
+</h1>
 <div mat-dialog-content>
   <ul>
-      <span>&#10003;</span> Username must be at least 4 characters.
+      <span>&#10003;</span> {{langservice.get("username-min-char")}} 
        <br>
-      <span>&#10003;</span> Password must be at least 8 characters.
+      <span>&#10003;</span> {{langservice.get("password-min-char")}}
        <br>
-      <span>&#10003;</span> Password must contain at least 1 uppercase.
+      <span>&#10003;</span> {{langservice.get("password-uppercase")}}
       <br>
-      <span>&#10003;</span> Password must contain at least 1 lowercase.
+      <span>&#10003;</span> {{langservice.get("password-lowercase")}}
       <br>
-      <span>&#10003;</span> Password must contain at least 1 digit.
+      <span>&#10003;</span> {{langservice.get("password-digit")}}
       <br>
-      <span>&#10003;</span> Password cannot contain any special characters.
+      <span>&#10003;</span> {{langservice.get("password-special-char")}}
   </ul>
 </div>

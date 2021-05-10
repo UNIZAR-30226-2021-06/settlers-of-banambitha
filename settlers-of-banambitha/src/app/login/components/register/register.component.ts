@@ -6,6 +6,7 @@ import { MatDialog,MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
+import { LangService } from 'src/app/service/lang/lang.service';
 import { UserService } from 'src/app/service/user/user.service';
 
 
@@ -34,7 +35,8 @@ export class RegisterComponent implements OnInit {
     Validators.pattern("^(?=.*[0-9]*)(?=.*[a-z]*)(?=.*[A-Z]*)(?=.*[-_]*).{5,32}$")
   ]
 
-  constructor(public dialog: MatDialog, private userService: UserService, private router: Router) { }
+  constructor(public dialog: MatDialog, private userService: UserService,
+              private router: Router, public langService: LangService) { }
 
   ngOnInit(): void {
     this.usernameForm = new FormGroup({
@@ -73,7 +75,7 @@ export class RegisterComponent implements OnInit {
   templateUrl: 'dialog-data.html',
 })
 export class DialogData {
-  constructor(@Inject(MAT_DIALOG_DATA) public data: DialogData) {}
+  constructor(@Inject(MAT_DIALOG_DATA) public data: DialogData, public langservice: LangService) {}
 }
 
 @Component({
@@ -81,4 +83,6 @@ export class DialogData {
   templateUrl: 'dialog-registered.html',
 })
 
-export class DialogRegistered { }
+export class DialogRegistered {
+ constructor(public langService: LangService) {}
+}
