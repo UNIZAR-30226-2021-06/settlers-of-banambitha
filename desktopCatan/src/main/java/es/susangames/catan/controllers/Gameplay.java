@@ -212,7 +212,7 @@ public class Gameplay {
     }
 
     protected static class Hexagonos {
-        protected static TipoTerreno[]    tipo;
+        protected static String[]    tipo;
         protected static Integer[]        valor;            
         protected static Integer          ladron;
         protected static Polygon[]        hexagons;         
@@ -331,7 +331,6 @@ public class Gameplay {
     public static void comenzarPartidaPrueba(String msg) {
         JSONObject message = new JSONObject(msg);
         String aux = message.getString("game");
-        System.out.println("holaaa1");
         comenzarPartida(aux, new String[] {UserService.getUsername(),
                                                 "Jugador_2",
                                                 "Jugador_3",
@@ -348,7 +347,6 @@ public class Gameplay {
             Partida.id = idPartida;
             Partida.jugadores = inicializarJugadores(jugadores);
             Partida.clock = -1;
-            System.out.println("holaaa5");
             subscribeToTopics();
             return true;
         }    
@@ -402,14 +400,7 @@ public class Gameplay {
                 }
                 @Override
                 public void handleFrame(StompHeaders headers, Object payload) {
-                    actualizarTablero(payload.toString());
-                    if(esperandoTableroInicial) {
-                        try {
-                            App.nuevaPantalla("/view/gameplay.fxml");
-                        } catch(Exception e) {}
-                        esperandoTableroInicial = false;
-                    }
-                    System.out.println("msg");
+                    procesarMensaje(payload.toString());
                 }
             });
             //Suscripción al chat de la partida
@@ -429,24 +420,87 @@ public class Gameplay {
     }
 
     private static void initTablero() {
-        Partida.tablero.hexagonos.tipo = new TipoTerreno[numberofHexagons];
+        // Hexagonos
+        Partida.tablero.hexagonos.tipo = new String[numberofHexagons];
         Partida.tablero.hexagonos.valor = new Integer[numberofHexagons];
         Partida.tablero.hexagonos.hexagons = new Polygon[numberofHexagons];
         Partida.tablero.hexagonos.numberOverHexagon = new Button[numberofHexagons];
+        // Vertices
         Partida.tablero.vertices.settlements = new Button[numberSettlements];
-        Partida.tablero.aristas.roads = new ToggleButton[numberRoads];  
+        Partida.tablero.vertices.posible_asentamiento = 
+                                new Boolean[numberPlayers][numberSettlements];
+
+        // Aristas
+        Partida.tablero.aristas.roads = new ToggleButton[numberRoads];
+        Partida.tablero.aristas.posible_camino = 
+                                new Boolean[numberPlayers][numberRoads];  
+        Partida.tablero.aristas.puertos = new Puerto();
     }
 
+    private static void procesarMensaje(String mensaje) {
+        if(!existeGanador(mensaje)) {
+            actualizarTablero(mensaje);
+            if(esperandoTableroInicial) {
+                try {
+                    App.nuevaPantalla("/view/gameplay.fxml");
+                } catch(Exception e) {}
+                esperandoTableroInicial = false;
+            }
+            mostrarCambiosTablero();
+        } else {
+            // TODO: Fin partida
+        }
+    }
+
+    private static Boolean existeGanador(String mensaje) {
+        return false;
+    }
 
     private static void actualizarTablero(String tablero) {
         if(esperandoTableroInicial) {
             Partida.tablero = new Tablero();
             initTablero();
-
-        } else {
-
-        }
+        } 
+        JSONObject object = new JSONObject(tablero);
+        String aux = object.get("Tab_inf").toString();
+        JSONObject objectTablero = new JSONObject(aux);
+        actualizarHexagonos(objectTablero.get("hexagono").toString());
     }
+
+    private static void actualizarHexagonos(String hexagonos) {
+        JSONObject object = new JSONObject(hexagonos);
+        String auxHexagonosTipo = object.get("tipo").toString();
+        String auxHexagonosValor = object.get("valor").toString();
+        Partida.tablero.hexagonos.ladron = object.getInt("ladron");
+
+        JSONArray hexagonoTipo = new JSONArray(auxHexagonosTipo);
+        JSONArray hexagonoValor = new JSONArray(auxHexagonosValor);
+        for (int i = 0; i < hexagonoTipo.length(); i++) {
+            String tipo = hexagonoTipo.getString(i);
+            int valor = hexagonoValor.getInt(i);
+            if (tipo.equals(TipoTerreno.BOSQUE)) {
+                Partida.tablero.hexagonos.tipo[i] = TipoTerreno.BOSQUE;
+            } else if(tipo.equals(TipoTerreno.CERRO)) {
+                Partida.tablero.hexagonos.tipo[i] = TipoTerreno.CERRO;
+            } else if(tipo.equals(TipoTerreno.DESIERTO)) {
+                Partida.tablero.hexagonos.tipo[i] = TipoTerreno.DESIERTO;
+            } else if(tipo.equals(TipoTerreno.MONTANYA)) {
+                Partida.tablero.hexagonos.tipo[i] = TipoTerreno.MONTANYA;
+            } else if (tipo.equals(TipoTerreno.PASTO)) {
+                Partida.tablero.hexagonos.tipo[i] = TipoTerreno.PASTO;
+            } else if (tipo.equals(TipoTerreno.SEMBRADO)) {
+                Partida.tablero.hexagonos.tipo[i] = TipoTerreno.SEMBRADO;
+            } else {
+                Partida.tablero.hexagonos.tipo[i] = TipoTerreno.VACIO;
+            }
+            Partida.tablero.hexagonos.valor[i] = valor;
+        } 
+    }
+
+    private static void mostrarCambiosTablero() {
+        updateHexagonBackground();
+    }
+
 
     @FXML
     void send_msg(ActionEvent event) {
@@ -498,31 +552,37 @@ public class Gameplay {
         return pol;
     }
 
-    private void fillHexagon(Polygon pol, Integer i) {
+    private void fillHexagonSea(Polygon pol, Integer i) {
         if ( i <= 4 || i == 8 || i == 9 || i == 14 ||
         i == 15 || i == 21 || i == 22 || i == 27 ||
         i == 28 || i >= 32) {
 
             pol.setFill(Color.DEEPSKYBLUE);
         } 
-        else {
-            int var = i % 5;
-            //TODO: Modificar para rellenar segun codigo backend
-            // Version estatica para frontend
-            if (var == 0) {
-                pol.setFill(Color.BLANCHEDALMOND);
-            } else if (var == 1) {
-                pol.setFill(Color.ORANGERED);
-            } else if (var == 2) {
-                pol.setFill(Color.GREEN);
-            } else if (var == 3) {
-                pol.setFill(Color.MAROON);
-            } else {
-                pol.setFill(Color.GRAY);
-            }
-        }
-
     }
+
+    private static void updateHexagonBackground() {
+        for(int i = 0; i < numberofHexagons; i++) {
+            if (Partida.tablero.hexagonos.tipo[i].equals(TipoTerreno.BOSQUE) ) {
+                Partida.tablero.hexagonos.hexagons[i].setFill(Color.CADETBLUE);
+            } else if (Partida.tablero.hexagonos.tipo[i].equals(TipoTerreno.CERRO)) {
+                Partida.tablero.hexagonos.hexagons[i].setFill(Color.ORANGERED);
+            } else if (Partida.tablero.hexagonos.tipo[i].equals(TipoTerreno.DESIERTO)) {
+                Partida.tablero.hexagonos.hexagons[i].setFill(Color.BLANCHEDALMOND);
+            } else if (Partida.tablero.hexagonos.tipo[i].equals(TipoTerreno.MONTANYA)) {
+                Partida.tablero.hexagonos.hexagons[i].setFill(Color.MAROON);
+            } else if (Partida.tablero.hexagonos.tipo[i].equals(TipoTerreno.PASTO)) {
+                Partida.tablero.hexagonos.hexagons[i].setFill(Color.GREEN);
+            } else if (Partida.tablero.hexagonos.tipo[i].equals(TipoTerreno.SEMBRADO)) {
+                Partida.tablero.hexagonos.hexagons[i].setFill(Color.PERU);
+            } else {
+                Partida.tablero.hexagonos.hexagons[i].setFill(Color.GRAY);
+            }
+            Partida.tablero.hexagonos.numberOverHexagon[i].setText(
+                Partida.tablero.hexagonos.valor[i].toString());
+        }     
+    }
+
 
     private Boolean hasRoads(Integer i) {
         return ( (i > 4  && i <=  7)  || 
@@ -537,7 +597,7 @@ public class Gameplay {
         _road.setPrefSize(1,30);
         _road.setLayoutX(pol.getLayoutX() - 65);
         _road.setLayoutY(pol.getLayoutY() - 15);
-        Tablero.aristas.roads[pos] =  _road;
+        Partida.tablero.aristas.roads[pos] =  _road;
         setColorButonOnClick(_road, pos);
         return _road;
     }
@@ -548,7 +608,7 @@ public class Gameplay {
         _roadSE.setLayoutX(pol.getLayoutX() + 23);
         _roadSE.setLayoutY(pol.getLayoutY() - 66);
         _roadSE.setRotate(120);
-        Tablero.aristas.roads[pos] =  _roadSE;
+        Partida.tablero.aristas.roads[pos] =  _roadSE;
         setColorButonOnClick(_roadSE, pos);
         return _roadSE;
     }
@@ -559,7 +619,7 @@ public class Gameplay {
         _roadNE.setLayoutX(pol.getLayoutX() - 40);
         _roadNE.setLayoutY(pol.getLayoutY() - 70);
         _roadNE.setRotate(60);
-        Tablero.aristas.roads[pos] =  _roadNE;
+        Partida.tablero.aristas.roads[pos] =  _roadNE;
         setColorButonOnClick(_roadNE, pos);
         return _roadNE;
 
@@ -682,7 +742,7 @@ public class Gameplay {
         circle.setMaxSize(2*settleSize, 2*settleSize);
         circle.setLayoutX(pol.getLayoutX() - 68);
         circle.setLayoutY(pol.getLayoutY() - 45);
-        Tablero.vertices.settlements[position] = circle;
+        Partida.tablero.vertices.settlements[position] = circle;
         onClickSettlement(circle,position);
         mainAnchor.getChildren().add(circle);
     }
@@ -698,7 +758,7 @@ public class Gameplay {
             circle.setMaxSize(2*settleSize, 2*settleSize);
             circle.setLayoutX(pol.getLayoutX() - 12);
             circle.setLayoutY(pol.getLayoutY() - 88);
-            Tablero.vertices.settlements[position] = circle;
+            Partida.tablero.vertices.settlements[position] = circle;
             onClickSettlement(circle,position);
             mainAnchor.getChildren().add(circle);
     }
@@ -1223,7 +1283,7 @@ public class Gameplay {
         Integer numberHexagonAux = 0;
         for(Integer i =0; i < 37; i++) {
             Polygon pol = createHexagon(i);
-            fillHexagon(pol, i);    
+            fillHexagonSea(pol, i);    
             mainAnchor.getChildren().add(pol);
             if(hasRoads(i)) {
                 Button circle = new Button();
@@ -1232,13 +1292,11 @@ public class Gameplay {
                 circle.setMaxSize(2*numberSize, 2*numberSize);
                 circle.setLayoutX(pol.getLayoutX() - 18);
                 circle.setLayoutY(pol.getLayoutY() - 20);
-                //circle.setText(numberHexagonAux.toString());
-                
                 
                 circle.setOnMouseClicked( event -> {
                     if (event.getButton().equals(MouseButton.PRIMARY)) {
                         circle.setDisable(true);
-                        for(Button aux : Tablero.hexagonos.numberOverHexagon) {
+                        for(Button aux : Partida.tablero.hexagonos.numberOverHexagon) {
                             if(aux != circle) {
                                 aux.setDisable(false);
                             }
@@ -1248,16 +1306,13 @@ public class Gameplay {
 
                 
                 mainAnchor.getChildren().add(circle); 
-                Tablero.hexagonos.hexagons[numberHexagonAux] = pol;
-                Tablero.hexagonos.numberOverHexagon[numberHexagonAux] = circle;
+                Partida.tablero.hexagonos.hexagons[numberHexagonAux] = pol;
+                Partida.tablero.hexagonos.numberOverHexagon[numberHexagonAux] = circle;
                 numberHexagonAux++;
             }
-
             assignRoads(pol, i);
-            assignSettlements(pol,i);
-            
+            assignSettlements(pol,i);        
         }
-        System.out.println("crearrr");
     } 
 }
 
