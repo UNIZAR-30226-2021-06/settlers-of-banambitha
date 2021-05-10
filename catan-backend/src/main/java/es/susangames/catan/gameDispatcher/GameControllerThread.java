@@ -37,6 +37,7 @@ public class GameControllerThread implements Runnable {
 	 * 			-Broadcast point:	/partida-act/<partidaId>
 	 * 			-Format:
 	 * 			{
+	 * 				"playerNames": [<nombreJ1>, <nombreJ2>, <nombreJ3>, <nombreJ4>]
 	 * 				"Message": "..."
 	 *				"exit_status" : 0 (Salida correcta), 1, 2, .. (Salida erronea)
 	 * 				"Tab_inf": {
@@ -75,7 +76,7 @@ public class GameControllerThread implements Runnable {
 	 * 					}
 	 * 				},
 	 * 
-	 * 				"Resultado_Tirada": 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12,
+	 * 				"Resultado_Tirada": 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12,
 	 * 
 	 * 				"Recursos": {
 	 * 					"Player_1": [num_madera, num_mineral, num_arcilla, num_lana, num_cereales], // integer array
@@ -98,8 +99,23 @@ public class GameControllerThread implements Runnable {
 	 * 					"Player_4": N,
 	 * 				},	
 	 * 
-	 * 				"Turno": 1 | 2 | 3 | 4
+	 * 				primerosAsentamiento: {
+	 *					"Player_1" : true | false (true si ya ha construido sus 2 primeros asentamientos)
+	 *					"Player_2" : true | false (true si ya ha construido sus 2 primeros asentamientos)
+	 *					"Player_3" : true | false (true si ya ha construido sus 2 primeros asentamientos)
+	 *					"Player_4" : true | false (true si ya ha construido sus 2 primeros asentamientos)
+	 * 				},
+	 * 
+	 * 				primerosCamino: {
+	 *					"Player_1" : true | false (true si ya ha construido sus 2 primeros caminos)
+	 *					"Player_2" : true | false (true si ya ha construido sus 2 primeros caminos)
+	 *					"Player_3" : true | false (true si ya ha construido sus 2 primeros caminos)
+	 *					"Player_4" : true | false (true si ya ha construido sus 2 primeros caminos)
+	 * 				},
+	 * 
+	 * 				"Turno": N
 	 *				"Ganador": N | 1 | 2 | 3 | 4
+	 * 				"Turno_Jugador": 0 | 1 | 2 | 3
 	 *				"Clock": N -> número de jugadas ejecutadas (útil para descartar mensajes antiguos)
 	 * 			}
 	****************************************************** */
