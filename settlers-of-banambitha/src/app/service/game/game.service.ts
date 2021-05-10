@@ -376,10 +376,9 @@ export class GameService implements Connectable{
 
     this.cargandoPartida = true
 
-    //Solo para pruebas
     // this.initPartidaPrueba()
     // this.ultimaSolicitudComercio = {
-    //   from: "Pepito", 
+    //   from: 1, 
     //   res1: {
     //     type: Recurso.MADERA,
     //     cuan: 10
@@ -390,10 +389,14 @@ export class GameService implements Connectable{
     //   },
     //   timeStamp: "12:12"
     // }
-    // this.openSnackBar()
+    // this.openWinnerSnackBar(2)
 
   }
 
+  /**
+   * Abre una snack bar con la informacion de la ultima solicitud 
+   * de comercio recibida
+   */
   public openTradeOfferSnackBar(): void {
     this._snackBar.openFromComponent(TradeOfferSnackBar, {
       data: { gameService: this, solicitud: this.ultimaSolicitudComercio },
@@ -401,6 +404,18 @@ export class GameService implements Connectable{
       verticalPosition: "top"
     });
   }
+
+
+  /**
+   * Abre una snackbar con información sobre el ganador de la partida
+   * 
+   * @param winner id del jugador que ganó la partida
+   */
+  public openWinnerSnackBar(winner: number): void {
+    let winnerName: String = (winner == this.partida.miTurno) ? "Has" : (this.partida.jugadores[winner - 1].nombre + " ha")
+    this._snackBar.open("¡" + winnerName + " ganado la partida!", "Entendido") 
+  }
+
 
   /**
    * Función a llamar cuando la conexión websocket con el 
@@ -532,6 +547,8 @@ export class GameService implements Connectable{
 
       if (msg[MessageKeys.GANADOR] > 0) {
         //Finalizar la partida y mostrar estadísticas
+        this.router.navigate(["/home/profile"])
+        this.openWinnerSnackBar(msg[MessageKeys.GANADOR])
         this.finalizarpartida()
       }
   }
@@ -600,7 +617,22 @@ export class GameService implements Connectable{
    * Finaliza la partida actual (solo en el lado del cliente)
    */
   private finalizarpartida() {
-    this.partida = null
+    this.partida = {
+      miTurno: 0,
+      id: "",
+      jugadores: this.inicializarJugadores(["","","",""]),
+      turnoActual: 0, 
+      totalTurnos: 0,
+      tablero: this.tableroVacio(), 
+      resultadoTirada: 0, 
+      mensajes: [],
+      clock: -1,
+      PobladoDisponible: false,
+      CiudadDisponible: false, 
+      CaminoDisponible: false,
+      movioLadron: false
+    }
+
     this.partida_act_topic_id.unsubscribe()
     this.partida_com_topic_id.unsubscribe()
     this.partida_chat_topic_id.unsubscribe()
@@ -996,6 +1028,7 @@ export class GameService implements Connectable{
   private esMiTurno(): boolean{
     return this.partida.miTurno == this.partida.turnoActual
   }
+
 
   /**
    * @return true si el usuario tiene los recursos 
