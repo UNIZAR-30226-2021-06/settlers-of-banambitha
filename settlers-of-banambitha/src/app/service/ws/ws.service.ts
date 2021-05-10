@@ -51,6 +51,7 @@ export class WsService implements OnDestroy{
   public static readonly partida_chat_topic:   string = "/partida-chat/"
   public static readonly partida_com_topic:    string = "/partida-com/"
   public static readonly partida_test_topic:   string = "/test-partida/"
+  public static readonly partida_reload_topic: string = "/partida-rld"
 
   //Cliente de stomp
   private stompClient: any = null;

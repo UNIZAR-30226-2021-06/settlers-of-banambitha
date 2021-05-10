@@ -48,6 +48,7 @@ enum MessageKeys {
   CLOCK                           = "Clock",
   PRIMEROS_CAMINOS                = "primerosCaminos",
   PRIMEROS_ASENTAMIENTOS          = "primerosAsentamiento",
+  PLAYER_NAMES                    = "playerNames"
 }
 
 
@@ -353,10 +354,11 @@ export class GameService implements Connectable{
 
   //Identificadores de los topics a los que se suscribe 
   //el jugador
-  private test_partida_topic_id:  any
-  private partida_act_topic_id:   any
-  private partida_chat_topic_id:  any
-  private partida_com_topic_id:   any
+  private test_partida_topic_id:   any
+  private partida_act_topic_id:    any
+  private partida_chat_topic_id:   any
+  private partida_com_topic_id:    any
+  private partida_reload_topic_id: any
 
   //Cliente de stomp
   private stompClient: any
@@ -424,6 +426,40 @@ export class GameService implements Connectable{
   public onConnect(): void {
 
     this.stompClient = this.wsService.getStompClient() 
+  }
+
+
+  /**
+   * Envía una solicitud para recargar la partida
+   * 
+   * @param idPartida id de la partida a recargar
+   */
+  public recargarPartida(idPartida: string): void {
+
+    this.partida.id = idPartida
+
+    let msg = {
+      player: this.userService.getUsername(),
+      game: idPartida,
+      reload: true
+    }
+
+    this.finalizarpartida()
+    let that = this
+    //Topic de recargar parrida
+    this.partida_com_topic_id = this.stompClient.subscribe(WsService.partida_reload_topic + this.userService.getUsername(),
+    function (message) {
+      if (message.body){
+        that.procesarMensajeRecarga(JSON.parse(message.body))
+      }else{
+        console.log("Error crítico")
+      }
+    });
+
+    this.stompClient.send(WsService.partidaRecargar, {}, JSON.stringify(msg) )
+
+    this.cargandoPartida = true
+    this.router.navigate(["/board"])
   }
 
 
@@ -529,6 +565,7 @@ export class GameService implements Connectable{
           console.log("Error crítico")
         }
       });
+
     }
   }
 
@@ -540,10 +577,8 @@ export class GameService implements Connectable{
    */
   private procesarMensajePartida(msg: Object): void{
       //Actualizar la partida con la nueva información
-      console.log("jugada")
       this.actualizarPartida(msg)
       this.cargandoPartida = false
-      console.log(this.partida)
 
       if (msg[MessageKeys.GANADOR] > 0) {
         //Finalizar la partida y mostrar estadísticas
@@ -551,6 +586,29 @@ export class GameService implements Connectable{
         this.openWinnerSnackBar(msg[MessageKeys.GANADOR])
         this.finalizarpartida()
       }
+  }
+
+
+  /**
+   * Procesa el mensaje de recarga de partida
+   * 
+   * @param msg 
+   */
+  public procesarMensajeRecarga(msg: Object): void{
+    let playerNames: Array<String> = msg[MessageKeys.PLAYER_NAMES]
+    let miTurno: number = playerNames.indexOf(this.userService.getUsername())
+    if (  miTurno >= 0 ){
+      console.log("comenzando partida")
+      this.partida.miTurno = miTurno + 1
+      this.partida.clock = -1
+
+      this.procesarMensajePartida(msg)
+      this.subscribeToTopics()
+
+    }else{
+
+      console.log("no estabas en esa partida!")
+    }
   }
 
 
@@ -593,18 +651,18 @@ export class GameService implements Connectable{
             timeStamp: msg["time"]
           }
           this.openTradeOfferSnackBar()
-          infoMsg = "¡" + msg["from"] + " quiere comerciar contigo!"
+          infoMsg = "¡" + this.partida.jugadores[msg["from"] - 1] + " quiere comerciar contigo!"
           this.generarMensajePartida(infoMsg)
         }
         break
 
       case MsgComercioStatus.ACCEPT: 
-        infoMsg = "¡" + msg["from"] + " ha ACEPTADO tu solicitud de comercio!"
+        infoMsg = "¡" + this.partida.jugadores[msg["from"] - 1] + " ha ACEPTADO tu solicitud de comercio!"
         this.generarMensajePartida(infoMsg)
         break
 
       case MsgComercioStatus.DECLINE: 
-        infoMsg = "¡" + msg["from"] + " ha RECHAZADO tu solicitud de comercio!"
+        infoMsg = "¡" + this.partida.jugadores[msg["from"] - 1] + " ha RECHAZADO tu solicitud de comercio!"
         this.generarMensajePartida(infoMsg)
         break
 
@@ -633,9 +691,21 @@ export class GameService implements Connectable{
       movioLadron: false
     }
 
-    this.partida_act_topic_id.unsubscribe()
-    this.partida_com_topic_id.unsubscribe()
-    this.partida_chat_topic_id.unsubscribe()
+    if ( this.partida_act_topic_id != null ){
+      this.partida_act_topic_id.unsubscribe()
+    }
+
+    if ( this.partida_com_topic_id != null ){
+      this.partida_com_topic_id.unsubscribe()
+    }
+
+    if ( this.partida_chat_topic_id != null ){
+      this.partida_chat_topic_id.unsubscribe()
+    }
+
+    if ( this.partida_reload_topic_id != null ){
+      this.partida_reload_topic_id.unsubscribe()
+    }
   }
 
 
@@ -1863,6 +1933,17 @@ export class GameService implements Connectable{
       if ( msg[MessageKeys.EXIT_STATUS] <= 0 ) {
 
         this.generarMensajePartida(msg[MessageKeys.MENSAJE])
+
+        if ( msg[MessageKeys.PLAYER_NAMES] != null ){
+          for ( let i = 0; i < GameService.numJugadores; i++){
+            this.partida.jugadores[i].nombre = msg[MessageKeys.PLAYER_NAMES][i]
+            if ( msg[MessageKeys.PLAYER_NAMES][i] == this.userService.getUsername() ){
+              this.partida.miTurno = i + 1
+            }
+          }
+        }else{
+          console.log("Faltan los nombres de los jugadores")
+        }
 
         if ( msg[MessageKeys.TURNO_JUGADOR] != null){
           this.partida.turnoActual = msg[MessageKeys.TURNO_JUGADOR] + 1
