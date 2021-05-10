@@ -57,46 +57,209 @@ import java.lang.reflect.Type;
 import es.susangames.catan.App;
 
 
-
-
-
-
 public class Gameplay {
-    public static String  MENSAJE                         = "Message";
-    public static String  EXIT_STATUS                     = "exit_status";
-    public static String  TAB_INFO                        = "Tab_inf";
-    public static String  TAB_INFO_HEXAGONOS              = "hexagono";
-    public static String  HEXAGONOS_TIPOS                 = "tipo";
-    public static String  HEXAGONOS_VALORES               = "valor";
-    public static String  HEXAGONOS_LADRON                = "ladron";
-    public static String  TAB_INFO_VERTICES               = "vertices";
-    public static String  VERTICES_ASENTAMIENTOS          = "asentamiento";
-    public static String  VERTICES_POSIBLES_ASENTAMIENTOS = "posibles_asentamiento";
-    public static String  TAB_INFO_ARISTAS                = "aristas";
-    public static String  ARISTAS_CAMINOS                 = "camino";
-    public static String  ARISTAS_POSIBLES_CAMINOS        = "posibles_camino";
-    public static String  ARISTAS_PUERTOS                 = "puertos";
-    public static String  RESULTADO_TIRADA                = "Resultado_Tirada";
-    public static String  RECURSOS                        = "Recursos";
+    private static double           start_X_position = 250.0;
+    private static double           start_Y_position = 110.0;
+    private static double           horizontal_right_gap = 115;
+    private static double           horizontal_left_gap = 60;
+    private static double           vertical_gap = 120;
+    private static int              numberRoads = 72;
+    private static int              settleSize = 12;
+    private static int              numberSize = 18;
+    private static int              numberSettlements = 54;
+    private static int              numberofHexagons = 19;
+    private static int              numberPlayers = 4;
+    private static Color[]          coloresPorId = new Color[]{Color.BLUE, Color.RED, Color.YELLOW, Color.GREEN};
+    private static Boolean          esperandoTableroInicial;
 
-
-
+    protected static class MessageKeys {
+        protected static String  MENSAJE                         = "Message";
+        protected static String  EXIT_STATUS                     = "exit_status";
+        protected static String  TAB_INFO                        = "Tab_inf";
+        protected static String  TAB_INFO_HEXAGONOS              = "hexagono";
+        protected static String  HEXAGONOS_TIPOS                 = "tipo";
+        protected static String  HEXAGONOS_VALORES               = "valor";
+        protected static String  HEXAGONOS_LADRON                = "ladron";
+        protected static String  TAB_INFO_VERTICES               = "vertices";
+        protected static String  VERTICES_ASENTAMIENTOS          = "asentamiento";
+        protected static String  VERTICES_POSIBLES_ASENTAMIENTOS = "posibles_asentamiento";
+        protected static String  TAB_INFO_ARISTAS                = "aristas";
+        protected static String  ARISTAS_CAMINOS                 = "camino";
+        protected static String  ARISTAS_POSIBLES_CAMINOS        = "posibles_camino";
+        protected static String  ARISTAS_PUERTOS                 = "puertos";
+        protected static String  RESULTADO_TIRADA                = "Resultado_Tirada";
+        protected static String  RECURSOS                        = "Recursos";
+        protected static String  CARTAS                          = "Cartas";
+        protected static String  PUNTUACIONES                    = "Puntuacion";
+        protected static String  TURNO_ACUM                      = "Turno";
+        protected static String  TURNO_JUGADOR                   = "Turno_Jugador";
+        protected static String  GANADOR                         = "Ganador";
+        protected static String  PLAYER_1                        = "Player_1";
+        protected static String  PLAYER_2                        = "Player_2";
+        protected static String  PLAYER_3                        = "Player_3";
+        protected static String  PLAYER_4                        = "Player_4";
+        protected static String  PUERTO_MADERA                   = "puertoMadera";
+        protected static String  PUERTO_LANA                     = "puertoLana";
+        protected static String  PUERTO_MINERAL                  = "puertoMineral";
+        protected static String  PUERTO_CEREAL                   = "puertoCereales";
+        protected static String  PUERTO_ARCILLA                  = "puertoArcilla";
+        protected static String  PUERTOS_BASICOS                 = "puertosBasicos";
+        protected static String  CLOCK                           = "Clock";
+        protected static String  PRIMEROS_CAMINOS                = "primerosCaminos";
+        protected static String  PRIMEROS_ASENTAMIENTOS          = "primerosAsentamiento";
+    }
     
-    
-    private static double start_X_position = 250.0;
-    private static double start_Y_position = 110.0;
-    private static double horizontal_right_gap = 115;
-    private static double horizontal_left_gap = 60;
-    private static double vertical_gap = 120;
-    private static int numberRoads = 72;
-    private static int settleSize = 12;
-    private static int numberSize = 18;
-    private static int numberSettlements = 54;
 
-    private static Polygon[] hexagons;
-    private static Button[] numberOverHexagon;
-    private static Button[] settlements;
-    public static ToggleButton[] roads;
+    protected static class MsgComercioStatus {
+        protected static String REQUEST = "REQUEST";
+        protected static String ACCEPT  = "ACCEPT";
+        protected static String DECLINE = "DECLINE";
+    }
+
+
+    protected static class Jugada {
+        protected static String CONSTRUIR_POBLADO   = "construir poblado";
+        protected static String MEJORAR_POBLADO     = "mejorar poblado";
+        protected static String CONSTRUIR_CAMINO    = "construir camino"; 
+        protected static String MOVER_LADRON        = "mover ladron";
+        protected static String PASAR_TURNO         = "finalizar turno";
+        protected static String PRIMER_ASENTAMIENTO = "primer asentamiento"; 
+        protected static String PRIMER_CAMINO       = "primer camino";
+        protected static String COMERCIAR           = "comerciar";
+        protected static String COMERCIAR_PUERTO    = "comerciar con puerto";
+    }
+
+    protected static class Colores {
+        protected static String AMARILLO = "Amarillo";
+        protected static String ROJO     = "Rojo";
+        protected static String VERDE    = "Verde"; 
+        protected static String AZUL     = "Azul";
+    }
+
+
+    protected static class TipoAsentamiento {
+        protected static String NADA             = "Nada";
+        protected static String POBLADO_PLAYER_1 = "PuebloAzul";
+        protected static String POBLADO_PLAYER_2 = "PuebloRojo"; 
+        protected static String POBLADO_PLAYER_3 = "PuebloAmarillo"; 
+        protected static String POBLADO_PLAYER_4 = "PuebloVerde";
+        protected static String CIUDAD_PLAYER_1  = "CiudadAzul";
+        protected static String CIUDAD_PLAYER_2  = "CiudadRojo"; 
+        protected static String CIUDAD_PLAYER_3  = "CiudadAmarillo"; 
+        protected static String CIUDAD_PLAYER_4  = "CiudadVerde"; 
+    }
+
+    protected static class TipoTerreno {
+        protected static String BOSQUE   = "Bosque";
+        protected static String PASTO    = "Pasto";
+        protected static String SEMBRADO = "Sembrado"; 
+        protected static String CERRO    = "Cerro";
+        protected static String MONTANYA = "Montanya"; 
+        protected static String DESIERTO = "Desierto"; 
+        protected static String VACIO    = "Vacio";
+    }
+
+    protected static class TipoCamino {
+        protected static String NADA     = "Nada";
+        protected static String  PLAYER_1 = "CaminoAzul";
+        protected static String  PLAYER_2 = "CaminoRojo"; 
+        protected static String  PLAYER_3 = "CaminoAmarillo";
+        protected static String  PLAYER_4 = "CaminoVerde";
+    }
+
+    protected static class MsgJugada {
+        protected static Integer player;
+        protected static String game;
+        protected static String jugada;
+        protected static Object param;
+    }
+
+    protected  class CartasJugador {
+        protected  Integer D1; 
+        protected  Integer D2;
+        protected  Integer D3; 
+        protected  Integer D4; 
+        protected  Integer D5; 
+        protected  Integer E1; 
+        protected  Integer E2; 
+    }
+
+    protected  class RecursosJugador {
+        protected  Integer madera;
+        protected  Integer mineral;
+        protected  Integer arcilla;
+        protected  Integer lana;
+        protected  Integer cereales;
+    }
+    
+
+    protected class Jugador {
+        protected String nombre;
+        protected Integer turno;
+        protected Color color;
+        protected Integer puntos;
+        protected CartasJugador cartas;
+        protected RecursosJugador recursos;
+        protected Boolean primerosAsentamientos;
+        protected Boolean primerosCaminos;
+    }
+
+    protected class Mensaje {
+        protected Boolean esError;
+        protected Jugador remitente;
+        protected String body;
+        protected String timeStamp;
+    }
+
+    protected static class Hexagonos {
+        protected static TipoTerreno[]    tipo;
+        protected static Integer[]        valor;            
+        protected static Integer          ladron;
+        protected static Polygon[]        hexagons;         
+        private   static Button[]         numberOverHexagon; 
+    }
+
+    protected static class Vertices {
+        protected static Button[]    settlements;
+        protected static Boolean[][] posible_asentamiento;
+    } 
+
+    protected static class Puerto {
+        protected  static Integer madera;
+        protected  static Integer mineral;
+        protected  static Integer arcilla;
+        protected  static Integer lana;
+        protected  static Integer cereal;
+        protected  static Integer basico;
+    }
+
+    protected static class Aristas {
+        protected static ToggleButton[] roads;
+        protected static Boolean[][] posible_camino;
+        protected static Puerto puertos;
+    }
+
+    protected static class Tablero {
+        protected static Hexagonos hexagonos;
+        protected static Vertices vertices;
+        protected static Aristas aristas;
+    } 
+
+    protected static class Partida {
+        protected static String id = null;
+        protected static Integer miTurno;
+        protected static Integer totalTurnos;
+        protected static Integer resultadoTirada;
+        protected static Jugador[] jugadores;
+        protected static Mensaje[] mensajes;
+        protected static Integer clock;
+        protected static Boolean PobladoDisponible;
+        protected static Boolean CaminoDisponible;
+        protected static Boolean CiudadDisponible;
+        protected static Boolean movioLadron;
+        protected static Tablero tablero;
+    }
+
     private Image imgSea, imgDes, imgMou, imgFie, imgFor, imgHil; 
  
     @FXML
@@ -160,64 +323,129 @@ public class Gameplay {
     private static Boolean cargandoPartida = false;
     private static String idPartida;
     
-
-
     public Gameplay() {
-        hexagons = new Polygon[19];
-        settlements = new Button[numberSettlements];
-        roads = new ToggleButton[numberRoads];
-        numberOverHexagon = new Button[19];
-        imgSea = new Image("/img/sea.png");
-        imgDes = new Image("/img/sand-desert.jpg"); 
-        imgMou = new Image("/img/mountain.png");  
-        imgFie = new Image("/img/fields.jpeg"); 
-        imgFor = new Image("/img/forest.png"); 
-        imgHil = new Image("/img/hills.jpeg"); 
-
-        // TODO: Conectar con backend
-        player1 = "Martín";
-        player2 = "Lucía";
-        player3 = "Marta";
-        player4 = "Pablo";
-
         offerAmountInt = 1;
         receiveAmountInt = 1;
-
     }
     
-
     public static void comenzarPartidaPrueba(String msg) {
         JSONObject message = new JSONObject(msg);
-		idPartida = message.getString("game");
-        comenzarPartida(idPartida, new String[] {UserService.getUsername(),
+        String aux = message.getString("game");
+        System.out.println("holaaa1");
+        comenzarPartida(aux, new String[] {UserService.getUsername(),
                                                 "Jugador_2",
                                                 "Jugador_3",
                                                 "Jugador_4"});
+
     }
 
     public static Boolean comenzarPartida(String idPartida, String[] jugadores) {
-        System.out.println(Arrays.asList(jugadores).indexOf(UserService.getUsername()));
-        subscribeToTopics();
-        return true;
+        Integer miTurno  = Arrays.asList(jugadores).indexOf(UserService.getUsername());
+       
+        if (jugadores.length == numberPlayers && miTurno >= 0) {
+            esperandoTableroInicial = true;
+            Partida.miTurno = miTurno++;
+            Partida.id = idPartida;
+            Partida.jugadores = inicializarJugadores(jugadores);
+            Partida.clock = -1;
+            System.out.println("holaaa5");
+            subscribeToTopics();
+            return true;
+        }    
+        return false;
+    }
+
+    private static Jugador[] inicializarJugadores (String[] jugadores) {
+        Jugador[] jugadoresAux = new Jugador[numberPlayers];
+        for(int i = 0; i < jugadores.length; i++) {
+            Jugador aux = new Gameplay().new Jugador();
+            aux.nombre = jugadores[i];
+            aux.turno = i + 1;
+            aux.color = coloresPorId[i];
+            aux.puntos = 0;
+            aux.recursos = recursosIniciales();
+            aux.cartas = cartasIniciales();
+            aux.primerosAsentamientos = false;
+            aux.primerosCaminos = false; 
+            jugadoresAux[i] = aux;
+        } 
+        return jugadoresAux;
+    }
+
+    private static RecursosJugador recursosIniciales() {
+        RecursosJugador recursosAux = new Gameplay().new RecursosJugador();
+        recursosAux.madera = 0; 
+        recursosAux.arcilla = 0;
+        recursosAux.cereales = 0; 
+        recursosAux.lana = 0;
+        recursosAux.mineral = 0;
+        return recursosAux;
+    }
+
+    private static CartasJugador cartasIniciales() {
+        CartasJugador cartasAux = new Gameplay().new CartasJugador();
+        cartasAux.D1 = 0; 
+        cartasAux.D2 = 0;
+        cartasAux.D3 = 0;
+        cartasAux.D4 = 0;
+        cartasAux.D5 = 0;
+        return cartasAux;
     }
 
     private static void subscribeToTopics() {
-        // TODO: Comprobaciones partida
-        ws.session.subscribe( ws.partida_act_topic  + idPartida, new StompFrameHandler() {
-            @Override
-            public Type getPayloadType(StompHeaders headers) {
-                return String.class;
-            }
-            @Override
-            public void handleFrame(StompHeaders headers, Object payload) {
-                System.out.println(payload.toString());
-                
-            }
-        });
-        try {
-            App.nuevaPantalla("/view/gameplay.fxml");
-        } catch(Exception e) {}
+        if(Partida.id != null) {
+            //Suscripción a los mensajes de la partida (acciones de los jugadores)
+            ws.session.subscribe( ws.partida_act_topic  + Partida.id, new StompFrameHandler() {
+                @Override
+                public Type getPayloadType(StompHeaders headers) {
+                    return String.class;
+                }
+                @Override
+                public void handleFrame(StompHeaders headers, Object payload) {
+                    actualizarTablero(payload.toString());
+                    if(esperandoTableroInicial) {
+                        try {
+                            App.nuevaPantalla("/view/gameplay.fxml");
+                        } catch(Exception e) {}
+                        esperandoTableroInicial = false;
+                    }
+                    System.out.println("msg");
+                }
+            });
+            //Suscripción al chat de la partida
+            ws.session.subscribe( ws.partida_chat_topic  + Partida.id, new StompFrameHandler() {
+                @Override
+                public Type getPayloadType(StompHeaders headers) {
+                    return String.class;
+                }
+                @Override
+                public void handleFrame(StompHeaders headers, Object payload) {
+                    System.out.println("msg chat");
+                }
+            });
+ 
+        }
         
+    }
+
+    private static void initTablero() {
+        Partida.tablero.hexagonos.tipo = new TipoTerreno[numberofHexagons];
+        Partida.tablero.hexagonos.valor = new Integer[numberofHexagons];
+        Partida.tablero.hexagonos.hexagons = new Polygon[numberofHexagons];
+        Partida.tablero.hexagonos.numberOverHexagon = new Button[numberofHexagons];
+        Partida.tablero.vertices.settlements = new Button[numberSettlements];
+        Partida.tablero.aristas.roads = new ToggleButton[numberRoads];  
+    }
+
+
+    private static void actualizarTablero(String tablero) {
+        if(esperandoTableroInicial) {
+            Partida.tablero = new Tablero();
+            initTablero();
+
+        } else {
+
+        }
     }
 
     @FXML
@@ -270,9 +498,6 @@ public class Gameplay {
         return pol;
     }
 
-   
-
-
     private void fillHexagon(Polygon pol, Integer i) {
         if ( i <= 4 || i == 8 || i == 9 || i == 14 ||
         i == 15 || i == 21 || i == 22 || i == 27 ||
@@ -312,7 +537,7 @@ public class Gameplay {
         _road.setPrefSize(1,30);
         _road.setLayoutX(pol.getLayoutX() - 65);
         _road.setLayoutY(pol.getLayoutY() - 15);
-        roads[pos] =  _road;
+        Tablero.aristas.roads[pos] =  _road;
         setColorButonOnClick(_road, pos);
         return _road;
     }
@@ -323,7 +548,7 @@ public class Gameplay {
         _roadSE.setLayoutX(pol.getLayoutX() + 23);
         _roadSE.setLayoutY(pol.getLayoutY() - 66);
         _roadSE.setRotate(120);
-        roads[pos] =  _roadSE;
+        Tablero.aristas.roads[pos] =  _roadSE;
         setColorButonOnClick(_roadSE, pos);
         return _roadSE;
     }
@@ -334,7 +559,7 @@ public class Gameplay {
         _roadNE.setLayoutX(pol.getLayoutX() - 40);
         _roadNE.setLayoutY(pol.getLayoutY() - 70);
         _roadNE.setRotate(60);
-        roads[pos] =  _roadNE;
+        Tablero.aristas.roads[pos] =  _roadNE;
         setColorButonOnClick(_roadNE, pos);
         return _roadNE;
 
@@ -457,7 +682,7 @@ public class Gameplay {
         circle.setMaxSize(2*settleSize, 2*settleSize);
         circle.setLayoutX(pol.getLayoutX() - 68);
         circle.setLayoutY(pol.getLayoutY() - 45);
-        settlements[position] = circle;
+        Tablero.vertices.settlements[position] = circle;
         onClickSettlement(circle,position);
         mainAnchor.getChildren().add(circle);
     }
@@ -473,7 +698,7 @@ public class Gameplay {
             circle.setMaxSize(2*settleSize, 2*settleSize);
             circle.setLayoutX(pol.getLayoutX() - 12);
             circle.setLayoutY(pol.getLayoutY() - 88);
-            settlements[position] = circle;
+            Tablero.vertices.settlements[position] = circle;
             onClickSettlement(circle,position);
             mainAnchor.getChildren().add(circle);
     }
@@ -587,7 +812,6 @@ public class Gameplay {
         });
     }
 
-
     private void cardsPopUp() {
         AnchorPane anchorPane = new AnchorPane();
         anchorPane.setPrefSize(500, 350);
@@ -651,12 +875,8 @@ public class Gameplay {
     }
 
     private void playersName() {
-        player1Name.setText(player1);
-        player2Name.setText(player2);
-        player3Name.setText(player3);
-        player4Name.setText(player4);
+        
     }
-
 
     private void inTradePopUp() {
         AnchorPane anchorPane = new AnchorPane();
@@ -813,7 +1033,6 @@ public class Gameplay {
          inTrade.setText((LangService.getMapping("internal_trade")));
     }
 
-
     private void externalTradePopUp() {
         AnchorPane anchorPane = new AnchorPane();
         anchorPane.setPrefSize(500, 400);
@@ -929,7 +1148,6 @@ public class Gameplay {
 
     }
 
- 
     private void settingsPopup() throws IOException {
         AnchorPane anchorPane = new AnchorPane();
         anchorPane.setPrefSize(200, 250);
@@ -987,10 +1205,6 @@ public class Gameplay {
         diceButton.setText("Dados: 8");
     }
 
-    
-
-    
-    
     @FXML
     public void initialize() throws IOException {
         chatContent.setEditable(false);
@@ -1018,13 +1232,13 @@ public class Gameplay {
                 circle.setMaxSize(2*numberSize, 2*numberSize);
                 circle.setLayoutX(pol.getLayoutX() - 18);
                 circle.setLayoutY(pol.getLayoutY() - 20);
-                circle.setText(numberHexagonAux.toString());
+                //circle.setText(numberHexagonAux.toString());
                 
                 
                 circle.setOnMouseClicked( event -> {
                     if (event.getButton().equals(MouseButton.PRIMARY)) {
                         circle.setDisable(true);
-                        for(Button aux : numberOverHexagon) {
+                        for(Button aux : Tablero.hexagonos.numberOverHexagon) {
                             if(aux != circle) {
                                 aux.setDisable(false);
                             }
@@ -1034,8 +1248,8 @@ public class Gameplay {
 
                 
                 mainAnchor.getChildren().add(circle); 
-                hexagons[numberHexagonAux] = pol;
-                numberOverHexagon[numberHexagonAux] = circle;
+                Tablero.hexagonos.hexagons[numberHexagonAux] = pol;
+                Tablero.hexagonos.numberOverHexagon[numberHexagonAux] = circle;
                 numberHexagonAux++;
             }
 
@@ -1043,7 +1257,7 @@ public class Gameplay {
             assignSettlements(pol,i);
             
         }
-
+        System.out.println("crearrr");
     } 
 }
 
