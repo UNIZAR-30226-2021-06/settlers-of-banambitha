@@ -143,7 +143,8 @@ public class GameControllerThread implements Runnable {
 			if(jugada.has("reload")) {
 				
 				respuesta = tableroPartida.returnMessage(); 
-				template.convertAndSend(WebSocketConfig.TOPIC_PARTIDA_ACT + "/" + partidaId, respuesta.toString());
+				respuesta.put("playerNames", this.jugadores);
+				template.convertAndSend(WebSocketConfig.TOPIC_PARTIDA_RELOAD + "/" + jugada.getString("player"), respuesta.toString());
 				
 			} else if(jugada.has("left")) {
 			
@@ -152,6 +153,7 @@ public class GameControllerThread implements Runnable {
 			} else {
 				
 				respuesta = tableroPartida.JSONmessage(jugada); 
+				respuesta.put("playerNames", this.jugadores);
 				template.convertAndSend(WebSocketConfig.TOPIC_PARTIDA_ACT + "/" + partidaId, respuesta.toString());
 				finalizada = tableroPartida.hayGanador(); 
 				
