@@ -291,14 +291,22 @@ public class Gameplay {
     @FXML
     private Text player1Name;
 
+    private static Text _player1Name;
+
     @FXML
     private Text player2Name;
+
+    private static Text _player2Name;
 
     @FXML
     private Text player3Name;
 
+    private static Text _player3Name;
+
     @FXML
     private Text player4Name;
+
+    private static Text _player4Name;
 
     @FXML
     private Button diceButton;
@@ -326,6 +334,7 @@ public class Gameplay {
     private Integer offerAmountInt;
     private Integer receiveAmountInt;
     private String player1,player2,player3,player4;
+    
 
     // Variables controlador partida
     private static Boolean cargandoPartida = false;
@@ -721,6 +730,7 @@ public class Gameplay {
         updateHexagonBackground();
         updateVertix();
         updateArist();
+        updateplayersName();
     }
 
 
@@ -1178,8 +1188,11 @@ public class Gameplay {
 
     }
 
-    private void playersName() {
-        
+    private static void updateplayersName() {
+        _player1Name.setText(Partida.jugadores[0].nombre);
+        _player2Name.setText(Partida.jugadores[1].nombre);
+        _player3Name.setText(Partida.jugadores[2].nombre);
+        _player4Name.setText(Partida.jugadores[3].nombre);
     }
 
     private void inTradePopUp() {
@@ -1511,17 +1524,20 @@ public class Gameplay {
 
     @FXML
     public void initialize() throws IOException {
+         _player1Name = player1Name; 
+         _player2Name = player2Name; 
+         _player3Name = player3Name; 
+         _player4Name = player4Name; 
         chatContent.setEditable(false);
         chatContent.setMouseTransparent(true);
         chatContent.setFocusTraversable(false);    
         cardsPopUp();
         inTradePopUp();
         externalTradePopUp();
-        playersName();
         updateDice();
         settingsPopup();
         passTurnButton.setText((LangService.getMapping("next_turn")));
-        
+       
        
         // Crear hexagonos
         Integer numberHexagonAux = 0;
