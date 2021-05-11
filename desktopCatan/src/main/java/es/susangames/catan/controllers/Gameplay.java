@@ -55,7 +55,8 @@ import org.springframework.web.socket.sockjs.client.WebSocketTransport;
 import es.susangames.catan.service.ws;
 import java.lang.reflect.Type;
 import es.susangames.catan.App;
-
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 
 public class Gameplay {
     private static double           start_X_position = 250.0;
@@ -69,7 +70,10 @@ public class Gameplay {
     private static int              numberSettlements = 54;
     private static int              numberofHexagons = 19;
     private static int              numberPlayers = 4;
-    private static Color[]          coloresPorId = new Color[]{Color.BLUE, Color.RED, Color.YELLOW, Color.GREEN};
+    private static Color[]          coloresPorId = new Color[]{Color.BLUE, 
+                                                               Color.RED, 
+                                                               Color.YELLOW, 
+                                                               Color.GREEN};
     private static Boolean          esperandoTableroInicial;
 
     protected static class MessageKeys {
@@ -107,6 +111,7 @@ public class Gameplay {
         protected static String  CLOCK                           = "Clock";
         protected static String  PRIMEROS_CAMINOS                = "primerosCaminos";
         protected static String  PRIMEROS_ASENTAMIENTOS          = "primerosAsentamiento";
+        protected static String  PLAYER_NAMES                    = "playerNames";
     }
     
 
@@ -221,6 +226,7 @@ public class Gameplay {
 
     protected static class Vertices {
         protected static Button[]    settlements;
+        protected static Color[]     colorSettlement;
         protected static Boolean[][] posible_asentamiento;
     } 
 
@@ -235,6 +241,7 @@ public class Gameplay {
 
     protected static class Aristas {
         protected static ToggleButton[] roads;
+        protected static Color[]     colorRoads;
         protected static Boolean[][] posible_camino;
         protected static Puerto puertos;
     }
@@ -249,6 +256,7 @@ public class Gameplay {
         protected static String id = null;
         protected static Integer miTurno;
         protected static Integer totalTurnos;
+        protected static Integer turnoActual;
         protected static Integer resultadoTirada;
         protected static Jugador[] jugadores;
         protected static Mensaje[] mensajes;
@@ -346,7 +354,10 @@ public class Gameplay {
             Partida.miTurno = miTurno++;
             Partida.id = idPartida;
             Partida.jugadores = inicializarJugadores(jugadores);
+            Partida.tablero = new Tablero();
+            initTablero();
             Partida.clock = -1;
+            Partida.turnoActual = 0;
             subscribeToTopics();
             return true;
         }    
@@ -432,49 +443,245 @@ public class Gameplay {
         Partida.tablero.vertices.settlements = new Button[numberSettlements];
         Partida.tablero.vertices.posible_asentamiento = 
                                 new Boolean[numberPlayers][numberSettlements];
+        Partida.tablero.vertices.colorSettlement = 
+                                new Color[numberSettlements];
 
         // Aristas
         Partida.tablero.aristas.roads = new ToggleButton[numberRoads];
         Partida.tablero.aristas.posible_camino = 
                                 new Boolean[numberPlayers][numberRoads];  
         Partida.tablero.aristas.puertos = new Puerto();
+        Partida.tablero.aristas.colorRoads = 
+                                new Color[numberRoads];
     }
 
     private static void procesarMensaje(String mensaje) {
-        if(!existeGanador(mensaje)) {
+        try {
             actualizarPartida(mensaje);
-            if(esperandoTableroInicial) {
-                try {
-                    App.nuevaPantalla("/view/gameplay.fxml");
-                } catch(Exception e) {}
-                esperandoTableroInicial = false;
-            }
-            mostrarCambiosTablero();
-        } else {
-            // TODO: Fin partida
+        } catch (Exception e) {
+            System.err.println("No se pudo procesar el mensaje");
         }
+        if(esperandoTableroInicial) {
+            esperandoTableroInicial = false;
+            try {
+                App.nuevaPantalla("/view/gameplay.fxml");
+            } catch(Exception e) {}
+        }
+        mostrarCambiosTablero();
+        if(existeGanador(mensaje)) { 
+            // TODO: Fin partida
+        } 
+        
     }
 
     private static Boolean existeGanador(String mensaje) {
         return false;
     }
 
-    private static void actualizarPartida(String partida) {
+    private static void actualizarPartida(String partida) throws Exception {
         JSONObject object = new JSONObject(partida);
+
+        if(!object.get(MessageKeys.CLOCK).equals(null) &&
+            object.getInt(MessageKeys.CLOCK) > Partida.clock) {
+
+            Partida.clock =  object.getInt(MessageKeys.CLOCK);
+
+            if(object.getInt(MessageKeys.EXIT_STATUS) <= 0) {
+                // TODO: Enviar mensaje al chat de la partida
+
+                // Nombre y miTurno
+                try {
+                    if(!object.get(MessageKeys.PLAYER_NAMES).equals(null)) {
+                        JSONArray nombresJugadores = object.getJSONArray(MessageKeys.PLAYER_NAMES);
+                        for (int i = 0; i < nombresJugadores.length(); i++) {
+                            Partida.jugadores[i].nombre = nombresJugadores.getString(i);
+                            if(nombresJugadores.getString(i).equals(UserService.getUsername())) {
+                                Partida.miTurno = i + 1;
+                            }
+                        }   
+                    }
+                } catch(Exception e) {
+                    System.err.println("Faltan los nombres de los jugadores");
+                }
+                 
+                // Turno jugador
+                try {
+                    if(!object.get(MessageKeys.TURNO_JUGADOR).equals(null)) {
+                        int turnoActual = object.getInt(MessageKeys.TURNO_JUGADOR);
+                        Partida.turnoActual = turnoActual++;
+                    } 
+                } catch(Exception e) {
+                    System.err.println("Falta el turno de la jugada");
+                }
+               
+                // Turno acumulado
+                try {
+                    if(!object.get(MessageKeys.TURNO_ACUM).equals(null)) {
+                        Partida.turnoActual = object.getInt(MessageKeys.TURNO_ACUM);
+                    }
+                } catch(Exception e) {
+                    System.err.println("Faltan los turnos totales");
+                }
+                 
+                //Resultado tirada
+                try  {
+                    if(!object.get(MessageKeys.RESULTADO_TIRADA).equals(null)) {
+                        Partida.resultadoTirada = object.getInt(MessageKeys.RESULTADO_TIRADA);
+                    }
+                } catch(Exception e) {
+                    System.err.println("Falta el resultado de la tirada");
+                }
+            
+                //Tablero
+                try {
+                    if(!object.get(MessageKeys.TAB_INFO).equals(null)) {
+                        actualizarTablero(
+                            new JSONObject(object.get(MessageKeys.TAB_INFO).toString()));
+                    }
+                } catch(Exception e) {
+                    System.err.println("Falta la información del tablero");
+                }   
+                 
+                // TODO: Falta terminar y editar parte visual en el tablero
+                actualizarJugadores(new JSONObject(partida));
+
+                //Primeros Asentamientos
+
+                // Primeros caminos
+
+                //Pre-calculos
+
+            } else {
+                // TODO: Recibido codigo erroneo
+            }
+        }
+
+    }
+
+    private static void actualizarJugadores(JSONObject partida) {
+        try  {
+            if(!partida.get(MessageKeys.RECURSOS).equals(null)) {
+                actualizarRecursosJugadores(
+                    new JSONObject (partida.get(MessageKeys.RECURSOS)));
+            }
+        } catch(Exception e) {
+            System.err.println("Faltan los recursos en el mensaje");
+        }
         
+        try {
+            if(!partida.get(MessageKeys.CARTAS).equals(null)) {
+                actualizarCartasJugadores(
+                    new JSONObject (partida.get(MessageKeys.CARTAS)));
+            } 
+        } catch (Exception e) {
+            System.err.println("Faltan las cartas en el mensaje");
+        }
+         
+        try {
+            if(!partida.get(MessageKeys.PUNTUACIONES).equals(null)) {
+                actualizarPuntuacionesJugadores(
+                    new JSONObject (partida.get(MessageKeys.PUNTUACIONES)));
+            } 
+        } catch (Exception e) {
+            System.err.println("Faltan las puntuaciones en el mensaje");
+        }
+    }
+
+    private static void actualizarRecursosJugadores(JSONObject recursos) {
+
+    }
+
+    private static void actualizarCartasJugadores(JSONObject cartas) {
         
-        if(esperandoTableroInicial) {
-            Partida.tablero = new Tablero();
-            initTablero();
-        } 
-        String aux = object.get(MessageKeys.TAB_INFO).toString();
-        JSONObject objectTablero = new JSONObject(aux);
-        actualizarHexagonos(objectTablero.get(MessageKeys.TAB_INFO_HEXAGONOS).toString());
-        actualizarVertices(objectTablero.get(MessageKeys.TAB_INFO_VERTICES).toString());
+    }
+
+    private static void actualizarPuntuacionesJugadores(JSONObject puntuaciones) {
+        
+    }
+
+
+    private static void actualizarTablero(JSONObject tablero) {
+        // Hexagonos
+        try {
+            if(!tablero.get(MessageKeys.TAB_INFO_HEXAGONOS).equals(null)) {
+                actualizarHexagonos(tablero.get(MessageKeys.TAB_INFO_HEXAGONOS).toString());
+            }
+        } catch (Exception e) {
+            System.err.println("Faltan los hexágonos en el mensaje");
+        }
+        
+        // Vertices
+        try {
+            if(!tablero.get(MessageKeys.TAB_INFO_VERTICES).equals(null)) {
+                actualizarVertices(tablero.get(MessageKeys.TAB_INFO_VERTICES).toString());
+            }
+        } catch (Exception e) {
+            System.err.println("Faltan los vértices en el mensaje");
+        }
+       
+        // Aristas
+        try {
+            if(!tablero.get(MessageKeys.TAB_INFO_ARISTAS).equals(null)) {
+                actualizarAristas(tablero.get(MessageKeys.TAB_INFO_ARISTAS).toString());
+            } 
+        } catch (Exception e) {
+            System.err.println("Faltan las aristas en el mensaje");
+        }      
     }
 
     private static void actualizarVertices(String vertices) {
-        
+        JSONObject verticesOb = new JSONObject(vertices);
+        JSONArray verticesArr = verticesOb.getJSONArray(MessageKeys.VERTICES_ASENTAMIENTOS);
+        for (int i = 0; i < verticesArr.length(); i++) {
+          modificarAsentamiento(verticesArr.getString(i), i);
+        } 
+    }
+
+    private static void actualizarAristas(String aristas) {
+        JSONObject aristasOb = new JSONObject(aristas);
+        JSONArray aristasArr = aristasOb.getJSONArray(MessageKeys.ARISTAS_CAMINOS);
+        for (int i = 0; i < aristasArr.length(); i++) {
+            modificarCarretera(aristasArr.getString(i), i);
+        } 
+    }
+
+
+
+    private static void modificarCarretera(String carretera, int numArista) {
+        if(carretera.equals(TipoCamino.PLAYER_1)) {
+            Partida.tablero.aristas.colorRoads[numArista] = coloresPorId[0];         
+        } else if(carretera.equals(TipoCamino.PLAYER_2)) {
+            Partida.tablero.aristas.colorRoads[numArista] = coloresPorId[1];  
+        } else if(carretera.equals(TipoCamino.PLAYER_3)) {
+            Partida.tablero.aristas.colorRoads[numArista] = coloresPorId[2];  
+        } else if(carretera.equals(TipoCamino.PLAYER_4)) {
+            Partida.tablero.aristas.colorRoads[numArista] = coloresPorId[3];  
+        } else {
+            Partida.tablero.aristas.colorRoads[numArista] = null;  
+        }
+    }
+
+    private static void modificarAsentamiento(String asentamiento, int numVertice) {
+        if(asentamiento.equals(TipoAsentamiento.POBLADO_PLAYER_1)) {
+            Partida.tablero.vertices.colorSettlement[numVertice] = coloresPorId[0];         
+        } else if(asentamiento.equals(TipoAsentamiento.POBLADO_PLAYER_2)) {
+            Partida.tablero.vertices.colorSettlement[numVertice] = coloresPorId[1];
+        } else if(asentamiento.equals(TipoAsentamiento.POBLADO_PLAYER_3)) {
+            Partida.tablero.vertices.colorSettlement[numVertice] = coloresPorId[2];
+        } else if(asentamiento.equals(TipoAsentamiento.POBLADO_PLAYER_4)) {
+            Partida.tablero.vertices.colorSettlement[numVertice] = coloresPorId[3];
+        } else if(asentamiento.equals(TipoAsentamiento.CIUDAD_PLAYER_1)) {
+            Partida.tablero.vertices.colorSettlement[numVertice] = coloresPorId[0];
+        } else if(asentamiento.equals(TipoAsentamiento.CIUDAD_PLAYER_2)) {
+            Partida.tablero.vertices.colorSettlement[numVertice] = coloresPorId[1];
+        } else if(asentamiento.equals(TipoAsentamiento.CIUDAD_PLAYER_3)) {
+            Partida.tablero.vertices.colorSettlement[numVertice] = coloresPorId[2];
+        } else if(asentamiento.equals(TipoAsentamiento.CIUDAD_PLAYER_4)) {
+            Partida.tablero.vertices.colorSettlement[numVertice] = coloresPorId[3];
+        } else {
+            Partida.tablero.vertices.colorSettlement[numVertice] = null;
+        }
+
     }
 
 
@@ -512,7 +719,10 @@ public class Gameplay {
 
     private static void mostrarCambiosTablero() {
         updateHexagonBackground();
+        updateVertix();
+        updateArist();
     }
+
 
 
     @FXML
@@ -597,8 +807,25 @@ public class Gameplay {
         Partida.tablero.hexagonos.numberOverHexagon[Partida.tablero.hexagonos.ladron].setDisable(true); 
     }
 
+    private static void updateVertix() {
+        for(int i = 0; i < numberSettlements; i++) {
+           if(Partida.tablero.vertices.colorSettlement[i] != null) {
+            Partida.tablero.vertices.settlements[i].
+                        setBackground(new Background(new BackgroundFill(
+                            Partida.tablero.vertices.colorSettlement[i], null, null)));
+           }
+        }
+    }
 
-
+    private static void updateArist() {
+        for(int i = 0; i < numberRoads; i++) {
+            if(Partida.tablero.aristas.colorRoads[i] != null) {
+             Partida.tablero.aristas.roads[i].
+                         setBackground(new Background(new BackgroundFill(
+                             Partida.tablero.aristas.colorRoads[i], null, null)));
+            }
+         }
+    }
     // Creacion del tablero
 
     private Boolean hasRoads(Integer i) {
