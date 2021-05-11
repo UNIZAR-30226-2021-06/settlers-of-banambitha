@@ -419,6 +419,9 @@ public class Gameplay {
         
     }
 
+    // Actualizacion del tablero
+
+
     private static void initTablero() {
         // Hexagonos
         Partida.tablero.hexagonos.tipo = new String[numberofHexagons];
@@ -439,7 +442,7 @@ public class Gameplay {
 
     private static void procesarMensaje(String mensaje) {
         if(!existeGanador(mensaje)) {
-            actualizarTablero(mensaje);
+            actualizarPartida(mensaje);
             if(esperandoTableroInicial) {
                 try {
                     App.nuevaPantalla("/view/gameplay.fxml");
@@ -456,23 +459,31 @@ public class Gameplay {
         return false;
     }
 
-    private static void actualizarTablero(String tablero) {
+    private static void actualizarPartida(String partida) {
+        JSONObject object = new JSONObject(partida);
+        
+        
         if(esperandoTableroInicial) {
             Partida.tablero = new Tablero();
             initTablero();
         } 
-        JSONObject object = new JSONObject(tablero);
-        String aux = object.get("Tab_inf").toString();
+        String aux = object.get(MessageKeys.TAB_INFO).toString();
         JSONObject objectTablero = new JSONObject(aux);
-        actualizarHexagonos(objectTablero.get("hexagono").toString());
+        actualizarHexagonos(objectTablero.get(MessageKeys.TAB_INFO_HEXAGONOS).toString());
+        actualizarVertices(objectTablero.get(MessageKeys.TAB_INFO_VERTICES).toString());
     }
+
+    private static void actualizarVertices(String vertices) {
+        
+    }
+
 
     private static void actualizarHexagonos(String hexagonos) {
         JSONObject object = new JSONObject(hexagonos);
-        String auxHexagonosTipo = object.get("tipo").toString();
-        String auxHexagonosValor = object.get("valor").toString();
-        Partida.tablero.hexagonos.ladron = object.getInt("ladron");
-
+        String auxHexagonosTipo = object.get(MessageKeys.HEXAGONOS_TIPOS).toString();
+        String auxHexagonosValor = object.get(MessageKeys.HEXAGONOS_VALORES).toString();
+        Partida.tablero.hexagonos.ladron = object.getInt(MessageKeys.HEXAGONOS_LADRON);
+        
         JSONArray hexagonoTipo = new JSONArray(auxHexagonosTipo);
         JSONArray hexagonoValor = new JSONArray(auxHexagonosValor);
         for (int i = 0; i < hexagonoTipo.length(); i++) {
@@ -494,7 +505,9 @@ public class Gameplay {
                 Partida.tablero.hexagonos.tipo[i] = TipoTerreno.VACIO;
             }
             Partida.tablero.hexagonos.valor[i] = valor;
-        } 
+        }
+        
+        
     }
 
     private static void mostrarCambiosTablero() {
@@ -580,9 +593,13 @@ public class Gameplay {
             }
             Partida.tablero.hexagonos.numberOverHexagon[i].setText(
                 Partida.tablero.hexagonos.valor[i].toString());
-        }     
+        }    
+        Partida.tablero.hexagonos.numberOverHexagon[Partida.tablero.hexagonos.ladron].setDisable(true); 
     }
 
+
+
+    // Creacion del tablero
 
     private Boolean hasRoads(Integer i) {
         return ( (i > 4  && i <=  7)  || 
