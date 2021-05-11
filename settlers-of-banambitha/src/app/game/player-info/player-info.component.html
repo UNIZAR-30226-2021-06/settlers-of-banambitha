@@ -1,4 +1,5 @@
-<div class="info" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="12px">
+<div *ngIf="!gameService.cargandoPartida"
+class="info" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="12px">
 <mat-accordion>
 
   <mat-expansion-panel *ngFor="let user of this.gameService.partida.jugadores; index as i">
@@ -12,7 +13,9 @@
       </mat-panel-description>
     </mat-expansion-panel-header>
     <button mat-raised-button *ngIf="i != this.gameService.partida.miTurno - 1"
-    (click)="openInternalTradeDialog(i)"> Comerciar </button>
+    (click)="openInternalTradeDialog(i)" [disabled]="this.gameService.partida.miTurno != this.gameService.partida.turnoActual || this.gameService.partida.yaComercio">
+        Comerciar
+    </button>
     <mat-tab-group mat-align-tabs="center">
         <mat-tab label="Materiales">
             <table class="mat-table center" >

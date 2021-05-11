@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { GameplayComponent } from './game/gameplay/gameplay.component';
+import { AuthBoardGuard } from './guards/auth-board.guard';
 import { AuthHomeGuard } from './guards/auth-home.guard';
 import { AuthLoginGuard } from './guards/auth-login.guard';
 import { HomeModule } from './home/home.module';
@@ -39,7 +40,8 @@ const routes: Routes = [
     ]
    },
 
-  {path: 'board', component: GameplayComponent}
+  {path: 'board', component: GameplayComponent, 
+    canActivate: [AuthBoardGuard]}
 
 ];
 

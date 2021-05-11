@@ -23,7 +23,7 @@ export class HexNumberComponent implements OnInit {
   }
 
   public move(): void {
-    this.gameService.partida.tablero.hexagonos.ladron = this.hexagono
+    this.gameService.moverLadron(this.hexagono)
   }
 
 }

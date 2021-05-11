@@ -1,0 +1,232 @@
+{
+    "signin": {
+        "ESP": "Iniciar sesión",
+        "ENG": "sign in"
+    },
+
+    "enter-username": {
+        "ESP": "Introduce el nombre de usuario",
+        "ENG": "Enter your username"
+    },
+
+    "username-required": {
+        "ESP": "Se requiere nombre de usuario", 
+        "ENG": "Username required"
+    },
+    
+    "username-not-exists": {
+        "ESP": "No existe el nombre de usuario", 
+        "ENG": "This username does not exist"
+    },
+
+    "enter-password": {
+        "ESP": "Introduce tu contraseña", 
+        "ENG": "Enter your password"
+    }, 
+
+    "invalid-password": {
+        "ESP": "Contraseña incorrecta", 
+        "ENG": "Invalid password"
+    },
+
+    "forgot-password": {
+        "ESP": "¿Olvidaste tu contraseña?",
+        "ENG": "Forgot your passord?"
+    }, 
+
+    "create-new-account": {
+        "ESP": "crear nueva cuenta", 
+        "ENG": "Create new account"
+    },
+
+    "sign-in-button": {
+        "ESP": "Entrar", 
+        "ENG": "Sign in"
+    },
+
+    "reset-password": {
+        "ESP": "Cambiar contraseña", 
+        "ENG": "Reset your password"
+    },
+
+    "enter-mail": {
+        "ESP": "Introduce tu correo electrónico", 
+        "ENG": "Enter your mail"
+    }, 
+
+    "reset": {
+        "ESP": "Resetear", 
+        "ENG": "Reset"
+    }, 
+
+    "send": {
+        "ESP": "Enviar", 
+        "ENG": "Send"
+    }, 
+
+    "register": {
+        "ESP": "Registrarse", 
+        "ENG": "Sign up"
+    }, 
+
+    "username-in-use": {
+        "ESP": "Este nombre está siendo usado por otro usuario", 
+        "ENG": "This username is already in use"
+    },
+
+    "server-error": {
+        "ESP": "Se ha producido un error en el servidor", 
+        "ENG": "There was an error in the server"
+    }, 
+
+    "try-later": {
+        "ESP": "Inténtalo más tarde", 
+        "ENG": "retry later"
+    }, 
+
+    "login-requirements": {
+        "ESP": "Requisitos del nombre y de la contraseña", 
+        "ENG": "Password and name requirements"
+    },
+
+    "username-min-char": {
+        "ESP": "El nombre de usuario debe tener al menos 4 caracteres", 
+        "ENG": "Username must be at least 4 characters long"
+    }, 
+
+    "password-min-char": {
+        "ESP": "La contraseña debe tener al menos 8 caracteres", 
+        "ENG": "Password must be at least 8 characters long"
+    }, 
+
+    "password-uppercase": {
+        "ESP": "La contraseña debe contener al menos una mayúscula", 
+        "ENG": "Password must contain at least 1 uppercase"
+    }, 
+
+    "password-lowercase": {
+        "ESP": "La contraseña debe contener al menos una minúscula", 
+        "ENG": "Password must contain at least 1 lowercase"
+    }, 
+
+    "password-digit": {
+        "ESP": "La contraseña debe contener al menos un dígito", 
+        "ENG": "Password must contain at least 1 digit"
+    }, 
+
+    "password-special-char": {
+        "ESP": "La contraseña no puede contener caracteres especiales", 
+        "ENG": "Password cannot contain any special character"
+    },
+
+    "room-of": {
+        "ESP": "Sala de ", 
+        "ENG": "Room of "
+    }, 
+
+    "select-appearence": {
+        "ESP": "Selecciona aspecto", 
+        "ENG": "Choose board skin"
+    }, 
+
+    "skin-normal": {
+        "ESP": "Normal", 
+        "ENG": "Normal"
+    }, 
+
+    "skin-spacial": {
+        "ESP": "Espacial", 
+        "ENG": "Spacial"
+    },
+
+    "skin-hardware": {
+        "ESP": "Hardware", 
+        "ENG": "Hardware"
+    },
+
+    "begin-search": {
+        "ESP": "Buscar partida", 
+        "ENG": "Look for game"
+    }, 
+
+    "leave-room": {
+        "ESP": "Abandonar sala",
+        "ENG": "Leave room"
+    },
+
+    "delete-room": {
+        "ESP": "Expulsar invitados", 
+        "ENG": "Expel everyone"
+    },
+
+    "looking-for-game": {
+        "ESP": "Buscando partida ...", 
+        "ENG": "Looking for game ..."
+    }, 
+
+    "cancel-search": {
+        "ESP": "Cancelar búsqueda", 
+        "ENG": "Stop searching"
+    },
+
+    "entering-room": {
+        "ESP": "Entrando a la sala ...",
+        "ENG": "Entering room ..."
+    }, 
+
+    "creating-room": {
+        "ESP": "Creando sala ...",
+        "ENG": "Creating room ..."
+    }, 
+
+    "user-skins": {
+        "ESP": "Aspectos de usuario",
+        "ENG": "user skins"
+    }, 
+
+    "board-skins": {
+        "ESP": "Aspectos de juego", 
+        "ENG": "Board skins"
+    }, 
+
+    "buy": {
+        "ESP": "Comprar", 
+        "ENG": "Buy"
+    }, 
+
+    "insufficient-gold": {
+        "ESP": "Saldo insuficiente", 
+        "ENG": "Insufficient gold"
+    }, 
+
+    "no-products": {
+        "ESP": "¡No hay productos nuevos para comprar!", 
+        "ENG": "There are no new products to buy!"
+    }, 
+
+    "rules-fundamentals": {
+        "ESP": "Aspectos básicos", 
+        "ENG": "Fundamentals"
+    },
+
+    "rules-settlements-resources": {
+        "ESP": "Figuras y recursos",
+        "ENG": "Settlements and resources"
+    },
+
+    "rules-development-cards": {
+        "ESP": "Cartas de desarrollo",
+        "ENG": "Development cards"
+    },
+
+    "rules-actions": {
+        "ESP": "Acciones", 
+        "ENG": "Actions"
+    }, 
+
+    "rules-game-stages": {
+        "ESP": "Fases de juego",
+        "ENG": "Game stages"
+    }
+
+}

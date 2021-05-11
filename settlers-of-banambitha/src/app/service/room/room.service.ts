@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { GameService } from '../game/game.service';
 import { UserService } from '../user/user.service';
 import { Connectable, WsService } from '../ws/ws.service';
 
@@ -97,7 +98,7 @@ export class RoomService implements Connectable{
    * @param router  router de la aplicación
    * @param userService servicio de usuario a utilizar (singleton)
    */
-  constructor(private wsService: WsService, private router: Router, private userService: UserService) {
+  constructor(private wsService: WsService, private router: Router, private userService: UserService, private gameService: GameService) {
     if ( ! wsService.atatchConnectable(this)){
       this.onConnect();
     }
@@ -275,10 +276,10 @@ export class RoomService implements Connectable{
 
         case RoomMsgStatus.FOUND: 
           //Se ha encontrado partida
+          this.gameService.comenzarPartida(msg["game"], msg["players"]);
           this.room = null
           this.buscandoPartida = false
           this.sala_act_topic_id.unsubscribe()
-          this.router.navigate(["/board"])
           break
 
         case RoomMsgStatus.FAILED: 

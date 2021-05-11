@@ -15,6 +15,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 
 /**
  * Esta clase define el tablero de la partida
@@ -56,6 +58,7 @@ public class Tablero {
 		this.haComerciado = false;
 		this.exit_status = -1;
 		this.message = "";
+		this.seHaMovidoLadron = false;
 		
 		j[0] = new Jugadores(ColorJugador.Azul);
 		j[1] = new Jugadores(ColorJugador.Rojo);
@@ -110,10 +113,10 @@ public class Tablero {
 			for (int j = 0; j < this.num_hexagonos_fila[i]; ++j) {
 				aux = new Coordenadas(ini_x, ini_y);
 				if ( this.vector_terrenos[id].esDesierto() ) {
-					hexagonos.put(id, new Hexagonos(aux, this.vector_terrenos[id], -1));
+					hexagonos.put(id, new Hexagonos(aux, this.vector_terrenos[id], -1, id));
 				} else {
 					hexagonos.put(id, new Hexagonos(aux, this.vector_terrenos[id], 
-							this.vector_valores[count_value]));
+							this.vector_valores[count_value],id));
 					count_value++;
 				}
 				ini_x += 2*apotema;
@@ -228,11 +231,12 @@ public class Tablero {
 	}
 	
 	/*
-	 * Genera un numero aleatorio n del 1 al 6. Simula la accion de lanzar un dado.
-	 * @return Devuelve n, siendo n un entero 1 <= n <= 6.
+	 * Genera un numero aleatorio n del 1 al 12. Simula la accion de lanzar un dado.
+	 * @return Devuelve n, siendo n un entero 1 <= n <= 12.
 	 * */
 	private int generarNumero () {
-		return (int) Math.floor( Math.random()*5 + 1 );
+		// return (int) Math.floor( Math.random()*5 + 1 );
+		return ThreadLocalRandom.current().nextInt(2, 13);
 	}
 	
 	//--------------------------- Partida pausada -----------------------------------------------\\
@@ -623,12 +627,17 @@ public class Tablero {
 					}
 					// Posibles Asentamientos. --> Respeta la regla de la distancia.
 					for (int i = 0; i < verticesAdyacentesV1.length; ++i) {
-						if (!verticesAdyacentesV1[i].equals(v2) && !verticesAdyacentesV1[i].tieneAsentamiento()) 
-							v1.posibleAsentamientoDeJugador(j);
+						if (verticesAdyacentesV1[i] != null) {
+							if (!verticesAdyacentesV1[i].equals(v2) && !verticesAdyacentesV1[i].tieneAsentamiento()) 
+								v1.posibleAsentamientoDeJugador(j);
+						}
+						
 					}
 					for (int i = 0; i < verticesAdyacentesV2.length; ++i) {
-						if (!verticesAdyacentesV2[i].equals(v1) && !verticesAdyacentesV2[i].tieneAsentamiento()) 
-							v2.posibleAsentamientoDeJugador(j);
+						if (verticesAdyacentesV2 != null) {
+							if (!verticesAdyacentesV2[i].equals(v1) && !verticesAdyacentesV2[i].tieneAsentamiento()) 
+								v2.posibleAsentamientoDeJugador(j);
+						}
 					}
 				}
 			}
@@ -726,10 +735,10 @@ public class Tablero {
 	public void comercioMaritimo ( int materialEsperado, Jugadores j1, String materialRecibe, int madera, 
 			int lana, int cereales, int arcilla, int mineral) {
 		int totalMaterial = madera + lana +  cereales + arcilla + mineral; 
-		if (materialEsperado > totalMaterial) {
+		if (materialEsperado < totalMaterial) {
 			this.message = "El material ofrecido es mayor al esperado";
 			this.exit_status = 28;
-		} else if (materialEsperado < totalMaterial) {
+		} else if (materialEsperado > totalMaterial) {
 			this.message = "El material ofrecido es menor al esperado";
 			this.exit_status = 29;
 		} else {
@@ -756,37 +765,37 @@ public class Tablero {
 			int lana, int cereales, int arcilla, int mineral) {
 		if (puerto.getTipoPuerto().esPuertoMadera()) {
 			if (materialRecibe == "madera") {
-				this.comercioMaritimo(3, j1, materialRecibe, madera, lana, cereales, arcilla, mineral);
+				this.comercioMaritimo(2, j1, materialRecibe, madera, lana, cereales, arcilla, mineral);
 			} else {
-				this.comercioMaritimo(4, j1, materialRecibe, madera, lana, cereales, arcilla, mineral);
+				this.comercioMaritimo(3, j1, materialRecibe, madera, lana, cereales, arcilla, mineral);
 			}
 		}
 		else if (puerto.getTipoPuerto().esPuertoLana()) {
 			if (materialRecibe == "lana") {
-				this.comercioMaritimo(3, j1, materialRecibe, madera, lana, cereales, arcilla, mineral);
+				this.comercioMaritimo(2, j1, materialRecibe, madera, lana, cereales, arcilla, mineral);
 			} else {
-				this.comercioMaritimo(4, j1, materialRecibe, madera, lana, cereales, arcilla, mineral);
+				this.comercioMaritimo(3, j1, materialRecibe, madera, lana, cereales, arcilla, mineral);
 			}
 		}
 		else if (puerto.getTipoPuerto().esPuertoCereales()) {
 			if (materialRecibe == "cereales") {
-				this.comercioMaritimo(3, j1, materialRecibe, madera, lana, cereales, arcilla, mineral);
+				this.comercioMaritimo(2, j1, materialRecibe, madera, lana, cereales, arcilla, mineral);
 			} else {
-				this.comercioMaritimo(4, j1, materialRecibe, madera, lana, cereales, arcilla, mineral);
+				this.comercioMaritimo(3, j1, materialRecibe, madera, lana, cereales, arcilla, mineral);
 			}
 		}
 		else if (puerto.getTipoPuerto().esPuertoArcilla()) {
 			if (materialRecibe == "arcilla") {
-				this.comercioMaritimo(3, j1, materialRecibe, madera, lana, cereales, arcilla, mineral);
+				this.comercioMaritimo(2, j1, materialRecibe, madera, lana, cereales, arcilla, mineral);
 			} else {
-				this.comercioMaritimo(4, j1, materialRecibe, madera, lana, cereales, arcilla, mineral);
+				this.comercioMaritimo(3, j1, materialRecibe, madera, lana, cereales, arcilla, mineral);
 			}
 		} else {
 			// Puerto mineral
 			if (materialRecibe == "mineral") {
-				this.comercioMaritimo(3, j1, materialRecibe, madera, lana, cereales, arcilla, mineral);
+				this.comercioMaritimo(2, j1, materialRecibe, madera, lana, cereales, arcilla, mineral);
 			} else {
-				this.comercioMaritimo(4, j1, materialRecibe, madera, lana, cereales, arcilla, mineral);
+				this.comercioMaritimo(3, j1, materialRecibe, madera, lana, cereales, arcilla, mineral);
 			}
 		}
 	}
@@ -798,13 +807,15 @@ public class Tablero {
      * @return los tipos de terreno de los hexagonos
      */
 	public JSONArray tiposHexagonosToJSONArray () {
-		JSONArray jsArray = new JSONArray ();
-		
+		String tipoTerreno[] = new String [19];
+
+		int id = 0;
 		for (Hexagonos h : hexagonos.values()) {
-			jsArray.put(h.getTipo_terreno().toString());
+			id = h.getIdentificador();
+			tipoTerreno[id] = h.getTipo_terreno().toString();
 		}
 		
-		return jsArray;
+		return new JSONArray(tipoTerreno);
 	}
 	
 	/**
@@ -814,11 +825,15 @@ public class Tablero {
 	private JSONArray valorHexagonosToJSONArray () {
 		JSONArray jsArray = new JSONArray ();
 		
+		Integer valorHexagono[] = new Integer [19];
+
+		int id = 0;
 		for (Hexagonos h : hexagonos.values()) {
-			jsArray.put(h.getValor());
+			id = h.getIdentificador();
+			valorHexagono[id] = h.getValor();
 		}
 		
-		return jsArray;
+		return new JSONArray(valorHexagono);
 	}
 	
 	/**
@@ -836,35 +851,19 @@ public class Tablero {
 	 * @return devuelve informacion de los hexagonos
 	 * */
 	private JSONObject infoHexagonosJSON () throws JSONException {
-		String aux = "{";
-		String auxTipo = "\"tipo\": [";
-		String auxValor = "\"valor\": [";
-		String auxLadron = "";
-		Integer i = 0;
-		Iterator<Hexagonos> it = hexagonos.values().iterator();
-		
-		Hexagonos h = it.next();
-		auxTipo += h.getTipo_terreno().getStringTipoTerreno();
-		auxValor += h.getValor().toString();
-		if (h.tieneLadron())
-			auxLadron = i.toString();
-		i++;
-		while(it.hasNext()) {
-			h = it.next();
-			auxTipo += "," + h.getTipo_terreno().getStringTipoTerreno();
-			auxValor += "," + h.getValor().toString();
-			if (h.tieneLadron())
-				auxLadron = i.toString();
-			i++;
-		}
-		aux += auxTipo + "]," + auxValor + "]," + "\"ladron\":" + auxLadron + "}";
-		return new JSONObject(aux);
+		JSONObject jsObj =  new JSONObject();
+		jsObj.put("tipo", this.tiposHexagonosToJSONArray());
+		jsObj.put("valor", this.valorHexagonosToJSONArray());
+		jsObj.put("ladron", this.getPosicionLadron().getIdentificador());
+
+		return jsObj;
 	}
 	
 	private String message;
 	private int exit_status;
 	private int turno_jugador;
 	private Boolean haComerciado;
+	private Boolean seHaMovidoLadron;
 
 	/*
 	 * Genera un JSONObject con la informacion de la partida
@@ -1071,10 +1070,17 @@ public class Tablero {
 				// Comprobamos que los dos hexagonos son adyacentes.
 				if (posActualLadron.sonAdyacentes(nuevaPosLadron)) {
 					if (this.dados == 7) {
-						posActualLadron.moverLadron();
-						nuevaPosLadron.colocarLadron();
-						message = "Se ha movido correctamente el ladrón de hexagono";
-						exit_status = 0;
+						if (!seHaMovidoLadron) {
+							this.seHaMovidoLadron = true;
+							posActualLadron.moverLadron();
+							nuevaPosLadron.colocarLadron();
+							message = "Se ha movido correctamente el ladrón de hexagono";
+							exit_status = 0;
+						} else {
+							message = "[Error] El ladrón ya ha sido movido en este turno.";
+							exit_status = 32;
+						}
+						
 					} else {
 						this.message = "[Error] No se puede mover al ladrón de hexagono ya que "
 								+ "el valor del dado no es de 7";
@@ -1161,7 +1167,6 @@ public class Tablero {
 			
 			break;
 		case "finalizar turno":
-			this.dados = generarNumero();
 			turno++;
 			this.message = "Se ha finalizado el turno correctamente";
 			this.turno_jugador = (this.turno_jugador + 1) % 4; 
@@ -1169,10 +1174,12 @@ public class Tablero {
 			this.haComerciado = false;
 			Boolean finalizadoPrimerasConstrucciones = 
 					this.j[0].getPrimerosAsentamientosConstruidos() 
-					|| this.j[1].getPrimerosAsentamientosConstruidos() 
-					|| this.j[2].getPrimerosAsentamientosConstruidos()
-					|| this.j[3].getPrimerosAsentamientosConstruidos();
+					&& this.j[1].getPrimerosAsentamientosConstruidos() 
+					&& this.j[2].getPrimerosAsentamientosConstruidos()
+					&& this.j[3].getPrimerosAsentamientosConstruidos();
 			if (finalizadoPrimerasConstrucciones) {
+				this.seHaMovidoLadron = false;
+				this.dados = generarNumero();
 				this.producir(dados);
 			}
 			break;
@@ -1213,8 +1220,8 @@ public class Tablero {
 						if (jug.equals(v1.getPropietario())) {
 							// Comprobar si es especial o basico.
 							if (p.getTipoPuerto().esBasico()) {
-								// 4 materiales a uno
-								this.comercioMaritimo(4, jug, material_que_recibe, madera, 
+								// 3 materiales a uno
+								this.comercioMaritimo(3, jug, material_que_recibe, madera, 
 										lana, cereales, arcilla, mineral);
 							} else {
 								// materiales a uno en concreto
@@ -1222,16 +1229,16 @@ public class Tablero {
 										madera, lana, cereales, arcilla, mineral);
 							}
 						} else {
-							// 5 materiales por 1
-							this.comercioMaritimo(5, jug, material_que_recibe, madera, 
+							// 4 materiales por 1
+							this.comercioMaritimo(4, jug, material_que_recibe, madera, 
 									lana, cereales, arcilla, mineral);
 						}
 					} else if (v2.tieneAsentamiento()) {
 						if (jug.equals(v1.getPropietario())) {
 							// Comprobar si es especial o basico.
 							if (p.getTipoPuerto().esBasico()) {
-								// 4 materiales a uno
-								this.comercioMaritimo(4, jug, material_que_recibe, madera, 
+								// 3 materiales a uno
+								this.comercioMaritimo(3, jug, material_que_recibe, madera, 
 										lana, cereales, arcilla, mineral);
 							} else {
 								// materiales a uno en concreto
@@ -1239,7 +1246,7 @@ public class Tablero {
 										madera, lana, cereales, arcilla, mineral);
 							}
 						} else {
-							// 5 materiales por 1
+							// 4 materiales por 1
 							this.comercioMaritimo(5, jug, material_que_recibe, madera, 
 									lana, cereales, arcilla, mineral);
 						}

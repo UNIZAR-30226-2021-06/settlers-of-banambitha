@@ -3,6 +3,9 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, of, throwError } from 'rxjs';
 import { catchError, retry, map } from 'rxjs/operators';
+import { environment } from 'src/environments/environment';
+import { GameService } from '../game/game.service';
+import { WsService } from '../ws/ws.service';
 
 
 @Injectable({
@@ -15,8 +18,8 @@ import { catchError, retry, map } from 'rxjs/operators';
  */
 export class UserService {
 
-  private static readonly baseUrl = "http://localhost:8080/usuario"
-  private static readonly addUrl = UserService.baseUrl + "/add"
+  private static readonly baseUrl = environment.baseUrl + "/usuario"
+  private static readonly addUrl  = UserService.baseUrl + "/add"
   private static readonly validae = UserService.baseUrl + "/validate"
   private static readonly httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
@@ -34,7 +37,7 @@ export class UserService {
   public avatar:     String
   public apariencia: String
   public saldo:      Number
-  public partida:    String
+  public partida:    string
   public validUser:  boolean = false
 
   constructor(private http: HttpClient) {}
@@ -83,6 +86,7 @@ export class UserService {
     this.mail = userData["mail"]
     this.avatar = userData["avatar"]
     this.partida = userData["partida"]
+    console.log(this.partida)
   }
 
   /**
@@ -144,15 +148,23 @@ export class UserService {
    * @param urlLogin True si la url solicitada es login o hijas, false en caso 
    *                 contrario
    */
-  public checkSession(router: Router, urlLogin: boolean): Observable<boolean>{
+  public checkSession(router: Router, urlLogin: boolean, gameService: GameService, wsService: WsService): Observable<boolean>{
+
     return this.http.get(UserService.baseUrl + "/session", UserService.httpOptions).pipe(
       map(response => {
         this.updateUserData(response.body)
-        if ( urlLogin ){
-          router.navigate(["/home"])
+        wsService._connect()
+        if ( this.partida != null ){
+          console.log("recargar partida")
+          router.navigate(["/board"])
           return false
-        } else {
-          return true
+        }else{
+          if ( urlLogin ){
+            router.navigate(["/home"])
+            return false
+          } else {
+            return true
+          }
         }
       }
     ), catchError(() => {
@@ -163,6 +175,40 @@ export class UserService {
         router.navigate(["/login"])
         return of(false)
       }
+    }))
+  }
+
+
+  /**
+   * Devuelve un valor booleano observable cuyo valor es true si el 
+   * usuario está en una partida y false si no lo está. Se consulta
+   * la base de datos para saber esta información. Se presupone que 
+   * esta función se llama solo si el usuario no ha cargado ya una partida.
+   * 
+   * Si el usuario está en partida, entonces navega automáticamente a la pantalla de
+   * partida. Si no, navega a la pantalla de home
+   * 
+   * @param router 
+   */
+  public checkLastMatch(router: Router, gameService: GameService, wsService: WsService): Observable<boolean> {
+    console.log("checking")
+    return this.http.get(UserService.baseUrl + "/session", UserService.httpOptions).pipe(
+      map(response => {
+        this.updateUserData(response.body)
+        wsService._connect()
+        if ( this.partida != null ){
+          console.log("Partida no nula")
+          console.log(this.partida)
+          gameService.recargarPartida(this.partida)
+          return true
+        }else{
+          router.navigate(["/home"])
+          return false
+        }
+      }
+    ), catchError(() => {
+        router.navigate(["/login"])
+        return of(false)
     }))
   }
 }
