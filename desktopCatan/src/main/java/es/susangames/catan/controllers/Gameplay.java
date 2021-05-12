@@ -311,11 +311,38 @@ public class Gameplay {
     @FXML
     private Button diceButton;
 
+    private static Button _diceButton;
+
     @FXML
     private Button settingsButton;
 
     @FXML
     private Button passTurnButton;
+
+    @FXML
+    private Text lanaCant;
+
+    private static Text _lanaCant;
+
+    @FXML
+    private Text arcillaCant;
+
+    private static Text _arcillaCant;
+
+    @FXML
+    private Text cerealesCant;
+
+    private static Text _cerealesCant;
+
+    @FXML
+    private Text mineralCant;
+
+    private static Text _mineralCant;
+
+    @FXML
+    private Text maderaCant;
+
+    private static Text _maderaCant;
 
     // Elementos graficos adicionales
     private Popup popupCards;
@@ -555,8 +582,25 @@ public class Gameplay {
                 actualizarJugadores(new JSONObject(partida));
 
                 //Primeros Asentamientos
-
+                try {
+                    if(!object.get(MessageKeys.PRIMEROS_ASENTAMIENTOS).equals(null)) {
+                        actualizarPrimerosAsentamientos(
+                            object.get(MessageKeys.PRIMEROS_ASENTAMIENTOS).toString()
+                        );
+                    }
+                } catch(Exception e) {
+                    System.err.println("Faltan los primeros asentamientos");
+                }
                 // Primeros caminos
+                try {
+                    if(!object.get(MessageKeys.PRIMEROS_CAMINOS).equals(null)) {
+                        actualizarPrimerosCaminos(
+                            object.get(MessageKeys.PRIMEROS_CAMINOS).toString()
+                        );
+                    }
+                } catch(Exception e) {
+                    System.err.println("Faltan los primeros caminos");
+                }
 
                 //Pre-calculos
 
@@ -571,7 +615,7 @@ public class Gameplay {
         try  {
             if(!partida.get(MessageKeys.RECURSOS).equals(null)) {
                 actualizarRecursosJugadores(
-                    new JSONObject (partida.get(MessageKeys.RECURSOS)));
+                    partida.get(MessageKeys.RECURSOS).toString());
             }
         } catch(Exception e) {
             System.err.println("Faltan los recursos en el mensaje");
@@ -579,6 +623,7 @@ public class Gameplay {
         
         try {
             if(!partida.get(MessageKeys.CARTAS).equals(null)) {
+                //TODO: Implementar
                 actualizarCartasJugadores(
                     new JSONObject (partida.get(MessageKeys.CARTAS)));
             } 
@@ -596,9 +641,40 @@ public class Gameplay {
         }
     }
 
-    private static void actualizarRecursosJugadores(JSONObject recursos) {
+    private static void actualizarRecursosJugadores(String _recursos) {
+        JSONObject recursos = new JSONObject(_recursos);
+        try {
+            if(!recursos.get(MessageKeys.PLAYER_1).equals(null)) {
+                actualizarRecursoJugador(
+                    recursos.get(MessageKeys.PLAYER_1).toString(),0);
+            }
+            if(!recursos.get(MessageKeys.PLAYER_2).equals(null)) {
+                actualizarRecursoJugador(
+                    recursos.get(MessageKeys.PLAYER_2).toString(),1);
+            }
+            if(!recursos.get(MessageKeys.PLAYER_3).equals(null)) {
+                actualizarRecursoJugador(
+                    recursos.get(MessageKeys.PLAYER_3).toString(),2);
+            }
+            if(!recursos.get(MessageKeys.PLAYER_4).equals(null)) {
+                actualizarRecursoJugador(
+                    recursos.get(MessageKeys.PLAYER_4).toString(),3);
+            }
 
+        } catch (Exception e) {
+            System.err.println("Error procesando recursos");
+        }
     }
+
+    private static void actualizarRecursoJugador(String recursos, int player) {
+        JSONArray recursosArr = new JSONArray(recursos);
+        Partida.jugadores[player].recursos.madera = recursosArr.getInt(0);
+        Partida.jugadores[player].recursos.mineral = recursosArr.getInt(1);
+        Partida.jugadores[player].recursos.arcilla = recursosArr.getInt(2);
+        Partida.jugadores[player].recursos.lana = recursosArr.getInt(3);
+        Partida.jugadores[player].recursos.cereales = recursosArr.getInt(4);
+    }
+
 
     private static void actualizarCartasJugadores(JSONObject cartas) {
         
@@ -606,6 +682,54 @@ public class Gameplay {
 
     private static void actualizarPuntuacionesJugadores(JSONObject puntuaciones) {
         
+    }
+
+    private static void actualizarPrimerosAsentamientos(String asentamientos) {
+        try {
+            JSONObject primerosAsentamientos = new JSONObject(asentamientos);
+            if(!primerosAsentamientos.get(MessageKeys.PLAYER_1).equals(null)) {
+                Partida.jugadores[0].primerosAsentamientos = 
+                        primerosAsentamientos.getBoolean(MessageKeys.PLAYER_1);
+            }
+            if(!primerosAsentamientos.get(MessageKeys.PLAYER_2).equals(null)) {
+                Partida.jugadores[1].primerosAsentamientos = 
+                        primerosAsentamientos.getBoolean(MessageKeys.PLAYER_2);
+            }
+            if(!primerosAsentamientos.get(MessageKeys.PLAYER_3).equals(null)) {
+                Partida.jugadores[2].primerosAsentamientos = 
+                        primerosAsentamientos.getBoolean(MessageKeys.PLAYER_3);
+            }
+            if(!primerosAsentamientos.get(MessageKeys.PLAYER_4).equals(null)) {
+                Partida.jugadores[3].primerosAsentamientos = 
+                        primerosAsentamientos.getBoolean(MessageKeys.PLAYER_3);
+            }
+        } catch (Exception e) {
+            System.err.println("Error procesando primeros asentamientos");
+        }
+    }
+
+    private static void actualizarPrimerosCaminos(String caminos) {
+        try {
+            JSONObject primerosCaminos = new JSONObject(caminos);
+            if(!primerosCaminos.get(MessageKeys.PLAYER_1).equals(null)) {
+                Partida.jugadores[0].primerosCaminos = 
+                        primerosCaminos.getBoolean(MessageKeys.PLAYER_1);
+            }
+            if(!primerosCaminos.get(MessageKeys.PLAYER_2).equals(null)) {
+                Partida.jugadores[1].primerosCaminos = 
+                        primerosCaminos.getBoolean(MessageKeys.PLAYER_2);
+            }
+            if(!primerosCaminos.get(MessageKeys.PLAYER_3).equals(null)) {
+                Partida.jugadores[2].primerosCaminos = 
+                        primerosCaminos.getBoolean(MessageKeys.PLAYER_3);
+            }
+            if(!primerosCaminos.get(MessageKeys.PLAYER_4).equals(null)) {
+                Partida.jugadores[3].primerosCaminos = 
+                        primerosCaminos.getBoolean(MessageKeys.PLAYER_3);
+            }
+        } catch (Exception e) {
+            System.err.println("Error procesando primeros caminos");
+        }
     }
 
 
@@ -731,6 +855,8 @@ public class Gameplay {
         updateVertix();
         updateArist();
         updateplayersName();
+        updateDice();
+        updateUserMaterials();
     }
 
 
@@ -1517,9 +1643,17 @@ public class Gameplay {
          
     }
 
-    private void updateDice() {
-        // TODO: Conectar con backend
-        diceButton.setText("Dados: 8");
+    private static void updateDice() {
+        _diceButton.setText(LangService.getMapping("dice") + ": " + 
+            Partida.resultadoTirada.toString());
+    }
+
+    private static void updateUserMaterials() {
+        _maderaCant.setText(Partida.jugadores[Partida.miTurno-1].recursos.madera.toString());
+        _mineralCant.setText(Partida.jugadores[Partida.miTurno-1].recursos.mineral.toString());
+        _arcillaCant.setText(Partida.jugadores[Partida.miTurno-1].recursos.arcilla.toString());
+        _lanaCant.setText(Partida.jugadores[Partida.miTurno-1].recursos.lana.toString());
+        _cerealesCant.setText(Partida.jugadores[Partida.miTurno-1].recursos.cereales.toString()); 
     }
 
     @FXML
@@ -1528,6 +1662,12 @@ public class Gameplay {
          _player2Name = player2Name; 
          _player3Name = player3Name; 
          _player4Name = player4Name; 
+         _diceButton = diceButton;
+         _maderaCant = maderaCant;
+         _mineralCant = mineralCant;
+         _arcillaCant = arcillaCant;
+         _lanaCant = lanaCant;
+         _cerealesCant = cerealesCant;
         chatContent.setEditable(false);
         chatContent.setMouseTransparent(true);
         chatContent.setFocusTraversable(false);    

@@ -23,7 +23,7 @@
                   <VBox>
                      <children>
                         <Region VBox.vgrow="ALWAYS" />
-                        <AnchorPane style="-fx-background-color: lightblue; -fx-background-radius: 12px;" VBox.vgrow="ALWAYS">
+                        <AnchorPane style="-fx-background-color: #006CFF; -fx-background-radius: 12px;" VBox.vgrow="ALWAYS">
                            <children>
                               <Text fx:id="player1Name" fill="WHITE" layoutX="31.0" layoutY="44.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" textAlignment="CENTER" wrappingWidth="238.1845703125">
                                  <font>
@@ -53,7 +53,7 @@
                            </children>
                         </AnchorPane>
                         <Region VBox.vgrow="ALWAYS" />
-                        <AnchorPane style="-fx-background-color: #c7956d; -fx-background-radius: 12px;" VBox.vgrow="ALWAYS">
+                        <AnchorPane style="-fx-background-color: #619B4A; -fx-background-radius: 12px;" VBox.vgrow="ALWAYS">
                            <children>
                               <Text fx:id="player4Name" fill="WHITE" layoutX="31.0" layoutY="44.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" textAlignment="CENTER" wrappingWidth="238.1845703125">
                                  <font>
@@ -85,22 +85,22 @@
                                     <Font name="System Bold Italic" size="19.0" />
                                  </font>
                               </Text>
-                              <Text fx:id="player1Name11111" fill="WHITE" layoutX="153.0" layoutY="30.0" strokeType="OUTSIDE" strokeWidth="0.0" text="4" textAlignment="CENTER" wrappingWidth="133.1845703125">
+                              <Text fx:id="lanaCant" fill="WHITE" layoutX="153.0" layoutY="30.0" strokeType="OUTSIDE" strokeWidth="0.0" text="4" textAlignment="CENTER" wrappingWidth="133.1845703125">
                                  <font>
                                     <Font name="System Bold Italic" size="19.0" />
                                  </font>
                               </Text>
-                              <Text fx:id="player1Name12" fill="WHITE" layoutX="153.0" layoutY="110.0" strokeType="OUTSIDE" strokeWidth="0.0" text="1" textAlignment="CENTER" wrappingWidth="133.1845703125">
+                              <Text fx:id="arcillaCant" fill="WHITE" layoutX="153.0" layoutY="110.0" strokeType="OUTSIDE" strokeWidth="0.0" text="1" textAlignment="CENTER" wrappingWidth="133.1845703125">
                                  <font>
                                     <Font name="System Bold Italic" size="19.0" />
                                  </font>
                               </Text>
-                              <Text fx:id="player1Name112" fill="WHITE" layoutX="153.0" layoutY="150.0" strokeType="OUTSIDE" strokeWidth="0.0" text="26" textAlignment="CENTER" wrappingWidth="133.1845703125">
+                              <Text fx:id="cerealesCant" fill="WHITE" layoutX="153.0" layoutY="150.0" strokeType="OUTSIDE" strokeWidth="0.0" text="26" textAlignment="CENTER" wrappingWidth="133.1845703125">
                                  <font>
                                     <Font name="System Bold Italic" size="19.0" />
                                  </font>
                               </Text>
-                              <Text fx:id="player1Name1112" fill="WHITE" layoutX="153.0" layoutY="190.0" strokeType="OUTSIDE" strokeWidth="0.0" text="12" textAlignment="CENTER" wrappingWidth="133.1845703125">
+                              <Text fx:id="mineralCant" fill="WHITE" layoutX="153.0" layoutY="190.0" strokeType="OUTSIDE" strokeWidth="0.0" text="12" textAlignment="CENTER" wrappingWidth="133.1845703125">
                                  <font>
                                     <Font name="System Bold Italic" size="19.0" />
                                  </font>
@@ -110,7 +110,7 @@
                                     <Font name="System Bold Italic" size="19.0" />
                                  </font>
                               </Text>
-                              <Text fx:id="player1Name111111" fill="WHITE" layoutX="153.0" layoutY="70.0" strokeType="OUTSIDE" strokeWidth="0.0" text="5" textAlignment="CENTER" wrappingWidth="133.1845703125">
+                              <Text fx:id="maderaCant" fill="WHITE" layoutX="153.0" layoutY="70.0" strokeType="OUTSIDE" strokeWidth="0.0" text="5" textAlignment="CENTER" wrappingWidth="133.1845703125">
                                  <font>
                                     <Font name="System Bold Italic" size="19.0" />
                                  </font>

@@ -240,6 +240,11 @@
     "no_user" : {
         "eng": "User doesn't exist",
         "esp": "Usuario inexistente"
+    },
+
+    "dice": {
+        "eng": "Dice",
+        "esp": "Dados"
     }
 }
  
