@@ -9,6 +9,8 @@
             {{ this.gameService.partida.tablero.aristas.camino[this.arista] == this.gameService.miTipoCamino() ? recursosRequeridos - 1 : recursosRequeridos }}:1
         </div>
         <mat-divider></mat-divider>
-        <button mat-menu-item (click)="openExternalTradeDialog()">Utilizar puerto</button>
+        <button mat-menu-item (click)="openExternalTradeDialog()">
+            {{langService.get("use-port")}}
+        </button>
     </mat-menu>
 </div>

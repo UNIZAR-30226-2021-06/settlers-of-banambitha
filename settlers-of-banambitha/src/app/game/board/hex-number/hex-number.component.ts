@@ -1,5 +1,6 @@
 import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { GameService, TipoTerreno } from 'src/app/service/game/game.service';
+import { LangService } from 'src/app/service/lang/lang.service';
 
 @Component({
   selector: 'board-hex-number',
@@ -13,7 +14,7 @@ export class HexNumberComponent implements OnInit {
 
   public numberNames: Array<String> = ["", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve"]
 
-  constructor(public gameService:GameService) { }
+  constructor(public gameService:GameService, public langService: LangService) { }
 
   ngOnInit(): void {
   }

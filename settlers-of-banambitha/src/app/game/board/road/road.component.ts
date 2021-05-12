@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { GameService, TipoCamino } from 'src/app/service/game/game.service';
+import { LangService } from 'src/app/service/lang/lang.service';
 import { BoardComponent } from '../board.component';
 
 @Component({
@@ -31,7 +32,7 @@ export class RoadComponent implements OnInit {
    * 
    * @param gameService servicio de juego
    */
-  constructor(public gameService: GameService) { }
+  constructor(public gameService: GameService, public langService: LangService) { }
 
 
   /**

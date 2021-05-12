@@ -3,6 +3,7 @@ import { MatDialog,MAT_DIALOG_DATA,MatDialogRef } from '@angular/material/dialog
 import { GameService, Jugador, Recurso, TipoPuerto } from 'src/app/service/game/game.service';
 import { BoardComponent } from '../board.component';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { LangService } from 'src/app/service/lang/lang.service';
 
 @Component({
   selector: 'board-harbor',
@@ -36,7 +37,7 @@ export class HarborComponent implements OnInit {
    * @param dialog 
    * @param gameService 
    */
-  constructor(public dialog: MatDialog, public gameService: GameService) { }
+  constructor(public dialog: MatDialog, public gameService: GameService, public langService: LangService) { }
 
 
   /**
@@ -71,32 +72,32 @@ export class HarborComponent implements OnInit {
 
     switch ( this.tipoPuerto ){
       case TipoPuerto.MADERA:
-        puertoString = "Puerto de madera"
+        puertoString = this.langService.get("puerto-madera")
         this.recursosRequeridos = 3
         break;
 
       case TipoPuerto.ARCILLA:
-        puertoString = "Puerto de arcilla"
+        puertoString = this.langService.get("puerto-arcilla")
         this.recursosRequeridos = 3
         break;
 
       case TipoPuerto.LANA:
-        puertoString = "Puerto de lana"
+        puertoString = this.langService.get("puerto-lana")
         this.recursosRequeridos = 3
         break;
 
       case TipoPuerto.MINERAL:
-        puertoString = "Puerto de minerales"
+        puertoString = this.langService.get("puerto-mineral")
         this.recursosRequeridos = 3
         break;
 
       case TipoPuerto.CEREAL:
-        puertoString = "Puerto de cereales"
+        puertoString = this.langService.get("puerto-cereal")
         this.recursosRequeridos = 3
         break;
 
       case TipoPuerto.BASICO:
-        puertoString = "Puerto básico"
+        puertoString = this.langService.get("puerto-basico")
         this.recursosRequeridos = 4
         break;
 
@@ -166,7 +167,7 @@ export class ExternalTradeDialog {
    * @param gameService 
    */
   constructor(public dialogRef: MatDialogRef<ExternalTradeDialog>, @Inject(MAT_DIALOG_DATA) public data: any,
-             fb: FormBuilder ,public gameService: GameService) {
+             fb: FormBuilder ,public gameService: GameService, public langService: LangService) {
     this.recursosRequeridos = data["requeridos"]
     this.tipoPuerto         = data["tipo"]
     this.nombrePuerto       = data["nombre"]

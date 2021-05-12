@@ -2,6 +2,7 @@ import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { MatDialog,MAT_DIALOG_DATA,MatDialogRef } from '@angular/material/dialog';
 import {MatAccordion} from '@angular/material/expansion';
 import { GameService, Jugador, Recurso } from 'src/app/service/game/game.service';
+import { LangService } from 'src/app/service/lang/lang.service';
 import { BoardComponent } from '../board/board.component';
 
 
@@ -20,7 +21,7 @@ export class PlayerInfoComponent implements OnInit {
 
   public MyMessage: string = ""
 
-  constructor(public dialog: MatDialog, public gameService: GameService) { }
+  constructor(public dialog: MatDialog, public gameService: GameService, public langService: LangService) { }
 
   public ngOnInit(): void {
   }
@@ -63,7 +64,7 @@ export class InternalTradeDialog implements OnInit {
   public ammountReceived: number;
 
   constructor(public dialogRef: MatDialogRef<InternalTradeDialog>, public gameService: GameService, 
-    @Inject(MAT_DIALOG_DATA) public data: any) {
+    @Inject(MAT_DIALOG_DATA) public data: any, public langService: LangService) {
     this.formatLabelOffer = this.formatLabelOffer.bind(this);
     this.formatLabelReceive = this.formatLabelReceive.bind(this);
     this.offerPlayer = this.gameService.partida.jugadores[data["player"]]

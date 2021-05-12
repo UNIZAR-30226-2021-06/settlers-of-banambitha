@@ -5,22 +5,22 @@
   <div mat-dialog-content >
 
 
-    <p> Material ofrecido </p>
+    <p> {{langService.get("offered-resource")}} </p>
     <mat-form-field appearance="fill" fxLayout="column" fxLayoutAlign="center stretch">
-      <mat-label>Selecciona un material</mat-label>
+      <mat-label> {{langService.get("select-resource")}} </mat-label>
       <mat-select [(ngModel)]="offerMaterial" name="material" required>
         <mat-option *ngFor="let material of materials" [value]="material.value">
-          {{material.viewValue}}
+          {{langService.get(material.value)}}
         </mat-option>
       </mat-select>
     </mat-form-field>
     
     <div *ngIf="offerMaterial != null">
       <div *ngIf="this.gameService.partida.jugadores[this.gameService.partida.miTurno - 1].recursos[offerMaterial] < 1" style="color: red;">
-        No tienes {{offerMaterial}} para comerciar
+        {{langService.get("you-dont-have")}} {{langService.get(offerMaterial)}} {{langService.get("to-trade")}}
       </div>
       <div *ngIf="this.gameService.partida.jugadores[this.gameService.partida.miTurno - 1].recursos[offerMaterial] > 0">
-        <p> Unidades {{offerMaterial}} para comerciar </p>
+        <p> {{langService.get("units")}} {{langService.get(offerMaterial)}} {{langService.get("to-trade")}} </p>
         <mat-slider fxLayout="column" fxLayoutAlign="center stretch"
         thumbLabel
         required
@@ -31,22 +31,22 @@
       </div>
     </div>
 
-    <p> Material solicitado </p>
+    <p> {{langService.get("requested-resource")}} </p>
     <mat-form-field appearance="fill" fxLayout="column" fxLayoutAlign="center stretch">
-      <mat-label>Selecciona un material</mat-label>
+      <mat-label> {{langService.get("select-resource")}} </mat-label>
       <mat-select [(ngModel)]="receiveMaterial" name="material" required >
         <mat-option *ngFor="let material of materials" [value]="material.value">
-          {{material.viewValue}}
+          {{langService.get(material.value)}}
         </mat-option>
       </mat-select>
     </mat-form-field>
     
     <div *ngIf="this.receiveMaterial != null">
       <div *ngIf="offerPlayer.recursos[receiveMaterial] < 1" style="color: red;">
-        {{offerPlayer.nombre}} no tiene {{receiveMaterial}} para comerciar
+        {{offerPlayer.nombre}} {{langService.get("dont-have")}} {{langService.get(receiveMaterial)}} {{langService.get("to-trade")}}
       </div>
       <div *ngIf="offerPlayer.recursos[receiveMaterial] > 0">
-        <p> Unidades {{receiveMaterial}} solicitadas a {{offerPlayer.nombre}} </p>
+        <p> {{langService.get("units")}} {{langService.get(receiveMaterial)}} {{langService.get("requested-to")}} {{offerPlayer.nombre}} </p>
         <mat-slider fxLayout="column" fxLayoutAlign="center stretch"
         thumbLabel
         required
@@ -61,7 +61,7 @@
       <button class="boton" mat-raised-button mat-dialog-close 
               (click)="onSubmit()"
               [disabled]="offerMaterial == null || receiveMaterial == null || ammountGiven == null || ammountReceived == null" >
-        Solicitar 
+        {{langService.get("request")}}
       </button>
     </div>
 

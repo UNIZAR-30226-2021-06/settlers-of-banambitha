@@ -1,6 +1,13 @@
 <div class="offerText">
-    {{this.gameService.partida.jugadores[this.solicitud.from - 1].nombre}} ofrece {{this.solicitud.res1.cuan}} de {{this.solicitud.res1.type}} por 
-    {{this.solicitud.res2.cuan}} de {{this.solicitud.res2.type}} <br/>
-    <button mat-raised-button (click)="this.aceptar()">aceptar</button> &nbsp;
-    <button mat-raised-button (click)="this.rechazar()">rechazar</button>
+    {{this.gameService.partida.jugadores[this.solicitud.from - 1].nombre}} {{langService.get("offers")}}
+    {{this.solicitud.res1.cuan}} {{langService.get("of")}}
+    {{langService.getResource(this.solicitud.res1.type)}} {{langService.get("for")}} 
+    {{this.solicitud.res2.cuan}} {{langService.get("of")}}
+    {{langService.getResource(this.solicitud.res2.type)}} <br/>
+    <button mat-raised-button (click)="this.aceptar()">
+        {{langService.get("accept")}}
+    </button> &nbsp;
+    <button mat-raised-button (click)="this.rechazar()">
+        {{langService.get("reject")}}
+    </button>
 </div>

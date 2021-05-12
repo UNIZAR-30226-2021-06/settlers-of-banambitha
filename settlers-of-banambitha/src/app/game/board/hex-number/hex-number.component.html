@@ -5,5 +5,7 @@ class='number'
 [matMenuTriggerFor]="moverladron"
 [style.pointer-events]="(gameService.partida.turnoActual == gameService.partida.miTurno) ? 'auto' : 'none'"></div>
 <mat-menu  #moverladron >
-    <button mat-menu-item [disabled]="this.gameService.partida.resultadoTirada != 7 || this.gameService.partida.movioLadron" (click)="move()">Mover ladrón aquí</button>
+    <button mat-menu-item [disabled]="this.gameService.partida.resultadoTirada != 7 || this.gameService.partida.movioLadron" (click)="move()">
+        {{langService.get("mvoe-robber")}}
+    </button>
 </mat-menu>

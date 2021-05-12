@@ -9,38 +9,48 @@ class="info" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="12px">
         {{user.nombre}}
       </mat-panel-title>
       <mat-panel-description>
-        {{user.puntos}} puntos
+        {{user.puntos}} {{langService.get("points")}}
       </mat-panel-description>
     </mat-expansion-panel-header>
     <button mat-raised-button *ngIf="i != this.gameService.partida.miTurno - 1"
     (click)="openInternalTradeDialog(i)" [disabled]="this.gameService.partida.miTurno != this.gameService.partida.turnoActual || this.gameService.partida.yaComercio">
-        Comerciar
+        {{langService.get("trade")}}
     </button>
     <mat-tab-group mat-align-tabs="center">
         <mat-tab label="Materiales">
             <table class="mat-table center" >
                 <tr class="mat-header-row">
-                    <th class="mat-header-cell">Material</th>
-                    <th class="mat-header-cell">Cantidad</th>
+                    <th class="mat-header-cell">{{langService.get("resource")}}</th>
+                    <th class="mat-header-cell">{{langService.get("quantity")}}</th>
                 </tr>
                 <tr class="mat-row">
-                    <td class="mat-cell">Madera</td>
+                    <td class="mat-cell">
+                        {{langService.get("madera")}}
+                    </td>
                     <td class="mat-cell center_td">{{user.recursos.madera}}</td>
                 </tr>
                 <tr class="mat-row">
-                    <td class="mat-cell">Mineral</td>
+                    <td class="mat-cell">
+                        {{langService.get("mineral")}}
+                    </td>
                     <td class="mat-cell center_td">{{user.recursos.mineral}}</td>
                 </tr>
                 <tr class="mat-row">
-                    <td class="mat-cell">Arcilla</td>
+                    <td class="mat-cell">
+                        {{langService.get("arcilla")}}
+                    </td>
                     <td class="mat-cell center_td">{{user.recursos.arcilla}}</td>
                 </tr>
                 <tr class="mat-row">
-                    <td class="mat-cell">Lana</td>
+                    <td class="mat-cell">
+                        {{langService.get("lana")}}
+                    </td>
                     <td class="mat-cell center_td">{{user.recursos.lana}}</td>
                 </tr>
                 <tr class="mat-row">
-                    <td class="mat-cell">Cereal</td>
+                    <td class="mat-cell">
+                        {{langService.get("cereales")}}
+                    </td>
                     <td class="mat-cell center_td">{{user.recursos.cereales}}</td>
                 </tr>
             </table>
@@ -50,8 +60,8 @@ class="info" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="12px">
                 <mat-grid-tile>
                     <table class="mat-table" >
                         <tr class="mat-header-row">
-                            <th class="mat-header-cell">Carta</th>
-                            <th class="mat-header-cell">Cantidad</th>
+                            <th class="mat-header-cell"> {{langService.get("card")}} </th>
+                            <th class="mat-header-cell"> {{langService.get("quantity")}} </th>
                         </tr>
                         <tr class="mat-row">
                             <td class="mat-cell">D1</td>
@@ -78,8 +88,8 @@ class="info" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="12px">
                 <mat-grid-tile>
                     <table class="mat-table" >
                         <tr class="mat-header-row">
-                            <th class="mat-header-cell">Carta</th>
-                            <th class="mat-header-cell">Cantidad</th>
+                            <th class="mat-header-cell"> {{langService.get("card")}} </th>
+                            <th class="mat-header-cell"> {{langService.get("quantity")}} </th>
                         </tr>
                         <tr class="mat-row">
                             <td class="mat-cell">E1</td>
@@ -117,7 +127,9 @@ class="info" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="12px">
         <br/>
         <form class="example-form">
             <mat-form-field class="example-full-width">
-                <mat-label>Escribe tu mensaje</mat-label>
+                <mat-label>
+                    {{langService.get("Write-your-message")}}
+                </mat-label>
                 <input matInput #message maxlength="256"
                 autocomplete="off"
                 (keyup.enter)="sendMessage(message)">

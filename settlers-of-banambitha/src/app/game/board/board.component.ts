@@ -2,6 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialog,MAT_DIALOG_DATA,MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { GameService, TipoAsentamiento, TipoTerreno } from 'src/app/service/game/game.service';
+import { LangService } from 'src/app/service/lang/lang.service';
 
 
 @Component({
@@ -26,7 +27,7 @@ export class BoardComponent implements OnInit {
   ]
   );
 
-  constructor(public dialog: MatDialog, public gameService: GameService) { }
+  constructor(public dialog: MatDialog, public gameService: GameService, public langService: LangService) { }
 
   ngOnInit(): void {
   }

@@ -1,7 +1,9 @@
 <div *ngIf="gameService.cargandoPartida" class="loading">
     <div class="center ">
         <br/> <br/> <br/> <br/> <br/> <br/> <br/>
-        <h1 style="color: white; text-align: center;">Cargando partida...</h1>
+        <h1 style="color: white; text-align: center;">
+            {{langService.get("loading-game")}}
+        </h1>
         <mat-spinner class="centerSpinner " diameter="60 "></mat-spinner>
     </div>
 </div>
@@ -479,18 +481,19 @@
     <!-- RESULTADO TIRADA -->
     <div class="resultadoTirada">
         {{( gameService.partida.totalTurnos > 3 ) ?
-            "Resultado de la tirada de " + gameService.partida.jugadores[gameService.partida.turnoActual - 1].nombre + ": " + gameService.partida.resultadoTirada : 
-            "Fase de posicionamiento inicial" }}
+            langService.get("roll-result") + gameService.partida.jugadores[gameService.partida.turnoActual - 1].nombre + ": " + gameService.partida.resultadoTirada : 
+            langService.get("initial-stage") }}
     </div>
 
     <br/>
     <!-- BOTONES -->
     <button class="botonTurno" mat-raised-button [disabled]="gameService.partida.turnoActual != gameService.partida.miTurno" (click)="gameService.pasarTurno()">
         <span *ngIf="gameService.partida.turnoActual == gameService.partida.miTurno">
-            Pasar turno
+            {{langService.get("pass-turn")}}
         </span>
         <span *ngIf="gameService.partida.turnoActual != gameService.partida.miTurno">
-            Turno de {{gameService.partida.jugadores[gameService.partida.turnoActual - 1].nombre}}
+            {{langService.get("turn-of")}} 
+            {{gameService.partida.jugadores[gameService.partida.turnoActual - 1].nombre}}
         </span>
     </button>
 

@@ -543,8 +543,176 @@
     "mountain": {
         "ESP": "Montaña",
         "ENG": "mountain"
+    }, 
+
+    "pass-turn": {
+        "ESP": "Pasar turno", 
+        "ENG": "Pass turn"
+    }, 
+
+    "turn-of": {
+        "ESP": "Turno de ",
+        "ENG": "Turn of "
+    }, 
+
+    "roll-result": {
+        "ESP": "Resultado de la tirada de ",
+        "ENG": "Roll result of "
+    }, 
+
+    "initial-stage": {
+        "ESP": "Fase de posicionamiento inicial", 
+        "ENG": "Initial stage"
+    }, 
+
+    "loading-game": {
+        "ESP": "Cargando partida...", 
+        "ENG": "Loading game..."
+    },
+
+    "build-village": {
+        "ESP": "Construir poblado", 
+        "ENG": "Build village"
+    }, 
+
+    "update-village": {
+        "ESP": "Mejorar poblado", 
+        "ENG": "Update village"
+    }, 
+
+    "build-road": {
+        "ESP": "Construir camino", 
+        "ENG": "Build road"
+    }, 
+
+    "move-robber": {
+        "ESP": "Mover ladrón aquí", 
+        "ENG": "Move robber here"
+    }, 
+
+    "use-port": {
+        "ESP": "Utilizar puerto", 
+        "ENG": "Use port"
+    }, 
+
+    "puerto-basico": {
+        "ESP": "Puerto básico", 
+        "ENG": "Basic Harbor"
+    }, 
+
+    "puerto-madera": {
+        "ESP": "Puerto de madera", 
+        "ENG": "Wood harbor"
+    }, 
+
+    "puerto-lana": {
+        "ESP": "Puerto de lana", 
+        "ENG": "Woal port"
+    }, 
+
+    "puerto-arcilla": {
+        "ESP": "Puerto de arcilla", 
+        "ENG": "Clay harbor" 
+    }, 
+
+    "puerto-mineral": {
+        "ESP": "Puerto de minerales", 
+        "ENG": "Mineral harbor"
+    }, 
+
+    "puerto-cereal": {
+        "ESP": "Puerto de cereales", 
+        "ENG": "Grain harbor"
+    }, 
+
+    "requested-resource": {
+        "ESP": "Material solicitado", 
+        "ENG": "Requested resource"
+    },
+
+    "select-resource": {
+        "ESP": "Selecciona un material", 
+        "ENG": "Select resource"
+    }, 
+    
+    "points": {
+        "ESP": "puntos", 
+        "ENG": "points"
+    }, 
+
+    "resource": {
+        "ESP": "Material",
+        "ENG": "Resource"
+    }, 
+
+    "quantity": {
+        "ESP": "Cantidad", 
+        "ENG": "Quantity"
+    }, 
+
+    "write-your-message": {
+        "ESP": "Escribe tu mensaje", 
+        "ENG": "Write your message"
+    }, 
+
+    "offered-resource": {
+        "ESP": "Material ofrecido", 
+        "ENG": "Offered resource"
+    }, 
+
+    "you-dont-have": {
+        "ESP": "No tienes ", 
+        "ENG": "You dont have "
+    }, 
+
+    "dont-have": {
+        "ESP": " no tiene", 
+        "ENG": " doesnt have "
+    }, 
+
+    "to-trade": {
+        "ESP": " para comerciar",
+        "ENG": " to trade"
+    }, 
+
+    "units": {
+        "ESP": "Unidades", 
+        "ENG": "Units"
+    }, 
+
+    "requested-to": {
+        "ESP": "solicitadas a", 
+        "ENG": "requested from"
+    }, 
+
+    "request": {
+        "ESP": "Solicitar", 
+        "ENG": "Request"
+    }, 
+
+    "accept": {
+        "ESP": "Aceptar", 
+        "ENG": "Accept"
+    }, 
+
+    "reject": {
+        "ESP": "Rechazar",
+        "ENG": "Reject"
+    }, 
+
+    "offers": {
+        "ESP": "ofrece", 
+        "ENG": "offers"
+    }, 
+
+    "of": {
+        "ESP": "de", 
+        "ENG": "of"
+    }, 
+
+    "for": {
+        "ESP": "por", 
+        "ENG": "for"
     }
-
-
 
 }

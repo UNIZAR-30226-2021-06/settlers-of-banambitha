@@ -6,7 +6,9 @@
     [matMenuTriggerFor]="construirCamino"
     [style.pointer-events]="(gameService.partida.turnoActual == gameService.partida.miTurno) ? 'auto' : 'none'"></div>
     <mat-menu  #construirCamino >
-        <button mat-menu-item [disabled]="(!gameService.partida.CaminoDisponible)" (click)="build()">Construir camino</button>
+        <button mat-menu-item [disabled]="(!gameService.partida.CaminoDisponible)" (click)="build()">
+            {{langService.get("build-road")}}
+        </button>
     </mat-menu>
 </div>
 <div *ngIf="gameService.partida.tablero.aristas.camino[arista] != tipoCamino().NADA">

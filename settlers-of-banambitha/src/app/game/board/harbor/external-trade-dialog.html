@@ -9,7 +9,7 @@
 
     <mat-grid-list cols="6" rowHeight="80px">
       <mat-grid-tile colspan=1>
-        Madera
+        {{langService.get("madera")}}
       </mat-grid-tile>
       <mat-grid-tile colspan=5>
         <mat-slider fxLayout="column" fxLayoutAlign="center stretch"
@@ -22,7 +22,7 @@
       </mat-grid-tile>
 
       <mat-grid-tile colspan=1>
-        Mineral
+        {{langService.get("mineral")}}
       </mat-grid-tile>
       <mat-grid-tile colspan=5>
         <mat-slider fxLayout="column" fxLayoutAlign="center stretch"
@@ -35,7 +35,7 @@
       </mat-grid-tile>
 
       <mat-grid-tile colspan=1>
-        Lana
+        {{langService.get("lana")}}
       </mat-grid-tile>
       <mat-grid-tile colspan=5>
         <mat-slider fxLayout="column" fxLayoutAlign="center stretch"
@@ -48,7 +48,7 @@
       </mat-grid-tile>
 
       <mat-grid-tile colspan=1>
-        Arcilla
+        {{langService.get("arcilla")}}
       </mat-grid-tile>
       <mat-grid-tile colspan=5>
         <mat-slider fxLayout="column" fxLayoutAlign="center stretch"
@@ -61,7 +61,7 @@
       </mat-grid-tile>
 
       <mat-grid-tile colspan=1>
-        Cereal
+        {{langService.get("cereales")}}
       </mat-grid-tile>
       <mat-grid-tile colspan=5>
         <mat-slider fxLayout="column" fxLayoutAlign="center stretch"
@@ -76,9 +76,11 @@
 
 
     <div *ngIf="tipoPuerto == tiposPuerto().BASICO">
-      <p> Material solicitado </p>
+      <p> {{langService.get("requested-resource")}} </p>
       <mat-form-field appearance="fill" fxLayout="column" fxLayoutAlign="center stretch">
-        <mat-label>Selecciona un material</mat-label>
+        <mat-label>
+          {{langService.get("select-resource")}}
+        </mat-label>
         <mat-select [(ngModel)]="materialSolicitado" name="material" required >
           <mat-option *ngFor="let material of materials" [value]="material.value">
             {{material.viewValue}}
@@ -92,7 +94,7 @@
               (click)="onSubmit()"
               [disabled] = "numMadera + numArcilla + numCereal
               + numLana + numMineral != recursosRequeridos || materialSolicitado == null" >
-         Comerciar
+         {{langService.get("trade")}}
       </button>
     </div>
 

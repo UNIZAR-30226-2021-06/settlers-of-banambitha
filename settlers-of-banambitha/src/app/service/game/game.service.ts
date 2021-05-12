@@ -4,6 +4,7 @@ import { Connectable, WsService } from '../ws/ws.service';
 import { UserService } from '../user/user.service';
 import { UserCardInfo } from '../room/room.service';
 import { MatSnackBar, MatSnackBarRef, MAT_SNACK_BAR_DATA } from '@angular/material/snack-bar';
+import { LangService } from '../lang/lang.service';
 
 
 /**
@@ -2045,7 +2046,8 @@ export class TradeOfferSnackBar {
   public solicitud: SolicitudComercio
   public gameService: GameService
 
-  constructor(public dialogRef: MatSnackBarRef<TradeOfferSnackBar>, @Inject(MAT_SNACK_BAR_DATA) public data: any){
+  constructor(public dialogRef: MatSnackBarRef<TradeOfferSnackBar>,
+    @Inject(MAT_SNACK_BAR_DATA) public data: any, public langService: LangService){
     this.solicitud = data["solicitud"]
     this.gameService = data["gameService"]
   }

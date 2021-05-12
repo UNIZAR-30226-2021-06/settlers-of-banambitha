@@ -1,5 +1,6 @@
 import { Component, Input, OnInit, setTestabilityGetter, ViewEncapsulation } from '@angular/core';
 import { GameService, TipoAsentamiento, TipoTerreno } from 'src/app/service/game/game.service';
+import { LangService } from 'src/app/service/lang/lang.service';
 import { BoardComponent } from '../board.component';
 
 @Component({
@@ -68,7 +69,7 @@ export class SettlementComponent implements OnInit {
    * 
    * @param gameService servicio de juego
    */
-  constructor(public gameService: GameService) { }
+  constructor(public gameService: GameService, public langService: LangService) { }
 
 
   /**
