@@ -42,6 +42,7 @@ public class ws {
     public static final String partida_chat_topic = "/partida-chat/";
     public static final String partida_com_topic = "/partida-com/";
     public static final String partida_test_topicUrl = "/test-partida/";
+    public static final String  partidaJugada= "/app/partida/jugada";
 
 
 

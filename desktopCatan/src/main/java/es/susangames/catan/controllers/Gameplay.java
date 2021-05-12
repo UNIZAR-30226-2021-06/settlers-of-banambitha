@@ -172,11 +172,11 @@ public class Gameplay {
         protected static String  PLAYER_4 = "CaminoVerde";
     }
 
-    protected static class MsgJugada {
-        protected static Integer player;
-        protected static String game;
-        protected static String jugada;
-        protected static Object param;
+    protected class MsgJugada {
+        protected  Integer player;
+        protected  String game;
+        protected  String name;
+        protected  Object param;
     }
 
     protected  class CartasJugador {
@@ -228,6 +228,7 @@ public class Gameplay {
         protected static Button[]    settlements;
         protected static Color[]     colorSettlement;
         protected static Boolean[][] posible_asentamiento;
+        protected static String[]    settlementsType;
     } 
 
     protected static class Puerto {
@@ -242,6 +243,7 @@ public class Gameplay {
     protected static class Aristas {
         protected static ToggleButton[] roads;
         protected static Color[]     colorRoads;
+        protected static String[] roadsType;
         protected static Boolean[][] posible_camino;
         protected static Puerto puertos;
     }
@@ -265,6 +267,7 @@ public class Gameplay {
         protected static Boolean CaminoDisponible;
         protected static Boolean CiudadDisponible;
         protected static Boolean movioLadron;
+        protected static Boolean yaComercio;
         protected static Tablero tablero;
     }
 
@@ -394,6 +397,13 @@ public class Gameplay {
             initTablero();
             Partida.clock = -1;
             Partida.turnoActual = 0;
+            Partida.totalTurnos = 0;
+            Partida.resultadoTirada = 0;
+            Partida.PobladoDisponible = false;
+            Partida.CiudadDisponible = false;
+            Partida.CaminoDisponible = false;
+            Partida.movioLadron = false;
+            Partida.yaComercio = false;
             subscribeToTopics();
             return true;
         }    
@@ -481,6 +491,8 @@ public class Gameplay {
                                 new Boolean[numberPlayers][numberSettlements];
         Partida.tablero.vertices.colorSettlement = 
                                 new Color[numberSettlements];
+        Partida.tablero.vertices.settlementsType =
+                                new String[numberSettlements];
 
         // Aristas
         Partida.tablero.aristas.roads = new ToggleButton[numberRoads];
@@ -489,6 +501,8 @@ public class Gameplay {
         Partida.tablero.aristas.puertos = new Puerto();
         Partida.tablero.aristas.colorRoads = 
                                 new Color[numberRoads];
+        Partida.tablero.aristas.roadsType =
+                                new String[numberRoads];
     }
 
     private static void procesarMensaje(String mensaje) {
@@ -544,7 +558,7 @@ public class Gameplay {
                 try {
                     if(!object.get(MessageKeys.TURNO_JUGADOR).equals(null)) {
                         int turnoActual = object.getInt(MessageKeys.TURNO_JUGADOR);
-                        Partida.turnoActual = turnoActual++;
+                        Partida.turnoActual = turnoActual + 1 ;
                     } 
                 } catch(Exception e) {
                     System.err.println("Falta el turno de la jugada");
@@ -553,7 +567,7 @@ public class Gameplay {
                 // Turno acumulado
                 try {
                     if(!object.get(MessageKeys.TURNO_ACUM).equals(null)) {
-                        Partida.turnoActual = object.getInt(MessageKeys.TURNO_ACUM);
+                        Partida.totalTurnos = object.getInt(MessageKeys.TURNO_ACUM);
                     }
                 } catch(Exception e) {
                     System.err.println("Faltan los turnos totales");
@@ -603,6 +617,7 @@ public class Gameplay {
                 }
 
                 //Pre-calculos
+                actualizarPrecalculos();
 
             } else {
                 // TODO: Recibido codigo erroneo
@@ -633,8 +648,9 @@ public class Gameplay {
          
         try {
             if(!partida.get(MessageKeys.PUNTUACIONES).equals(null)) {
+                // TODO: Implementar
                 actualizarPuntuacionesJugadores(
-                    new JSONObject (partida.get(MessageKeys.PUNTUACIONES)));
+                    partida.get(MessageKeys.PUNTUACIONES).toString());
             } 
         } catch (Exception e) {
             System.err.println("Faltan las puntuaciones en el mensaje");
@@ -680,8 +696,16 @@ public class Gameplay {
         
     }
 
-    private static void actualizarPuntuacionesJugadores(JSONObject puntuaciones) {
-        
+    private static void actualizarPuntuacionesJugadores(String _puntuaciones) {
+        try {
+            JSONObject puntuaciones = new JSONObject(_puntuaciones);
+            Partida.jugadores[0].puntos = puntuaciones.getInt(MessageKeys.PLAYER_1);
+            Partida.jugadores[1].puntos = puntuaciones.getInt(MessageKeys.PLAYER_2);
+            Partida.jugadores[2].puntos = puntuaciones.getInt(MessageKeys.PLAYER_3);
+            Partida.jugadores[3].puntos = puntuaciones.getInt(MessageKeys.PLAYER_4);
+        } catch (Exception e) {
+            System.err.println("Error procesando puntuaciones");
+        }
     }
 
     private static void actualizarPrimerosAsentamientos(String asentamientos) {
@@ -733,6 +757,7 @@ public class Gameplay {
     }
 
 
+
     private static void actualizarTablero(JSONObject tablero) {
         // Hexagonos
         try {
@@ -753,6 +778,7 @@ public class Gameplay {
         }
        
         // Aristas
+        // TODO: Actualizar puertos
         try {
             if(!tablero.get(MessageKeys.TAB_INFO_ARISTAS).equals(null)) {
                 actualizarAristas(tablero.get(MessageKeys.TAB_INFO_ARISTAS).toString());
@@ -782,7 +808,7 @@ public class Gameplay {
 
     private static void modificarCarretera(String carretera, int numArista) {
         if(carretera.equals(TipoCamino.PLAYER_1)) {
-            Partida.tablero.aristas.colorRoads[numArista] = coloresPorId[0];         
+            Partida.tablero.aristas.colorRoads[numArista] = coloresPorId[0];    
         } else if(carretera.equals(TipoCamino.PLAYER_2)) {
             Partida.tablero.aristas.colorRoads[numArista] = coloresPorId[1];  
         } else if(carretera.equals(TipoCamino.PLAYER_3)) {
@@ -792,6 +818,7 @@ public class Gameplay {
         } else {
             Partida.tablero.aristas.colorRoads[numArista] = null;  
         }
+        Partida.tablero.aristas.roadsType[numArista] = carretera;     
     }
 
     private static void modificarAsentamiento(String asentamiento, int numVertice) {
@@ -814,6 +841,8 @@ public class Gameplay {
         } else {
             Partida.tablero.vertices.colorSettlement[numVertice] = null;
         }
+        // TODO:
+        //Partida.tablero.vertices.settlementsType[numVertice] = asentamiento; 
 
     }
 
@@ -859,6 +888,141 @@ public class Gameplay {
         updateUserMaterials();
     }
 
+  /****************************************************************
+  *                     ACCIONES POSIBLES
+  *****************************************************************/
+
+    private static MsgJugada construirJugada(String jugada, Object param) {
+        MsgJugada msg = new Gameplay().new MsgJugada();
+        msg.game = Partida.id;
+        msg.player = Partida.miTurno;
+        msg.name = jugada;
+        msg.param = param;
+        return msg;
+    }
+
+    private static Boolean construirPrimerCamino(int arista) {
+        if(esMiTurno() && Partida.tablero.aristas.roadsType[arista].equals(TipoCamino.NADA)) {
+            JSONObject jugada = new JSONObject();
+            JSONObject move = new JSONObject();
+            move.put("name", Jugada.PRIMER_CAMINO);
+            move.put("param", arista);
+            jugada.put("player", Partida.miTurno);
+            jugada.put("game", Partida.id);
+            jugada.put("move",move);
+            ws.session.send(ws.partidaJugada, jugada.toString());
+            return true;
+        }
+        return false;
+    }
+
+    private static Boolean construirPrimerAsentamiento(int vertice) {
+        if(esMiTurno() && Partida.tablero.vertices.settlementsType[vertice].equals(TipoAsentamiento.NADA)) {
+            JSONObject jugada = new JSONObject();
+            JSONObject move = new JSONObject();
+            move.put("name", Jugada.PRIMER_ASENTAMIENTO);
+            move.put("param", vertice);
+            jugada.put("player", Partida.miTurno);
+            jugada.put("game", Partida.id);
+            jugada.put("move",move);
+            ws.session.send(ws.partidaJugada, jugada.toString());
+            return true;
+        }
+        return false;
+    }
+
+  /****************************************************************
+  * FUNCIONES AUXILIARES PARA TRADUCIR EL MENSAJE DEL
+  * TABLERO A LAS ESTRUCTURAS DE DATOS INTERNAS E INICIALIZARLAS
+  *****************************************************************/
+
+    
+    private static void actualizarPrecalculos() {
+        Partida.CaminoDisponible = puedoConstruirCamino();
+        Partida.CiudadDisponible = puedoConstruirCiudad();
+        Partida.PobladoDisponible = puedoConstruirPoblado();
+
+        if(!esMiTurno()) {
+            Partida.movioLadron = false;
+            Partida.yaComercio = false;
+        }
+    }
+
+    private static Boolean esMiTurno() {
+        return Partida.miTurno == Partida.turnoActual;
+    }
+
+    private static Boolean puedoConstruirPoblado() {
+        Integer arcilla = Partida.jugadores[Partida.miTurno - 1].recursos.arcilla;
+        Integer madera = Partida.jugadores[Partida.miTurno - 1].recursos.madera;
+        Integer lana = Partida.jugadores[Partida.miTurno - 1].recursos.lana;
+        Integer cereal = Partida.jugadores[Partida.miTurno - 1].recursos.cereales;
+
+        return (!Partida.jugadores[Partida.miTurno -1].primerosAsentamientos ||
+                arcilla > 0 && cereal > 0 && lana > 0 && madera > 0);
+    }
+
+
+    private static Boolean puedoConstruirCiudad() {
+        Integer mineral = Partida.jugadores[Partida.miTurno - 1].recursos.mineral;
+        Integer cereal = Partida.jugadores[Partida.miTurno - 1].recursos.cereales;
+
+        return mineral > 2 && cereal > 1;
+    }
+
+
+    private static Boolean puedoConstruirCamino() {
+        Integer arcilla = Partida.jugadores[Partida.miTurno - 1].recursos.arcilla;
+        Integer madera = Partida.jugadores[Partida.miTurno - 1].recursos.madera;
+
+        return (!Partida.jugadores[Partida.miTurno -1].primerosCaminos ||
+            arcilla > 0 && madera > 0);
+    }
+
+    private static String miTipoAsentamiento() {
+        switch (Partida.miTurno) {
+            case 1:
+                return TipoAsentamiento.POBLADO_PLAYER_1;
+            case 2:
+                return TipoAsentamiento.POBLADO_PLAYER_2;
+            case 3:
+                return TipoAsentamiento.POBLADO_PLAYER_3;
+            case 4:
+                return TipoAsentamiento.POBLADO_PLAYER_4;
+            default:
+                return TipoAsentamiento.NADA;
+        }
+    }
+
+    private static String miTipoCiudad() {
+        switch (Partida.miTurno) {
+            case 1:
+                return TipoAsentamiento.CIUDAD_PLAYER_1;
+            case 2:
+                return TipoAsentamiento.CIUDAD_PLAYER_2;
+            case 3:
+                return TipoAsentamiento.CIUDAD_PLAYER_3;
+            case 4:
+                return TipoAsentamiento.CIUDAD_PLAYER_4;
+            default:
+                return TipoAsentamiento.NADA;
+        }
+    }
+
+    public static String miTipoCamino(){
+        switch (Partida.miTurno) {
+            case 1:
+                return TipoCamino.PLAYER_1;
+            case 2:
+                return TipoCamino.PLAYER_2;
+            case 3:
+                return TipoCamino.PLAYER_3;
+            case 4:
+                return TipoCamino.PLAYER_4;
+            default:
+                return TipoCamino.NADA;
+        }
+      }
 
 
     @FXML
@@ -1008,10 +1172,13 @@ public class Gameplay {
     private void setColorButonOnClick(ToggleButton button, int pos) {
         button.setOnMouseClicked( event -> {
             if (event.getButton().equals(MouseButton.PRIMARY)) {
-                button.setStyle("-fx-background-color: red");
-            }   else if (event.getButton() == MouseButton.SECONDARY) {
-                button.setStyle("-fx-background-color: yellow;");
-            }     
+                if(Partida.jugadores[Partida.miTurno -1].primerosCaminos){
+                    button.setStyle("-fx-background-color: red;");
+                } else {
+                    System.out.println("entraa");
+                    construirPrimerCamino(pos);
+                }
+            }    
         });
     }
 
@@ -1245,9 +1412,11 @@ public class Gameplay {
     private void onClickSettlement(Button circle,Integer position) {
         circle.setOnMouseClicked( event -> {
             if (event.getButton().equals(MouseButton.PRIMARY)) {
-                circle.setStyle("-fx-background-color: red");
-            }   else if (event.getButton() == MouseButton.SECONDARY) {
-                circle.setStyle("-fx-background-color: yellow; -fx-border-color:blue;-fx-border-width: 3 3 3 3;");
+                if(Partida.jugadores[Partida.miTurno -1].primerosAsentamientos) {
+
+                } else {
+                    //construirPrimerAsentamiento(position);
+                }
             }     
         });
     }
@@ -1315,10 +1484,15 @@ public class Gameplay {
     }
 
     private static void updateplayersName() {
-        _player1Name.setText(Partida.jugadores[0].nombre);
-        _player2Name.setText(Partida.jugadores[1].nombre);
-        _player3Name.setText(Partida.jugadores[2].nombre);
-        _player4Name.setText(Partida.jugadores[3].nombre);
+        _player1Name.setText(Partida.jugadores[0].nombre  +
+            " (" + Partida.jugadores[0].puntos + ")"); 
+        
+        _player2Name.setText(Partida.jugadores[1].nombre  +
+            " (" + Partida.jugadores[1].puntos + ")");
+        _player3Name.setText(Partida.jugadores[2].nombre  +
+            " (" + Partida.jugadores[2].puntos + ")");
+        _player4Name.setText(Partida.jugadores[3].nombre + 
+            " (" + Partida.jugadores[Partida.miTurno-1].puntos + ")");
     }
 
     private void inTradePopUp() {
