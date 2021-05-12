@@ -1,32 +1,35 @@
 <mat-card class="description">
-    <p class="title" fxLayout fxLayoutAlign="center center">Construir</p>
+    <p class="title" fxLayout fxLayoutAlign="center center">
+        {{langService.get("build")}}
+    </p>
     <p class="info">
-        Después de tirar los dados para determinar la producción de materias primas, el jugador con el turno puede construir. Para ello debe entregar diferentes combinaciones de cartas de materia prima (ver tabla de costes de construcción), que se devuelven a
-        las pilas de la reserva. El jugador puede construir todo lo que quiera y comprar cartas de desarrollo mientras tenga cartas de materia prima para “pagar”, mientras tenga figuras disponibles para construir y mientras queden cartas de desarrollo
-        en la reserva. Ver también poblado, ciudad, carretera y cartas de desarrollo. Cada jugador tiene 15 carreteras, 5 poblados y 4 ciudades. Si un jugador construye una ciudad, recupera el poblado y puede volverlo a construir. Por el contrario, las
-        carreteras y las ciudades, una vez construidas, permanecen en su lugar de construcción hasta el final de la partida.
+        {{langService.get("rules-actions-build")}}
     </p>
 </mat-card>
 
 <mat-card class="description">
-    <p class="title" fxLayout fxLayoutAlign="center center">Comerciar</p>
+    <p class="title" fxLayout fxLayoutAlign="center center">
+        {{langService.get("trade")}}
+    </p>
     <p class="info">
-        Después de que el jugador con el turno haya tirado los dados para determinar los terrenos que producen materias primas, puede comerciar. Puede intercambiar cartas de materia prima con los otros jugadores (comercio interior), pero también puede comerciar
-        sin necesidad de hacerlo con ningún otro jugador (comercio marítimo) intercambiando sus cartas de materia prima por cartas de las pilas de reserva. Durante su turno, un jugador puede comerciar tanto tiempo y tantas veces como le permitan las cartas
-        de materia prima que tenga en la mano.
+        {{langService.get("rules-actions-trade-1")}}
         <br><br>
-        <li class="title"> Comercio interior:</li>
-        El jugador con el turno puede (después de haber tirado los dados para determinar la produccián de materias primas) intercambiar cartas de materia prima con los otros jugadores. Las condiciones del intercambio – cuántas cartas se cambian por cuáles – dependen
-        del talento negociador de los jugadores. No está permitido regalar cartas (intercambiar 0 cartas por 1 o más cartas). Importante: Sólo se puede comerciar con el jugador que tiene el turno. El resto de jugadores no pueden comerciar entre si
+        <li class="title">
+            {{langService.get("domestic-trade")}}
+        </li>
+        {{langService.get("rules-actions-trade-2")}}
         <br><br>
-        <li class="title"> Comercio maritimo:</li>
-        Durante el turno de un jugador, en la fase de comercio, puede intercambiar cartas de materia prima sin necesidad de hacerlo con ningún otro jugador: el comercio marítimo le permite esto.
-        <br><br> Sin puerto: Se aplica la tasa de cambio básica (y menos favorable) 4:1. El jugador devuelve 4 cartas iguales de materia prima a la reserva, y toma a cambio la carta que quiera (una) de la pila correspondiente. El jugador no necesita tener
-        ningún puerto (un poblado construido en un puerto) para hacer el intercambio 4:1.
-        <br><br> Con puerto: Si el jugador ha construido un poblado o una ciudad en un puerto, entonces tiene mejores posibilidades de intercambio. Hay dos tipos diferentes de puerto:
-        <br><br> Puerto básico (3:1): Durante el turno de un jugador, en su fase de comercio, puede devolver 3 cartas iguales de materia prima a la reserva, y tomar a cambio 1 carta de materia prima diferente.
-        <br><br> Puerto especial (2:1): Existe un puerto especial por cada tipo de materia prima. La tasa de cambio 2:1, la más favorable, sólo se aplica a la materia prima indicada en el puerto especial en el marco de mar. Se ha de tener en cuenta que
-        en un puerto especial no se pueden intercambiar otros tipos de materia prima con la tasa 3:1. Importante: Sólo el jugador con el turno puede hacer el comercio marítimo
-
+        <li class="title">
+            {{langService.get("maritime-trade")}}
+        </li>
+        {{langService.get("rules-actions-trade-3")}}
+        <br><br>
+        {{langService.get("rules-actions-trade-4")}}
+        <br><br>
+        {{langService.get("rules-actions-trade-5")}}
+        <br><br>
+        {{langService.get("rules-actions-trade-6")}}
+        <br><br>
+        {{langService.get("rules-actions-trade-7")}}
     </p>
 </mat-card>

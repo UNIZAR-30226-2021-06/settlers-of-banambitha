@@ -1,65 +1,72 @@
 <mat-card class="description">
-    <p class="title" fxLayout fxLayoutAlign="center center">Cartas de desarrollo</p>
+    <p class="title" fxLayout fxLayoutAlign="center center">
+        {{langService.get("rules-development-cards")}}
+    </p>
     <p class="info">
-        Hay tres tipos diferentes de cartas de desarrollo: caballero, progreso y puntos de victoria. Cuando un jugador compra una carta de desarrollo, toma la carta superior de la pila y la añade a su mano. Las cartas de desarrollo se mantienen en secreto hasta
-        su uso. Cuando es su turno, un jugador siempre puede jugar sólo 1 carta: 1 carta de caballero o bien 1 carta de progreso. Se puede jugar la carta en cualquier momento del turno, incluso antes de tirar los dados. Sin embargo, no se puede jugar
-        una carta de desarrollo en el mismo turno en que se ha comprado. Excepción: si un jugador compra una carta y resulta ser una carta de puntos de victoria con la que consigue llegar a 10 puntos de victoria, en este caso puede poner boca arriba esta
-        carta enseguida y ganar la partida. Las cartas de puntos de victoria (ya sea una o varias) sólo se ponen boca arriba al final de la partida, cuando gracias a ellas un jugador consigue 10 puntos de victoria, ganando la partida y provocando su fin.
-        Atención: Cuando se le roba una carta a un jugador sólo puede ser una carta de materia prima de su mano. El jugador debería poner aparte sus cartas de desarrollo antes de presentar su mano de cartas para que le roben, o guardarlas de otra forma
-        en un lugar diferente
+        {{langService.get("rules-development-cards-1")}}
     </p>
 </mat-card>
 
 <mat-card class="description">
-    <p class="title" fxLayout fxLayoutAlign="center center">Caballero</p>
+    <p class="title" fxLayout fxLayoutAlign="center center">
+        {{langService.get("knight-card")}}
+    </p>
     <p class="info">
-        Si un jugador juega en su turno la carta de desarrollo “caballero” (la puede jugar también antes de tirar los dados), debe mover inmediatamente el ladrón. El jugador que ha jugado la carta de caballero tiene que tomar el ladrón y moverlo a otro terreno
-        a su elección.
-        <br> <br> Después, puede robar 1 carta de materia prima (y quedársela) al jugador que tenga algún poblado o ciudad adyacente a ese terreno. Si hay dos o más jugadores que hayan construido en ese terreno, entonces puede elegir a quién le quiere
-        robar.
-        <br> <br> La carta se roba de la mano del jugador, sin mirar. ◦ El primer jugador que consiga tener 3 cartas de caballero a la vista delante de el, recibe la carta especial “Gran ejército de caballería”, que vale por 2 puntos de victoria.
-        <br><br> En cuanto otro jugador tenga a la vista una carta de caballero más que el propietario actual de la carta especial “Gran ejército de caballería”, esta pasa a sus manos junto con los 2 puntos de victoria. Importante: Cuando se juega una
-        carta de caballero no se debe comprobar si algún jugador tiene más de 7 cartas en su mano. Sólo hay que devolver cartas cuando sale un “7” en los dados y se tienen más de 7 cartas en la mano.
+        {{langService.get("rules-knight-card-1")}}
+        <br> <br>
+        {{langService.get("rules-knight-card-2")}}
+        <br> <br>
+        {{langService.get("rules-knight-card-3")}}
+        <br><br>
+        {{langService.get("rules-knight-card-4")}}
     </p>
 </mat-card>
 
 
 <mat-card class="description">
-    <p class="title" fxLayout fxLayoutAlign="center center">Cartas de progreso</p>
+    <p class="title" fxLayout fxLayoutAlign="center center">
+        {{langService.get("progress-cards")}}
+    </p>
     <p class="info">
-        Las cartas de progreso son uno de los tipos de las cartas de desarrollo. Durante su turno, un jugador sólo puede jugar una carta de desarrollo. De cada carta de progreso hay dos copias:
-        <br> <br> Construcción de carreteras: el jugador que juega esta carta puede, sin pagar ninguna materia prima, construir 2 nuevas carreteras en el tablero. Para ello se tienen en cuenta las reglas habituales de construcción de carreteras.
-        <br> <br> Descubrimiento: el jugador que juega esta carta puede tomar dos cartas de materia prima de las pilas de la reserva. Si el jugador aún no ha resuelto su fase de construcción, puede usar estas cartas de materia prima para construir.
-        <br><br> Monopolio: el jugador que juega esta carta elige una materia prima. Todos los demás jugadores le tienen que entregar las cartas de materia prima de ese tipo que tengan. Si algún jugador no tiene cartas de esa materia prima, no tiene que
-        entregar nada.
+        {{langService.get("rules-progress-cards-1")}}
+        <br><br>
+        {{langService.get("rules-progress-cards-2")}}
+        <br><br>
+        {{langService.get("rules-progress-cards-3")}}
+        <br><br>
+        {{langService.get("rules-progress-cards-4")}}
     </p>
 </mat-card>
 
 <mat-card class="description">
-    <p class="title" fxLayout fxLayoutAlign="center center">Cartas de punto de victoria</p>
+    <p class="title" fxLayout fxLayoutAlign="center center">
+        {{langService.get("victory-point-card")}}
+    </p>
     <p class="info">
-        Las cartas de puntos de victoria son un tipo de cartas de desarrollo. Esto significa que se pueden “comprar”. Estas cartas de desarrollo representan importantes logros culturales, que están simbolizados por diferentes edificios. Cada carta de puntos de
-        victoria vale 1 punto de victoria. Si un jugador compra una carta de puntos de victoria, la guarda y la mantiene oculta. Si, durante su turno, un jugador consigue tener 10 puntos de victoria, contando los obtenidos por las cartas de puntos de
-        victoria, pone la carta (o cartas) boca arriba y demuestra así que ha ganado la partida. Consejo: Las cartas de puntos de victoria se deberían guardar de tal manera que los otros jugadores no puedan llegar a ninguna conclusión. Si un jugador tiene
-        siempre delante de el una o dos cartas boca abajo, y nunca las usa, alimenta la sospecha de que podrían ser cartas de puntos de victoria.
+        {{langService.get("rules-victory-point-cards-1")}}
     </p>
 </mat-card>
 
 <mat-card class="description">
-    <p class="title" fxLayout fxLayoutAlign="center center">Carta Gran ruta comercial</p>
+    <p class="title" fxLayout fxLayoutAlign="center center">
+        {{langService.get("great-trade-route-card")}}
+    </p>
     <p class="info">
-        Una ruta comercial puede ser interrumpida, y por tanto no ser válida para ser considerada como Gran ruta comercial, si otro jugador construye un poblado en una encrucijada libre por la que transcurra la ruta comercial. Importante: Los poblados o ciudades
-        propios no interrumpen una ruta comercial propia. Si después de la interrupción de una ruta comercial, varios jugadores tienen rutas comerciales formadas por la misma cantidad de carreteras, entonces hay que comprobar lo siguiente:
-        <br><br> Si el jugador que tiene la carta especial “Gran ruta comercial” también participa en el empate, la mantiene.
-        <br><br> Si el jugador que tiene la carta especial “Gran ruta comercial” no participa en el empate, la carta se retira momentáneamente de la partida. Entrará en juego de nuevo cuando un único jugador tenga en solitario la “Gran ruta comercial“.
-        <br><br> La carta especial también se retira de la partida si, después de una interrupción, ningún jugador ya no tiene 5 o más carreteras consecutivas, es decir, que ya no hay ninguna “Gran ruta comercial“.
+        {{langService.get("rules-great-trade-route-1")}}
+        <br><br>
+        {{langService.get("rules-great-trade-route-2")}}
+        <br><br>
+        {{langService.get("rules-great-trade-route-3")}}
+        <br><br>
+        {{langService.get("rules-great-trade-route-4")}}
     </p>
 </mat-card>
 
 <mat-card class="description">
-    <p class="title" fxLayout fxLayoutAlign="center center">Carta Ejercito de caballeria</p>
+    <p class="title" fxLayout fxLayoutAlign="center center">
+        {{langService.get("great-cavalry-army-card")}}
+    </p>
     <p class="info">
-        El primer jugador que consiga tener 3 cartas de caballero a la vista delante de el, recibe la carta especial “Gran ejército de caballería”, que vale por 2 puntos de victoria. En cuanto otro jugador tenga a la vista una carta de caballero más que el propietario
-        actual de la carta especial “Gran ejército de caballería”, esta pasa a sus manos junto con los 2 puntos de victoria.
+        {{langService.get("rules-great-cavalry-army-1")}}
     </p>
 </mat-card>

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { LangService } from 'src/app/service/lang/lang.service';
 
 @Component({
   selector: 'rules-development-card',
@@ -7,7 +8,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DevelopmentCardComponent implements OnInit {
 
-  constructor() { }
+  constructor(public langService: LangService) { }
 
   ngOnInit(): void {
   }
