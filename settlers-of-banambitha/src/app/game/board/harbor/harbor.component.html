@@ -1,4 +1,16 @@
 <div class='harbor'>
     <div *ngIf="this.gameService.TipoPuerto(arista) != null" class='harbor-piece'
-    [ngClass]="posicion"></div>
+    [ngClass]="posicion"
+    [matMenuTriggerFor]="usarPuerto"
+    [style.pointer-events]="(gameService.partida.turnoActual == gameService.partida.miTurno) ? 'auto' : 'none'"></div>
+    <mat-menu  #usarPuerto >
+        <div style="text-align: center; color: white;">
+            {{tipoPuertoString}} <br/> 
+            {{ this.gameService.partida.tablero.aristas.camino[this.arista] == this.gameService.miTipoCamino() ? recursosRequeridos - 1 : recursosRequeridos }}:1
+        </div>
+        <mat-divider></mat-divider>
+        <button mat-menu-item (click)="openExternalTradeDialog()">
+            {{langService.get("use-port")}}
+        </button>
+    </mat-menu>
 </div>

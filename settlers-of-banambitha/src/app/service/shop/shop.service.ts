@@ -1,5 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { environment } from 'src/environments/environment';
 import { UserService } from '../user/user.service';
 import { environment } from '../../../environments/environment.prod';
 
@@ -8,9 +9,9 @@ import { environment } from '../../../environments/environment.prod';
 })
 export class ShopService {
 
-  private static readonly baseUrl = environment.baseUrl + "/producto"
-  private static readonly adquiridos = ShopService.baseUrl + "/adquiridos"
-  private static readonly adquirir = ShopService.baseUrl + "/adquirir"
+  private static readonly baseUrl     = environment.baseUrl + "/producto"
+  private static readonly adquiridos  = ShopService.baseUrl + "/adquiridos"
+  private static readonly adquirir    = ShopService.baseUrl + "/adquirir"
   private static readonly disponibles = ShopService.baseUrl + "/disponibles"
   private static readonly httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' }),

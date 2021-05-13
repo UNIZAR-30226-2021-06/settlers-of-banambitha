@@ -4,7 +4,6 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { UserService } from '../user/user.service';
 import { environment } from '../../../environments/environment';
 
-
 export interface Connectable{
   onConnect(): void; 
 }
@@ -51,6 +50,7 @@ export class WsService implements OnDestroy{
   public static readonly partida_chat_topic:   string = "/partida-chat/"
   public static readonly partida_com_topic:    string = "/partida-com/"
   public static readonly partida_test_topic:   string = "/test-partida/"
+  public static readonly partida_reload_topic: string = "/partida-rld/"
 
   //Cliente de stomp
   private stompClient: any = null;
@@ -61,7 +61,7 @@ export class WsService implements OnDestroy{
    * Constructor: realiza la conexión con el servidor
    */
   constructor(private userService: UserService){
-    this._connect()
+    this.observers = []
   }
 
   /**
@@ -100,23 +100,25 @@ export class WsService implements OnDestroy{
    * con el protocolo stomp sobre sockjs.
    */
   public _connect(): void {
-    console.log("Initialize WebSocket Connection");
-    let ws = new SockJS(WsService.webSocketEndPoint);
-    this.stompClient = Stomp.over(ws);
-    const that = this;
+    if ( !this.connected ){
+      console.log("Initialize WebSocket Connection");
+      let ws = new SockJS(WsService.webSocketEndPoint);
+      this.stompClient = Stomp.over(ws);
+      const that = this;
 
-    this.stompClient.ws.onclose = function(event) {
-      that._disconnect()
+      this.stompClient.ws.onclose = function(event) {
+        that._disconnect()
+      }
+
+      that.stompClient.connect(this.getWsHeaders(), function (frame) {
+        that.observers.forEach( observer => {
+          observer.onConnect()
+        })
+        that.connected = true
+        that.observers = []
+      }, this.errorCallBack);
     }
-
-    that.stompClient.connect(this.getWsHeaders(), function (frame) {
-      that.observers.forEach( observer => {
-        observer.onConnect()
-      })
-      that.connected = true
-      that.observers = null
-    }, this.errorCallBack);
-  };
+  }
 
 
   /**

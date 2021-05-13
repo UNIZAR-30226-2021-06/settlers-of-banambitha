@@ -1,23 +1,14 @@
-<!-- <div class='house target tl'></div>
-                <div class='house target t'></div>
-                <div class='house target '></div>
-                <div class='road tl'></div>
-                <div class='road target l' [ngStyle]="{'background-color': 'black'}"></div>
-                <div class='road target tr'></div> -->
-<!-- <div class='house target tl'></div>
-                <div class='house target t'></div>
-                <div class='house target '></div>
-                <div class='road target tl'></div>
-                <div class='road target l'></div>
-                <div class='road target tr'></div>
-                <div class='number three'></div>
-                <div class='house target tl' [matMenuTriggerFor]="menu"></div>
-                <mat-menu #menu="matMenu">
-                    <button mat-menu-item>Item 1</button>
-                    <button mat-menu-item>Item 2</button>
-                </mat-menu>
-            -->
-<div class="container">
+<div *ngIf="gameService.cargandoPartida" class="loading">
+    <div class="center ">
+        <br/> <br/> <br/> <br/> <br/> <br/> <br/>
+        <h1 style="color: white; text-align: center;">
+            {{langService.get("loading-game")}}
+        </h1>
+        <mat-spinner class="centerSpinner " diameter="60 "></mat-spinner>
+    </div>
+</div>
+
+<div class="container" *ngIf="!gameService.cargandoPartida">
 
     <!-- TABLERO -->
 
@@ -486,4 +477,24 @@
 
         </ol>
     </div>
+
+    <!-- RESULTADO TIRADA -->
+    <div class="resultadoTirada">
+        {{( gameService.partida.totalTurnos > 3 ) ?
+            langService.get("roll-result") + gameService.partida.jugadores[gameService.partida.turnoActual - 1].nombre + ": " + gameService.partida.resultadoTirada : 
+            langService.get("initial-stage") }}
+    </div>
+
+    <br/>
+    <!-- BOTONES -->
+    <button class="botonTurno" mat-raised-button [disabled]="gameService.partida.turnoActual != gameService.partida.miTurno" (click)="gameService.pasarTurno()">
+        <span *ngIf="gameService.partida.turnoActual == gameService.partida.miTurno">
+            {{langService.get("pass-turn")}}
+        </span>
+        <span *ngIf="gameService.partida.turnoActual != gameService.partida.miTurno">
+            {{langService.get("turn-of")}} 
+            {{gameService.partida.jugadores[gameService.partida.turnoActual - 1].nombre}}
+        </span>
+    </button>
+
 </div>

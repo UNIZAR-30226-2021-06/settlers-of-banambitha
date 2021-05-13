@@ -575,3 +575,41 @@ ol.odd {
 .hex .house.blue {
     background-color: #0000ff;
 }
+
+/* Estilo de botones*/
+.botonTurno{
+    width: 150px;
+    min-width: unset!important;
+    margin-right: 1%;
+    margin: auto;
+    display: block;
+    background-color: #965d62;
+}
+
+.resultadoTirada{
+    margin-right: 1%;
+    margin: auto;
+    display: block;
+    text-align: center;
+    color: white;
+    font-size: 20px;
+}
+
+:host ::ng-deep .mat-progress-spinner circle, .mat-spinner circle{
+    stroke:#965d62;
+}
+
+.loading {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+
+
+.centerSpinner{
+    margin: 0 auto;
+    width: fit-content;
+    display: block;
+}

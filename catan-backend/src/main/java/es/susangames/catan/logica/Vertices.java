@@ -37,10 +37,9 @@ public class Vertices {
 	 * 						(posibles valores Nada, Poblado, Ciudad).
 	 * @param id			Identificador del tipo de dato Vertice.
 	 * */
-	Vertices (Coordenadas c, TipoAsentamiento asentamiento, int id) {
+	Vertices (Coordenadas c, TipoAsentamiento asentamiento) {
 		this.coord = c;
 		this.asentamiento = asentamiento;
-		this.id = id;
 		this.puedeConstruirJugador = new Boolean[] {false, false, false, false};
 	}
 	
@@ -52,10 +51,9 @@ public class Vertices {
 	 * 						(posibles valores Nada, Poblado, Ciudad).
 	 * @param id			Identificador del tipo de dato Vertice.
 	 * */
-	Vertices (Coordenadas c, int id) {
+	Vertices (Coordenadas c) {
 		this.coord = c;
 		this.asentamiento = TipoAsentamiento.Nada;
-		this.id = id;
 		this.puedeConstruirJugador = new Boolean[] {false, false, false, false};
 	}
 	
@@ -65,6 +63,10 @@ public class Vertices {
 	 * */
 	public Integer getIdentificador () {
 		return this.id;
+	}
+
+	public void setIdentificador (int id) {
+		this.id = id;
 	}
 	
 	/*

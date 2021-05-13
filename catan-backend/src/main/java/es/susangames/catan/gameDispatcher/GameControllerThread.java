@@ -36,6 +36,7 @@ public class GameControllerThread implements Runnable {
 	 * 			-Broadcast point:	/partida-act/<partidaId>
 	 * 			-Format:
 	 * 			{
+	 * 				"playerNames": [<nombreJ1>, <nombreJ2>, <nombreJ3>, <nombreJ4>]
 	 * 				"Message": "..."
 	 *				"exit_status" : 0 (Salida correcta), 1, 2, .. (Salida erronea)
 	 * 				"Tab_inf": {
@@ -74,7 +75,7 @@ public class GameControllerThread implements Runnable {
 	 * 					}
 	 * 				},
 	 * 
-	 * 				"Resultado_Tirada": 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12,
+	 * 				"Resultado_Tirada": 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12,
 	 * 
 	 * 				"Recursos": {
 	 * 					"Player_1": [num_madera, num_mineral, num_arcilla, num_lana, num_cereales], // integer array
@@ -97,8 +98,23 @@ public class GameControllerThread implements Runnable {
 	 * 					"Player_4": N,
 	 * 				},	
 	 * 
-	 * 				"Turno": 1 | 2 | 3 | 4
+	 * 				primerosAsentamiento: {
+	 *					"Player_1" : true | false (true si ya ha construido sus 2 primeros asentamientos)
+	 *					"Player_2" : true | false (true si ya ha construido sus 2 primeros asentamientos)
+	 *					"Player_3" : true | false (true si ya ha construido sus 2 primeros asentamientos)
+	 *					"Player_4" : true | false (true si ya ha construido sus 2 primeros asentamientos)
+	 * 				},
+	 * 
+	 * 				primerosCamino: {
+	 *					"Player_1" : true | false (true si ya ha construido sus 2 primeros caminos)
+	 *					"Player_2" : true | false (true si ya ha construido sus 2 primeros caminos)
+	 *					"Player_3" : true | false (true si ya ha construido sus 2 primeros caminos)
+	 *					"Player_4" : true | false (true si ya ha construido sus 2 primeros caminos)
+	 * 				},
+	 * 
+	 * 				"Turno": N
 	 *				"Ganador": N | 1 | 2 | 3 | 4
+	 * 				"Turno_Jugador": 0 | 1 | 2 | 3
 	 *				"Clock": N -> número de jugadas ejecutadas (útil para descartar mensajes antiguos)
 	 * 			}
 	****************************************************** */
@@ -110,6 +126,11 @@ public class GameControllerThread implements Runnable {
 
 		//Inicializar tablero
 		tableroPartida = new Tablero(); 
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e1) {
+			e1.printStackTrace();
+		}
 		//Enviar primer mensaje con el tablero vacío a todos los jugadores
 		respuesta = tableroPartida.returnMessage(); 
 		template.convertAndSend(WebSocketConfig.TOPIC_PARTIDA_ACT + "/" + partidaId, respuesta.toString());
@@ -132,12 +153,13 @@ public class GameControllerThread implements Runnable {
 				listaJugadas.remove(0);
 			}
 			
-			System.out.print(jugada.toString());
+			System.out.println(jugada.toString());
 			
 			if(jugada.has("reload")) {
 				
 				respuesta = tableroPartida.returnMessage(); 
-				template.convertAndSend(WebSocketConfig.TOPIC_PARTIDA_ACT + "/" + partidaId, respuesta.toString());
+				respuesta.put("playerNames", this.jugadores);
+				template.convertAndSend(WebSocketConfig.TOPIC_PARTIDA_RELOAD + "/" + jugada.getString("player"), respuesta.toString());
 				
 			} else if(jugada.has("left")) {
 			
@@ -146,6 +168,7 @@ public class GameControllerThread implements Runnable {
 			} else {
 				
 				respuesta = tableroPartida.JSONmessage(jugada); 
+				respuesta.put("playerNames", this.jugadores);
 				template.convertAndSend(WebSocketConfig.TOPIC_PARTIDA_ACT + "/" + partidaId, respuesta.toString());
 				finalizada = tableroPartida.hayGanador(); 
 				

@@ -1,12 +1,15 @@
 <!--ASENTAMIENTO-->
 <div *ngIf="gameService.partida.tablero.vertices.asentamiento[vertice] == tipoAsentamiento().NADA">
-    <div *ngIf="gameService.partida.PrimerTurno || gameService.partida.tablero.vertices.posible_asentamiento[gameService.partida.miTurno - 1][vertice]"
+    <div *ngIf="!this.gameService.partida.jugadores[this.gameService.partida.miTurno - 1].primerosAsentamientos
+                || gameService.partida.tablero.vertices.posible_asentamiento[gameService.partida.miTurno - 1][vertice]"
     class='house target'
     [ngClass]='posicion'
     [matMenuTriggerFor]="construirPoblado"
     [style.pointer-events]="(gameService.partida.turnoActual == gameService.partida.miTurno) ? 'auto' : 'none'"></div>
     <mat-menu  #construirPoblado >
-        <button mat-menu-item [disabled]="(!gameService.partida.PobladoDisponible)" (click)="build()">Construir poblado</button>
+        <button mat-menu-item [disabled]="(!gameService.partida.PobladoDisponible)" (click)="build()">
+            {{langService.get("build-village")}}
+        </button>
     </mat-menu>
 </div>
 <div *ngIf="gameService.partida.tablero.vertices.asentamiento[vertice] != tipoAsentamiento().NADA">
@@ -17,7 +20,9 @@
     (settlementTypeMapping.get(gameService.partida.tablero.vertices.asentamiento[vertice]) == CSSPoblado) &&
     (gameService.partida.turnoActual == gameService.partida.miTurno)) ? 'auto' : 'none'"></div>
     <mat-menu #mejorarPoblado>
-        <button mat-menu-item [disabled]="(!gameService.partida.CiudadDisponible)" (click)="improve()">Mejorar poblado</button>
+        <button mat-menu-item [disabled]="(!gameService.partida.CiudadDisponible)" (click)="improve()">
+            {{langService.get("update-village")}}
+        </button>
     </mat-menu>
 </div>
 <!--ASENTAMIENTO-->

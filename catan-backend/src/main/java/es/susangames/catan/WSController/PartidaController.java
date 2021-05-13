@@ -2,6 +2,7 @@ package es.susangames.catan.WSController;
 
 import java.sql.Timestamp;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -120,7 +121,7 @@ public class PartidaController {
 		JSONObject message = new JSONObject(mensaje);
 		
 		int destinatario = message.getInt("to");
-		int partida = message.getInt("game");
+		String partida = message.getString("game");
 		
 		message.remove("to");
 		message.remove("game");
@@ -177,6 +178,8 @@ public class PartidaController {
 		int destinatario  	= message.getInt("to");
 		
 		String partida = message.getString("game");
+		JSONObject res1 = message.getJSONObject("res1");
+		JSONObject res2 = message.getJSONObject("res2");
 		
 		JSONObject answer = new JSONObject();
 		answer.put("type", ACCEPT);
@@ -185,7 +188,24 @@ public class PartidaController {
 		
 		template.convertAndSend(WebSocketConfig.TOPIC_PARTIDA_COM + "/" + partida + "/" + destinatario, answer.toString());
 
-		MoveCarrierHeap.newJugada(partida, message);
+		JSONObject jugadaIntercambio = new JSONObject(); 
+		jugadaIntercambio.put("player", destinatario); 
+		jugadaIntercambio.put("game", partida); 
+
+		JSONObject move = new JSONObject();
+		move.put("name","comerciar"); 
+
+		JSONArray param = new JSONArray();
+		param.put(remitente);
+		param.put(res1.getString("type"));
+		param.put(res1.getInt("cuan"));
+		param.put(res2.getString("type"));
+		param.put(res2.getInt("cuan"));
+
+		move.put("param", param);
+		jugadaIntercambio.put("move", move); 
+
+		moveCarrierHeap.newJugada(partida, jugadaIntercambio);
 	}
 	
 	
@@ -218,7 +238,7 @@ public class PartidaController {
 		
 		int remitente = message.getInt("from");
 		int destinatario = message.getInt("to");
-		int partida = message.getInt("game");
+		String partida = message.getString("game");
 		
 		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 		int Hours = timestamp.getHours();

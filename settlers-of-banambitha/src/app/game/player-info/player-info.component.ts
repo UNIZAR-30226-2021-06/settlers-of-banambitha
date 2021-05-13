@@ -1,7 +1,8 @@
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { MatDialog,MAT_DIALOG_DATA,MatDialogRef } from '@angular/material/dialog';
 import {MatAccordion} from '@angular/material/expansion';
-import { GameService, Jugador } from 'src/app/service/game/game.service';
+import { GameService, Jugador, Recurso } from 'src/app/service/game/game.service';
+import { LangService } from 'src/app/service/lang/lang.service';
 import { BoardComponent } from '../board/board.component';
 
 
@@ -18,18 +19,28 @@ export class PlayerInfoComponent implements OnInit {
                                                  BoardComponent.player3Color,
                                                  BoardComponent.player4Color]
 
-  constructor(public dialog: MatDialog, public gameService: GameService) { }
+  public MyMessage: string = ""
 
-  ngOnInit(): void {
+  constructor(public dialog: MatDialog, public gameService: GameService, public langService: LangService) { }
+
+  public ngOnInit(): void {
   }
 
-  openInternalTradeDialog(playerId: number) {
+  public openInternalTradeDialog(playerId: number): void {
     this.dialog.open(InternalTradeDialog, { data: { player: playerId}})
   }
 
-  openExternalTradeDialog() {
-    this.dialog.open(ExternalTradeDialog);
+  public sendMessage(message: any): void{
+    this.gameService.enviarMensaje(message.value)
+    message.value = ""
+    this.scrollDown()
   }
+
+  public scrollDown(): void {
+    let objDiv = document.getElementById("chatbox")
+    objDiv.scrollTop = objDiv.scrollHeight + 1
+  }
+
 }
 
 
@@ -53,7 +64,7 @@ export class InternalTradeDialog implements OnInit {
   public ammountReceived: number;
 
   constructor(public dialogRef: MatDialogRef<InternalTradeDialog>, public gameService: GameService, 
-    @Inject(MAT_DIALOG_DATA) public data: any) {
+    @Inject(MAT_DIALOG_DATA) public data: any, public langService: LangService) {
     this.formatLabelOffer = this.formatLabelOffer.bind(this);
     this.formatLabelReceive = this.formatLabelReceive.bind(this);
     this.offerPlayer = this.gameService.partida.jugadores[data["player"]]
@@ -71,6 +82,15 @@ export class InternalTradeDialog implements OnInit {
   ];
 
 
+  private static readonly materialRecurso: Map<string, Recurso> = new Map<string, Recurso>([
+    ['madera', Recurso.MADERA],
+    ['lana', Recurso.LANA], 
+    ['cereales', Recurso.CEREAL],
+    ['mineral', Recurso.MINERAL],
+    ['arcilla', Recurso.ARCILLA]
+  ])
+
+
   formatLabelOffer(value: number) {
     this.ammountGiven = value;
     return value;
@@ -81,55 +101,17 @@ export class InternalTradeDialog implements OnInit {
     return value;
   }
 
+  /**
+   * Comerciar
+   */
   onSubmit() {
     console.log(this.offerMaterial);  
     console.log(this.offerPlayer);  
     console.log(this.receiveMaterial);
     console.log(this.ammountGiven);
     console.log(this.ammountReceived);
+    this.gameService.comerciarConJugador(this.offerPlayer.turno, InternalTradeDialog.materialRecurso.get(this.offerMaterial), 
+                                         InternalTradeDialog.materialRecurso.get(this.receiveMaterial),
+                                         this.ammountGiven, this.ammountReceived )
   }
-}
-
-
-interface Ratio {
-  value: string;
-  viewValue: string;
-}
-
-
-@Component({
-  selector: 'app-trade-external',
-  templateUrl: 'external-trade-dialog.html',
-  styleUrls: ['./trade.dialog.sass']
-})
-export class ExternalTradeDialog {
-  offerMaterial: string;
-  receiveMaterial: string;
-  ratioSelected: string;
-
-
-  constructor(public dialogRef: MatDialogRef<InternalTradeDialog>) {}
-
-
-   materials: Material[] = [
-    { value: 'Madera', viewValue: 'Madera'},
-    { value: 'Lana', viewValue: 'Lana'},
-    { value: 'Cereales', viewValue: 'Cereales'},
-    { value: 'Arcilla', viewValue: 'Arcilla'},
-    { value: 'Mineral', viewValue: 'Mineral'}
-  ];
-
-  ratios: Ratio[] = [
-    { value: '4-1', viewValue: '4-1'},
-    { value: '3-1', viewValue: '3-1'},
-    { value: '2-1', viewValue: '2-1'}
-  ];
-
-  onSubmit() {
-    console.log(this.offerMaterial);  
-    console.log(this.ratioSelected);
-    console.log(this.receiveMaterial);
-  }
-
-
 }

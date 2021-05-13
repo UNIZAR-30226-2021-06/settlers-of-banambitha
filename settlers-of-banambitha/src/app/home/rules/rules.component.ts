@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Observable } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
+import { LangService } from 'src/app/service/lang/lang.service';
 
 
 @Component({
@@ -11,7 +12,7 @@ import { map, shareReplay } from 'rxjs/operators';
 })
 export class RulesComponent implements OnInit {
 
-  constructor(private breakpointObserver: BreakpointObserver) {}
+  constructor(private breakpointObserver: BreakpointObserver, public langService: LangService) {}
   ngOnInit(): void {
   }
 
