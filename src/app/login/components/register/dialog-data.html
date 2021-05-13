@@ -1,0 +1,18 @@
+<h1 mat-dialog-title>
+  {{langservice.get("login-requirements")}}
+</h1>
+<div mat-dialog-content>
+  <ul>
+      <span>&#10003;</span> {{langservice.get("username-min-char")}} 
+       <br>
+      <span>&#10003;</span> {{langservice.get("password-min-char")}}
+       <br>
+      <span>&#10003;</span> {{langservice.get("password-uppercase")}}
+      <br>
+      <span>&#10003;</span> {{langservice.get("password-lowercase")}}
+      <br>
+      <span>&#10003;</span> {{langservice.get("password-digit")}}
+      <br>
+      <span>&#10003;</span> {{langservice.get("password-special-char")}}
+  </ul>
+</div>

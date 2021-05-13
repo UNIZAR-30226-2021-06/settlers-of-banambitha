@@ -1,0 +1,95 @@
+<body *ngIf="this.roomService.room != null && !this.roomService.creandoSala && !this.roomService.uniendoseASala">
+    <br/>
+    <h1> 
+        {{langService.get("room-of")}} {{this.roomService.room.leader}}
+    </h1>
+
+    <mat-grid-list [cols]="this.roomService.room.players.length" rowHeight="25rem" layout-align="center center">
+        <mat-grid-tile *ngFor="let user of this.roomService.room.players let i = index">
+            <app-player-card [playerName]="user.username" [playerNumber]="i + 1" [profilePictureUrl]="user.avatar"></app-player-card>
+        </mat-grid-tile>
+    </mat-grid-list>
+
+    <div class="mb">
+        <mat-form-field appearance="outline" class="center">
+            <mat-label>
+                {{langService.get("select-appearence")}}
+            </mat-label>
+            <mat-select>
+                <mat-option>
+                    {{langService.get("skin-spacial")}}
+                </mat-option>
+                <mat-option>
+                    {{langService.get("skin-normal")}}
+                </mat-option>
+                <mat-option>
+                    {{langService.get("skin-hardware")}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+
+    <div *ngIf="!this.roomService.buscandoPartida; else buscando">
+        <section class="mb">
+            <div class="button-row">
+                <button mat-raised-button (click)="this.roomService.buscarPartida()">
+                    {{langService.get("begin-search")}}
+                </button>
+            </div>
+            <div style="width: 10px; "></div>
+            <div class="button-row">
+                <button mat-raised-button (click)="this.roomService.cerrarSala(true)" [disabled]="this.roomService.room.players.length == 1">
+                   {{this.roomService.soyLider() ? langService.get("delete-room") : langService.get("leave-room")}}
+                </button>
+            </div>
+        </section>
+        <section class="mb">
+            <div class="button-row">
+                <button mat-raised-button (click)="this.gameService.comenzarPartidaPrueba(true)">
+                    Simular partida
+                </button>
+            </div>
+            <div style="width: 10px; "></div>
+            <div class="button-row">
+                <button mat-raised-button (click)="this.gameService.comenzarPartidaPrueba(false)">
+                    Partida meVSme
+                </button>
+            </div>
+        </section>
+    </div>
+    <ng-template #buscando>
+        <div>
+            <h2>
+                {{langService.get("looking-for-game")}}
+            </h2>
+            <br/>
+            <mat-spinner class=" center " diameter="30 "></mat-spinner>
+            <br/> <br/>
+            <div class="center ">
+                <button mat-raised-button (click)="this.roomService.cancelarBusqueda()">
+                    {{langService.get("cancel-search")}}
+                </button>
+            </div>
+        </div>
+    </ng-template>
+</body>
+
+<body *ngIf="this.roomService.uniendoseASala ">
+    <div class="center ">
+        <br/> <br/> <br/> <br/> <br/> <br/> <br/>
+        <h1>
+            {{langService.get("entering-room")}}
+        </h1>
+        <mat-spinner class="center " diameter="60 "></mat-spinner>
+    </div>
+</body>
+
+<body *ngIf="this.roomService.creandoSala ">
+    <div class="center ">
+        <br/> <br/> <br/> <br/> <br/> <br/> <br/>
+        <h1>
+            {{langService.get("creating-room")}}
+        </h1>
+        <mat-spinner class="center " diameter="60 "></mat-spinner>
+    </div>
+</body>

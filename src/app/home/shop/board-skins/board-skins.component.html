@@ -1,0 +1,33 @@
+<html>
+
+<div class="content">
+    <div fxLayout="row wrap" fxLayoutGap="36px grid">
+        <div fxFlex="50%" fxFlex.xs="100%" fxFlex.sm="33%" *ngFor="let product of board_products">
+            <mat-card class="mat-elevation-z4">
+                <mat-card-title>
+                    <mat-card-title>{{product["nombre"]}}</mat-card-title>
+                </mat-card-title>
+                <mat-divider></mat-divider>
+                <img mat-card-image class="user-image" src='{{ "../../../../assets/images/shop/board/" + product.url}}'>
+                <mat-card-content>
+                    <img mat-card-image class="icon" src="../../../../assets/images/icons/gold_icon.png"> {{product["precio"]}}
+                </mat-card-content>
+                <mat-card-actions>
+                    <button mat-raised-button (click)='buy(product["url"])' [disabled]="product['precio'] > this.userService.saldo">
+                        <div *ngIf="product['precio'] <= this.userService.saldo; else notAvailable">
+                            {{langService.get("buy")}}
+                        </div>
+                        <ng-template #notAvailable>
+                            {{langService.get("insufficient-gold")}}
+                        </ng-template>
+                    </button>
+                </mat-card-actions>
+            </mat-card>
+        </div>
+        <H1 *ngIf="empty">
+            {{langService.get("no-products")}}
+        </H1>
+    </div>
+</div>
+
+</html>

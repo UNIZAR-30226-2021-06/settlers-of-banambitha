@@ -1,0 +1,11 @@
+<div class= "sidebar">
+    <div class = "browser">
+        <app-friend-browser (myEvent)="findFriends()"></app-friend-browser>
+    </div>
+    <div class= "friend-list">
+        <div class = "friend-card" *ngFor="let card of friends">
+            <app-friend-card [name]=card.name [elo]=card.elo [profilePic]=card.profilePic ></app-friend-card>
+        </div>
+    </div>
+
+</div>

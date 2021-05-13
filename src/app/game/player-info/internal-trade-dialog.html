@@ -1,0 +1,69 @@
+<h1 mat-dialog-title class="cards-info-title">Comercie con {{offerPlayer.nombre}}:</h1>
+
+
+<form name="myform">
+  <div mat-dialog-content >
+
+
+    <p> {{langService.get("offered-resource")}} </p>
+    <mat-form-field appearance="fill" fxLayout="column" fxLayoutAlign="center stretch">
+      <mat-label> {{langService.get("select-resource")}} </mat-label>
+      <mat-select [(ngModel)]="offerMaterial" name="material" required>
+        <mat-option *ngFor="let material of materials" [value]="material.value">
+          {{langService.get(material.value)}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    
+    <div *ngIf="offerMaterial != null">
+      <div *ngIf="this.gameService.partida.jugadores[this.gameService.partida.miTurno - 1].recursos[offerMaterial] < 1" style="color: red;">
+        {{langService.get("you-dont-have")}} {{langService.get(offerMaterial)}} {{langService.get("to-trade")}}
+      </div>
+      <div *ngIf="this.gameService.partida.jugadores[this.gameService.partida.miTurno - 1].recursos[offerMaterial] > 0">
+        <p> {{langService.get("units")}} {{langService.get(offerMaterial)}} {{langService.get("to-trade")}} </p>
+        <mat-slider fxLayout="column" fxLayoutAlign="center stretch"
+        thumbLabel
+        required
+        [displayWith]="formatLabelOffer"
+        tickInterval="1"
+        min="1"
+        [max]="this.gameService.partida.jugadores[this.gameService.partida.miTurno - 1].recursos[offerMaterial]"></mat-slider>
+      </div>
+    </div>
+
+    <p> {{langService.get("requested-resource")}} </p>
+    <mat-form-field appearance="fill" fxLayout="column" fxLayoutAlign="center stretch">
+      <mat-label> {{langService.get("select-resource")}} </mat-label>
+      <mat-select [(ngModel)]="receiveMaterial" name="material" required >
+        <mat-option *ngFor="let material of materials" [value]="material.value">
+          {{langService.get(material.value)}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    
+    <div *ngIf="this.receiveMaterial != null">
+      <div *ngIf="offerPlayer.recursos[receiveMaterial] < 1" style="color: red;">
+        {{offerPlayer.nombre}} {{langService.get("dont-have")}} {{langService.get(receiveMaterial)}} {{langService.get("to-trade")}}
+      </div>
+      <div *ngIf="offerPlayer.recursos[receiveMaterial] > 0">
+        <p> {{langService.get("units")}} {{langService.get(receiveMaterial)}} {{langService.get("requested-to")}} {{offerPlayer.nombre}} </p>
+        <mat-slider fxLayout="column" fxLayoutAlign="center stretch"
+        thumbLabel
+        required
+        [displayWith]="formatLabelReceive"
+        tickInterval="1"
+        min="1"
+        [max]="offerPlayer.recursos[receiveMaterial]"></mat-slider>
+      </div>
+    </div>
+
+    <div fxLayout="column" fxLayoutAlign="center stretch">
+      <button class="boton" mat-raised-button mat-dialog-close 
+              (click)="onSubmit()"
+              [disabled]="offerMaterial == null || receiveMaterial == null || ammountGiven == null || ammountReceived == null" >
+        {{langService.get("request")}}
+      </button>
+    </div>
+
+  </div>
+</form>

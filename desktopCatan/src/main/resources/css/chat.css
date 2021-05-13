@@ -1,7 +1,0 @@
-.text-input .scroll-pane:disabled {
-    -fx-opacity: 1;
-}
-
-.txtarea .scroll-pane:disabled{
-    -fx-opacity: 1.0;
-  }

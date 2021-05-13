@@ -1,0 +1,96 @@
+@import '../../../styles'
+
+.center
+    margin: 0 auto
+    width: fit-content
+    display: block
+
+.container
+    display: flex
+    justify-content: center
+    align-items: center
+
+h1, h2
+    margin: 0 auto
+    text-align: center
+    color: white
+
+app-player-card
+    margin-right: 4%
+
+button  
+    width: 150px
+    min-width: unset!important
+    margin-right: 1% 
+    background-color: map-get($palette, mainRed )
+
+.button-row
+    width: fit-content
+    display: table-cell
+
+section 
+    display: table
+    margin: 0 auto
+
+.mb
+    margin-bottom: 1%
+
+mat-grid-tile
+    margin: 0
+    padding: 0
+
+body
+    padding: 0
+    margin: 0
+    background-color: map-get($palette, mainDark)
+    height: 100%
+
+// mat-icon-stepper selected color change 
+::ng-deep .mat-step-header .mat-step-icon-selected, .mat-step-header .mat-step-icon-state-done, .mat-step-header .mat-step-icon-state-edit 
+    background-color: map-get($palette, mainRed)!important
+
+
+//input outline color
+::ng-deep .mat-form-field-appearance-outline .mat-form-field-outline 
+    color: map-get($palette, mainRed)!important
+    // opacity: 1!important;
+
+
+//mat-input focused color
+::ng-deep .mat-form-field-appearance-outline.mat-focused .mat-form-field-outline-thick 
+    color: map-get($palette, mainRed)!important
+
+
+// mat-input error outline color
+::ng-deep .mat-form-field-appearance-outline.mat-form-field-invalid.mat-form-field-invalid .mat-form-field-outline-thick
+    color: map-get($palette, mainRed)!important
+    opacity: 0.8!important
+
+
+// mat-input carent color
+::ng-deep .mat-input-element 
+    caret-color: map-get($palette, mainRed)!important
+
+
+// mat-input error carent color
+::ng-deep .mat-form-field-invalid .mat-input-element, .mat-warn .mat-input-element 
+    caret-color: map-get($palette, mainRed)!important
+
+
+// mat-label normal state style
+::ng-deep .mat-form-field-label 
+    color: #FFFFFF!important
+    // color: $mainColor!important
+
+
+// mat-label focused style
+::ng-deep .mat-form-field.mat-focused .mat-form-field-label 
+    color: map-get($palette,mainRed)!important
+
+
+// mat-label error style
+::ng-deep .mat-form-field.mat-form-field-invalid .mat-form-field-label 
+    color: map-get($palette,mainRed)!important
+
+:host ::ng-deep .mat-progress-spinner circle, .mat-spinner circle
+    stroke: map-get($palette,mainRed )

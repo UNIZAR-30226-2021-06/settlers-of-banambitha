@@ -1,0 +1,45 @@
+@import '../../../../styles'
+
+html
+    background-color: map-get($palette, mainDark)
+
+.content 
+    padding: 26px
+    justify-content: center
+    align-items: center
+    height: fit-content
+    box-sizing: border-box
+
+.content > mat-card
+    width: 100px
+
+mat-card
+  background-color: map-get($palette, mainRed)
+  text-align: center
+  border-radius: 0
+  border-bottom-left-radius: 0%
+  border-bottom-right-radius: 0%
+  margin: 0
+  padding: 5% 3% 10% 3%
+  overflow: hidden
+
+mat-card-content
+    font-size: 30px
+
+.icon
+    height: 30px
+    width: 30px
+    margin-right: 1%
+
+.user-image
+  width: 400px
+  height: 250px
+  margin-top: 10%
+  border-radius: 5%
+  background-repeat: no-repeat
+  background-position: center center
+  background-size: cover
+  object-fit: cover
+
+button  
+    background-color: map-get($palette, mainOrange )
