@@ -842,7 +842,9 @@ public class Gameplay {
             Partida.tablero.vertices.colorSettlement[numVertice] = null;
         }
         // TODO:
-        //Partida.tablero.vertices.settlementsType[numVertice] = asentamiento; 
+        System.out.println(asentamiento + " " + numVertice);
+        Partida.tablero.vertices.settlementsType[numVertice] = asentamiento;
+        System.out.println(asentamiento + " " + numVertice);
 
     }
 
@@ -1109,7 +1111,7 @@ public class Gameplay {
 
     private static void updateVertix() {
         for(int i = 0; i < numberSettlements; i++) {
-           if(Partida.tablero.vertices.colorSettlement[i] != null) {
+           if(!Partida.tablero.vertices.settlementsType[i].equals(TipoAsentamiento.NADA)) {
             Partida.tablero.vertices.settlements[i].
                         setBackground(new Background(new BackgroundFill(
                             Partida.tablero.vertices.colorSettlement[i], null, null)));
@@ -1415,7 +1417,7 @@ public class Gameplay {
                 if(Partida.jugadores[Partida.miTurno -1].primerosAsentamientos) {
 
                 } else {
-                    //construirPrimerAsentamiento(position);
+                    construirPrimerAsentamiento(position);
                 }
             }     
         });
