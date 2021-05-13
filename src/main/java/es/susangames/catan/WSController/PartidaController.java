@@ -205,7 +205,7 @@ public class PartidaController {
 		move.put("param", param);
 		jugadaIntercambio.put("move", move); 
 
-		moveCarrierHeap.newJugada(partida, jugadaIntercambio);
+		MoveCarrierHeap.newJugada(partida, jugadaIntercambio);
 	}
 	
 	
