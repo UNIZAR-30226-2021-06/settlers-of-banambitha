@@ -230,7 +230,7 @@ public class Gameplay {
     protected static class Vertices {
         protected static Button[]    settlements;
         protected static Color[]     colorSettlement;
-        protected static Boolean[][] posible_asentamiento;
+        protected static Boolean[] posible_asentamiento;
         protected static String[]    settlementsType;
     } 
 
@@ -247,7 +247,7 @@ public class Gameplay {
         protected static ToggleButton[] roads;
         protected static Color[]     colorRoads;
         protected static String[] roadsType;
-        protected static Boolean[][] posible_camino;
+        protected static Boolean[] posible_camino;
         protected static Puerto puertos;
     }
 
@@ -495,7 +495,7 @@ public class Gameplay {
         // Vertices
         Partida.tablero.vertices.settlements = new Button[numberSettlements];
         Partida.tablero.vertices.posible_asentamiento = 
-                                new Boolean[numberPlayers][numberSettlements];
+                                new Boolean[numberSettlements];
         Partida.tablero.vertices.colorSettlement = 
                                 new Color[numberSettlements];
         Partida.tablero.vertices.settlementsType =
@@ -504,7 +504,7 @@ public class Gameplay {
         // Aristas
         Partida.tablero.aristas.roads = new ToggleButton[numberRoads];
         Partida.tablero.aristas.posible_camino = 
-                                new Boolean[numberPlayers][numberRoads];  
+                                new Boolean[numberRoads];  
         Partida.tablero.aristas.puertos = new Puerto();
         Partida.tablero.aristas.colorRoads = 
                                 new Color[numberRoads];
@@ -806,11 +806,21 @@ public class Gameplay {
     }
 
     private static void actualizarAristas(String aristas) {
+        System.out.println(aristas);
         JSONObject aristasOb = new JSONObject(aristas);
         JSONArray aristasArr = aristasOb.getJSONArray(MessageKeys.ARISTAS_CAMINOS);
         for (int i = 0; i < aristasArr.length(); i++) {
             modificarCarretera(aristasArr.getString(i), i);
         } 
+        String aristasPosibles = aristasOb.get(
+            MessageKeys.ARISTAS_POSIBLES_CAMINOS).toString();
+        JSONArray aristasPosArr = new JSONArray(aristasPosibles);
+        String aux = aristasPosArr.getJSONArray(Partida.miTurno - 1).toString();
+        JSONArray posiblesMijugadorArr = new JSONArray(aux);  
+                    
+        for(int i = 0; i < posiblesMijugadorArr.length(); i++) {
+            Partida.tablero.aristas.posible_camino[i] = posiblesMijugadorArr.getBoolean(i);  
+        }
     }
 
 
@@ -1204,7 +1214,8 @@ public class Gameplay {
 
     private void setColorButonOnClick(ToggleButton button, int pos) {
         button.setOnMouseClicked( event -> {
-            if (event.getButton().equals(MouseButton.PRIMARY)) {
+            if (event.getButton().equals(MouseButton.PRIMARY) && 
+                Partida.tablero.aristas.posible_camino[pos]) {
                 posRoad = pos;
                 if (!popupCards.isShowing()) {
                     Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
