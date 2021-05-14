@@ -64,7 +64,7 @@ import javafx.application.Platform;
 public class Gameplay {
     private static double           start_X_position = 250.0;
     private static double           start_Y_position = 110.0;
-    private static double           horizontal_right_gap = 115;
+    private static double           horizontal_right_gap = 115; 
     private static double           horizontal_left_gap = 60;
     private static double           vertical_gap = 120;
     private static int              numberRoads = 72;
@@ -73,6 +73,7 @@ public class Gameplay {
     private static int              numberSettlements = 54;
     private static int              numberofHexagons = 19;
     private static int              numberPlayers = 4;
+    private static int              numberBasicPorts = 4;
     private static Color[]          coloresPorId = new Color[]{Color.BLUE, 
                                                                Color.RED, 
                                                                Color.YELLOW, 
@@ -233,14 +234,14 @@ public class Gameplay {
         protected static Boolean[] posible_asentamiento;
         protected static String[]    settlementsType;
     } 
-
+    
     protected static class Puerto {
         protected  static Integer madera;
         protected  static Integer mineral;
         protected  static Integer arcilla;
         protected  static Integer lana;
         protected  static Integer cereal;
-        protected  static Integer basico;
+        protected  static Integer[] basico;
     }
 
     protected static class Aristas {
@@ -357,6 +358,7 @@ public class Gameplay {
     private Popup popupInternalTrade;
     private Popup popupExternalTrade;
     private Popup popupSettings;
+    private Popup popupBuildSettle;
     private ChoiceBox<String> offerMaterial;
     private ChoiceBox<String> offerPlayer;
     private ChoiceBox<String> receiveMaterial;
@@ -375,6 +377,7 @@ public class Gameplay {
     private static Boolean cargandoPartida = false;
     private static String idPartida;
     private static Integer posRoad;
+    private static Integer posSettle;
     
     
     public Gameplay() {
@@ -504,8 +507,10 @@ public class Gameplay {
         // Aristas
         Partida.tablero.aristas.roads = new ToggleButton[numberRoads];
         Partida.tablero.aristas.posible_camino = 
-                                new Boolean[numberRoads];  
-        Partida.tablero.aristas.puertos = new Puerto();
+                                new Boolean[numberRoads]; 
+        Puerto puerto = new Puerto();
+        puerto.basico = new Integer[numberBasicPorts]; 
+        Partida.tablero.aristas.puertos = puerto;
         Partida.tablero.aristas.colorRoads = 
                                 new Color[numberRoads];
         Partida.tablero.aristas.roadsType =
@@ -803,24 +808,55 @@ public class Gameplay {
         for (int i = 0; i < verticesArr.length(); i++) {
           modificarAsentamiento(verticesArr.getString(i), i);
         } 
+        // Posibles asentamientos
+        String verticesPosibles = verticesOb.get(
+            MessageKeys.VERTICES_POSIBLES_ASENTAMIENTOS).toString();
+        JSONArray verticesPosArr = new JSONArray(verticesPosibles);
+        String aux = verticesPosArr.getJSONArray(Partida.miTurno - 1).toString();
+        JSONArray posiblesMijugadorArr = new JSONArray(aux);    
+        for(int i = 0; i < posiblesMijugadorArr.length(); i++) {
+            Partida.tablero.vertices.posible_asentamiento[i] = 
+                                            posiblesMijugadorArr.getBoolean(i);  
+        }
+
     }
 
     private static void actualizarAristas(String aristas) {
-        System.out.println(aristas);
         JSONObject aristasOb = new JSONObject(aristas);
         JSONArray aristasArr = aristasOb.getJSONArray(MessageKeys.ARISTAS_CAMINOS);
         for (int i = 0; i < aristasArr.length(); i++) {
             modificarCarretera(aristasArr.getString(i), i);
         } 
+        // Posibles caminos
         String aristasPosibles = aristasOb.get(
             MessageKeys.ARISTAS_POSIBLES_CAMINOS).toString();
         JSONArray aristasPosArr = new JSONArray(aristasPosibles);
         String aux = aristasPosArr.getJSONArray(Partida.miTurno - 1).toString();
-        JSONArray posiblesMijugadorArr = new JSONArray(aux);  
-                    
+        JSONArray posiblesMijugadorArr = new JSONArray(aux);    
         for(int i = 0; i < posiblesMijugadorArr.length(); i++) {
             Partida.tablero.aristas.posible_camino[i] = posiblesMijugadorArr.getBoolean(i);  
         }
+        // Puertos
+        String puertos = aristasOb.get(MessageKeys.ARISTAS_PUERTOS).toString();
+        JSONObject puertosOb = new JSONObject(puertos);
+        Partida.tablero.aristas.puertos.arcilla = puertosOb.getInt(
+                                                    MessageKeys.PUERTO_ARCILLA);
+        Partida.tablero.aristas.puertos.madera = puertosOb.getInt(
+                                                    MessageKeys.PUERTO_MADERA);
+        Partida.tablero.aristas.puertos.mineral = puertosOb.getInt(
+                                                    MessageKeys.PUERTO_MINERAL);
+        Partida.tablero.aristas.puertos.lana = puertosOb.getInt(
+                                                    MessageKeys.PUERTO_LANA);
+        Partida.tablero.aristas.puertos.cereal = puertosOb.getInt(
+                                                    MessageKeys.PUERTO_CEREAL);
+        
+        JSONArray puertosBasicos = puertosOb.getJSONArray(
+                                                MessageKeys.PUERTOS_BASICOS);
+        for(int i = 0; i<numberBasicPorts; i++) {
+            Partida.tablero.aristas.puertos.basico[i] = puertosBasicos.getInt(i);
+        }
+       
+
     }
 
 
@@ -948,12 +984,46 @@ public class Gameplay {
     // TODO: Comprobacion arista valida
     private static Boolean construirCamino(int arista) {
         if(esMiTurno() && Partida.tablero.aristas.roadsType[arista].equals(
-            TipoCamino.NADA)) {
+            TipoCamino.NADA) && puedoConstruirCamino()) {
 
             JSONObject jugada = new JSONObject();
             JSONObject move = new JSONObject();
             move.put("name", Jugada.CONSTRUIR_CAMINO);
             move.put("param", arista);
+            jugada.put("player", Partida.miTurno);
+            jugada.put("game", Partida.id);
+            jugada.put("move",move);
+            ws.session.send(ws.partidaJugada, jugada.toString());
+            return true;
+        }
+        return false;
+    }
+
+    private static Boolean construirAsentamiento(int vertice) {
+        if(esMiTurno() && Partida.tablero.vertices.settlementsType[vertice].equals(
+            TipoAsentamiento.NADA) && puedoConstruirPoblado()) {
+            
+            JSONObject jugada = new JSONObject();
+            JSONObject move = new JSONObject();
+            move.put("name", Jugada.CONSTRUIR_POBLADO);
+            move.put("param", vertice);
+            jugada.put("player", Partida.miTurno);
+            jugada.put("game", Partida.id);
+            jugada.put("move",move);
+            ws.session.send(ws.partidaJugada, jugada.toString());
+            return true;
+        }
+        return false;
+    }
+
+    private static Boolean mejorarPueblo(int vertice) {
+        if(esMiTurno() && Partida.tablero.vertices.settlementsType[vertice].equals(
+            miTipoAsentamiento()) && puedoConstruirCiudad()) {
+            
+            JSONObject jugada = new JSONObject();
+            JSONObject move = new JSONObject();
+            move.put("name", Jugada.MEJORAR_POBLADO);
+            move.put("param", vertice);
             jugada.put("player", Partida.miTurno);
             jugada.put("game", Partida.id);
             jugada.put("move",move);
@@ -1136,7 +1206,8 @@ public class Gameplay {
             Partida.tablero.hexagonos.numberOverHexagon[i].setText(
                 Partida.tablero.hexagonos.valor[i].toString());
         }    
-        Partida.tablero.hexagonos.numberOverHexagon[Partida.tablero.hexagonos.ladron].setDisable(true); 
+        Partida.tablero.hexagonos.numberOverHexagon[Partida.tablero.hexagonos.ladron].setDisable(true);
+
     }
 
     private static void updateVertix() {
@@ -1167,6 +1238,18 @@ public class Gameplay {
                          setBackground(new Background(new BackgroundFill(
                              Partida.tablero.aristas.colorRoads[i], null, null)));
             }
+            if(Partida.tablero.aristas.puertos.arcilla == i ||
+               Partida.tablero.aristas.puertos.madera == i  ||
+               Partida.tablero.aristas.puertos.mineral == i ||
+               Partida.tablero.aristas.puertos.lana == i    ||
+               Partida.tablero.aristas.puertos.cereal == i  || 
+               Partida.tablero.aristas.puertos.basico[0] == i ||
+               Partida.tablero.aristas.puertos.basico[1] == i ||
+               Partida.tablero.aristas.puertos.basico[2] == i ||
+               Partida.tablero.aristas.puertos.basico[3] == i) {
+                Partida.tablero.aristas.roads[i].setStyle(
+                    "-fx-border-color:#BA55D3;-fx-border-width: 3;");
+               }
          }
     }
     // Creacion del tablero
@@ -1215,8 +1298,10 @@ public class Gameplay {
     private void setColorButonOnClick(ToggleButton button, int pos) {
         button.setOnMouseClicked( event -> {
             if (event.getButton().equals(MouseButton.PRIMARY) && 
-                Partida.tablero.aristas.posible_camino[pos]) {
+                Partida.tablero.aristas.posible_camino[pos] &&
+                Partida.tablero.aristas.roadsType[pos].equals(TipoCamino.NADA)) {
                 posRoad = pos;
+                buildRoadPopUp();
                 if (!popupCards.isShowing()) {
                     Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
                     popupCards.show(stage);
@@ -1450,12 +1535,22 @@ public class Gameplay {
     // Click sobre una carretera
     private void onClickSettlement(Button circle,Integer position) {
         circle.setOnMouseClicked( event -> {
-            if (event.getButton().equals(MouseButton.PRIMARY)) {
-                if(Partida.jugadores[Partida.miTurno -1].primerosAsentamientos) {
-                    //construirAsentamiento(position);
-                } else {
-                    construirPrimerAsentamiento(position);
-                }
+            if (event.getButton().equals(MouseButton.PRIMARY) && 
+                (!Partida.jugadores[Partida.miTurno -1].primerosAsentamientos) 
+                ||
+                (Partida.jugadores[Partida.miTurno -1].primerosCaminos && 
+                 Partida.tablero.vertices.posible_asentamiento[position]) 
+                ||
+                (Partida.jugadores[Partida.miTurno -1].primerosCaminos &&
+                 !Partida.tablero.vertices.posible_asentamiento[position] &&
+                  Partida.tablero.vertices.settlementsType[position].equals(
+                    miTipoAsentamiento()))) {
+                    posSettle = position;
+                    buildSettlementPopUp();
+                    if (!popupBuildSettle.isShowing()) {
+                        Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+                        popupBuildSettle.show(stage);
+                    }
             }     
         });
     }
@@ -1468,23 +1563,24 @@ public class Gameplay {
         popupCards.getContent().add(anchorPane);
         popupCards.setAutoHide(true);
 
-        Button buildSettle = new Button();
-        buildSettle.setPrefSize(300,90);
-        buildSettle.setLayoutX(anchorPane.getLayoutX() + 5);
-        buildSettle.setLayoutY(anchorPane.getLayoutY() + 10);
+        Button buildRoad = new Button();
+        buildRoad.setPrefSize(300,90);
+        buildRoad.setLayoutX(anchorPane.getLayoutX() + 5);
+        buildRoad.setLayoutY(anchorPane.getLayoutY() + 10);
 
-        buildSettle.setStyle("-fx-background-color: #c7956d; -fx-background-radius: 12px");
+        buildRoad.setStyle("-fx-background-color: #c7956d; -fx-background-radius: 12px");
         if(Partida.jugadores[Partida.miTurno -1].primerosCaminos){
-            buildSettle.setText(LangService.getMapping("build_road"));
-            buildSettle.setOnMouseClicked( event -> {
+            buildRoad.setText(LangService.getMapping("build_road"));
+            buildRoad.setDisable(!Partida.CaminoDisponible);
+            buildRoad.setOnMouseClicked( event -> {
                 if (event.getButton().equals(MouseButton.PRIMARY)) {
                     construirCamino(posRoad);
                     popupCards.hide();
                 }    
             });
         } else {
-            buildSettle.setText(LangService.getMapping("first_road"));
-            buildSettle.setOnMouseClicked( event -> {
+            buildRoad.setText(LangService.getMapping("first_road"));
+            buildRoad.setOnMouseClicked( event -> {
                 if (event.getButton().equals(MouseButton.PRIMARY)) {
                     construirPrimerCamino(posRoad);
                     popupCards.hide();
@@ -1493,9 +1589,56 @@ public class Gameplay {
         }
 
         DropShadow shadow = new DropShadow();
+        buildRoad.setEffect(shadow);
+        anchorPane.getChildren().add(buildRoad);
+
+    }
+
+    private void buildSettlementPopUp() {
+        AnchorPane anchorPane = new AnchorPane();
+        anchorPane.setPrefSize(310, 115);
+        anchorPane.setStyle("-fx-background-color:  #965d62; -fx-background-radius: 12px" );
+        popupBuildSettle = new Popup();
+        popupBuildSettle.getContent().add(anchorPane);
+        popupBuildSettle.setAutoHide(true);
+
+        Button buildSettle = new Button();
+        buildSettle.setPrefSize(300,90);
+        buildSettle.setLayoutX(anchorPane.getLayoutX() + 5);
+        buildSettle.setLayoutY(anchorPane.getLayoutY() + 10);
+
+        buildSettle.setStyle("-fx-background-color: #c7956d; -fx-background-radius: 12px");
+        if(Partida.jugadores[Partida.miTurno -1].primerosAsentamientos){
+            if(Partida.tablero.vertices.settlementsType[posSettle].equals(
+                miTipoAsentamiento())) {
+
+                buildSettle.setText(LangService.getMapping("city_upgrade"));
+                buildSettle.setDisable(!Partida.CiudadDisponible);
+
+            } else if(Partida.tablero.vertices.settlementsType[posSettle].equals(
+                miTipoCiudad())) {
+
+                buildSettle.setText(LangService.getMapping(
+                    LangService.getMapping("no_upgrade")));
+                buildSettle.setDisable(true);
+
+            } else {
+                buildSettle.setText(LangService.getMapping("build_town"));
+                buildSettle.setDisable(!Partida.PobladoDisponible);
+            }
+        } else {
+            buildSettle.setText(LangService.getMapping("first_settle"));
+            buildSettle.setOnMouseClicked( event -> {
+                if (event.getButton().equals(MouseButton.PRIMARY)) {
+                    construirPrimerAsentamiento(posSettle);
+                    popupBuildSettle.hide();
+                }    
+            });
+        }
+
+        DropShadow shadow = new DropShadow();
         buildSettle.setEffect(shadow);
         anchorPane.getChildren().add(buildSettle);
-
     }
 
     private static void updateplayersName() {
@@ -1861,7 +2004,7 @@ public class Gameplay {
         chatContent.setEditable(false);
         chatContent.setMouseTransparent(true);
         chatContent.setFocusTraversable(false);  
-        
+        buildSettlementPopUp();
         buildRoadPopUp();
         inTradePopUp();
         externalTradePopUp();
