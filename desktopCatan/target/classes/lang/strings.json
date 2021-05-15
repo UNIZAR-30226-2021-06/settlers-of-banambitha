@@ -274,6 +274,11 @@
     "build_town": {
         "eng": "Build a village",
         "esp": "Construir una aldea"
+    },
+
+    "turn": {
+        "eng": "Turn",
+        "esp": "Turno"
     }
 }
  

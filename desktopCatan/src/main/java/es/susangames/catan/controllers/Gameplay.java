@@ -328,6 +328,8 @@ public class Gameplay {
     @FXML
     private Button passTurnButton;
 
+    private static Button _passTurnButton;
+
     @FXML
     private Text lanaCant;
 
@@ -352,6 +354,11 @@ public class Gameplay {
     private Text maderaCant;
 
     private static Text _maderaCant;
+
+    @FXML
+    private Button turnPlayer;
+
+    private static Button _turnPlayer;
 
     // Elementos graficos adicionales
     private static Popup popupCards;
@@ -1299,7 +1306,8 @@ public class Gameplay {
         button.setOnMouseClicked( event -> {
             if (event.getButton().equals(MouseButton.PRIMARY) && 
                 Partida.tablero.aristas.posible_camino[pos] &&
-                Partida.tablero.aristas.roadsType[pos].equals(TipoCamino.NADA)) {
+                Partida.tablero.aristas.roadsType[pos].equals(TipoCamino.NADA) &&
+                esMiTurno()) {
                 posRoad = pos;
                 buildRoadPopUp();
                 if (!popupCards.isShowing()) {
@@ -1535,7 +1543,8 @@ public class Gameplay {
     // Click sobre una carretera
     private void onClickSettlement(Button circle,Integer position) {
         circle.setOnMouseClicked( event -> {
-            if (event.getButton().equals(MouseButton.PRIMARY) && 
+            if (event.getButton().equals(MouseButton.PRIMARY) && esMiTurno()    
+                && 
                 (!Partida.jugadores[Partida.miTurno -1].primerosAsentamientos) 
                 ||
                 (Partida.jugadores[Partida.miTurno -1].primerosCaminos && 
@@ -1651,8 +1660,16 @@ public class Gameplay {
             " (" + Partida.jugadores[2].puntos + ")");
         _player4Name.setText(Partida.jugadores[3].nombre + 
             " (" + Partida.jugadores[Partida.miTurno-1].puntos + ")");
-    }
 
+        Platform.runLater(new Runnable() {
+            @Override public void run() {
+                _turnPlayer.setText(LangService.getMapping("turn") + ": " + 
+                        Partida.jugadores[Partida.turnoActual-1].nombre);
+            }
+        });
+        _passTurnButton.setDisable(Partida.miTurno != Partida.turnoActual);
+    }
+    
     private void inTradePopUp() {
         AnchorPane anchorPane = new AnchorPane();
         anchorPane.setPrefSize(400, 650);
@@ -2001,6 +2018,8 @@ public class Gameplay {
          _lanaCant = lanaCant;
          _cerealesCant = cerealesCant;
          _chatContent = chatContent;
+         _turnPlayer = turnPlayer;
+         _passTurnButton = passTurnButton;
         chatContent.setEditable(false);
         chatContent.setMouseTransparent(true);
         chatContent.setFocusTraversable(false);  
