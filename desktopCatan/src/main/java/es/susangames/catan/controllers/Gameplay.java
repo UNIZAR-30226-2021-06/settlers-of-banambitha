@@ -360,12 +360,17 @@ public class Gameplay {
 
     private static Button _turnPlayer;
 
+    private static Text _knight_card;
+
+
     // Elementos graficos adicionales
     private static Popup popupCards;
     private Popup popupInternalTrade;
     private Popup popupExternalTrade;
     private Popup popupSettings;
     private Popup popupBuildSettle;
+    private Popup popupResources;
+
     private ChoiceBox<String> offerMaterial;
     private ChoiceBox<String> offerPlayer;
     private ChoiceBox<String> receiveMaterial;
@@ -1603,6 +1608,93 @@ public class Gameplay {
 
     }
 
+    private void resourcesPopUp() {
+        AnchorPane anchorPane = new AnchorPane();
+        anchorPane.setPrefSize(310, 115);
+        anchorPane.setStyle("-fx-background-color:  #965d62; -fx-background-radius: 12px" );
+        popupResources = new Popup();
+        popupResources.getContent().add(anchorPane);
+        popupResources.setAutoHide(true);
+        
+        // Titulo
+        Text title = new Text(10, 50, (LangService.getMapping("player_resources")));
+        title.setFont(new Font(40));
+        title.setLayoutX(anchorPane.getLayoutX() + 5 );
+        title.setLayoutY(anchorPane.getLayoutY() + 30);
+        title.setFill(Color.WHITE);
+        anchorPane.getChildren().add(title);
+
+        Text tofferPlayer = new Text(10, 50, LangService.getMapping("choose_player"));
+        tofferPlayer.setFont(new Font(20));
+        tofferPlayer.setLayoutX(anchorPane.getLayoutX() + 10 );
+        tofferPlayer.setLayoutY(anchorPane.getLayoutY() + 100);
+        tofferPlayer.setFill(Color.WHITE);
+        anchorPane.getChildren().add(tofferPlayer);
+
+
+        // Select jugador elegido
+        offerPlayer = new ChoiceBox<>();
+        offerPlayer.setStyle("-fx-background-radius: 12px;");
+        for(int i = 0; i < numberPlayers; i++) {
+            if(i != (Partida.miTurno - 1) ) {
+                offerPlayer.getItems().add(Partida.jugadores[i].nombre);
+            }
+        }
+        Integer j = 0;
+        offerPlayer.setValue(Partida.jugadores[((Partida.miTurno - 1) + 1) % 4].nombre);
+    
+        // Arcilla
+        _knight_card = new Text(10, 50, (LangService.getMapping("knight_card")) + "\t " + j.toString());
+        _knight_card.setFont(new Font(20));
+        _knight_card.setLayoutX(anchorPane.getLayoutX()+ 10);
+        _knight_card.setLayoutY(anchorPane.getLayoutY() + 100);
+        _knight_card.setFill(Color.WHITE);
+        anchorPane.getChildren().add(_knight_card);
+
+        // Madera
+        Spinner<Integer> spinnerGive = new Spinner(1, 250, 1);
+        spinnerGive.setStyle("-fx-background-radius: 12px;" );
+        spinnerGive.setPrefSize(75, 25);
+        spinnerGive.setLayoutX(anchorPane.getLayoutX() + 270 );
+        spinnerGive.setLayoutY(anchorPane.getLayoutY() + 290);
+        anchorPane.getChildren().add(spinnerGive);
+
+        offerPlayer.getSelectionModel().selectedItemProperty().addListener( (v, oldValue, newValue) -> 
+         {
+                String name = (String) newValue;
+                if(name.equals(Partida.jugadores[1].nombre)) {
+                    Platform.runLater(new Runnable() {
+                        @Override public void run() {
+                            _knight_card.setText("5555");
+                            anchorPane.getChildren().remove(spinnerGive);
+                            Spinner<Integer> spinnerGive  = new Spinner(1, 2, 1);
+                            spinnerGive.setStyle("-fx-background-radius: 12px;" );
+                            spinnerGive.setPrefSize(75, 25);
+                            spinnerGive.setLayoutX(anchorPane.getLayoutX() + 270 );
+                            spinnerGive.setLayoutY(anchorPane.getLayoutY() + 290);
+                            anchorPane.getChildren().add(spinnerGive);
+                        }
+                    });
+                }
+               
+            
+         }
+        );
+
+
+        // Mineral
+
+
+        // Lana
+
+        // Cereales
+
+        offerPlayer.setLayoutX(anchorPane.getLayoutX() + 270);
+        offerPlayer.setLayoutY(anchorPane.getLayoutY() + 127);
+        anchorPane.getChildren().add(offerPlayer);
+
+    }
+    
     private void buildSettlementPopUp() {
         AnchorPane anchorPane = new AnchorPane();
         anchorPane.setPrefSize(310, 115);
@@ -2020,9 +2112,27 @@ public class Gameplay {
          _chatContent = chatContent;
          _turnPlayer = turnPlayer;
          _passTurnButton = passTurnButton;
+
+         passTurnButton.setOnAction((ActionEvent event) -> {
+            if(esMiTurno()) {
+                JSONObject jugada = new JSONObject();
+                JSONObject move = new JSONObject();
+                move.put("name", Jugada.PASAR_TURNO);
+                move.put("param", "");
+                jugada.put("player", Partida.miTurno);
+                jugada.put("game", Partida.id);
+                jugada.put("move",move);
+                ws.session.send(ws.partidaJugada, jugada.toString());
+            }
+         });
+         
+
+
         chatContent.setEditable(false);
         chatContent.setMouseTransparent(true);
         chatContent.setFocusTraversable(false);  
+
+        resourcesPopUp();
         buildSettlementPopUp();
         buildRoadPopUp();
         inTradePopUp();
@@ -2031,6 +2141,13 @@ public class Gameplay {
         settingsPopup();
         passTurnButton.setText((LangService.getMapping("next_turn")));
        
+
+        cards.setOnAction((ActionEvent event) -> {
+            if (!popupResources.isShowing()) {
+                Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+                popupResources.show(stage);
+            }
+         });
        
         // Crear hexagonos
         Integer numberHexagonAux = 0;

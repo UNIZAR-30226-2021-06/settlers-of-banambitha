@@ -279,6 +279,16 @@
     "turn": {
         "eng": "Turn",
         "esp": "Turno"
+    },
+
+    "choose_player": {
+        "eng": "Choose a player",
+        "esp": "Seleccione un jugador"
+    },
+
+    "player_resources": {
+        "eng": "Player resources",
+        "esp": "Recuros de jugadores"
     }
 }
  
