@@ -194,7 +194,7 @@ public class RoomServices {
             for (int i = 0; i < invitesJSArray.length(); ++i) {
                 invites.add(invitesJSArray.getString(i));
             }
-            room = new Room(jsObj.getString("leader"), jsObj.getString("leader"), 
+            room = new Room(jsObj.getString("leader"), jsObj.getString("room"), 
                 invites, players, status);
             
             ws.SubscribeSalaAct();
@@ -231,34 +231,10 @@ public class RoomServices {
         }
     }
 
-    public static void procesarMensajeAccionSala (Object payload) {
-        if (room != null) {
-            JSONObject jsObj = new JSONObject(payload.toString());
-            String status = jsObj.getString("status");
-            switch (status) {
-                case "CREATED":
-                case "CLOSE":
-                case "SEARCHING":
-                case "UPDATED_INVITES":
-                case "UPDATED_PLAYERS":
-                case "FOUND":
-                case "FAILED":
-                    room = null;
-                    buscandoPartida = false;
-                    crearSala();
-                case "CANCELLED":
-                    room.setStatus(RoomStatus.CREATED.toString());
-                    buscandoPartida = false;
-                default:
-            }
-        }
-    }
-
     public static void procesarMensajeInvitacion (Object payload) {
         Invite invitacion;
         JSONObject jsObj = new JSONObject(payload.toString());
         String status = jsObj.getString("status");
-
         switch (status) {
             case "INVITED":
                 invitacion = new Invite(jsObj.getString("leader"), jsObj.getString("id"));
@@ -321,7 +297,13 @@ public class RoomServices {
 
     }
 
+    /**
+     * Crea una sala en la que el usuario loggeado (userService) es
+     * el líder y único jugador. No hay jugadores invitados. 
+     * Solo se puede crear una sala si el jugador todavía no está en ninguna sala
+     */
     public static void crearSala () {
+        System.out.println("crearSala");
         if (room == null && !uniendoseASala && !creandoSala) {
             JSONObject myObject = new JSONObject();
             myObject.put("leader", UserService.getUsername());
@@ -330,19 +312,97 @@ public class RoomServices {
         }
     }
 
-    public static void cerrarSala (Boolean crearSala) {
-
+    /**
+     * Envía una invitación al usuario con el identificador dado.
+     * 
+     * @param username nombre del usuario al que se envía la invitación. El usuario debe existir
+     * o la operación no tendrá efecto. 
+     * @return true si el usuario es el líder de la sala y se ha podido enviar la invitación, false 
+     * en caso contrario. 
+     */
+    public static Boolean enviarInvitacion (String username) {
+        if (RoomServices.soyLider()) {
+            JSONObject myObject = new JSONObject();
+            myObject.put("leader", RoomServices.room.getLeader());
+            myObject.put("room", RoomServices.room.getId());
+            myObject.put("invite", username);
+            ws.session.send(ws.invitacionEnviar, myObject.toString());
+            return true;
+        }
+        return false;
     }
 
-    public static void abandonarSala () {}
+    /**
+     * Cancela una invitación a partida (por parte del emisor).
+     * 
+     * @param leader líder de la sala que envió la invitación.
+     * @param roomId identificador de la sala a la que el usuario fue invitado. 
+     */
+    public static void cancelarInvitacion (String leader, String roomId) {
+        if (RoomServices.soyLider()) {
+            JSONObject myObject = new JSONObject();
+            myObject.put("leader", RoomServices.room.getLeader());
+            myObject.put("room", RoomServices.room.getId());
+            myObject.put("invite", UserService.getUsername());
+            ws.session.send(ws.invitacionCancelar, myObject.toString());
+        }
+    }
 
-    public static void enviarInvitacion () {}
+    /**
+     * Acepta la invitación a una sala y espera para cargar los datos de la misma.
+     * Si el usuario ya estaba en una sala, entonces sale de la sala y 
+     * se une a la sala de invitación aceptada. Hasta que lleguen los datos de 
+     * la nueva sala el usuario no estará en ninguna sala. 
+     * 
+     * @param leader líder de la sala a la que el usuario fue invitado
+     * @param roomId identificador de la sala a la que el usuario fue invitado
+     */
+    public static void aceptarInvitacion (String leader, String roomId) {
+        if (leader != null && roomId != null && !creandoSala && !uniendoseASala) {
+            JSONObject myObject = new JSONObject();
+            myObject.put("leader", RoomServices.room.getLeader());
+            myObject.put("room", RoomServices.room.getId());
+            myObject.put("invite", UserService.getUsername());
+            ws.session.send(ws.invitacionAceptar, myObject.toString());
+            if (soyLider()) {
+                ws.cerrarSala(false);
+            } else if (room != null){
+                ws.abandonarSala(false);
+            }
+            uniendoseASala = true;
+        }
+    }
 
-    public static void cancelarInvitacion (String leader, String roomId) {}
+    /**
+     * Inicia la búsqueda de partida para todos los integrantes de la sala actual. 
+     * Solo se puede ejecutar si el líder de la sala es el usuario de la sesión actual. 
+     * @return true si se pudo iniciar la búsqueda de partida, false en caso contrario. 
+     */
+    public static Boolean buscarPartida () {
+        if(soyLider() && !busquedaIniciada()) {
+            JSONObject myObject = new JSONObject();
+            myObject.put("leader", RoomServices.room.getLeader());
+            myObject.put("room", RoomServices.room.getId());
+            ws.session.send(ws.busquedaComenzar, myObject.toString());
+            return true;
+        }
+        return false;
+    }
 
-    public static void aceptarInvitacion (String leader, String roomId) {}
-
-    //public static Boolean buscarPartida () {}
-
-    //public static Boolean cancelarBusqueda () {}
+    /**
+     * Si se había iniciado la búsqueda de partida, la cancela. Si no se había iniciado 
+     * no hace nada. 
+     * @return true si se ha podido cancelar la búsqueda, false si la búsqueda no había empezado
+     */
+    public static Boolean cancelarBusqueda () {
+        if (busquedaIniciada()) {
+            JSONObject myObject = new JSONObject();
+            myObject.put("leader", RoomServices.room.getLeader());
+            myObject.put("room", RoomServices.room.getId());
+            myObject.put("player", UserService.getUsername());
+            ws.session.send(ws.busquedaCancelar, myObject.toString());
+            return true;
+        }
+        return false;
+    }
 }

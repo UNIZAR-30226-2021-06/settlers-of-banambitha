@@ -1,5 +1,6 @@
 package es.susangames.catan.service;
 
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,6 +24,7 @@ import org.springframework.web.socket.messaging.WebSocketStompClient;
 import org.springframework.web.socket.sockjs.client.SockJsClient;
 import org.springframework.web.socket.sockjs.client.Transport;
 import org.springframework.web.socket.sockjs.client.WebSocketTransport;
+import es.susangames.catan.App;
 //import org.graalvm.compiler.lir.LIRInstruction.Use;
 import org.json.*;
 import javafx.application.Platform;
@@ -45,7 +47,21 @@ public class ws {
     public static final StompSession session;
 
     public static final String crearSala = "/app/sala/crear";
-
+    public static final String salaCerrar = "/app/sala/cerrar";
+    public static final String salaAbandonar = "/app/sala/abandonar";
+    public static final String invitacionEnviar = "/app/invitacion/enviar";
+    public static final String invitacionCancelar = "/app/invitacion/cancelar";
+    public static final String invitacionAceptar = "/app/invitacion/aceptar";
+    public static final String busquedaComenzar = "/app/partida/busqueda/comenzar";
+    public static final String busquedaCancelar = "/app/partida/busqueda/cancelar";
+    public static final String partidaTestComenzar = "/app/partida/test";
+    public static final String partidaJugada = "/app/partida/jugada";
+    public static final String partidaRecargar = "/app/partida/recargar";
+    public static final String proponerComercio =  "/app/partida/comercio/proponer";
+    public static final String aceptarComercio = "/app/partida/comercio/aceptar";
+    public static final String rechazarComercio = "/app/partida/comercio/rechazar";
+    public static final String enviarMensajePrivado = "/app/enviar/privado";
+    public static final String enviarMensajePartida = "/app/enviar/partida";
 
     private static Subscription invitacion_topic_id;
     private static Subscription sala_crear_topic_id;
@@ -252,6 +268,7 @@ public class ws {
     public static void procesarMensajeAccionSala (Object payload) {
         if (RoomServices.room != null) {
             JSONObject jsObj = new JSONObject(payload.toString());
+            System.out.println(jsObj.toString(4));
             String status = jsObj.getString("status");
             switch (status) {
                 case "CREATED":
@@ -293,6 +310,13 @@ public class ws {
                     RoomServices.buscandoPartida = false;
                     sala_act_topic_id.unsubscribe();
                     //this.router.navigate(["/board"])
+                    System.out.println("||||||||||| FOUND |||||||||||");
+                    try {
+                        App.nuevaPantalla("/view/gameplay.fxml");
+                    } catch (IOException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
                 case "FAILED":
                     RoomServices.room = null;
                     RoomServices.buscandoPartida = false;
@@ -304,6 +328,54 @@ public class ws {
                     break;
                 default:
             }
+        }
+    }
+
+    /**
+     * Cierra la sala en la que se encuentra el jugador (si es que se 
+     * encuentra en alguna). Solo se puede cerrar la sala si el usuario
+     * es el líder de la sala.
+     * Si la sala estaba en estado SEARCHING, entonces cancela la búsqueda
+     * y cierra la sala (solo si el usuario es el líder).
+     * @param crearSala: indica si se debe tratar de crear una nueva sala o no.
+     */
+    public static void cerrarSala (Boolean crearSala) {
+        if (RoomServices.soyLider()) {
+            JSONObject myObject = new JSONObject();
+            myObject.put("leader", RoomServices.room.getLeader());
+            myObject.put("room", RoomServices.room.getId());
+            session.send(salaCerrar, myObject.toString());
+            sala_act_topic_id.unsubscribe();
+            RoomServices.buscandoPartida = false;
+            RoomServices.uniendoseASala = false;
+            RoomServices.room = null;
+            if ( crearSala ){
+                RoomServices.crearSala();
+            }
+        }
+    }
+
+    /**
+   * Abandona la sala en la que se encuentra el usuario (si es que se encuentra
+   * en alguna). Si el usuario es el líder, entonces cierra la sala. 
+   * Si el estado de la sala es SEARCHING, entonces cancela la búsqueda y cierra la 
+   * sala conforme a lo especificado anteriormente. 
+   * @param crearSala: indica si se debe tratar de crear una nueva sala o no.
+   */
+    public static void abandonarSala(Boolean crearSala) {
+        if ( RoomServices.room != null && !RoomServices.soyLider() ){
+            JSONObject myObject = new JSONObject();
+            myObject.put("leader", RoomServices.room.getLeader());
+            myObject.put("room", RoomServices.room.getId());
+            myObject.put("player", UserService.getUsername());
+            session.send(salaAbandonar, myObject.toString());
+            sala_act_topic_id.unsubscribe();
+            RoomServices.buscandoPartida = false;
+            RoomServices.uniendoseASala = false;
+            RoomServices.room = null;
+            if ( crearSala ){
+                RoomServices.crearSala();
+            }   
         }
     }
 }

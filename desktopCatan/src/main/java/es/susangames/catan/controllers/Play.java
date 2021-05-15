@@ -1,6 +1,7 @@
 package es.susangames.catan.controllers;
 
 import es.susangames.catan.service.LangService;
+import es.susangames.catan.service.RoomServices;
 import javafx.fxml.FXML;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.*;
@@ -111,8 +112,9 @@ public class Play {
         System.out.println(typeGameSelector.getValue());
         System.out.println(skinSelector.getValue());
         // Buscar partida
+        System.out.println("___________Pulsacion___________");
+        RoomServices.buscarPartida();
         // Cancelar
-        App.nuevaPantalla("/view/gameplay.fxml");
     }
    
 
