@@ -4,7 +4,8 @@
     <div class="main-wrapper" fxLayout="row" fxLayoutAlign="center center">
         <mat-card class="box mat-elevation-z10">
             <mat-card-header>
-                <mat-card-title>Register
+                <mat-card-title>
+                    {{langService.get("register")}}
                     <button mat-icon-button (click)="openDialog()">
                     <mat-icon>info</mat-icon>
                   </button>
@@ -16,23 +17,29 @@
             <form #f="ngForm" (ngSubmit)="onSubmit(f)" *ngIf="usernameForm.get('username') as usernameControl">
                 <mat-card-content>
                     <mat-form-field appearance="fill" class="example-full-width" [formGroup]="usernameForm">
-                        <mat-label>Enter your username</mat-label>
+                        <mat-label>
+                            {{langService.get("enter-username")}}
+                        </mat-label>
                         <input matInput placeholder="Username" name="username" formControlName="username" matInput>
                         <mat-error *ngIf="usernameControl.hasError('required')">
-                            Username is required
+                            {{langService.get("username-required")}}
                         </mat-error>
                         <mat-error *ngIf="usernameControl.hasError('invalidAsync')">
-                            This username is already in use
+                            {{langService.get("username-in-use")}}
                         </mat-error>
                     </mat-form-field>
 
                     <mat-form-field appearance="fill" class="example-full-width">
-                        <mat-label>Enter your email</mat-label>
+                        <mat-label>
+                            {{langService.get("enter-mail")}}
+                        </mat-label>
                         <input matInput type="email" name="email" ngModel email required pattern="^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$" #email="ngModel" placeholder="someone@example.com">
                     </mat-form-field>
 
                     <mat-form-field appearance="fill" class="example-full-width">
-                        <mat-label>Enter your password</mat-label>
+                        <mat-label>
+                            {{langService.get("enter-password")}}
+                        </mat-label>
                         <input matInput [type]="hide ? 'password' : 'text'" name="password" ngModel required pattern="^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,32}$" #password="ngModel">
 
                         <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
@@ -42,8 +49,9 @@
                 </mat-card-content>
                 <div class="boton">
                     <button mat-stroked-button color="accent" [disabled]="f.invalid || usernameForm.invalid" class="btn-block">
-                    Register  <mat-icon>app_registration</mat-icon>
-                  </button>
+                        {{langService.get("register")}}
+                        <mat-icon>app_registration</mat-icon>
+                    </button>
                 </div>
             </form>
             <div style="margin-left: 10px;" *ngIf="loading">

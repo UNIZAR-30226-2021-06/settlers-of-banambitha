@@ -1,8 +1,9 @@
-import { Injectable } from '@angular/core';
+import { Component, Inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Connectable, WsService } from '../ws/ws.service';
 import { UserService } from '../user/user.service';
 import { UserCardInfo } from '../room/room.service';
+import { MatSnackBar, MatSnackBarRef, MAT_SNACK_BAR_DATA } from '@angular/material/snack-bar';
 
 
 /**
@@ -31,7 +32,8 @@ enum MessageKeys {
   RECURSOS                        = "Recursos", 
   CARTAS                          = "Cartas",
   PUNTUACIONES                    = "Puntuacion",
-  TURNO                           = "Turno", 
+  TURNO_ACUM                      = "Turno", 
+  TURNO_JUGADOR                   = "Turno_Jugador", 
   GANADOR                         = "Ganador",
   PLAYER_1                        = "Player_1",
   PLAYER_2                        = "Player_2",
@@ -43,7 +45,20 @@ enum MessageKeys {
   PUERTO_CEREAL                   = "puertoCereales",
   PUERTO_ARCILLA                  = "puertoArcilla",
   PUERTOS_BASICOS                 = "puertosBasicos",
-  CLOCK                           = "Clock"
+  CLOCK                           = "Clock",
+  PRIMEROS_CAMINOS                = "primerosCaminos",
+  PRIMEROS_ASENTAMIENTOS          = "primerosAsentamiento",
+  PLAYER_NAMES                    = "playerNames"
+}
+
+
+/**
+ * Estados posibles de un mensaje de comercio
+ */
+enum MsgComercioStatus {
+  REQUEST = "REQUEST",
+  ACCEPT  = "ACCEPT",
+  DECLINE = "DECLINE"
 }
 
 
@@ -53,7 +68,7 @@ enum MessageKeys {
 enum Jugada {
   CONSTRUIR_POBLADO   = "construir poblado",
   MEJORAR_POBLADO     = "mejorar poblado",
-  CONSTRUIR_CAMINO    = "crear carretera", 
+  CONSTRUIR_CAMINO    = "construir camino", 
   MOVER_LADRON        = "mover ladron", 
   PASAR_TURNO         = "finalizar turno",
   PRIMER_ASENTAMIENTO = "primer asentamiento", 
@@ -144,14 +159,6 @@ export enum TipoCamino {
 
 
 /**
- * Códigos de error
- * TODO: implementar códigos de error
- */
-enum CodigoError {
-}
-
-
-/**
  * Mensaje de solicitud de jugada
  */
 interface MsgJugada {
@@ -199,7 +206,9 @@ export interface Jugador {
   color:    Color,
   puntos:   number, 
   cartas:   CartasJugador,
-  recursos: RecursosJugador
+  recursos: RecursosJugador,
+  primerosAsentamientos: boolean,
+  primerosCaminos:       boolean
 }
 
 
@@ -207,7 +216,8 @@ export interface Jugador {
  * Mensaje que se puede recibir durante una partida
  */
 export interface Mensaje {
-  remitente: String, 
+  esError: boolean
+  remitente: Jugador, 
   body:      String, 
   timeStamp: String
 }
@@ -269,21 +279,44 @@ export interface Tablero {
 
 
 /**
+ * Interfaz auxiliar para gestionar una petición 
+ * de comercio
+ */
+export interface ProductoComercio {
+  type: Recurso, 
+  cuan: number
+}
+
+
+/**
+ * Solicitud de comercio
+ */
+export interface SolicitudComercio {
+  from: number,
+  res1: ProductoComercio, 
+  res2: ProductoComercio,
+  timeStamp: string
+}
+
+
+/**
  * Almacena toda la información necesaria de una partida
  */
 export interface Partida {
-  id:              String,
-  miTurno:         number,
-  turnoActual:     number,
-  tablero:         Tablero,
-  resultadoTirada: number, 
-  jugadores:       Array<Jugador>,
-  mensajes:        Array<Mensaje>, 
-  clock:           number,
-  PobladoDisponible: boolean,
-  CaminoDisponible: boolean, 
-  CiudadDisponible: boolean, 
-  PrimerTurno: boolean
+  id:                    String,
+  miTurno:               number,
+  turnoActual:           number,
+  totalTurnos:           number,
+  tablero:               Tablero,
+  resultadoTirada:       number, 
+  jugadores:             Array<Jugador>,
+  mensajes:              Array<Mensaje>, 
+  clock:                 number,
+  PobladoDisponible:     boolean,
+  CaminoDisponible:      boolean, 
+  CiudadDisponible:      boolean, 
+  movioLadron:           boolean
+  yaComercio:            boolean
 }
 
 
@@ -297,19 +330,37 @@ export class GameService implements Connectable{
 
   private static readonly coloresPorId: Array<Color> = [Color.AZUL, Color.ROJO, Color.AMARILLO, Color.VERDE]
   private static readonly numAristas:   number = 72
-  private static readonly numVertices:  number = 52
+  private static readonly numVertices:  number = 54
   private static readonly numHexagonos: number = 19
   private static readonly numJugadores: number = 4 //si se cambia este valor se tiene que cambiar buena parte del código
 
-  public partida: Partida
-  private count: number = 0
+  public partida: Partida = {
+      miTurno: 0,
+      id: "",
+      jugadores: this.inicializarJugadores(["","","",""]),
+      turnoActual: 0, 
+      totalTurnos: 0,
+      tablero: this.tableroVacio(), 
+      resultadoTirada: 0, 
+      mensajes: [],
+      clock: -1,
+      PobladoDisponible: false,
+      CiudadDisponible: false, 
+      CaminoDisponible: false,
+      movioLadron: false,
+      yaComercio: false
+  }
+
+  public cargandoPartida: boolean = false
+  public ultimaSolicitudComercio: SolicitudComercio
 
   //Identificadores de los topics a los que se suscribe 
   //el jugador
-  private test_partida_topic_id:  any
-  private partida_act_topic_id:   any
-  private partida_chat_topic_id:  any
-  private partida_com_topic_id:   any
+  private test_partida_topic_id:   any
+  private partida_act_topic_id:    any
+  private partida_chat_topic_id:   any
+  private partida_com_topic_id:    any
+  private partida_reload_topic_id: any
 
   //Cliente de stomp
   private stompClient: any
@@ -321,15 +372,76 @@ export class GameService implements Connectable{
    * @param router      router de la aplicación
    * @param userService servicio de usuario a utilizar (singleton)
    */
-  constructor(private wsService: WsService, private router: Router, private userService: UserService) {
+  constructor(private wsService: WsService, private router: Router, private userService: UserService, private _snackBar: MatSnackBar) {
 
     if ( ! wsService.atatchConnectable(this)){
       this.onConnect();
     }
 
-    //Solo para pruebas
-    this.initPartidaPrueba()
+    this.cargandoPartida = false
+    this.initData()
 
+    // this.initPartidaPrueba()
+    // this.ultimaSolicitudComercio = {
+    //   from: 1, 
+    //   res1: {
+    //     type: Recurso.MADERA,
+    //     cuan: 10
+    //   },
+    //   res2: {
+    //     type: Recurso.LANA,
+    //     cuan: 5
+    //   },
+    //   timeStamp: "12:12"
+    // }
+    // this.openWinnerSnackBar(2)
+
+  }
+
+  /**
+   * Inicializa los datos de la partida (se asegura de que los valores
+   * no son nulos)
+   */
+  public initData(): void {
+    this.partida = {
+      miTurno: 0,
+      id: "",
+      jugadores: this.inicializarJugadores(["","","",""]),
+      turnoActual: 0, 
+      totalTurnos: 0,
+      tablero: this.tableroVacio(), 
+      resultadoTirada: 0, 
+      mensajes: [],
+      clock: -1,
+      PobladoDisponible: false,
+      CiudadDisponible: false, 
+      CaminoDisponible: false,
+      movioLadron: false,
+      yaComercio: false
+    }
+  }
+
+  /**
+   * Abre una snack bar con la informacion de la ultima solicitud 
+   * de comercio recibida
+   */
+  public openTradeOfferSnackBar(): void {
+    this._snackBar.openFromComponent(TradeOfferSnackBar, {
+      data: { gameService: this, solicitud: this.ultimaSolicitudComercio },
+      horizontalPosition: "left",
+      verticalPosition: "top"
+    });
+  }
+
+
+  /**
+   * Abre una snackbar con información sobre el ganador de la partida
+   * 
+   * @param winner id del jugador que ganó la partida
+   */
+  public openWinnerSnackBar(winner: number): void {
+    let winnerName: String = (winner == this.partida.miTurno) ? "Has" : (this.partida.jugadores[winner - 1].nombre + " ha")
+    this._snackBar.open("¡" + winnerName + " ganado la partida!", "Entendido") 
   }
 
 
@@ -340,6 +452,40 @@ export class GameService implements Connectable{
   public onConnect(): void {
 
     this.stompClient = this.wsService.getStompClient() 
+  }
+
+
+  /**
+   * Envía una solicitud para recargar la partida
+   * 
+   * @param idPartida id de la partida a recargar
+   */
+  public recargarPartida(idPartida: string): void {
+    
+    this.finalizarpartida()
+
+    this.partida.id = idPartida
+
+    let msg = {
+      player: this.userService.getUsername(),
+      game: idPartida,
+      reload: true
+    }
+
+    let that = this
+    //Topic de recargar parrida
+    this.partida_com_topic_id = this.stompClient.subscribe(WsService.partida_reload_topic + this.userService.getUsername(),
+    function (message) {
+      if (message.body){
+        that.procesarMensajeRecarga(JSON.parse(message.body))
+      }else{
+        console.log("Error crítico")
+      }
+    });
+
+    this.stompClient.send(WsService.partidaRecargar, {}, JSON.stringify(msg) )
+
+    this.cargandoPartida = true
   }
 
 
@@ -383,30 +529,24 @@ export class GameService implements Connectable{
    * @Return true si ha podido inicializar la partida, false en 
    * caso contrario
    */
-  public comenzarPartida(idPartida: string, jugadores: Array<String>): boolean{
+  public comenzarPartida(idPartida: String, jugadores: Array<String>): boolean{
     
     console.log("Iniciando partida...")
+    console.log(jugadores)
+    this.cargandoPartida = true
     let miTurno: number = jugadores.indexOf(this.userService.getUsername())
     if ( jugadores.length == GameService.numJugadores && miTurno >= 0){
-      this.partida = {
-        miTurno: miTurno + 1,
-        id: idPartida, 
-        jugadores: this.inicializarJugadores(jugadores),
-        turnoActual: 0, 
-        tablero: this.tableroVacio(), 
-        resultadoTirada: 0, 
-        mensajes: [],
-        clock: -1,
-        PobladoDisponible: false,
-        CiudadDisponible: false, 
-        CaminoDisponible: false,
-        PrimerTurno: false
-      }
+      console.log("comenzando partida")
+      this.partida.miTurno = miTurno + 1
+      this.partida.id = idPartida
+      this.partida.jugadores = this.inicializarJugadores(jugadores)
+      this.partida.clock = -1
 
       this.subscribeToTopics()
-
+      this.router.navigate(["/board"])
       return true
     }
+    console.log("no se pudo comenzar la partida")
 
     return false
   }
@@ -443,7 +583,7 @@ export class GameService implements Connectable{
       });
 
       //Suscripción a las peticiones de comercio
-      this.partida_com_topic_id = this.stompClient.subscribe(WsService.partida_com_topic + this.partida.id,
+      this.partida_com_topic_id = this.stompClient.subscribe(WsService.partida_com_topic + this.partida.id + "/" + this.partida.miTurno,
       function (message) {
         if (message.body){
           that.procesarMensajeComercio(JSON.parse(message.body))
@@ -451,6 +591,7 @@ export class GameService implements Connectable{
           console.log("Error crítico")
         }
       });
+
     }
   }
 
@@ -463,14 +604,42 @@ export class GameService implements Connectable{
   private procesarMensajePartida(msg: Object): void{
       //Actualizar la partida con la nueva información
       this.actualizarPartida(msg)
-      console.log("ServerResponse: " + this.count )
-      console.log(this.partida)
-      this.count++
+      this.cargandoPartida = false
 
       if (msg[MessageKeys.GANADOR] > 0) {
         //Finalizar la partida y mostrar estadísticas
+        this.router.navigate(["/home/profile"])
+        this.openWinnerSnackBar(msg[MessageKeys.GANADOR])
         this.finalizarpartida()
       }
+  }
+
+
+  /**
+   * Procesa el mensaje de recarga de partida
+   * 
+   * @param msg 
+   */
+  public procesarMensajeRecarga(msg: Object): void{
+
+    console.log("Ahora la partida es: " + this.partida.id)
+
+    let playerNames: Array<String> = msg[MessageKeys.PLAYER_NAMES]
+    let miTurno: number = playerNames.indexOf(this.userService.getUsername())
+    if (  miTurno >= 0 ){
+      console.log("comenzando partida")
+      this.partida.miTurno = miTurno + 1
+      this.partida.clock = -1
+
+      this.procesarMensajePartida(msg)
+      console.log("la partida: ")
+      console.log(this.partida.id)
+      this.subscribeToTopics()
+
+    }else{
+
+      console.log("no estabas en esa partida!")
+    }
   }
 
 
@@ -482,9 +651,10 @@ export class GameService implements Connectable{
   private procesarMensajeChat(msg: Object): void{
     console.log(msg)
     let mensajeNuevo: Mensaje = {
-      remitente: msg["from"], 
+      remitente: this.partida.jugadores[msg["from"] - 1], 
       body: msg["body"],
-      timeStamp: msg["time"]
+      timeStamp: msg["time"],
+      esError: false
     }
 
     //TODO: ordenar los mensajes por timestamp, habrá que 
@@ -500,7 +670,35 @@ export class GameService implements Connectable{
    */
   private procesarMensajeComercio(msg: Object): void{
     console.log(msg)
-    //TODO: informar sobre comercio entrante
+    let infoMsg: string
+    switch (msg["type"]){
+
+      case MsgComercioStatus.REQUEST: 
+        if ( this.partida.turnoActual != this.partida.miTurno ){
+          this.ultimaSolicitudComercio = {
+            from: msg["from"],
+            res1: msg["res1"],
+            res2: msg["res2"],
+            timeStamp: msg["time"]
+          }
+          this.openTradeOfferSnackBar()
+          infoMsg = "¡" + this.partida.jugadores[msg["from"] - 1] + " quiere comerciar contigo!"
+          this.generarMensajePartida(infoMsg)
+        }
+        break
+
+      case MsgComercioStatus.ACCEPT: 
+        infoMsg = "¡" + this.partida.jugadores[msg["from"] - 1] + " ha ACEPTADO tu solicitud de comercio!"
+        this.generarMensajePartida(infoMsg)
+        break
+
+      case MsgComercioStatus.DECLINE: 
+        infoMsg = "¡" + this.partida.jugadores[msg["from"] - 1] + " ha RECHAZADO tu solicitud de comercio!"
+        this.generarMensajePartida(infoMsg)
+        break
+
+      default: 
+    }
   }
 
 
@@ -508,10 +706,41 @@ export class GameService implements Connectable{
    * Finaliza la partida actual (solo en el lado del cliente)
    */
   private finalizarpartida() {
-    this.partida = null
-    this.partida_act_topic_id.unsubscribe()
-    this.partida_com_topic_id.unsubscribe()
-    this.partida_chat_topic_id.unsubscribe()
+
+    this.cargandoPartida = false
+
+    this.partida = {
+      miTurno: 0,
+      id: "",
+      jugadores: this.inicializarJugadores(["","","",""]),
+      turnoActual: 0, 
+      totalTurnos: 0,
+      tablero: this.tableroVacio(), 
+      resultadoTirada: 0, 
+      mensajes: [],
+      clock: -1,
+      PobladoDisponible: false,
+      CiudadDisponible: false, 
+      CaminoDisponible: false,
+      movioLadron: false,
+      yaComercio: false
+    }
+
+    if ( this.partida_act_topic_id != null ){
+      this.partida_act_topic_id.unsubscribe()
+    }
+
+    if ( this.partida_com_topic_id != null ){
+      this.partida_com_topic_id.unsubscribe()
+    }
+
+    if ( this.partida_chat_topic_id != null ){
+      this.partida_chat_topic_id.unsubscribe()
+    }
+
+    if ( this.partida_reload_topic_id != null ){
+      this.partida_reload_topic_id.unsubscribe()
+    }
   }
 
 
@@ -602,7 +831,7 @@ export class GameService implements Connectable{
    * @return true si ha podido enviar la petición, false en caso 
    * contrario
    */
-  public cconstruirPrimerCamino( arista: number ): boolean {
+  public construirPrimerCamino( arista: number ): boolean {
     
     if ( this.esMiTurno() &&
          this.aristaValida(arista) &&
@@ -656,8 +885,10 @@ export class GameService implements Connectable{
   public moverLadron( hexagono: number): boolean {
 
     if ( this.esMiTurno() &&
-         this.partida.resultadoTirada == 7 ){
+         this.partida.resultadoTirada == 7  
+         && !this.partida.movioLadron){
 
+      this.partida.movioLadron = true
       let msg = this.construirJugada(Jugada.MOVER_LADRON, hexagono)
 
       this.stompClient.send(WsService.partidaJugada, {}, JSON.stringify(msg) )
@@ -701,7 +932,23 @@ export class GameService implements Connectable{
    * contrario
    */
   public comerciarConJugador(jugador: number, recursoOfrecido: Recurso, recursoSolicitado: Recurso, 
-                            cantidadOfrecida: Number, cantidadSolicitada: Number): void { }
+                            cantidadOfrecida: Number, cantidadSolicitada: Number): void {
+    console.log("Proponer comercio a " + jugador)
+    let msg = {
+      from: this.partida.miTurno, 
+      to:   jugador,
+      game: this.partida.id,
+      res1: {
+        type: recursoOfrecido,
+        cuan: cantidadOfrecida
+      },
+      res2: {
+        type: recursoSolicitado, 
+        cuan: cantidadSolicitada
+      }
+    }
+    this.stompClient.send(WsService.proponerComercio, {}, JSON.stringify(msg) )
+  }
 
 
   /**
@@ -710,33 +957,65 @@ export class GameService implements Connectable{
    * tipo correcto (ofrece el recurso solicitado y acepta el recurso ofrecido)
    * 
    * @param aristaPuerto puerto con el que se realizará el intercambio
-   * @param recursoOfrecido tipo de recurso ofrecido
    * @param recursoSolicitado tipo de recurso solicitado
-   * @param cantidadOfrecida  cantidad de recursos ofrecida
-   * @param cantidadSolicitada cantidad de recursos solicitada
-   * @return true si ha podido enviar la petición, false en caso 
-   * contrario
    */
-  public comerciarConPuerto(aristaPuerto: number, recursoOfrecido: Recurso, recursoSolicitado: Recurso, 
-                            cantidadOfrecida: Number, cantidadSolicitada: Number): void { }
+  public comerciarConPuerto(aristaPuerto: number, recursoSolicitado: Recurso, 
+                            numMadera: number, numArcilla: number, numMineral: number, 
+                            numCereales: number, numLana: number): void {
+    let solicitud: Object = {
+      id_puerto: aristaPuerto, 
+      materiales: {
+        madera:   numMadera,
+        lana:     numLana, 
+        arcilla:  numArcilla, 
+        mineral:  numMineral, 
+        cereales: numCereales 
+      },
+      material_que_recibe: recursoSolicitado
+    }
+    let msg = this.construirJugada(Jugada.COMERCIAR_PUERTO, solicitud)
+    this.stompClient.send(WsService.partidaJugada, {}, JSON.stringify(msg) )
+  }
 
                     
   /**
-   * Acepta la petición de comercio enviada por el jugador dado. 
+   * Acepta la última petición de comercio recibida
    * Solo se pueden aceptar peticiones fuera del turno del jugador
    * 
-   * @param jugador jugador que solicita el comercio
    */
-  public aceptarComercioJugador(jugador: number): void { }              
+  public aceptarComercioJugador(): void {
+    if ( this.partida.turnoActual != this.partida.miTurno ){
+      let msg = {
+        from: this.partida.miTurno, 
+        to:   this.ultimaSolicitudComercio.from,
+        game: this.partida.id,
+        res1: {
+          type: this.ultimaSolicitudComercio.res1.type,
+          cuan: this.ultimaSolicitudComercio.res1.cuan
+        },
+        res2: {
+          type: this.ultimaSolicitudComercio.res2.type,
+          cuan: this.ultimaSolicitudComercio.res2.cuan
+        }
+      }
+      this.stompClient.send(WsService.aceptarComercio, {}, JSON.stringify(msg) )
+    }
+  }              
 
 
   /**
-   * Rechaza la petición de comercio enviada por el jugador dado. 
+   * Rechaza la última petición de comercio
    * Solo se pueden rechazar peticiones fuera del turno de partida
    * 
-   * @param jugador jugador que solicitó el comercio
    */
-  public rechazarComercioJugador(jugador: number): void { }
+  public rechazarComercioJugador(): void {
+    let msg = {
+      from: this.partida.miTurno, 
+      to:   this.ultimaSolicitudComercio.from,
+      game: this.partida.id
+    }
+    this.stompClient.send(WsService.rechazarComercio, {}, JSON.stringify(msg) )
+  }
 
 
   /**
@@ -746,7 +1025,7 @@ export class GameService implements Connectable{
    */
   public enviarMensaje(mensaje: String): void{
     let msg = {
-      from: this.userService.getUsername,
+      from: this.partida.miTurno,
       game: this.partida.id, 
       body: mensaje
     }
@@ -767,6 +1046,10 @@ export class GameService implements Connectable{
     this.partida.CaminoDisponible  = this.puedeConstruirCamino()
     this.partida.CiudadDisponible  = this.puedeConstruirCiudad()
     this.partida.PobladoDisponible = this.puedeConstruirPoblado()
+    if ( !this.esMiTurno() ){
+      this.partida.movioLadron = false
+      this.partida.yaComercio  = false
+    }
   }
 
 
@@ -852,6 +1135,7 @@ export class GameService implements Connectable{
     return this.partida.miTurno == this.partida.turnoActual
   }
 
+
   /**
    * @return true si el usuario tiene los recursos 
    * suficientes como para construir un poblado
@@ -861,7 +1145,7 @@ export class GameService implements Connectable{
     let madera:  number = this.partida.jugadores[this.partida.miTurno - 1].recursos.madera
     let lana:    number = this.partida.jugadores[this.partida.miTurno - 1].recursos.lana
     let cereal:  number = this.partida.jugadores[this.partida.miTurno - 1].recursos.cereales
-    return (this.partida.PrimerTurno && this.contarMisPoblados() < 2) ||
+    return (!this.partida.jugadores[this.partida.miTurno - 1].primerosAsentamientos) ||
            arcilla > 0 && cereal > 0 && lana > 0 && madera > 0
   }
 
@@ -884,7 +1168,7 @@ export class GameService implements Connectable{
   public puedeConstruirCamino(): boolean {
     let arcilla: number = this.partida.jugadores[this.partida.miTurno - 1].recursos.arcilla
     let madera:  number = this.partida.jugadores[this.partida.miTurno - 1].recursos.madera
-    return (this.partida.PrimerTurno && this.contarMisCaminos() < 2) ||
+    return (!this.partida.jugadores[this.partida.miTurno - 1].primerosCaminos) ||
             arcilla > 0 && madera > 0
   }
 
@@ -1032,6 +1316,7 @@ export class GameService implements Connectable{
    * @Return un tablero vacío
    */
   private tableroVacio(): Tablero {
+    console.log("tablero vacio")
     return {
       hexagonos: {
         valor: [],
@@ -1058,20 +1343,26 @@ export class GameService implements Connectable{
   }
 
 
+  /**
+   * Funcion de prueba no la uses
+   */
   private initPartidaPrueba(){
+    this.cargandoPartida = false
     this.partida = {
       miTurno: 1,
       id: "", 
       jugadores: this.inicializarJugadores(["Me!", "Some1", "Some2", "Some3"]),
       turnoActual: 1, 
+      totalTurnos: 0,
       tablero: this.tableroPrueba(), 
       resultadoTirada: 7, 
       mensajes: [],
       clock: -1,
       PobladoDisponible: true,
       CiudadDisponible: true, 
-      CaminoDisponible: true,
-      PrimerTurno: true
+      CaminoDisponible: true, 
+      movioLadron: false,
+      yaComercio: false
     }
 
     this.partida.jugadores[0].recursos = {
@@ -1089,6 +1380,12 @@ export class GameService implements Connectable{
       lana: 1, 
       cereales: 8
     }
+
+    this.partida.mensajes.push({ esError:false, remitente: this.partida.jugadores[1], timeStamp: "17:49", body:"Hola a todos!" })
+    this.partida.mensajes.push({ esError:false, remitente: this.partida.jugadores[2], timeStamp: "17:49", body:"Hola tío!" })
+    this.partida.mensajes.push({ esError:false, remitente: this.partida.jugadores[3], timeStamp: "17:49", body:"Seré el rey de los piratas!" })
+    this.partida.mensajes.push({ esError:false, remitente: null, timeStamp: "17:49", body:"Alguien ha hecho algo!" })
+    this.partida.mensajes.push({ esError:true, remitente: null, timeStamp: "17:49", body:"Alguien ha hecho algo mu malo nooooo!" })
   }
 
   /**
@@ -1240,14 +1537,16 @@ export class GameService implements Connectable{
     
     let jugadoresPartida: Array<Jugador> = []
     for (let i = 0; i < jugadores.length; i++){
-      jugadoresPartida[i] = {
+      jugadoresPartida.push({
         nombre: jugadores[i],
         turno: i + 1, 
         color: GameService.coloresPorId[i],
         puntos: 0, 
         recursos: { madera: 0, arcilla: 0, cereales: 0, lana: 0, mineral: 0 },
-        cartas: { D1: 0, D2: 0, D3: 0, D4: 0, D5: 0, E1: 0, E2: 0}
-      }
+        cartas: { D1: 0, D2: 0, D3: 0, D4: 0, D5: 0, E1: 0, E2: 0},
+        primerosAsentamientos: false,
+        primerosCaminos: false
+      })
     }
     return jugadoresPartida
   }
@@ -1279,25 +1578,25 @@ export class GameService implements Connectable{
    */
   private actualizarRecursosJugadores(recursos: Object){
 
-    if ( recursos[MessageKeys.PLAYER_1] ){
+    if ( recursos[MessageKeys.PLAYER_1] != null ){
       this.actualizarRecursosJugador(recursos[MessageKeys.PLAYER_1], 0)
     } else {
       console.log("Faltan los recursos del jugador 1")
     }
 
-    if ( recursos[MessageKeys.PLAYER_2] ){
+    if ( recursos[MessageKeys.PLAYER_2] != null ){
       this.actualizarRecursosJugador(recursos[MessageKeys.PLAYER_2], 1)
     } else {
       console.log("Faltan los recursos del jugador 2")
     }
 
-    if ( recursos[MessageKeys.PLAYER_3] ){
+    if ( recursos[MessageKeys.PLAYER_3] != null ){
       this.actualizarRecursosJugador(recursos[MessageKeys.PLAYER_3], 2)
     } else {
       console.log("Faltan los recursos del jugador 3")
     }
 
-    if ( recursos[MessageKeys.PLAYER_4] ){
+    if ( recursos[MessageKeys.PLAYER_4] != null ){
       this.actualizarRecursosJugador(recursos[MessageKeys.PLAYER_4], 3)
     } else {
       console.log("Faltan los recursos del jugador 4")
@@ -1334,25 +1633,25 @@ export class GameService implements Connectable{
    */
   private actualizarCartasJugadores(cartas: Object){
 
-    if ( cartas[MessageKeys.PLAYER_1] ){
+    if ( cartas[MessageKeys.PLAYER_1] != null ){
       this.actualizarCartasJugador(cartas[MessageKeys.PLAYER_1], 0)
     } else {
       console.log("Faltan las cartas del jugador 1")
     }
 
-    if ( cartas[MessageKeys.PLAYER_2] ){
+    if ( cartas[MessageKeys.PLAYER_2] != null ){
       this.actualizarCartasJugador(cartas[MessageKeys.PLAYER_2], 1)
     } else {
       console.log("Faltan las cartas del jugador 2")
     }
 
-    if ( cartas[MessageKeys.PLAYER_3] ){
+    if ( cartas[MessageKeys.PLAYER_3] != null ){
       this.actualizarCartasJugador(cartas[MessageKeys.PLAYER_3], 2)
     } else {
       console.log("Faltan las cartas del jugador 3")
     }
 
-    if ( cartas[MessageKeys.PLAYER_4] ){
+    if ( cartas[MessageKeys.PLAYER_4] != null ){
       this.actualizarCartasJugador(cartas[MessageKeys.PLAYER_4], 3)
     } else {
       console.log("Faltan las cartas del jugador 4")
@@ -1405,19 +1704,22 @@ export class GameService implements Connectable{
    */
   private actualizarJugadores(msg: Object): void{
 
-    if ( msg[MessageKeys.RECURSOS] ){
+    if ( msg[MessageKeys.RECURSOS] != null ){
+      console.log("Actualizando recursos")
       this.actualizarRecursosJugadores(msg[MessageKeys.RECURSOS])
     }else{
       console.log("Faltan los recursos en el mensaje")
     }
 
-    if ( msg[MessageKeys.CARTAS] ){
+    if ( msg[MessageKeys.CARTAS] != null ){
+      console.log("Actualizando cartas")
       this.actualizarCartasJugadores(msg[MessageKeys.CARTAS])
     }else{
       console.log("Faltan las cartas en el mensaje")
     }
 
-    if ( msg[MessageKeys.PUNTUACIONES] ){
+    if ( msg[MessageKeys.PUNTUACIONES] != null ){
+      console.log("Actualizando puntuaciones")
       this.actualizarPuntuacionJugadores(msg[MessageKeys.PUNTUACIONES])
     }else{
       console.log("Faltan las puntuaciones en el mensaje")
@@ -1435,19 +1737,21 @@ export class GameService implements Connectable{
    */
   private actualizarHexagonos(hexagonos: Object): void {
 
-    if ( hexagonos[MessageKeys.HEXAGONOS_TIPOS] ){
+    if ( hexagonos[MessageKeys.HEXAGONOS_TIPOS] != null ){
+      console.log( hexagonos[MessageKeys.HEXAGONOS_TIPOS] )
       this.partida.tablero.hexagonos.tipo = hexagonos[MessageKeys.HEXAGONOS_TIPOS]
+      console.log(this.partida.tablero.hexagonos.tipo)
     }else{
       console.log("Faltan los tipos de los hexágonos")
     }
 
-    if ( hexagonos[MessageKeys.HEXAGONOS_VALORES] ){
+    if ( hexagonos[MessageKeys.HEXAGONOS_VALORES] != null ){
       this.partida.tablero.hexagonos.valor = hexagonos[MessageKeys.HEXAGONOS_VALORES]
     }else{
       console.log("Faltan los valores de los hexágonos")
     }
 
-    if ( hexagonos[MessageKeys.HEXAGONOS_LADRON] ){
+    if ( hexagonos[MessageKeys.HEXAGONOS_LADRON] != null ){
       this.partida.tablero.hexagonos.ladron = hexagonos[MessageKeys.HEXAGONOS_LADRON]
     }else{
       console.log("Faltan el ladrón")
@@ -1464,13 +1768,13 @@ export class GameService implements Connectable{
    */
   private actualizarVertices(Vertices: Object): void {
 
-    if ( Vertices[MessageKeys.VERTICES_ASENTAMIENTOS] ){
+    if ( Vertices[MessageKeys.VERTICES_ASENTAMIENTOS] != null ){
       this.partida.tablero.vertices.asentamiento = Vertices[MessageKeys.VERTICES_ASENTAMIENTOS]
     }else{
       console.log("Falta la información sobre asentamientos")
     }
 
-    if ( Vertices[MessageKeys.VERTICES_POSIBLES_ASENTAMIENTOS] ){
+    if ( Vertices[MessageKeys.VERTICES_POSIBLES_ASENTAMIENTOS] != null ){
       let posiblesAsentamientos: Array<Array<boolean>> = Vertices[MessageKeys.VERTICES_POSIBLES_ASENTAMIENTOS]
       for (let i = 0; i < posiblesAsentamientos.length; i++){
           this.partida.tablero.vertices.posible_asentamiento[i] = posiblesAsentamientos[i] 
@@ -1490,13 +1794,13 @@ export class GameService implements Connectable{
    */
   private actualizarAristas(Aristas: Object): void {
 
-    if ( Aristas[MessageKeys.ARISTAS_CAMINOS] ){
+    if ( Aristas[MessageKeys.ARISTAS_CAMINOS] != null ){
       this.partida.tablero.aristas.camino = Aristas[MessageKeys.ARISTAS_CAMINOS]
     }else{
       console.log("Falta la información sobre los caminos")
     }
 
-    if ( Aristas[MessageKeys.ARISTAS_POSIBLES_CAMINOS] ){
+    if ( Aristas[MessageKeys.ARISTAS_POSIBLES_CAMINOS] != null ){
       let posiblesCaminos: Array<Array<boolean>> = Aristas[MessageKeys.ARISTAS_POSIBLES_CAMINOS]
       for (let i = 0; i < posiblesCaminos.length; i++){
         this.partida.tablero.aristas.posible_camino[i] = posiblesCaminos[i]
@@ -1505,7 +1809,7 @@ export class GameService implements Connectable{
       console.log("Falta la información sobre posibles caminos")
     }
 
-    if ( Aristas[MessageKeys.ARISTAS_PUERTOS] ){
+    if ( Aristas[MessageKeys.ARISTAS_PUERTOS] != null ){
       let puertos: Object = Aristas[MessageKeys.ARISTAS_PUERTOS]
       this.partida.tablero.aristas.puertos.basico   = puertos[MessageKeys.PUERTOS_BASICOS]
       this.partida.tablero.aristas.puertos.madera   = puertos[MessageKeys.PUERTO_MADERA]
@@ -1526,23 +1830,127 @@ export class GameService implements Connectable{
    * Debería de ser el contenido de "Tab_info" del mensaje recibido desde el servidor.
    */
   private actualizarTablero(tab_info: Object): void {
-    if ( tab_info[MessageKeys.TAB_INFO_HEXAGONOS] ){
+
+    if ( tab_info[MessageKeys.TAB_INFO_HEXAGONOS] != null ){
       this.actualizarHexagonos(tab_info[MessageKeys.TAB_INFO_HEXAGONOS])
     }else{
       console.log("Faltan los hexágonos en el mensaje")
     }
 
-    if ( tab_info[MessageKeys.TAB_INFO_VERTICES]){
+    if ( tab_info[MessageKeys.TAB_INFO_VERTICES] != null ){
       this.actualizarVertices(tab_info[MessageKeys.TAB_INFO_VERTICES])
     }else{
       console.log("Faltan los vértices en el mensaje")
     }
 
-    if ( tab_info[MessageKeys.TAB_INFO_ARISTAS] ){
+    if ( tab_info[MessageKeys.TAB_INFO_ARISTAS] != null ){
       this.actualizarAristas(tab_info[MessageKeys.TAB_INFO_ARISTAS])
     }else{
       console.log("Faltan las aristas en el mensaje")
     }
+  }
+
+
+  /**
+   * Actualiza la información de los primeros asentamientos de los jugadores. 
+   * 
+   * @param primerosAsentamientos corresponde con el campo "primerosAsentamientos"
+   * que se encuentra en el mensaje recibido del servidor.
+   */
+  private actualiarPrimerosAsentamientos(primerosAsentamientos: Object): void {
+
+    if ( primerosAsentamientos[MessageKeys.PLAYER_1] != null ){
+      this.partida.jugadores[0].primerosAsentamientos = primerosAsentamientos[MessageKeys.PLAYER_1]
+    }else{
+      console.log("Faltan los primeros asentamientos del jugador 1")
+    }
+
+    if ( primerosAsentamientos[MessageKeys.PLAYER_2] != null ){
+      this.partida.jugadores[1].primerosAsentamientos = primerosAsentamientos[MessageKeys.PLAYER_2]
+    }else{
+      console.log("Faltan los primeros asentamientos del jugador 2")
+    }
+
+    if ( primerosAsentamientos[MessageKeys.PLAYER_3] != null ){
+      this.partida.jugadores[2].primerosAsentamientos = primerosAsentamientos[MessageKeys.PLAYER_3]
+    }else{
+      console.log("Faltan los primeros asentamientos del jugador 3")
+    }
+
+    if ( primerosAsentamientos[MessageKeys.PLAYER_4] != null ){
+      this.partida.jugadores[3].primerosAsentamientos = primerosAsentamientos[MessageKeys.PLAYER_4]
+    }else{
+      console.log("Faltan los primeros asentamientos del jugador 4")
+    }
+
+  }
+
+
+  /**
+   * Actualiza la información de los primeros caminos de los jugadores. 
+   * 
+   * @param primerosCaminos corresponde con el campo "primerosCaminos"
+   * que se encuentra en el mensaje recibido del servidor.
+   */
+  private actualiarPrimerosCaminos(primerosCaminos: Object): void {
+
+    if ( primerosCaminos[MessageKeys.PLAYER_1] != null ){
+      this.partida.jugadores[0].primerosCaminos = primerosCaminos[MessageKeys.PLAYER_1]
+    }else{
+      console.log("Faltan los primeros Caminos del jugador 1")
+    }
+
+    if ( primerosCaminos[MessageKeys.PLAYER_2] != null ){
+      this.partida.jugadores[1].primerosCaminos = primerosCaminos[MessageKeys.PLAYER_2]
+    }else{
+      console.log("Faltan los primeros Caminos del jugador 2")
+    }
+
+    if ( primerosCaminos[MessageKeys.PLAYER_3] != null ){
+      this.partida.jugadores[2].primerosCaminos = primerosCaminos[MessageKeys.PLAYER_3]
+    }else{
+      console.log("Faltan los primeros Caminos del jugador 3")
+    }
+
+    if ( primerosCaminos[MessageKeys.PLAYER_4] != null ){
+      this.partida.jugadores[3].primerosCaminos = primerosCaminos[MessageKeys.PLAYER_4]
+    }else{
+      console.log("Faltan los primeros asentamientos del jugador 4")
+    }
+  }
+
+
+  /**
+   * Genera un mensaje informativo sobre el transcurso de la partida que se 
+   * mostrará en el chat de partida.
+   * 
+   * @param message mensaje a mostrar
+   */
+  private generarMensajePartida(message: string): void{
+    let msg: Mensaje = {
+      remitente: null, 
+      esError: false,
+      timeStamp: null,
+      body: message
+    }
+    this.partida.mensajes.push(msg)
+  }
+
+
+  /**
+   * Genera un mensaje de error sobre el transcurso de la partida que se 
+   * mostrará en el chat de partida.
+   * 
+   * @param message mensaje de error a mostrar
+   */
+  private generarMensajeErrorPartida(message: string): void{
+    let msg: Mensaje = {
+      remitente: null, 
+      esError: true,
+      timeStamp: null,
+      body: message
+    }
+    this.partida.mensajes.push(msg)
   }
 
 
@@ -1555,37 +1963,100 @@ export class GameService implements Connectable{
   private actualizarPartida(msg: Object): void {
 
     if (msg[MessageKeys.CLOCK] != null &&
-        msg[MessageKeys.CLOCK] > this.partida.clock &&
-        msg[MessageKeys.EXIT_STATUS] == 0){
-
+        msg[MessageKeys.CLOCK] > this.partida.clock ){
+      
       this.partida.clock = msg[MessageKeys.CLOCK]
 
-      if ( msg[MessageKeys.TURNO] != null){
-        this.partida.turnoActual = msg[MessageKeys.TURNO]
+      if ( msg[MessageKeys.EXIT_STATUS] <= 0 ) {
+
+        this.generarMensajePartida(msg[MessageKeys.MENSAJE])
+
+        if ( msg[MessageKeys.PLAYER_NAMES] != null ){
+          for ( let i = 0; i < GameService.numJugadores; i++){
+            this.partida.jugadores[i].nombre = msg[MessageKeys.PLAYER_NAMES][i]
+            if ( msg[MessageKeys.PLAYER_NAMES][i] == this.userService.getUsername() ){
+              this.partida.miTurno = i + 1
+            }
+          }
+        }else{
+          console.log("Faltan los nombres de los jugadores")
+        }
+
+        if ( msg[MessageKeys.TURNO_JUGADOR] != null){
+          this.partida.turnoActual = msg[MessageKeys.TURNO_JUGADOR] + 1
+        }else{
+          console.log("Falta el turno de la jugada")
+        }
+
+        if ( msg[MessageKeys.TURNO_ACUM] != null){
+          this.partida.totalTurnos = msg[MessageKeys.TURNO_ACUM]
+        }else{
+          console.log("Faltan los turnos totales")
+        }
+
+        if ( msg[MessageKeys.RESULTADO_TIRADA] != null ){
+          this.partida.resultadoTirada = msg[MessageKeys.RESULTADO_TIRADA]
+        } else {
+          console.log("Falta el resultado de la tirada")
+        }
+
+        if ( msg[MessageKeys.TAB_INFO] != null ){
+          this.actualizarTablero(msg[MessageKeys.TAB_INFO])
+        }else{
+          console.log("Falta la información del tablero")
+        }
+
+        this.actualizarJugadores(msg)
+
+        if (msg[MessageKeys.PRIMEROS_ASENTAMIENTOS] != null){
+          this.actualiarPrimerosAsentamientos(msg[MessageKeys.PRIMEROS_ASENTAMIENTOS])
+        }else{
+          console.log("Faltan los primeros asentamientos")
+        }
+
+        if (msg[MessageKeys.PRIMEROS_CAMINOS] != null){
+          this.actualiarPrimerosCaminos(msg[MessageKeys.PRIMEROS_CAMINOS])
+        }else{
+          console.log("Faltan los primeros caminos")
+        }
+
+        this.actualizarPrecalculos()
+
       }else{
-        console.log("Falta el turno de la jugada")
+        this.generarMensajeErrorPartida(msg[MessageKeys.MENSAJE])
       }
 
-      if ( msg[MessageKeys.RESULTADO_TIRADA] != null ){
-        this.partida.resultadoTirada = msg[MessageKeys.RESULTADO_TIRADA]
-      } else {
-        console.log("Falta el resultado de la tirada")
-      }
-
-      if ( msg[MessageKeys.TAB_INFO] ){
-        this.actualizarTablero(msg[MessageKeys.TAB_INFO])
-      }else{
-        console.log("Falta la información del tablero")
-      }
-
-      this.actualizarJugadores(msg)
-      this.actualizarPrecalculos()
-
-    } else  if (msg[MessageKeys.CLOCK] != null &&
-        msg[MessageKeys.CLOCK] > this.partida.clock){
-          console.log("Mensaje desordenado, se ignora")
+    } else{
+      console.log("Mensaje desordenado, se ignora")
     }
   }
 
 
+}
+
+
+@Component({
+  selector: 'snack-bar-component-example-snack',
+  templateUrl: '../../game/trade-snack-bar.html',
+  styleUrls: ['../../game/trade-snack-bar.sass'],
+})
+export class TradeOfferSnackBar {
+
+  public solicitud: SolicitudComercio
+  public gameService: GameService
+
+  constructor(public dialogRef: MatSnackBarRef<TradeOfferSnackBar>, @Inject(MAT_SNACK_BAR_DATA) public data: any){
+    this.solicitud = data["solicitud"]
+    this.gameService = data["gameService"]
+  }
+
+  public aceptar(){
+    this.gameService.aceptarComercioJugador()
+    this.dialogRef.dismiss()
+  }
+
+  public rechazar(){
+    this.gameService.rechazarComercioJugador()
+    this.dialogRef.dismiss()
+  }
 }

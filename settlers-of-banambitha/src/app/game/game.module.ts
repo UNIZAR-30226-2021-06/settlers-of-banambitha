@@ -9,7 +9,6 @@ import { MatListModule} from '@angular/material/list';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
 import { BoardComponent } from './board/board.component';
-import { ChatComponent } from './chat/chat.component';
 import { StatsComponent } from './stats/stats.component';
 import { PlayerInfoComponent, InternalTradeDialog } from './player-info/player-info.component';
 import { ExternalTradeDialog } from './board/harbor/harbor.component';
@@ -31,6 +30,8 @@ import { HexNumberComponent } from './board/hex-number/hex-number.component';
 import { HarborComponent } from './board/harbor/harbor.component';
 import { MatDividerModule} from '@angular/material/divider';
 import { MatInputModule } from '@angular/material/input';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner'; 
+import {MatSnackBarModule} from '@angular/material/snack-bar'; 
 
 
 
@@ -38,7 +39,6 @@ import { MatInputModule } from '@angular/material/input';
   declarations: [
     GameplayComponent, 
     BoardComponent, 
-    ChatComponent, 
     StatsComponent, 
     PlayerInfoComponent,
     InternalTradeDialog,
@@ -69,7 +69,9 @@ import { MatInputModule } from '@angular/material/input';
     MatProgressBarModule,
     MatDividerModule, 
     ReactiveFormsModule,
-    MatInputModule
+    MatInputModule,
+    MatProgressSpinnerModule,
+    MatSnackBarModule
   ],
   exports: [GameplayComponent],
   entryComponents: [InternalTradeDialog, ExternalTradeDialog],

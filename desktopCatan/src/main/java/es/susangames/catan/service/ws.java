@@ -8,6 +8,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
+
+import es.susangames.catan.controllers.Gameplay;
 import es.susangames.catan.controllers.MainMenu;
 
 import org.json.JSONObject;
@@ -66,6 +68,12 @@ public class ws {
     private static Subscription invitacion_topic_id;
     private static Subscription sala_crear_topic_id;
     private static Subscription sala_act_topic_id;
+    // Partida
+    public static final String partida_act_topic = "/partida-act/";
+    public static final String partida_chat_topic = "/partida-chat/";
+    public static final String partida_com_topic = "/partida-com/";
+    public static final String partida_test_topicUrl = "/test-partida/";
+
 
     static {
         msgs = new HashMap<String, ArrayList<JSONObject>>();
@@ -306,17 +314,24 @@ public class ws {
                     RoomServices.updatePlayers(updated_players);
                     break;
                 case "FOUND":
+                    System.out.println("_____FOUND_____");
                     RoomServices.room = null;
                     RoomServices.buscandoPartida = false;
                     sala_act_topic_id.unsubscribe();
-                    //this.router.navigate(["/board"])
-                    System.out.println("||||||||||| FOUND |||||||||||");
-                    try {
-                        App.nuevaPantalla("/view/gameplay.fxml");
-                    } catch (IOException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
+
+                    JSONArray players = jsObj.getJSONArray("players");
+                    String stringPlayers[] = new String[players.length()];
+                    for (int i = 0; i < players.length(); ++i) {
+                        stringPlayers[i] = players.getString(i);
                     }
+                    String a[] = new String[4];
+                    a[0] = "1"; a[1] = "2"; a[2] = "3"; a[3] = "4";
+                    System.out.println(jsObj.getString("game"));
+                    System.out.println(stringPlayers);
+                    Gameplay.comenzarPartida(jsObj.getString("game"), 
+                        stringPlayers);
+                    System.out.println("break");
+                    break;
                 case "FAILED":
                     RoomServices.room = null;
                     RoomServices.buscandoPartida = false;

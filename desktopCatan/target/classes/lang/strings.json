@@ -240,6 +240,45 @@
     "no_user" : {
         "eng": "User doesn't exist",
         "esp": "Usuario inexistente"
+    },
+
+    "dice": {
+        "eng": "Dice",
+        "esp": "Dados"
+    },
+
+    "first_road": {
+        "eng": "Build first road",
+        "esp": "Construir primera carretera"
+    },
+
+    "build_road": {
+        "eng": "Build road",
+        "esp": "Construir carretera"
+    },
+
+    "no_upgrade": {
+        "eng": "Cannot upgrade your city",
+        "esp": "No puede mejorar su ciudad"
+    },
+    "first_settle": {
+        "eng": "Build first settlement",
+        "esp": "Construir primer pueblo"
+    },
+
+    "city_upgrade": {
+        "eng": "Build a city",
+        "esp": "Construir una ciudad"
+    },
+
+    "build_town": {
+        "eng": "Build a village",
+        "esp": "Construir una aldea"
+    },
+
+    "turn": {
+        "eng": "Turn",
+        "esp": "Turno"
     }
 }
  

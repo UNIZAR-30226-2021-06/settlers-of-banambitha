@@ -23,12 +23,15 @@ public class Hexagonos {
 	
 	private TipoTerreno tipo_terreno;
 	private int valor;
+
+	private int id;
 	
-	Hexagonos (Coordenadas c, TipoTerreno tipo_terreno, int valor) {
+	Hexagonos (Coordenadas c, TipoTerreno tipo_terreno, int valor, int id) {
 		this.centro = c;
 		this.tipo_terreno = tipo_terreno;
 		this.valor = valor;
 		this.tieneLadron = false;
+		this.id = id;
 		if(tipo_terreno.esDesierto()) {
 			this.tieneLadron = true;
 		}
@@ -79,6 +82,10 @@ public class Hexagonos {
 		return new Coordenadas(Math.round(coordX * 100000d) / 100000d, Math.round(coordY * 10d) / 10d);
 	}
 	
+	public int getIdentificador () {
+		return this.id;
+	}
+
 	/*
 	 * Devuelve las coordenadas del centro
 	 * */

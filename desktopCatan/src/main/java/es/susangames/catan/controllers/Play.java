@@ -2,6 +2,8 @@ package es.susangames.catan.controllers;
 
 import es.susangames.catan.service.LangService;
 import es.susangames.catan.service.RoomServices;
+import es.susangames.catan.service.ws;
+import es.susangames.catan.controllers.Gameplay;
 import javafx.fxml.FXML;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.*;
@@ -15,6 +17,21 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.shape.Circle;
 import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
+import org.json.*;
+import es.susangames.catan.service.UserService;
+import org.springframework.messaging.converter.StringMessageConverter;
+import org.springframework.messaging.simp.stomp.StompFrameHandler;
+import org.springframework.messaging.simp.stomp.StompHeaders;
+import org.springframework.messaging.simp.stomp.StompSession;
+import org.springframework.messaging.simp.stomp.StompSessionHandlerAdapter;
+import org.springframework.web.socket.client.WebSocketClient;
+import org.springframework.web.socket.client.standard.StandardWebSocketClient;
+import org.springframework.web.socket.messaging.WebSocketStompClient;
+import org.springframework.web.socket.sockjs.client.SockJsClient;
+import org.springframework.web.socket.sockjs.client.Transport;
+import org.springframework.web.socket.sockjs.client.WebSocketTransport;
+import java.lang.reflect.Type;
+
 
 
 
@@ -76,7 +93,7 @@ public class Play {
     @FXML
     public void initialize() throws IOException {
         playButton.setText((LangService.getMapping("play_button")));
-        
+
         skinSelector.getItems().add((LangService.getMapping("play_skin_space")));
         skinSelector.getItems().add("Normal");
         skinSelector.getItems().add((LangService.getMapping("play_skin_computer")));
@@ -117,5 +134,4 @@ public class Play {
         // Cancelar
     }
    
-
 }

@@ -15,16 +15,18 @@
                 <mat-card-actions>
                     <button mat-raised-button (click)='buy(product["url"])' [disabled]="product['precio'] > this.userService.saldo">
                         <div *ngIf="product['precio'] <= this.userService.saldo; else notAvailable">
-                            Comprar
+                            {{langService.get("buy")}}
                         </div>
                         <ng-template #notAvailable>
-                            Saldo insuficiente
+                            {{langService.get("insufficient-gold")}}
                         </ng-template>
                     </button>
                 </mat-card-actions>
             </mat-card>
         </div>
-        <H1 *ngIf="empty">No hay Productos nuevos para comprar!</H1>
+        <H1 *ngIf="empty">
+            {{langService.get("no-products")}}
+        </H1>
     </div>
 </div>
 

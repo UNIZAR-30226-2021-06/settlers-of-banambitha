@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { LangService } from 'src/app/service/lang/lang.service';
 
 @Component({
   selector: 'app-reset-password',
@@ -8,7 +9,7 @@ import { NgForm } from '@angular/forms';
 })
 export class ResetPasswordComponent implements OnInit {
 
-  constructor() { }
+  constructor(public langService: LangService) { }
 
   ngOnInit(): void {
   }

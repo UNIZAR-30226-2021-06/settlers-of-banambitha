@@ -121,6 +121,16 @@ public class RoomServices {
         String getStatus () {
             return this._status;
         }
+
+        String[] toArrayStrings () {
+            String array_players[] = new String[_players.size()];
+            int i = 0;
+            for(UserCardInfo u : _players) {
+                array_players[i] = u.getUsername();
+                i++;
+            }
+            return array_players;
+        }
     }
 
     public static class Invite {
