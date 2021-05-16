@@ -1610,7 +1610,7 @@ public class Gameplay {
 
     private void resourcesPopUp() {
         AnchorPane anchorPane = new AnchorPane();
-        anchorPane.setPrefSize(310, 115);
+        anchorPane.setPrefSize(350, 115);
         anchorPane.setStyle("-fx-background-color:  #965d62; -fx-background-radius: 12px" );
         popupResources = new Popup();
         popupResources.getContent().add(anchorPane);
@@ -1619,18 +1619,17 @@ public class Gameplay {
         // Titulo
         Text title = new Text(10, 50, (LangService.getMapping("player_resources")));
         title.setFont(new Font(40));
-        title.setLayoutX(anchorPane.getLayoutX() + 5 );
-        title.setLayoutY(anchorPane.getLayoutY() + 30);
+        title.setLayoutX(anchorPane.getLayoutX());
+        title.setLayoutY(anchorPane.getLayoutY() + 5);
         title.setFill(Color.WHITE);
         anchorPane.getChildren().add(title);
 
         Text tofferPlayer = new Text(10, 50, LangService.getMapping("choose_player"));
         tofferPlayer.setFont(new Font(20));
         tofferPlayer.setLayoutX(anchorPane.getLayoutX() + 10 );
-        tofferPlayer.setLayoutY(anchorPane.getLayoutY() + 100);
+        tofferPlayer.setLayoutY(anchorPane.getLayoutY() + 65);
         tofferPlayer.setFill(Color.WHITE);
         anchorPane.getChildren().add(tofferPlayer);
-
 
         // Select jugador elegido
         offerPlayer = new ChoiceBox<>();
@@ -1640,59 +1639,99 @@ public class Gameplay {
                 offerPlayer.getItems().add(Partida.jugadores[i].nombre);
             }
         }
-        Integer j = 0;
-        offerPlayer.setValue(Partida.jugadores[((Partida.miTurno - 1) + 1) % 4].nombre);
-    
+
+        Integer _offerPlayer = ((Partida.miTurno - 1) + 1) % 4;
+        offerPlayer.setValue(Partida.jugadores[_offerPlayer].nombre);
+        Integer _arcilla = Partida.jugadores[_offerPlayer].recursos.arcilla;
+        Integer _madera = Partida.jugadores[_offerPlayer].recursos.madera;
+        Integer _cereal =  Partida.jugadores[_offerPlayer].recursos.cereales;
+        Integer _mineral = Partida.jugadores[_offerPlayer].recursos.mineral;
+        Integer _lana = Partida.jugadores[_offerPlayer].recursos.lana;
+
         // Arcilla
-        _knight_card = new Text(10, 50, (LangService.getMapping("knight_card")) + "\t " + j.toString());
-        _knight_card.setFont(new Font(20));
-        _knight_card.setLayoutX(anchorPane.getLayoutX()+ 10);
-        _knight_card.setLayoutY(anchorPane.getLayoutY() + 100);
-        _knight_card.setFill(Color.WHITE);
-        anchorPane.getChildren().add(_knight_card);
+        Text arcilla = new Text(10, 50, (LangService.getMapping("clay")) + "\t\t\t\t\t\t " 
+                                            + _arcilla.toString());
+        arcilla.setFont(new Font(20));
+        arcilla.setLayoutX(anchorPane.getLayoutX()+ 10);
+        arcilla.setLayoutY(anchorPane.getLayoutY() + 105);
+        arcilla.setFill(Color.WHITE);
+        anchorPane.getChildren().add(arcilla);
 
         // Madera
-        Spinner<Integer> spinnerGive = new Spinner(1, 250, 1);
-        spinnerGive.setStyle("-fx-background-radius: 12px;" );
-        spinnerGive.setPrefSize(75, 25);
-        spinnerGive.setLayoutX(anchorPane.getLayoutX() + 270 );
-        spinnerGive.setLayoutY(anchorPane.getLayoutY() + 290);
-        anchorPane.getChildren().add(spinnerGive);
+        Text madera = new Text(10, 50, (LangService.getMapping("wood")) + "\t\t\t\t\t\t " 
+                                            + _madera.toString());
+        madera.setFont(new Font(20));
+        madera.setLayoutX(anchorPane.getLayoutX()+ 10);
+        madera.setLayoutY(anchorPane.getLayoutY() + 145);
+        madera.setFill(Color.WHITE);
+        anchorPane.getChildren().add(madera);
 
-        offerPlayer.getSelectionModel().selectedItemProperty().addListener( (v, oldValue, newValue) -> 
-         {
-                String name = (String) newValue;
-                if(name.equals(Partida.jugadores[1].nombre)) {
-                    Platform.runLater(new Runnable() {
-                        @Override public void run() {
-                            _knight_card.setText("5555");
-                            anchorPane.getChildren().remove(spinnerGive);
-                            Spinner<Integer> spinnerGive  = new Spinner(1, 2, 1);
-                            spinnerGive.setStyle("-fx-background-radius: 12px;" );
-                            spinnerGive.setPrefSize(75, 25);
-                            spinnerGive.setLayoutX(anchorPane.getLayoutX() + 270 );
-                            spinnerGive.setLayoutY(anchorPane.getLayoutY() + 290);
-                            anchorPane.getChildren().add(spinnerGive);
-                        }
-                    });
-                }
-               
-            
-         }
-        );
-
+        // Cereal
+        Text cereal = new Text(10, 50, (LangService.getMapping("cereal")) + "\t\t\t\t\t\t " 
+                                            + _cereal.toString());
+        cereal.setFont(new Font(20));
+        cereal.setLayoutX(anchorPane.getLayoutX()+ 10);
+        cereal.setLayoutY(anchorPane.getLayoutY() + 185);
+        cereal.setFill(Color.WHITE);
+        anchorPane.getChildren().add(cereal);
 
         // Mineral
-
+        Text mineral = new Text(10, 50, (LangService.getMapping("mineral")) + "\t\t\t\t\t\t " 
+                                            + _mineral.toString());
+        mineral.setFont(new Font(20));
+        mineral.setLayoutX(anchorPane.getLayoutX()+ 10);
+        mineral.setLayoutY(anchorPane.getLayoutY() + 225);
+        mineral.setFill(Color.WHITE);
+        anchorPane.getChildren().add(mineral);
 
         // Lana
+        Text lana = new Text(10, 50, (LangService.getMapping("wool")) + "\t\t\t\t\t\t\t " 
+                                        + _lana.toString());
+        lana.setFont(new Font(20));
+        lana.setLayoutX(anchorPane.getLayoutX()+ 10);
+        lana.setLayoutY(anchorPane.getLayoutY() + 265);
+        lana.setFill(Color.WHITE);
+        anchorPane.getChildren().add(lana);
 
-        // Cereales
+        offerPlayer.getSelectionModel().selectedItemProperty().addListener( (v, oldValue, newValue) -> 
+        {
+               String name = (String) newValue;
+               Integer player;
+               if(name.equals(Partida.jugadores[0].nombre)) {
+                   player = 0;
+               } else if(name.equals(Partida.jugadores[1].nombre)) {
+                   player = 1;
+               } else if(name.equals(Partida.jugadores[2].nombre)) {
+                   player = 2;
+               } else {
+                   player = 3;
+               }
+               final Integer arcilla_aux = Partida.jugadores[player].recursos.arcilla;
+               final Integer madera_aux = Partida.jugadores[player].recursos.madera;
+               final Integer cereal_aux =  Partida.jugadores[player].recursos.cereales;
+               final Integer mineral_aux = Partida.jugadores[player].recursos.mineral;
+               final Integer lana_aux = Partida.jugadores[player].recursos.lana;
 
-        offerPlayer.setLayoutX(anchorPane.getLayoutX() + 270);
-        offerPlayer.setLayoutY(anchorPane.getLayoutY() + 127);
-        anchorPane.getChildren().add(offerPlayer);
 
+               Platform.runLater(new Runnable() {
+                   @Override public void run() {
+                       arcilla.setText((LangService.getMapping("clay")) + "\t\t\t\t\t\t " 
+                                       + arcilla_aux.toString());
+                       madera.setText((LangService.getMapping("wood")) + "\t\t\t\t\t\t " 
+                                       + madera_aux.toString());
+                       mineral.setText((LangService.getMapping("mineral")) + "\t\t\t\t\t\t " 
+                                       + cereal_aux.toString());
+                       cereal.setText((LangService.getMapping("cereal")) + "\t\t\t\t\t\t " 
+                                       + mineral_aux.toString());
+                       lana.setText((LangService.getMapping("wool")) + "\t\t\t\t\t\t\t " 
+                                       + lana_aux.toString());
+                   }
+               });    
+        }
+       );
+       offerPlayer.setLayoutX(anchorPane.getLayoutX() + 270);
+       offerPlayer.setLayoutY(anchorPane.getLayoutY() + 90);
+       anchorPane.getChildren().add(offerPlayer);
     }
     
     private void buildSettlementPopUp() {
@@ -2140,7 +2179,7 @@ public class Gameplay {
         updateDice();
         settingsPopup();
         passTurnButton.setText((LangService.getMapping("next_turn")));
-       
+        cards.setText(LangService.getMapping("player_resources"));
 
         cards.setOnAction((ActionEvent event) -> {
             if (!popupResources.isShowing()) {

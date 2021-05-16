@@ -289,6 +289,31 @@
     "player_resources": {
         "eng": "Player resources",
         "esp": "Recuros de jugadores"
+    },
+
+    "clay": {
+        "eng" : "Clay",
+        "esp" : "Arcilla"
+    },
+
+    "wool" : {
+        "eng": "Wool",
+        "esp": "Lana"
+    },
+
+    "wood": {
+        "eng": "Wood",
+        "esp": "Madera"
+    },
+
+    "mineral": {
+        "eng": "Mineral",
+        "esp": "Mineral"
+    },
+
+    "cereal": {
+        "eng": "Cereal",
+        "esp": "Cereal"
     }
 }
  
