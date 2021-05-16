@@ -130,11 +130,6 @@
                            </effect>
                         </Button>
                         <Region VBox.vgrow="ALWAYS" />
-                        <Button fx:id="outTrade" mnemonicParsing="false" prefWidth="280.0" style="-fx-background-color: #965d62; -fx-background-radius: 12px;" text="Button" VBox.vgrow="ALWAYS">
-                           <effect>
-                              <DropShadow />
-                           </effect>
-                        </Button>
                         <Region VBox.vgrow="ALWAYS" />
                      </children>
                      <HBox.margin>

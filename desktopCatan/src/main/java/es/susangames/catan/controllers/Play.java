@@ -137,7 +137,7 @@ public class Play {
         });
         JSONObject object = new JSONObject();
         object.put("from", UserService.getUsername());
-        object.put("simulate", false); 
+        object.put("simulate", true); 
         ws.session.send(ws.partidaTestComenzar, object.toString());
     }
    

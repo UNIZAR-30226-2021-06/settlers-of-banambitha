@@ -295,9 +295,6 @@ public class Gameplay {
     private Button inTrade;    
 
     @FXML
-    private Button outTrade; 
-
-    @FXML
     private Text player1Name;
 
     private static Text _player1Name;
@@ -1319,7 +1316,23 @@ public class Gameplay {
                     Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
                     popupCards.show(stage);
                 }
-            }    
+            } else if((Partida.tablero.aristas.puertos.arcilla == pos ||
+                      Partida.tablero.aristas.puertos.madera == pos  ||
+                      Partida.tablero.aristas.puertos.mineral == pos ||
+                      Partida.tablero.aristas.puertos.lana == pos    ||
+                      Partida.tablero.aristas.puertos.cereal == pos  || 
+                      Partida.tablero.aristas.puertos.basico[0] == pos ||
+                      Partida.tablero.aristas.puertos.basico[1] == pos ||
+                      Partida.tablero.aristas.puertos.basico[2] == pos ||
+                      Partida.tablero.aristas.puertos.basico[3] == pos) && 
+                      event.getButton().equals(MouseButton.SECONDARY) && 
+                      esMiTurno()) {
+                        
+                        if (!popupExternalTrade.isShowing()) {
+                            Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+                            popupExternalTrade.show(stage);
+                        }
+            }   
         });
     }
 
@@ -2055,20 +2068,6 @@ public class Gameplay {
         });
 
         anchorPane.getChildren().add(sendTradeExternal);
-
-        // Boton para acceder al popup
-        outTrade.setOnAction((ActionEvent event) -> {
-            
-            if (!popupExternalTrade.isShowing()) {
-                Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
-                popupExternalTrade.show(stage);
-            }
-            
-         });
-         
-         outTrade.setText((LangService.getMapping("external_trade")));
-
-
     }
 
     private void settingsPopup() throws IOException {
