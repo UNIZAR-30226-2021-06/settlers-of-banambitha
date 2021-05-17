@@ -202,7 +202,10 @@ public class Tablero {
      */
 	public void producir (Integer valor) {	
 		for (Hexagonos hex : hexagonos.values()) {
-			if (hex.getValor() == valor) hex.producir();
+			if (hex.getValor() == valor) {
+				System.out.println("ID: " + hex.getIdentificador() + " , valor: " + hex.getValor());
+				hex.producir();
+			}
 		}
 	}
 	
@@ -944,6 +947,11 @@ public class Tablero {
 	public JSONObject JSONmessage ( JSONObject jsObject ) throws JSONException {
 		
 		Integer id_jugador = jsObject.getInt("player");
+		if ((id_jugador - 1) > 3 || (id_jugador - 1) < 0) {
+			this.message = "[Fatal error] Identificador de jugador erroneo.";
+			this.exit_status = -2;
+			return this.returnMessage();
+		}
 		Jugadores jug = this.j[id_jugador - 1];
 		
 		// Comprobar que jugador debería de realizar el movimiento
@@ -1192,6 +1200,8 @@ public class Tablero {
 				
 				this.comerciar(jug, materialJ1, numMaterialJ1, j2, materialJ2, numMaterialJ2);
 				this.haComerciado = true;
+				this.message = "Se ha realizado el intercambio de recursos entre el jugador i y el jugador j";
+				this.exit_status = 0;
 			} else {
 				this.message = "El jugador ya ha comerciado durante su turno";
 				this.exit_status = 25;
@@ -1206,6 +1216,7 @@ public class Tablero {
 					// Vamos a comprobar si el jugador tiene un asentamiento en la arista (puerto)
 					Vertices v1 = vertices.get(p.getCoordenadasVertice1());
 					Vertices v2 = vertices.get(p.getCoordenadasVertice2());
+					
 					JSONObject materiales = comercioMaritimo.getJSONObject("materiales");
 					int madera = materiales.getInt("madera");
 					int lana = materiales.getInt("lana");
@@ -1213,44 +1224,27 @@ public class Tablero {
 					int arcilla = materiales.getInt("arcilla");
 					int mineral = materiales.getInt("mineral");
 					String material_que_recibe = comercioMaritimo.getString("material_que_recibe");
-					if (v1.tieneAsentamiento()) {
-						if (jug.equals(v1.getPropietario())) {
-							// Comprobar si es especial o basico.
-							if (p.getTipoPuerto().esBasico()) {
-								// 3 materiales a uno
-								this.comercioMaritimo(3, jug, material_que_recibe, madera, 
-										lana, cereales, arcilla, mineral);
-							} else {
-								// materiales a uno en concreto
-								this.comercioEnPuertoEspecial(p, jug, material_que_recibe, 
-										madera, lana, cereales, arcilla, mineral);
-							}
-						} else {
-							// 4 materiales por 1
-							this.comercioMaritimo(4, jug, material_que_recibe, madera, 
+					
+					if (v1.tieneAsentamiento() && jug.equals(v1.getPropietario())
+							|| v2.tieneAsentamiento() && jug.equals(v1.getPropietario())) {
+						
+						// Comprobar si es especial o basico.
+						if (p.getTipoPuerto().esBasico()) {
+							// 3 materiales a uno
+							this.comercioMaritimo(3, jug, material_que_recibe, madera, 
 									lana, cereales, arcilla, mineral);
-						}
-					} else if (v2.tieneAsentamiento()) {
-						if (jug.equals(v1.getPropietario())) {
-							// Comprobar si es especial o basico.
-							if (p.getTipoPuerto().esBasico()) {
-								// 3 materiales a uno
-								this.comercioMaritimo(3, jug, material_que_recibe, madera, 
-										lana, cereales, arcilla, mineral);
-							} else {
-								// materiales a uno en concreto
-								this.comercioEnPuertoEspecial(p, jug, material_que_recibe, 
-										madera, lana, cereales, arcilla, mineral);
-							}
 						} else {
-							// 4 materiales por 1
-							this.comercioMaritimo(5, jug, material_que_recibe, madera, 
-									lana, cereales, arcilla, mineral);
+							// materiales a uno en concreto
+							this.comercioEnPuertoEspecial(p, jug, material_que_recibe, 
+									madera, lana, cereales, arcilla, mineral);
 						}
+						
 					} else {
-						// No hay asentamiento --> comercio por 5 materiales a uno.
-						this.comercioMaritimo(5, jug, material_que_recibe, madera, lana, cereales, arcilla, mineral);
+						// No hay asentamiento o el asentamiento no coincide con el jugador 
+						// 		--> comercio por 4 materiales a uno.
+						this.comercioMaritimo(4, jug, material_que_recibe, madera, lana, cereales, arcilla, mineral);
 					}
+					
 				} else {
 					this.message = "La arista seleccionada no corresponde a ningún puerto";
 					this.exit_status = 27;
@@ -1273,7 +1267,7 @@ public class Tablero {
 		return this.returnMessage();
 	}
 
-	private String[] listAsentamientoToJSON () {
+	private JSONArray listAsentamientoToJSON () {
 		Iterator<Vertices> it = vertices.values().iterator();
 		Vertices aux;
 		//JSONArray jsArray = new JSONArray();
@@ -1285,7 +1279,7 @@ public class Tablero {
 			listAsentamiento[id] = aux.getAsentamientoJugador();
 		}
 		
-		return listAsentamiento;
+		return new JSONArray(listAsentamiento);
 	}
 
 	private JSONArray posibleAsentamientoToJSON () {
@@ -1303,15 +1297,15 @@ public class Tablero {
 			posiblesAsentamientos[3][id] = vAux.getPosibleAsentamientoDeJugador(3);
 		}
 		
-		jsArray.put(posiblesAsentamientos[0]);
-		jsArray.put(posiblesAsentamientos[1]);
-		jsArray.put(posiblesAsentamientos[2]);
-		jsArray.put(posiblesAsentamientos[3]);
+		jsArray.put(new JSONArray(posiblesAsentamientos[0]));
+		jsArray.put(new JSONArray(posiblesAsentamientos[1]));
+		jsArray.put(new JSONArray(posiblesAsentamientos[2]));
+		jsArray.put(new JSONArray(posiblesAsentamientos[3]));
 		
 		return jsArray;
 	}
 
-	private String[] listCaminoToJSON () {
+	private JSONArray listCaminoToJSON () {
 		Iterator<Aristas> it = aristas.values().iterator();
 		//JSONArray jsArray = new JSONArray();
 		Aristas aux;
@@ -1323,7 +1317,7 @@ public class Tablero {
 			caminos[id] = aux.getCaminoJugador();
 		}
 		
-		return caminos;
+		return new JSONArray(caminos);
 	}
 
 	private JSONArray posibleCaminoToJSON () {
@@ -1341,10 +1335,10 @@ public class Tablero {
 			posiblesCaminos[3][id] = aAux.getPosibleCaminoDeJugador(3);
 		}
 		
-		jsArray.put(posiblesCaminos[0]);
-		jsArray.put(posiblesCaminos[1]);
-		jsArray.put(posiblesCaminos[2]);
-		jsArray.put(posiblesCaminos[3]);
+		jsArray.put(new JSONArray(posiblesCaminos[0]));
+		jsArray.put(new JSONArray(posiblesCaminos[1]));
+		jsArray.put(new JSONArray(posiblesCaminos[2]));
+		jsArray.put(new JSONArray(posiblesCaminos[3]));
 		
 		return jsArray;
 	}

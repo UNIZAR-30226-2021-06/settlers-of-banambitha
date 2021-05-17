@@ -170,8 +170,9 @@ public class Hexagonos {
 	 * */
 	public void producir() {
 		if (!tieneLadron()) {
-			for (int i = 0 ; i < NUM_VERTICES_ARISTAS; i++) {
-				v[i].producir(this.tipo_terreno);
+			for (int i = 0 ; i < this.v.length; i++) {
+				System.out.println("Vertice: " + v[i].getIdentificador());
+				this.v[i].producir(this.tipo_terreno);
 			}
 		}
 	}
