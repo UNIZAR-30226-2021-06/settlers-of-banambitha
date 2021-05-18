@@ -2,6 +2,8 @@ package es.susangames.catan.service;
 
 import org.json.*;
 import java.io.IOException;
+import java.util.regex.Pattern;
+
 //http://localhost:8080/
 //https://catan-backend-app.herokuapp.com/
 public class UserService {
@@ -22,7 +24,10 @@ public class UserService {
     private static String apariencia;
     private static Integer saldo;
     private static String partida;
-
+    private static String regexPassword = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,32}$";
+    private static String regexEmail = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$";
+    private static String regexName = "^[a-zA-Z0-9]$";
+    
     public UserService() {
         netService = new HttpService();
     }
@@ -80,19 +85,24 @@ public class UserService {
         return (!response.has("error"));
     }
 
-
+    /* Pattern.matches(regexName, name)*/
     public static Boolean register(String name, String mail, String pass) {
-        JSONObject myObject = new JSONObject();
-        myObject.put("nombre", name);
-        myObject.put("email", mail);
-        myObject.put("contrasenya", pass);
-        JSONObject response;
-        try {
-            response = netService.post(addUrl, myObject.toString());
-        } catch(IOException e) {
-            return false;
-        }   
-        return (!response.has("error"));
+        if(Pattern.matches(regexEmail, mail) && Pattern.matches(regexPassword, pass) 
+          && name.length() > 4) {
+            JSONObject myObject = new JSONObject();
+            myObject.put("nombre", name);
+            myObject.put("email", mail);
+            myObject.put("contrasenya", pass);
+            JSONObject response;
+            try {
+                response = netService.post(addUrl, myObject.toString());
+            } catch(IOException e) {
+                return false;
+            }   
+            return (!response.has("error"));
+          } 
+        return false;
+        
     }
 
     public static void fillData(JSONObject data) {

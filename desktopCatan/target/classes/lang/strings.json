@@ -314,6 +314,11 @@
     "cereal": {
         "eng": "Cereal",
         "esp": "Cereal"
+    },
+
+    "send": {
+        "eng": "Send",
+        "esp": "Enviar"
     }
 }
  
