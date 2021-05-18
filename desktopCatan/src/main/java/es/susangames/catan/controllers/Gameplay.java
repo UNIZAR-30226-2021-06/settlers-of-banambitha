@@ -373,6 +373,7 @@ public class Gameplay {
     private ChoiceBox<String> receiveMaterial;
     private ChoiceBox<String> receivePlayer;
     private ChoiceBox<String> ratio;
+    private Spinner<Integer>  spinnerReceive;
     private Button sendTrade;
     private Button sendTradeExternal;
     private Button leaveGame;
@@ -1739,7 +1740,8 @@ public class Gameplay {
                        lana.setText((LangService.getMapping("wool")) + "\t\t\t\t\t\t\t " 
                                        + lana_aux.toString());
                    }
-               });    
+               });
+               offerPlayer.setValue(newValue);    
         }
        );
        offerPlayer.setLayoutX(anchorPane.getLayoutX() + 270);
@@ -1838,18 +1840,25 @@ public class Gameplay {
         tofferPlayer.setFill(Color.WHITE);
         anchorPane.getChildren().add(tofferPlayer);
 
-
         // Select jugador elegido
         offerPlayer = new ChoiceBox<>();
-        offerPlayer.setStyle("-fx-background-radius: 12px;" );
-        offerPlayer.getItems().add(player2);
-        offerPlayer.getItems().add(player3);
-        offerPlayer.getItems().add(player4);
-        offerPlayer.setValue(player2);
+        offerPlayer.setStyle("-fx-background-radius: 12px;");
+        for(int i = 0; i < numberPlayers; i++) {
+            if(i != (Partida.miTurno - 1) ) {
+                offerPlayer.getItems().add(Partida.jugadores[i].nombre);
+            }
+        }
         offerPlayer.setLayoutX(anchorPane.getLayoutX() + 270);
         offerPlayer.setLayoutY(anchorPane.getLayoutY() + 127);
+        Integer _offerPlayer = ((Partida.miTurno - 1) + 1) % 4;
+        offerPlayer.setValue(Partida.jugadores[_offerPlayer].nombre);
+        Integer _arcilla = Partida.jugadores[_offerPlayer].recursos.arcilla;
+        Integer _madera = Partida.jugadores[_offerPlayer].recursos.madera;
+        Integer _cereal =  Partida.jugadores[_offerPlayer].recursos.cereales;
+        Integer _mineral = Partida.jugadores[_offerPlayer].recursos.mineral;
+        Integer _lana = Partida.jugadores[_offerPlayer].recursos.lana;
         anchorPane.getChildren().add(offerPlayer);
-
+        
 
          // Selecciona un material para tradeo
          Text tofferMaterial = new Text(10, 50, "Material ofrecido");
@@ -1862,15 +1871,16 @@ public class Gameplay {
          // Select material ofrecido
         offerMaterial = new ChoiceBox<>();
         offerMaterial.setStyle("-fx-background-radius: 12px;" );
-        offerMaterial.getItems().add("Lana");
-        offerMaterial.getItems().add("Madera");
-        offerMaterial.getItems().add("Cereales");
-        offerMaterial.getItems().add("Arcilla");
-        offerMaterial.getItems().add("Mineral");
-        offerMaterial.setValue("Lana");
+        offerMaterial.getItems().add(LangService.getMapping("clay"));
+        offerMaterial.getItems().add(LangService.getMapping("wood"));
+        offerMaterial.getItems().add(LangService.getMapping("cereal"));
+        offerMaterial.getItems().add(LangService.getMapping("wool"));
+        offerMaterial.getItems().add(LangService.getMapping("mineral"));
+        offerMaterial.setValue(LangService.getMapping("clay"));
         offerMaterial.setLayoutX(anchorPane.getLayoutX() + 270);
         offerMaterial.setLayoutY(anchorPane.getLayoutY() + 210);
         anchorPane.getChildren().add(offerMaterial);
+
 
         // Cantidad de material ofrecido
         Text tofferAmmount = new Text(10, 50, "Cantidad ofrecida");
@@ -1882,7 +1892,8 @@ public class Gameplay {
 
 
 
-         // Spinner cantidad material ofrecido
+         // Spinner cantidad material ofrecido.
+         // TODO: Listener
          Spinner<Integer> spinnerGive = new Spinner(1, 250, 1);
          spinnerGive.setStyle("-fx-background-radius: 12px;" );
          spinnerGive.setPrefSize(75, 25);
@@ -1902,17 +1913,26 @@ public class Gameplay {
         
         
         // Material solicitado
+         // TODO: Listener
          receiveMaterial = new ChoiceBox<>();
          receiveMaterial.setStyle("-fx-background-radius: 12px;" );
-         receiveMaterial.getItems().add("Lana");
-         receiveMaterial.getItems().add("Madera");
-         receiveMaterial.getItems().add("Cereales");
-         receiveMaterial.getItems().add("Arcilla");
-         receiveMaterial.getItems().add("Mineral");
-         receiveMaterial.setValue("Lana");
+         receiveMaterial.getItems().add(LangService.getMapping("clay"));
+         receiveMaterial.getItems().add(LangService.getMapping("wood"));
+         receiveMaterial.getItems().add(LangService.getMapping("cereal"));
+         receiveMaterial.getItems().add(LangService.getMapping("wool"));
+         receiveMaterial.getItems().add(LangService.getMapping("mineral"));
+         receiveMaterial.setValue(LangService.getMapping("wool"));
          receiveMaterial.setLayoutX(anchorPane.getLayoutX() + 270);
          receiveMaterial.setLayoutY(anchorPane.getLayoutY() + 373);
          anchorPane.getChildren().add(receiveMaterial);
+
+         receiveMaterial.getSelectionModel().selectedItemProperty().addListener( (v, oldValue, newValue) -> 
+         {
+            receiveMaterial.setValue(newValue);
+         }
+        );
+
+
  
          // Cantidad de material ofrecido
          Text treceiveAmmount = new Text(10, 50, "Cantidad solicitada");
@@ -1924,7 +1944,7 @@ public class Gameplay {
  
  
         // Spinner cantidad material solicitado
-        Spinner<Integer> spinnerReceive = new Spinner(1, 250, 1);
+        spinnerReceive = new Spinner(0, 250, 1);
         spinnerReceive.setStyle("-fx-background-radius: 12px;" );
         spinnerReceive.setPrefSize(75, 25);
         spinnerReceive.setLayoutX(anchorPane.getLayoutX() + 270 );
@@ -1944,29 +1964,84 @@ public class Gameplay {
         DropShadow shadow = new DropShadow();
         sendTrade.setEffect(shadow);
 
-
-
         // TODO: Añadir accion cuando se hace click sobre boton compra
         sendTrade.setOnAction((ActionEvent event) -> {
             System.out.println(spinnerGive.getValue().toString());
             System.out.println(spinnerReceive.getValue().toString());
             popupInternalTrade.hide();
         });
-
         anchorPane.getChildren().add(sendTrade);
 
+         offerPlayer.getSelectionModel().selectedItemProperty().addListener( (v, oldValue, newValue) -> 
+        {
+               String name = (String) newValue;
+               Integer player;
+               if(name.equals(Partida.jugadores[0].nombre)) {
+                   player = 0;
+               } else if(name.equals(Partida.jugadores[1].nombre)) {
+                   player = 1;
+               } else if(name.equals(Partida.jugadores[2].nombre)) {
+                   player = 2;
+               } else {
+                   player = 3;
+               }
+                final Integer  arcilla_aux = 
+                                    Partida.jugadores[player].recursos.arcilla;
+                final Integer  madera_aux  = 
+                                    Partida.jugadores[player].recursos.madera;
+                final Integer  cereal_aux  = 
+                                    Partida.jugadores[player].recursos.cereales;
+                final Integer mineral_aux = 
+                                    Partida.jugadores[player].recursos.mineral;
+                final Integer lana_aux    = 
+                                    Partida.jugadores[player].recursos.lana;
+               
+                final String materialSeleccionado =  new String(receiveMaterial.getValue());
+                System.out.println(materialSeleccionado);
+                //TODO: Añadir comprobacion en español
+                Platform.runLater(new Runnable() {
+                    @Override public void run() {
+                        anchorPane.getChildren().remove(spinnerReceive);
+                        if(materialSeleccionado.equals("Lana")) {
+                            spinnerReceive = 
+                                        new Spinner(0, lana_aux, 1);
+                        } else if(materialSeleccionado.equals("Madera")) {
+                            spinnerReceive = 
+                                        new Spinner(0, madera_aux, 1);
+                        } else if(materialSeleccionado.equals("Mineral")) {
+                            spinnerReceive = 
+                                        new Spinner(0, mineral_aux, 1);
+                        } else if(materialSeleccionado.equals("Cereal")) {
+                            spinnerReceive = 
+                                        new Spinner(0, cereal_aux, 1);
+                        } else {
+                            spinnerReceive = 
+                                        new Spinner(0, arcilla_aux, 1);
+                        }
+                        spinnerReceive.setStyle("-fx-background-radius: 12px;" );
+                        spinnerReceive.setPrefSize(75, 25);
+                        spinnerReceive.setLayoutX(anchorPane.getLayoutX() + 270 );
+                        spinnerReceive.setLayoutY(anchorPane.getLayoutY() + 453);
+                        anchorPane.getChildren().add(spinnerReceive);
+                    }
+                });
 
-        // Boton para acceder al popup
-        inTrade.setOnAction((ActionEvent event) -> {
-            
-            if (!popupInternalTrade.isShowing()) {
-                Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
-                popupInternalTrade.show(stage);
-            }
-            
-         });
-         
-         inTrade.setText((LangService.getMapping("internal_trade")));
+        }
+       );
+
+       // Boton para acceder al popup
+       // Hacer comprobacion fuera para bloquear si no es su turno o ya comercio
+       inTrade.setOnAction((ActionEvent event) -> {
+        
+        if (!popupInternalTrade.isShowing()) {
+            Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+            popupInternalTrade.show(stage);
+        }
+        
+     });
+     inTrade.setText((LangService.getMapping("internal_trade")));
+
+
     }
 
     private void externalTradePopUp() {

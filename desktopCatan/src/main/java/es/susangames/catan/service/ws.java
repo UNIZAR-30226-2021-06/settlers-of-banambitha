@@ -23,8 +23,8 @@ import org.springframework.web.socket.sockjs.client.Transport;
 import org.springframework.web.socket.sockjs.client.WebSocketTransport;
 import org.json.*;
 import javafx.application.Platform;
-
-
+//http://localhost:8080
+//https://catan-backend-app.herokuapp.com/
 public class ws {
 
     public static Map<String,ArrayList<JSONObject>> msgs;
