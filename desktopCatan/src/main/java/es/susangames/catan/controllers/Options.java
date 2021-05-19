@@ -3,6 +3,7 @@ package es.susangames.catan.controllers;
 import es.susangames.catan.service.LangService;
 import es.susangames.catan.service.ShopService;
 import es.susangames.catan.service.UserService;
+import es.susangames.catan.controllers.MainMenu;
 import javafx.fxml.FXML;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.*;
@@ -74,7 +75,6 @@ public class Options {
 
 
     public Options() {
-        userImg = new Image("/img/users/" + UserService.getAvatar());
         win = new Image("/img/win.png");
         settings = new Image("/img/settings.png");
         shop = new ShopService();
@@ -252,11 +252,11 @@ public class Options {
         DropShadow shadow = new DropShadow();
         selectButton.setEffect(shadow);
 
-        // TODO: Añadir accion cuando se hace click sobre boton compra
+        // TODO: Añadir accion cuando se hace click sobre el  boton 
         selectButton.setOnAction((ActionEvent event) -> {
-            System.out.println(imgURL);
-           UserService.updateUser(UserService.getUsername(),"avatar",imgURL);
-            
+            UserService.updateUser(UserService.getUsername(),"avatar",imgURL);
+            MainMenu.updateUserImg();
+            userImage.setFill(new ImagePattern(new Image(UserService.getUserImg(UserService.getUsername()))));
            popupChangeUserImg.hide();
         });
 
@@ -267,7 +267,7 @@ public class Options {
 
     @FXML
     public void initialize()  {
-        userImage.setFill(new ImagePattern(userImg));
+        userImage.setFill(new ImagePattern(new Image(UserService.getUserImg(UserService.getUsername()))));
         userName.setText(UserService.getUsername());
         userEmail.setText(UserService.getMail());
         

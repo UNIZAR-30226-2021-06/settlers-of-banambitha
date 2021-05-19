@@ -128,6 +128,9 @@ public class Play {
         skinSelector.getItems().add("Normal");
         skinSelector.getItems().add((LangService.getMapping("play_skin_computer")));
         skinSelector.setValue("Normal");
+        if (!RoomServices.soyLider()) {
+            skinSelector.setDisable(true);
+        }
 
         typeGameSelector.getItems().add((LangService.getMapping("play_game_public")));
         typeGameSelector.getItems().add((LangService.getMapping("play_game_private")));

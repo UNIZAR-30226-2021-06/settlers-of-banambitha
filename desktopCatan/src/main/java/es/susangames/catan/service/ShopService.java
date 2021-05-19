@@ -3,8 +3,8 @@ package es.susangames.catan.service;
 import org.json.*;
 import java.io.IOException;
 
-
-
+//http://localhost:8080
+//https://catan-backend-app.herokuapp.com/
 public class ShopService {
     private static HttpService netService;
     private static final String baseUrl = "http://localhost:8080/producto";

@@ -72,6 +72,8 @@ public class MainMenu {
     @FXML
     private Circle userImg;
 
+    private static Circle _userImg;
+
     @FXML
     private ImageView goldImage;
 
@@ -108,7 +110,6 @@ public class MainMenu {
 
     public MainMenu() {
         goldImg = new Image("/img/gold_icon.png");
-        userImage = new Image("/img/users/user_profile_image_original.png");
         catanLog = new Image("/img/catan-logo.png");
         chatOpenned = false;
         playOpenned = false;
@@ -463,6 +464,9 @@ public class MainMenu {
         _numberCoins.setText(UserService.getSaldo().toString());
     }
 
+    public static void updateUserImg() {
+        _userImg.setFill(new ImagePattern(new Image(UserService.getUserImg(UserService.getUsername()))));
+    }
     
     public static void getFriends() {
         _playerList.getItems().clear();
@@ -506,6 +510,7 @@ public class MainMenu {
         updateStrings();
         _numberCoins = numberCoins;
         _playerList = playerList;
+        _userImg = userImg;
         _playerList.getStylesheets().add("/css/shop.css"); 
 
         mainMenuBP.prefHeightProperty().bind(mainMenu.heightProperty());
@@ -515,10 +520,8 @@ public class MainMenu {
         mainMenuBP.setStyle("-fx-background-color: #534e52");
 
         goldImage.setImage(goldImg);
-        userImg.setFill(new ImagePattern(userImage));
-
-       
-
+        userImg.setFill(new ImagePattern(new Image(UserService.getUserImg(UserService.getUsername()))));
+        
         //TODO: Cargar amigos. (Ejemplo de prueba)
         getFriends();
 
