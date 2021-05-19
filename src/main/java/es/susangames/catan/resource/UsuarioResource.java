@@ -181,7 +181,7 @@ public class UsuarioResource {
 	}
 	
 	/* ******************************************************
-	 * Maps: 	Update a user (avatar, apariencia,...)
+	 * Maps: 	Update a user (avatar, apariencia,...) @put
 	 * 
 	 * Expects: -User in body
 	 * 			-Mapped point: 	/usuario/validate
@@ -224,7 +224,7 @@ public class UsuarioResource {
 	}
 	
 	/* ******************************************************
-	 * Maps: 	Update a user's password
+	 * Maps: 	Update a user's password @put
 	 * 
 	 * Expects: -New and Old Password in body
 	 * 			-Mapped point: 	/usuario/validate
