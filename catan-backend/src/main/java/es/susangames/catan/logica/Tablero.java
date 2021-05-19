@@ -54,6 +54,7 @@ public class Tablero {
 		j = new Jugadores[num_jugadores];
 		this.turno_jugador = 0;
 		this.haComerciado = false;
+		this.haComerciadoMaritimo = false;
 		this.exit_status = -1;
 		this.message = "";
 		this.seHaMovidoLadron = false;
@@ -722,14 +723,67 @@ public class Tablero {
 		}
 	}
 	
+	private Boolean comprobarNumMateriales (Jugadores j, String material, int numMaterial) {
+		switch (material) {
+		case "madera" : 
+			if (j.getMadera() > numMaterial) {
+				return true;
+			} else return false;
+		case "lana" : 
+			if (j.getLana() > numMaterial) {
+				return true;
+			} else return false;
+
+		case "cereales" :
+			if (j.getCereales() > numMaterial) {
+				return true;
+			} else return false;
+
+		case "arcilla" :
+			if (j.getArcilla() > numMaterial) {
+				return true;
+			} else return false;
+
+		case "mineral" : 
+			if (j.getMineral() > numMaterial) {
+				return true;
+			} else return false;
+		default:
+			return false;
+		}
+	}
+	
 	public void comerciar(Jugadores j1, String materialJ1, int numMaterialJ1, 
 			Jugadores j2, String materialJ2, int numMaterialJ2) {
 		
-		actualizarMaterial(j1,materialJ1, -numMaterialJ1);
-		actualizarMaterial(j1,materialJ2, numMaterialJ2);
+		Boolean puedeComerciarJ1 = comprobarNumMateriales(j1,materialJ1, numMaterialJ1);
+		Boolean puedeComerciarJ2 = comprobarNumMateriales(j2,materialJ2, numMaterialJ2);
 		
-		actualizarMaterial(j2,materialJ1, numMaterialJ1);
-		actualizarMaterial(j2,materialJ2, -numMaterialJ1);
+		if (puedeComerciarJ1 && puedeComerciarJ2) {
+			actualizarMaterial(j1,materialJ1, -numMaterialJ1);
+			actualizarMaterial(j1,materialJ2, numMaterialJ2);
+			
+			actualizarMaterial(j2,materialJ1, numMaterialJ1);
+			actualizarMaterial(j2,materialJ2, -numMaterialJ1);
+			
+			this.haComerciado = true;
+			this.message = "Se ha realizado el intercambio de recursos entre el jugador i y el jugador j";
+			this.exit_status = 0;
+			
+		} else if (puedeComerciarJ1 && !puedeComerciarJ2){
+			this.message = "El jugador " + j2.getColor().numeroColor() + " no puede realizar el "
+					+ "comercio porque no dispone del suficiente número de materiales.";
+			this.exit_status = 34;
+		} else if (!puedeComerciarJ1 && puedeComerciarJ2){
+			this.message = "El jugador " + j1.getColor().numeroColor() + " no puede realizar el "
+					+ "comercio porque no dispone del suficiente número de materiales.";
+			this.exit_status = 34;
+		} else {
+			this.message = "Ninguno de los jugadores dispone de los suficientes materiales"
+					+ " para realizar el comercio";
+			this.exit_status = 35;
+		}
+		
 	}
 	
 	public void comercioMaritimo ( int materialEsperado, Jugadores j1, String materialRecibe, int madera, 
@@ -747,6 +801,7 @@ public class Tablero {
 				this.message = "El jugador no dispone de los materiales requeridos";
 				this.exit_status = 30;
 			} else {
+				this.haComerciadoMaritimo = true;
 				j1.setMadera( j1.getMadera() - madera);
 				j1.setLana( j1.getLana() - lana );
 				j1.setCereales( j1.getCereales() - cereales );
@@ -863,6 +918,7 @@ public class Tablero {
 	private int exit_status;
 	private int turno_jugador;
 	private Boolean haComerciado;
+	private Boolean haComerciadoMaritimo;
 	private Boolean seHaMovidoLadron;
 
 	/*
@@ -1199,61 +1255,67 @@ public class Tablero {
 				int numMaterialJ2 = jsArray.getInt(4);
 				
 				this.comerciar(jug, materialJ1, numMaterialJ1, j2, materialJ2, numMaterialJ2);
-				this.haComerciado = true;
-				this.message = "Se ha realizado el intercambio de recursos entre el jugador i y el jugador j";
-				this.exit_status = 0;
+		
 			} else {
 				this.message = "El jugador ya ha comerciado durante su turno";
 				this.exit_status = 25;
 			}
 			break;
-		case "comerciar con puerto":
+		case "comerciar con puerto": // TODO: Limitar el comercio maritmo a 1.
 			JSONObject comercioMaritimo = move.getJSONObject("param");
 			int id_puerto = comercioMaritimo.getInt("id_puerto");
-			if (existeArista(id_puerto)) {
-				Aristas p = getAristaPorId(id_puerto);
-				if (p.tienePuerto()) {
-					// Vamos a comprobar si el jugador tiene un asentamiento en la arista (puerto)
-					Vertices v1 = vertices.get(p.getCoordenadasVertice1());
-					Vertices v2 = vertices.get(p.getCoordenadasVertice2());
-					
-					JSONObject materiales = comercioMaritimo.getJSONObject("materiales");
-					int madera = materiales.getInt("madera");
-					int lana = materiales.getInt("lana");
-					int cereales = materiales.getInt("cereales");
-					int arcilla = materiales.getInt("arcilla");
-					int mineral = materiales.getInt("mineral");
-					String material_que_recibe = comercioMaritimo.getString("material_que_recibe");
-					
-					if (v1.tieneAsentamiento() && jug.equals(v1.getPropietario())
-							|| v2.tieneAsentamiento() && jug.equals(v1.getPropietario())) {
+			if (!this.haComerciadoMaritimo) {
+				
+				if (existeArista(id_puerto)) {
+					Aristas p = getAristaPorId(id_puerto);
+					if (p.tienePuerto()) {
+						// Vamos a comprobar si el jugador tiene un asentamiento en la arista (puerto)
+						Vertices v1 = vertices.get(p.getCoordenadasVertice1());
+						Vertices v2 = vertices.get(p.getCoordenadasVertice2());
 						
-						// Comprobar si es especial o basico.
-						if (p.getTipoPuerto().esBasico()) {
-							// 3 materiales a uno
-							this.comercioMaritimo(3, jug, material_que_recibe, madera, 
-									lana, cereales, arcilla, mineral);
+						JSONObject materiales = comercioMaritimo.getJSONObject("materiales");
+						int madera = materiales.getInt("madera");
+						int lana = materiales.getInt("lana");
+						int cereales = materiales.getInt("cereales");
+						int arcilla = materiales.getInt("arcilla");
+						int mineral = materiales.getInt("mineral");
+						String material_que_recibe = comercioMaritimo.getString("material_que_recibe");
+						
+						if (v1.tieneAsentamiento() && jug.equals(v1.getPropietario())
+								|| v2.tieneAsentamiento() && jug.equals(v1.getPropietario())) {
+							
+							// Comprobar si es especial o basico.
+							if (p.getTipoPuerto().esBasico()) {
+								// 3 materiales a uno
+								this.comercioMaritimo(3, jug, material_que_recibe, madera, 
+										lana, cereales, arcilla, mineral);
+							} else {
+								// materiales a uno en concreto
+								this.comercioEnPuertoEspecial(p, jug, material_que_recibe, 
+										madera, lana, cereales, arcilla, mineral);
+							}
+							
 						} else {
-							// materiales a uno en concreto
-							this.comercioEnPuertoEspecial(p, jug, material_que_recibe, 
-									madera, lana, cereales, arcilla, mineral);
+							// No hay asentamiento o el asentamiento no coincide con el jugador 
+							// 		--> comercio por 4 materiales a uno.
+							this.comercioMaritimo(4, jug, material_que_recibe, madera, lana, cereales, arcilla, mineral);
 						}
 						
 					} else {
-						// No hay asentamiento o el asentamiento no coincide con el jugador 
-						// 		--> comercio por 4 materiales a uno.
-						this.comercioMaritimo(4, jug, material_que_recibe, madera, lana, cereales, arcilla, mineral);
+						this.message = "La arista seleccionada no corresponde a ningún puerto";
+						this.exit_status = 27;
 					}
-					
 				} else {
-					this.message = "La arista seleccionada no corresponde a ningún puerto";
-					this.exit_status = 27;
+					this.message = "El identificador de arista introducido no corresponde a ninguno "
+							+ "de los disponibles";
+					this.exit_status = 26;
 				}
+				
 			} else {
-				this.message = "El identificador de arista introducido no corresponde a ninguno "
-						+ "de los disponibles";
-				this.exit_status = 26;
+				this.message = "El jugador ya ha comerciado con puerto durante su turno";
+				this.exit_status = 33;
 			}
+			
 			break;
 			// Cartas
 		default:
