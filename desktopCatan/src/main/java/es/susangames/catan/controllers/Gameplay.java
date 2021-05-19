@@ -900,7 +900,7 @@ public class Gameplay {
             }
             if(!primerosCaminos.get(MessageKeys.PLAYER_4).equals(null)) {
                 Partida.jugadores[3].primerosCaminos = 
-                        primerosCaminos.getBoolean(MessageKeys.PLAYER_4);
+                        primerosCaminos.getBoolean(MessageKeys.PLAYER_3);
             }
         } catch (Exception e) {
             System.err.println("Error procesando primeros caminos");
@@ -2691,16 +2691,28 @@ public class Gameplay {
     }
 
     private static void updateDice() {
-        _diceButton.setText(LangService.getMapping("dice") + ": " + 
-            Partida.resultadoTirada.toString());
+        Platform.runLater(new Runnable() {
+            @Override public void run() {
+            _diceButton.setText(LangService.getMapping("dice") + ": " + 
+                    Partida.resultadoTirada.toString());
+            }
+        });
+
+       
     }
 
     private static void updateUserMaterials() {
-        _maderaCant.setText(Partida.jugadores[Partida.miTurno-1].recursos.madera.toString());
-        _mineralCant.setText(Partida.jugadores[Partida.miTurno-1].recursos.mineral.toString());
-        _arcillaCant.setText(Partida.jugadores[Partida.miTurno-1].recursos.arcilla.toString());
-        _lanaCant.setText(Partida.jugadores[Partida.miTurno-1].recursos.lana.toString());
-        _cerealesCant.setText(Partida.jugadores[Partida.miTurno-1].recursos.cereales.toString()); 
+        Platform.runLater(new Runnable() {
+            @Override public void run() {
+                _maderaCant.setText(Partida.jugadores[Partida.miTurno-1].recursos.madera.toString());
+                _mineralCant.setText(Partida.jugadores[Partida.miTurno-1].recursos.mineral.toString());
+                _arcillaCant.setText(Partida.jugadores[Partida.miTurno-1].recursos.arcilla.toString());
+                _lanaCant.setText(Partida.jugadores[Partida.miTurno-1].recursos.lana.toString());
+                _cerealesCant.setText(Partida.jugadores[Partida.miTurno-1].recursos.cereales.toString()); 
+            }
+        });
+
+       
     }
 
     @FXML
