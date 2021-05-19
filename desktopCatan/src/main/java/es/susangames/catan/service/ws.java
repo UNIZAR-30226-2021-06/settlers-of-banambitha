@@ -11,6 +11,7 @@ import java.util.concurrent.ExecutionException;
 
 import es.susangames.catan.controllers.Gameplay;
 import es.susangames.catan.controllers.MainMenu;
+import es.susangames.catan.controllers.Play;
 
 import org.json.JSONObject;
 import org.springframework.messaging.converter.StringMessageConverter;
@@ -257,7 +258,6 @@ public class ws {
         session.send("/app/enviar/privado", object.toString()); 
     }
 
-
     public static void SubscribeSalaAct () {
         sala_act_topic_id = session.subscribe(salaActRequestUrl + RoomServices.room.getId(), new StompFrameHandler () {
             @Override
@@ -276,6 +276,7 @@ public class ws {
     public static void procesarMensajeAccionSala (Object payload) {
         if (RoomServices.room != null) {
             JSONObject jsObj = new JSONObject(payload.toString());
+            System.out.println("procesarMensajeAccionSala");
             System.out.println(jsObj.toString(4));
             String status = jsObj.getString("status");
             switch (status) {
@@ -295,7 +296,7 @@ public class ws {
                     RoomServices.room.setStatus("SEARCHING");
                     System.out.println("buscando partida");
                     break;
-                case "UPDATED_INVITES":
+                case "UPDATED-INVITES":
                     //Se ha actualizado la lista de usuarios inviatdos
                     ArrayList<String> invites = new ArrayList<String> ();
                     JSONArray invitesJSArray = jsObj.getJSONArray("invites");
@@ -304,14 +305,22 @@ public class ws {
                     }
                     RoomServices.room.setInvites(invites);
                     break;
-                case "UPDATED_PLAYERS":
+                case "UPDATED-PLAYERS":
                     //Se ha actualizado la lista de jugadores de la sala
-                    ArrayList<String> updated_players = new ArrayList<String> ();
                     JSONArray playersJSArray = jsObj.getJSONArray("players");
+                    System.out.println(playersJSArray.toString());
+                    ArrayList<String> updated_players = new ArrayList<String> ();
                     for (int i = 0; i < playersJSArray.length(); ++i) {
+                        System.out.println("Player: " + playersJSArray.getString(i));
                         updated_players.add(playersJSArray.getString(i));
                     }
                     RoomServices.updatePlayers(updated_players);
+
+                    //MainMenu.loadPlay();
+                    if(MainMenu.playOpenned) {
+                        Play.recargarSalaPartida();
+                    }
+
                     break;
                 case "FOUND":
                     System.out.println("_____FOUND_____");
@@ -392,5 +401,63 @@ public class ws {
                 RoomServices.crearSala();
             }   
         }
+    }
+    
+    public static void sendInvitation (String friend) {
+        JSONObject js = new JSONObject();
+        js.put("leader", RoomServices.room.getLeader());
+        js.put("room", RoomServices.room.getId());
+        js.put("invite", friend);
+
+        session.send(invitacionEnviar, js.toString());
+    }
+
+    public static void acceptMatchRequest(String friend, String room) {
+        JSONObject js = new JSONObject();
+        js.put("leader", friend);
+        js.put("room", room);
+        js.put("invite", UserService.getUsername());
+
+        session.send(invitacionAceptar, js.toString());
+        System.out.println("Enviar invitacion aceptar.");
+        for (RoomServices.Invite i : RoomServices.invites) {
+            if (i.getLeader().equals(friend)) {
+                i.aceptarInvitacion();
+                break;
+            }
+        }
+        try{
+            Thread.sleep(500); // Esperamos a que se procese 
+            Platform.runLater(new Runnable() {
+                @Override public void run() {
+                    MainMenu.getFriends();
+                }
+              });
+        } catch(Exception e){}
+        // Entrar a la pantalla play
+    }
+
+    public static void declineMatchRequest(String friend, String room) {
+        JSONObject js = new JSONObject();
+        js.put("leader", friend);
+        js.put("room", room);
+        js.put("invite", UserService.getUsername());
+
+        session.send(invitacionCancelar, js.toString());
+        for (RoomServices.Invite i : RoomServices.invites) {
+            if (i.getLeader().equals(friend)) {
+                i.cancelarInvitacion();
+                break;
+            }
+        }
+        try{
+            Thread.sleep(500); // Esperamos a que se procese 
+            Platform.runLater(new Runnable() {
+                @Override public void run() {
+                    // Invitaciones
+                    MainMenu.getFriends();
+                }
+              });
+        } catch(Exception e){}
     }
 }

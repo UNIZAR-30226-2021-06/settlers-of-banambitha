@@ -1,6 +1,7 @@
 package es.susangames.catan.service;
 
 import java.util.ArrayList;
+import java.io.IOException;
 import java.lang.reflect.Type;
 import org.json.*;
 
@@ -8,7 +9,11 @@ import org.springframework.messaging.simp.stomp.StompFrameHandler;
 import org.springframework.messaging.simp.stomp.StompHeaders;
 
 import es.susangames.catan.service.ws;
+import es.susangames.catan.controllers.Play;
 import es.susangames.catan.service.UserService;
+import es.susangames.catan.App;
+import es.susangames.catan.controllers.MainMenu;
+import javafx.application.Platform;
 
 public class RoomServices {
     
@@ -45,24 +50,24 @@ public class RoomServices {
         private String _username;
         private String _avatar;
 
-        UserCardInfo (String username, String avatar) {
+        public UserCardInfo (String username, String avatar) {
             this._username = username;
             this._avatar = avatar;
         }
 
-        void setUsername (String username) {
+        public void setUsername (String username) {
             this._username = username;
         }
 
-        String getUsername () {
+        public String getUsername () {
             return this._username;
         }
 
-        void setAvatar (String avatar) {
+        public void setAvatar (String avatar) {
             this._avatar = avatar;
         }
 
-        String getAvatar () {
+        public String getAvatar () {
             return this._avatar;
         }
     }
@@ -74,7 +79,7 @@ public class RoomServices {
         private ArrayList<UserCardInfo> _players;
         private String _status;
 
-        Room (String leader, String id, ArrayList<String> invites, ArrayList<UserCardInfo> players, String status) {
+        public Room (String leader, String id, ArrayList<String> invites, ArrayList<UserCardInfo> players, String status) {
             this._leader = leader;
             this._id = id;
             this._invites = invites;
@@ -82,47 +87,47 @@ public class RoomServices {
             this._status = status;
         }
 
-        void setLeader (String leader) {
+        public void setLeader (String leader) {
             this._leader = leader;
         }
 
-        String getLeader () {
+        public String getLeader () {
             return this._leader;
         }
 
-        void setId (String id) {
+        public void setId (String id) {
             this._id = id;
         }
 
-        String getId () {
+        public String getId () {
             return this._id;
         }
 
-        void setInvites (ArrayList<String> invites) {
+        public void setInvites (ArrayList<String> invites) {
             this._invites = invites;
         }
 
-        ArrayList<String> getInvites () {
+        public ArrayList<String> getInvites () {
             return this._invites;
         }
 
-        void setPlayers (ArrayList<UserCardInfo> players) {
+        public void setPlayers (ArrayList<UserCardInfo> players) {
             this._players = players;
         }
 
-        ArrayList<UserCardInfo> getPlayers () {
+        public ArrayList<UserCardInfo> getPlayers () {
             return this._players;
         }
 
-        void setStatus (String status) {
+        public void setStatus (String status) {
             this._status = status;
         }
 
-        String getStatus () {
+        public String getStatus () {
             return this._status;
         }
 
-        String[] toArrayStrings () {
+        public String[] toArrayStrings () {
             String array_players[] = new String[_players.size()];
             int i = 0;
             for(UserCardInfo u : _players) {
@@ -136,26 +141,40 @@ public class RoomServices {
     public static class Invite {
         private String _leader;
         private String _id;
+        private String _status;
 
-        Invite (String leader, String id) {
+        public Invite (String leader, String id) {
             this._leader = leader;
             this._id = id;
+            _status = "No contestada";
         }
 
-        void setLeader (String leader) {
+        public void setLeader (String leader) {
             this._leader = leader;
         }
 
-        String getLeader () {
+        public String getLeader () {
             return this._leader;
         }
 
-        void setId (String id) {
+        public void setId (String id) {
             this._id = id;
         }
 
-        String getId () {
+        public String getId () {
             return this._id;
+        }
+
+        public void cancelarInvitacion () {
+            _status = "Cancelada";
+        }
+
+        public void aceptarInvitacion () {
+            _status = "Aceptada";
+        }
+
+        public Boolean noHaSidoContestada () {
+            return _status == "No contestada";
         }
     }
 
@@ -212,25 +231,32 @@ public class RoomServices {
     }
 
     public static void updatePlayers (ArrayList<String> updated_players) {
+        System.out.println("Actualizando los jugadores");
         if (room != null) {
+            System.out.println("Sala no nula");
             ArrayList<UserCardInfo> updatedPlayers = new ArrayList<UserCardInfo> ();
             ArrayList<UserCardInfo> oldPlayers = room.getPlayers();
             Boolean encontrado = false;
             
             // Comprobar que si los jugadores existian ya.
             for (String player : updated_players) {
+                encontrado = false;
+                System.out.println("Player: " + player);
                 for (int i = 0; i < oldPlayers.size(); ++i) {
                     if (oldPlayers.get(i).getUsername().equals(player)) {
                         encontrado = true;
+                        System.out.println("Old player: " + player);
                         updatedPlayers.add(oldPlayers.get(i));
                     }
                 }
                 if (!encontrado) {
+                    System.out.println("Player no existe: " + player);
                     //El jugador no estaba en la sala, se añade y 
                     //se busca su avatar
                     String username = player;
                     UserService userService = new UserService ();
                     JSONObject jsUserInfo = UserService.getUserInfo(username);
+                    System.out.println(jsUserInfo.toString(4));
                     String avatar = jsUserInfo.getString("avatar");
 
                     updatedPlayers.add(new UserCardInfo(username, avatar));
@@ -241,14 +267,47 @@ public class RoomServices {
         }
     }
 
-    public static void procesarMensajeInvitacion (Object payload) {
+    public static void anyadirInvitaciones (String leader, String room) {
         Invite invitacion;
+        invitacion = new Invite(leader, room);
+        System.out.println("Añadiendo invitación...");
+        invites.add(invitacion);
+        System.out.println("Invitación añadida");
+        for (Invite i : invites) {
+            System.out.println("leader: " + i.getLeader() + " id: " + i.getId());
+        }
+        try{
+            Thread.sleep(500); // Esperamos a que se procese 
+            Platform.runLater(new Runnable() {
+                @Override public void run() {
+                    // Invitaciones
+                    System.out.println("Runnable");
+                    MainMenu.getFriends();
+                }
+                });
+        } catch(Exception e){
+            System.out.println(e.toString());
+        }
+    }
+
+    public static void eliminarInvitaciones (String leader, String room) {
+        Invite invitacion;
+        invitacion = new Invite(leader,room);
+        if (invites.contains(invitacion)) {
+            invites.remove(invitacion);
+        }
+    }
+
+    public static void procesarMensajeInvitacion (Object payload) {
         JSONObject jsObj = new JSONObject(payload.toString());
+        System.out.println("Invitaciones: " + payload.toString());
         String status = jsObj.getString("status");
         switch (status) {
             case "INVITED":
-                invitacion = new Invite(jsObj.getString("leader"), jsObj.getString("id"));
-                invites.add(invitacion);
+                String leader = jsObj.getString("leader");
+                System.out.println("Invitacion de " + leader);
+                anyadirInvitaciones(leader, jsObj.getString("room"));
+                
                 break;
             case "ACCEPTED":
                 uniendoseASala = false;
@@ -266,9 +325,10 @@ public class RoomServices {
                 room.setPlayers(players);
                 room.setInvites(invitesPL);
 
-                ArrayList<String> updated_players = new ArrayList<String> ();
                 JSONArray playersJSArray = jsObj.getJSONArray("players");
+                ArrayList<String> updated_players = new ArrayList<String> ();
                 for (int i = 0; i < playersJSArray.length(); ++i) {
+                    System.out.println("Player: " + playersJSArray.getString(i));
                     updated_players.add(playersJSArray.getString(i));
                 }
                 RoomServices.updatePlayers(updated_players);
@@ -282,10 +342,7 @@ public class RoomServices {
                 crearSala();
                 break;
             case "CANCELLED":
-                invitacion = new Invite(jsObj.getString("leader"), jsObj.getString("id"));
-                if (invites.contains(invitacion)) {
-                    invites.remove(invitacion);
-                }
+                eliminarInvitaciones(jsObj.getString("leader"), jsObj.getString("id"));
                 break;
             case "CLOSED":
                 uniendoseASala = false;

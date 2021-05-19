@@ -1,5 +1,6 @@
 package es.susangames.catan.controllers;
 
+import java.util.ArrayList;
 import es.susangames.catan.service.LangService;
 import es.susangames.catan.service.RoomServices;
 import es.susangames.catan.service.ws;
@@ -33,8 +34,6 @@ import org.springframework.web.socket.sockjs.client.WebSocketTransport;
 import java.lang.reflect.Type;
 
 
-
-
 public class Play {
  
     @FXML
@@ -46,53 +45,84 @@ public class Play {
     @FXML
     private ChoiceBox<String> typeGameSelector;
 
+    private Button exitRoom;
+
     @FXML
     private Text player1Name;
+
+    private static Text _player1Name;
 
     @FXML
     private Circle player1Icon;
 
-    @FXML
-    private Text player1ELO;
+    private static Circle _player1Icon;
 
     @FXML
     private Text player2Name;
 
+    private static Text _player2Name;
+
     @FXML
     private Circle player2Icon;
 
-    @FXML
-    private Text player2ELO;
+    private static Circle _player2Icon;
 
     @FXML
     private Text player3Name;
 
+    private static Text _player3Name;
+
     @FXML
     private Circle player3Icon;
 
-    @FXML
-    private Text player3ELO;
+    private static Circle _player3Icon;
 
     @FXML
     private Text player4Name;
 
-    @FXML
-    private Circle player4Icon;
+    private static Text _player4Name;
 
     @FXML
-    private Text player4ELO;
+    private Circle player4Icon;
+    
+    private static Circle _player4Icon;
 
 
 
 
     public Play() {
+        
+        _player1Name = player1Name;
+        _player2Name = player2Name;
+        _player3Name = player3Name;
+        _player4Name = player4Name;
+
+        _player1Icon = player1Icon;
+        _player2Icon = player2Icon;
+        _player3Icon = player3Icon;
+        _player4Icon = player4Icon;
+
         skinSelector = new ChoiceBox<>();
         typeGameSelector = new ChoiceBox<>();
     }
     
     @FXML
     public void initialize() throws IOException {
+
+        _player1Name = player1Name;
+        _player2Name = player2Name;
+        _player3Name = player3Name;
+        _player4Name = player4Name;
+
+        _player1Icon = player1Icon;
+        _player2Icon = player2Icon;
+        _player3Icon = player3Icon;
+        _player4Icon = player4Icon;
+
         playButton.setText((LangService.getMapping("play_button")));
+        if (!RoomServices.soyLider()) {
+            playButton.setDisable(true);
+        }
 
         skinSelector.getItems().add((LangService.getMapping("play_skin_space")));
         skinSelector.getItems().add("Normal");
@@ -103,25 +133,113 @@ public class Play {
         typeGameSelector.getItems().add((LangService.getMapping("play_game_private")));
         typeGameSelector.setValue((LangService.getMapping("play_game_public")));
 
-        // TODO: Cambiar para integrar con backend. Sirve como ejemplo 
-        player1Name.setText("Martín");
-        player2Name.setText("Lucía");
-        player3Name.setText("Marta");
-        player4Name.setText("Pablo");
-        Image imgUser1 = new Image("/img/users/user_profile_image_0.png");
-        Image imgUser2 = new Image("/img/users/user_profile_image_1.png");
-        Image imgUser3 = new Image("/img/users/user_profile_image_2.png");
-        Image imgUser4 = new Image("/img/users/user_profile_image_3.png");
-        player1Icon.setFill(new ImagePattern(imgUser1));
-        player2Icon.setFill(new ImagePattern(imgUser2));
-        player3Icon.setFill(new ImagePattern(imgUser3));
-        player4Icon.setFill(new ImagePattern(imgUser4));
-        player1ELO.setText("55");
-        player2ELO.setText("738");
-        player3ELO.setText("81");
-        player4ELO.setText("919");
+        String users[] = RoomServices.room.toArrayStrings();
+        if(users.length  > 0) {
+            JSONObject info_player1 = UserService.getUserInfo(users[0]);
+            System.out.println("Player 1:\n" + info_player1.toString(4));
 
+            _player1Name.setText(info_player1.getString("nombre"));
+            Image imgUser1 = new Image("/img/users/" + info_player1.getString("avatar"));
+            _player1Icon.setFill(new ImagePattern(imgUser1));
+        } else {
+            _player1Name.setText("Jugador 1");
+            Image imgUser1 = new Image("/img/users/user_profile_image_original.png");
+            _player1Icon.setFill(new ImagePattern(imgUser1));
+        }
+        if (users.length > 1 ) {
+            JSONObject info_player2 = UserService.getUserInfo(users[1]);
+            System.out.println("Player 2:\n" + info_player2.toString(4));
+
+            _player2Name.setText(info_player2.getString("nombre"));
+            Image imgUser2 = new Image("/img/users/" + info_player2.getString("avatar"));
+            _player2Icon.setFill(new ImagePattern(imgUser2));
+        } else {
+            _player2Name.setText("Jugador 2");
+            Image imgUser2 = new Image("/img/users/user_profile_image_original.png");
+            _player2Icon.setFill(new ImagePattern(imgUser2));
+        }
+        if (users.length > 2) {
+            JSONObject info_player3 = UserService.getUserInfo(users[2]);
+            System.out.println("Player 3:\n" + info_player3.toString(4));
+
+            _player3Name.setText(info_player3.getString("nombre"));
+            Image imgUser3 = new Image("/img/users/" + info_player3.getString("avatar"));
+            _player3Icon.setFill(new ImagePattern(imgUser3));
+        } else {
+            _player3Name.setText("Jugador 3");
+            Image imgUser3 = new Image("/img/users/user_profile_image_original.png");
+            _player3Icon.setFill(new ImagePattern(imgUser3));
+        }
+        if (users.length > 3) {
+            JSONObject info_player4 = UserService.getUserInfo(users[3]);
+            System.out.println("Player 4:\n" + info_player4.toString(4));
+
+            _player4Name.setText(info_player4.getString("nombre"));
+            Image imgUser4 = new Image("/img/users/" + info_player4.getString("avatar"));
+            _player4Icon.setFill(new ImagePattern(imgUser4));
+        } else {
+            _player4Name.setText("Jugador 4");
+            Image imgUser4 = new Image("/img/users/user_profile_image_original.png");
+            _player4Icon.setFill(new ImagePattern(imgUser4));
+        }
+        
     } 
+
+    // TODO: ELIMINAR ESTA FUNCION.
+    @FXML
+    public static void recargarSalaPartida () {
+        System.out.println("Intentando recargar la sala...");
+        String users[] = RoomServices.room.toArrayStrings();
+        System.out.println(users.length);
+        if(users.length  > 0) {
+            JSONObject info_player1 = UserService.getUserInfo(users[0]);
+            System.out.println("Player 1:\n" + info_player1.toString(4));
+
+            _player1Name.setText(info_player1.getString("nombre"));
+            Image imgUser1 = new Image("/img/users/" + info_player1.getString("avatar"));
+            _player1Icon.setFill(new ImagePattern(imgUser1));
+        } else {
+            _player1Name.setText("Jugador 1");
+            Image imgUser1 = new Image("/img/users/user_profile_image_original.png");
+            _player1Icon.setFill(new ImagePattern(imgUser1));
+        }
+        if (users.length > 1 ) {
+            JSONObject info_player2 = UserService.getUserInfo(users[1]);
+            System.out.println("Player 2:\n" + info_player2.toString(4));
+
+            _player2Name.setText(info_player2.getString("nombre"));
+            Image imgUser2 = new Image("/img/users/" + info_player2.getString("avatar"));
+            _player2Icon.setFill(new ImagePattern(imgUser2));
+        } else {
+            _player2Name.setText("Jugador 2");
+            Image imgUser2 = new Image("/img/users/user_profile_image_original.png");
+            _player2Icon.setFill(new ImagePattern(imgUser2));
+        }
+        if (users.length > 2) {
+            JSONObject info_player3 = UserService.getUserInfo(users[2]);
+            System.out.println("Player 3:\n" + info_player3.toString(4));
+
+            _player3Name.setText(info_player3.getString("nombre"));
+            Image imgUser3 = new Image("/img/users/" + info_player3.getString("avatar"));
+            _player3Icon.setFill(new ImagePattern(imgUser3));
+        } else {
+            _player3Name.setText("Jugador 3");
+            Image imgUser3 = new Image("/img/users/user_profile_image_original.png");
+            _player3Icon.setFill(new ImagePattern(imgUser3));
+        }
+        if (users.length > 3) {
+            JSONObject info_player4 = UserService.getUserInfo(users[3]);
+            System.out.println("Player 4:\n" + info_player4.toString(4));
+
+            _player4Name.setText(info_player4.getString("nombre"));
+            Image imgUser4 = new Image("/img/users/" + info_player4.getString("avatar"));
+            _player4Icon.setFill(new ImagePattern(imgUser4));
+        } else {
+            _player4Name.setText("Jugador 4");
+            Image imgUser4 = new Image("/img/users/user_profile_image_original.png");
+            _player4Icon.setFill(new ImagePattern(imgUser4));
+        }
+    }
 
     @FXML
     void loadGameplay(ActionEvent event)  throws IOException {

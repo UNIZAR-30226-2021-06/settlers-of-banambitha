@@ -387,13 +387,13 @@ public class SalaController {
 		String liderId 	= message.getString("leader");
 		String salaId 	= message.getString("room");
 		String invitado = message.getString("invite");
+
 		
 		synchronized (salas) {
 			
 			Sala sala = salas.get(salaId);
 		
 			if(sala != null && sala.getLeader().contentEquals(liderId)) {
-				
 				JSONObject invitacion = new JSONObject();
 				invitacion.put("leader", liderId);
 				invitacion.put("room", salaId);
@@ -411,7 +411,7 @@ public class SalaController {
 							template.convertAndSend(WebSocketConfig.TOPIC_INVITACION + "/" + i, actualizacionInvitacion.toString());
 						}
 					}
-					
+
 					JSONObject actualizacion = new JSONObject();
 					JSONArray jugadores = new JSONArray(sala.getPlayers());
 					JSONArray invitados = new JSONArray(sala.getInvites());

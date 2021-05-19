@@ -207,9 +207,19 @@
         "esp": "Aceptar"
     },
 
+    "decline": {
+        "eng": "Decline",
+        "esp": "Denegar"
+    },
+
     "accept_friend": {
         "eng": "Add",
         "esp": "Añadir"
+    },
+
+    "decline_friend": {
+        "eng": "Decline",
+        "esp": "Denegar"
     },
 
     "new_psw": {

@@ -61,24 +61,6 @@
                                           <Insets top="20.0" />
                                        </VBox.margin>
                                     </HBox>
-                                    <HBox>
-                                       <children>
-                                          <Region HBox.hgrow="ALWAYS">
-                                             <HBox.margin>
-                                                <Insets />
-                                             </HBox.margin>
-                                          </Region>
-                                          <Text fx:id="player1ELO" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" HBox.hgrow="ALWAYS">
-                                             <font>
-                                                <Font name="System Bold Italic" size="19.0" />
-                                             </font>
-                                          </Text>
-                                          <Region HBox.hgrow="ALWAYS" />
-                                       </children>
-                                       <VBox.margin>
-                                          <Insets top="15.0" />
-                                       </VBox.margin>
-                                    </HBox>
                                     <HBox prefHeight="100.0" prefWidth="200.0">
                                        <children>
                                           <Region HBox.hgrow="ALWAYS" />
@@ -141,24 +123,6 @@
                                        </children>
                                        <VBox.margin>
                                           <Insets top="20.0" />
-                                       </VBox.margin>
-                                    </HBox>
-                                    <HBox>
-                                       <children>
-                                          <Region HBox.hgrow="ALWAYS">
-                                             <HBox.margin>
-                                                <Insets />
-                                             </HBox.margin>
-                                          </Region>
-                                          <Text fx:id="player2ELO" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" HBox.hgrow="ALWAYS">
-                                             <font>
-                                                <Font name="System Bold Italic" size="19.0" />
-                                             </font>
-                                          </Text>
-                                          <Region HBox.hgrow="ALWAYS" />
-                                       </children>
-                                       <VBox.margin>
-                                          <Insets top="15.0" />
                                        </VBox.margin>
                                     </HBox>
                                     <HBox prefHeight="100.0" prefWidth="200.0">
@@ -228,24 +192,6 @@
                                           <Insets top="20.0" />
                                        </VBox.margin>
                                     </HBox>
-                                    <HBox>
-                                       <children>
-                                          <Region HBox.hgrow="ALWAYS">
-                                             <HBox.margin>
-                                                <Insets />
-                                             </HBox.margin>
-                                          </Region>
-                                          <Text fx:id="player3ELO" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" HBox.hgrow="ALWAYS">
-                                             <font>
-                                                <Font name="System Bold Italic" size="19.0" />
-                                             </font>
-                                          </Text>
-                                          <Region HBox.hgrow="ALWAYS" />
-                                       </children>
-                                       <VBox.margin>
-                                          <Insets top="15.0" />
-                                       </VBox.margin>
-                                    </HBox>
                                     <HBox prefHeight="100.0" prefWidth="200.0">
                                        <children>
                                           <Region HBox.hgrow="ALWAYS" />
@@ -308,24 +254,6 @@
                                        </children>
                                        <VBox.margin>
                                           <Insets top="20.0" />
-                                       </VBox.margin>
-                                    </HBox>
-                                    <HBox>
-                                       <children>
-                                          <Region HBox.hgrow="ALWAYS">
-                                             <HBox.margin>
-                                                <Insets />
-                                             </HBox.margin>
-                                          </Region>
-                                          <Text fx:id="player4ELO" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" HBox.hgrow="ALWAYS">
-                                             <font>
-                                                <Font name="System Bold Italic" size="19.0" />
-                                             </font>
-                                          </Text>
-                                          <Region HBox.hgrow="ALWAYS" />
-                                       </children>
-                                       <VBox.margin>
-                                          <Insets top="15.0" />
                                        </VBox.margin>
                                     </HBox>
                                     <HBox prefHeight="100.0" prefWidth="200.0">

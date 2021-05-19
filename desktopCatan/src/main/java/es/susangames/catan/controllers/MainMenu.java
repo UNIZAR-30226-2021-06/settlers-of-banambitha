@@ -1,5 +1,5 @@
 package es.susangames.catan.controllers;
-
+import es.susangames.catan.service.RoomServices;
 import es.susangames.catan.App;
 import es.susangames.catan.controllers.Instructions;
 import es.susangames.catan.service.UserService;
@@ -49,7 +49,7 @@ public class MainMenu {
     private StackPane mainMenu; 
 
     @FXML
-    private BorderPane mainMenuBP; 
+    private BorderPane mainMenuBP;
 
     private HBox navbar; 
 
@@ -90,7 +90,6 @@ public class MainMenu {
     private static Text _numberCoins;
     public static JFXListView<AnchorPane> _playerList;
 
-
     private Image goldImg;
     private Image userImage;
     private Image catanLog;
@@ -102,6 +101,7 @@ public class MainMenu {
     private static Text userSearchName;
     private static String userSearched;
     public static Boolean chatOpenned;
+    public static Boolean playOpenned;
     public static String userChatOpenned;
     public static JFXTextArea _chatContent;
 
@@ -111,6 +111,7 @@ public class MainMenu {
         userImage = new Image("/img/users/user_profile_image_original.png");
         catanLog = new Image("/img/catan-logo.png");
         chatOpenned = false;
+        playOpenned = false;
         userChatOpenned ="";
     }
     
@@ -384,7 +385,8 @@ public class MainMenu {
         inviteButton.setEffect(shadow);
 
         inviteButton.setOnAction((ActionEvent event) -> {
-           // TODO: Invitar a partida
+           // invitacionEnviar
+           ws.sendInvitation(username);
          });
 
         anchorPane.getChildren().add(chatButton);
@@ -439,7 +441,7 @@ public class MainMenu {
          declineButton.setLayoutX(anchorPane.getLayoutX() + 120);
          declineButton.setLayoutY(anchorPane.getLayoutY() + 105);
          declineButton.setStyle("-fx-background-color: #c7956d; -fx-background-radius: 12px");
-         declineButton.setText(LangService.getMapping("accept_friend"));
+         declineButton.setText(LangService.getMapping("decline_friend"));
          declineButton.setEffect(shadow);
  
          declineButton.setOnAction((ActionEvent event) -> {
@@ -464,7 +466,17 @@ public class MainMenu {
     
     public static void getFriends() {
         _playerList.getItems().clear();
+        System.out.println("Cargando amigos....");
         loadUserSearch();
+
+        ArrayList<RoomServices.Invite> invitaciones = RoomServices.invites;
+
+        for (RoomServices.Invite i : invitaciones) {
+            if (i.noHaSidoContestada()) {
+                System.out.println("Invitacion de " + i.getLeader());
+                loadInvitation(i.getLeader(), i.getId(), UserService.getUserImg(i.getLeader()));
+            }
+        }
 
         JSONArray pendingReqs = UserService.pendingFriendReq();
         for (int i = 0; i < pendingReqs.length(); i++) {
@@ -491,7 +503,6 @@ public class MainMenu {
      */
     @FXML
     public void initialize(){
-        
         updateStrings();
         _numberCoins = numberCoins;
         _playerList = playerList;
@@ -523,19 +534,22 @@ public class MainMenu {
         //Barra de navegación
         btnPlay.setOnAction( f -> {
             loadScene("/view/play.fxml", btnPlay);
-            
+            playOpenned = true;
         });
 
         btnShop.setOnAction( f -> {
             loadScene("/view/shop.fxml", btnShop);
+            playOpenned = false;
         });
 
         btnOpt.setOnAction( f -> {
             loadScene("/view/options.fxml", btnOpt);
+            playOpenned = false;
         });
 
         btnInst.setOnAction( f -> {
             loadScene("/view/instructions.fxml", btnInst);
+            playOpenned = false;
         });
 
         loadScene("/view/shop.fxml", btnPlay);
@@ -543,4 +557,62 @@ public class MainMenu {
         ws.initialize();
     }
 
+
+    private static void loadInvitation (String username, String room, String imgURL) {
+        AnchorPane anchorPane = new AnchorPane();
+        anchorPane.setPrefSize(5, 150);
+        anchorPane.setStyle("-fx-background-color: #965d62");
+
+        // Image usuario
+        Circle circle = new Circle();
+        circle.setCenterX(10.0f);
+        circle.setCenterY(10.0f);
+        circle.setRadius(45.0f);
+        circle.setLayoutX(anchorPane.getLayoutX() + 45);
+        circle.setLayoutY(anchorPane.getLayoutY() + 45);
+        Image imgSkin = new Image(imgURL);
+        circle.setFill(new ImagePattern(imgSkin));
+        anchorPane.getChildren().add(circle);
+
+        // Nombre usuario
+        Text tName = new Text(10, 10, username);
+        tName.setFont(new Font(15));
+        tName.setLayoutX(anchorPane.getLayoutX() + 85 );
+        tName.setLayoutY(anchorPane.getLayoutY() + 15);
+        tName.setFill(Color.WHITE);
+        anchorPane.getChildren().add(tName);
+
+
+        // Boton aceptar invitacion 
+        Button chatButton = new Button();
+        chatButton.setPrefSize(80,15);
+        chatButton.setLayoutX(anchorPane.getLayoutX() + 120);
+        chatButton.setLayoutY(anchorPane.getLayoutY() + 65);
+        chatButton.setStyle("-fx-background-color: #c7956d; -fx-background-radius: 12px");
+        chatButton.setText(LangService.getMapping("accept"));
+        DropShadow shadow = new DropShadow();
+        chatButton.setEffect(shadow);
+
+        chatButton.setOnAction((ActionEvent event) -> {
+           ws.acceptMatchRequest(username, room);
+         });
+
+
+         Button declineButton = new Button();
+         declineButton.setPrefSize(80,15);
+         declineButton.setLayoutX(anchorPane.getLayoutX() + 120);
+         declineButton.setLayoutY(anchorPane.getLayoutY() + 105);
+         declineButton.setStyle("-fx-background-color: #c7956d; -fx-background-radius: 12px");
+         declineButton.setText(LangService.getMapping("decline"));
+         declineButton.setEffect(shadow);
+ 
+         declineButton.setOnAction((ActionEvent event) -> {
+            ws.declineMatchRequest(username, room);
+          });
+
+
+        anchorPane.getChildren().add(chatButton);
+        anchorPane.getChildren().add(declineButton);
+        _playerList.getItems().add(anchorPane);
+    }
 }
