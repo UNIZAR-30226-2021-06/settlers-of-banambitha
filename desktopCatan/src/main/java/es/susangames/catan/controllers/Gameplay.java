@@ -876,7 +876,7 @@ public class Gameplay {
             }
             if(!primerosAsentamientos.get(MessageKeys.PLAYER_4).equals(null)) {
                 Partida.jugadores[3].primerosAsentamientos = 
-                        primerosAsentamientos.getBoolean(MessageKeys.PLAYER_3);
+                        primerosAsentamientos.getBoolean(MessageKeys.PLAYER_4);
             }
         } catch (Exception e) {
             System.err.println("Error procesando primeros asentamientos");
@@ -900,7 +900,7 @@ public class Gameplay {
             }
             if(!primerosCaminos.get(MessageKeys.PLAYER_4).equals(null)) {
                 Partida.jugadores[3].primerosCaminos = 
-                        primerosCaminos.getBoolean(MessageKeys.PLAYER_3);
+                        primerosCaminos.getBoolean(MessageKeys.PLAYER_4);
             }
         } catch (Exception e) {
             System.err.println("Error procesando primeros caminos");
