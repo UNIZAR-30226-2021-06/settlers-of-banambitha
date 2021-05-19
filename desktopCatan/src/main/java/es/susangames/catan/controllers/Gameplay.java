@@ -1985,7 +1985,7 @@ public class Gameplay {
         _player3Name.setText(Partida.jugadores[2].nombre  +
             " (" + Partida.jugadores[2].puntos + ")");
         _player4Name.setText(Partida.jugadores[3].nombre + 
-            " (" + Partida.jugadores[Partida.miTurno-1].puntos + ")");
+            " (" + Partida.jugadores[3].puntos + ")");
 
         Platform.runLater(new Runnable() {
             @Override public void run() {
