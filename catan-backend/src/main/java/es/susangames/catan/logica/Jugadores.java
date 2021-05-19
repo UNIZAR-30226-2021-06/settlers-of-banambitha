@@ -91,6 +91,8 @@ public class Jugadores {
 		case Montanya:
 			mineral+=numProducidos;
 			break;
+		case Desierto:
+			break;
 		}
 	}
 	
@@ -197,6 +199,7 @@ public class Jugadores {
 		if (numPobladosConstruidos >= 2) {
 			primerosAsentamientosConstruidos = true;
 		}
+		this.puntosVictoria++;
 	}
 	
 	public void construirPrimerAsentamiento () {
@@ -204,6 +207,7 @@ public class Jugadores {
 		if (numPobladosConstruidos >= 2) {
 			primerosAsentamientosConstruidos = true;
 		}
+		this.puntosVictoria++;
 	}
 	
 	public void construirPrimerCamino () {
