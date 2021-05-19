@@ -61,6 +61,7 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BackgroundImage;
 import javafx.application.Platform;
+import java.util.Timer;
 
 
 public class Gameplay {
@@ -298,6 +299,8 @@ public class Gameplay {
     @FXML
     private AnchorPane mainAnchor;
 
+    private static AnchorPane _mainAnchor;
+
     @FXML
     private JFXTextArea chatContent;
 
@@ -385,6 +388,7 @@ public class Gameplay {
     private Popup popupSettings;
     private Popup popupBuildSettle;
     private Popup popupResources;
+    private static Popup popupNewTradeOffer;
 
     private ChoiceBox<String> offerMaterial;
     private ChoiceBox<String> offerPlayer;
@@ -447,6 +451,7 @@ public class Gameplay {
             Partida.yaComercio = false;
             SolicitudComercio.res1 = new Gameplay().new ProductoComercio();
             SolicitudComercio.res2 = new Gameplay().new ProductoComercio();
+
             subscribeToTopics();
             return true;
         }    
@@ -511,7 +516,7 @@ public class Gameplay {
                 }
                 @Override
                 public void handleFrame(StompHeaders headers, Object payload) {
-                    System.out.println("msg chat");
+                    procesarMnesajeChat(payload.toString());
                 }
             });
 
@@ -531,9 +536,40 @@ public class Gameplay {
         
     }
 
+    private static void procesarMnesajeChat(String mensaje) {
+        JSONObject object = new JSONObject(mensaje);
+        try {
+            Integer user = object.getInt("from");
+            String body = object.getString("body");
+            switch (user) {
+                case 1:
+                _chatContent.appendText( Partida.jugadores[0].nombre + ": " +
+                                         body + "\n");
+                    break;
+                case 2:
+                _chatContent.appendText( Partida.jugadores[1].nombre + ": " +
+                                         body + "\n");
+                    break;
+                case 3:
+                _chatContent.appendText( Partida.jugadores[2].nombre + ": " + 
+                                         body + "\n");
+                    break;
+                case 4:
+                _chatContent.appendText( Partida.jugadores[3].nombre + ": " + 
+                                         body + "\n");
+                    break;
+                default:
+                    System.out.println("Jugador erroneo");
+                    break;
+            }
+
+        } catch (Exception e) {
+            System.out.println("Mensaje chat erroneo");
+        }
+    }
+
+
     // Actualizacion del tablero
-
-
     private static void initTablero() {
         // Hexagonos
         Partida.tablero.hexagonos.tipo = new String[numberofHexagons];
@@ -577,13 +613,21 @@ public class Gameplay {
         mostrarCambiosTablero();
         if(existeGanador(mensaje)) { 
             // TODO: Fin partida
+            try {
+                App.nuevaPantalla("/view/mainMenu.fxml");
+            } catch (IOException e) {
+        
+            }
         } 
         
     }
 
     private static Boolean existeGanador(String mensaje) {
-        return false;
+        JSONObject object = new JSONObject(mensaje);
+        Integer ganador = object.getInt(MessageKeys.GANADOR);
+        return ganador > 0;
     }
+
 
     private static void procesarMensajeComercio(String mensajeComercio) {
         JSONObject object = new JSONObject(mensajeComercio);
@@ -602,7 +646,16 @@ public class Gameplay {
                     SolicitudComercio.res2.cuan = res2_object.getInt("cuan");
                     SolicitudComercio.res2.recurso = res2_object.getString("type");
 
-                    // TODO: Open tradeo
+                    try {
+                        if (!popupNewTradeOffer.isShowing()) {
+                            newTradePopUp();
+                            Stage stage = (Stage) _mainAnchor.getScene().getWindow();
+                            popupNewTradeOffer.show(stage);
+                        }
+                    } catch(Exception e) {
+                        System.out.println("Fallo cargando pop up tradeo recibido");
+                    }
+                    
                 }
             } else if(type.equals(MsgComercioStatus.ACCEPT)) {
                 Integer turnoJugador = object.getInt("from");
@@ -1213,7 +1266,11 @@ public class Gameplay {
 
     @FXML
     void send_msg(ActionEvent event) {
-        chatContent.appendText("User: " + chatInput.getText().toString() + "\n"); 
+        JSONObject msg = new JSONObject();
+        msg.put("from", Partida.miTurno);
+        msg.put("game", Partida.id);
+        msg.put("body", chatInput.getText().toString() );
+        ws.session.send(ws.enviarMensajePartida, msg.toString());  
         chatInput.clear();    
 
     }
@@ -1287,11 +1344,53 @@ public class Gameplay {
             } else {
                 Partida.tablero.hexagonos.hexagons[i].setFill(Color.GRAY);
             }
-            Partida.tablero.hexagonos.numberOverHexagon[i].setText(
-                Partida.tablero.hexagonos.valor[i].toString());
+            /*Partida.tablero.hexagonos.numberOverHexagon[i].setText(
+                Partida.tablero.hexagonos.valor[i].toString());*/
         }    
         Partida.tablero.hexagonos.numberOverHexagon[Partida.tablero.hexagonos.ladron].setDisable(true);
-
+        // runLater debe usar variables final.
+        Platform.runLater(new Runnable() {
+            @Override public void run() {
+                Partida.tablero.hexagonos.numberOverHexagon[0].setText(
+                Partida.tablero.hexagonos.valor[0].toString());
+                Partida.tablero.hexagonos.numberOverHexagon[1].setText(
+                Partida.tablero.hexagonos.valor[1].toString());
+                Partida.tablero.hexagonos.numberOverHexagon[2].setText(
+                Partida.tablero.hexagonos.valor[2].toString());
+                Partida.tablero.hexagonos.numberOverHexagon[3].setText(
+                Partida.tablero.hexagonos.valor[3].toString());
+                Partida.tablero.hexagonos.numberOverHexagon[4].setText(
+                Partida.tablero.hexagonos.valor[4].toString());
+                Partida.tablero.hexagonos.numberOverHexagon[5].setText(
+                Partida.tablero.hexagonos.valor[5].toString());
+                Partida.tablero.hexagonos.numberOverHexagon[6].setText(
+                Partida.tablero.hexagonos.valor[6].toString());
+                Partida.tablero.hexagonos.numberOverHexagon[7].setText(
+                Partida.tablero.hexagonos.valor[7].toString());
+                Partida.tablero.hexagonos.numberOverHexagon[8].setText(
+                Partida.tablero.hexagonos.valor[8].toString());
+                Partida.tablero.hexagonos.numberOverHexagon[9].setText(
+                Partida.tablero.hexagonos.valor[9].toString());
+                Partida.tablero.hexagonos.numberOverHexagon[10].setText(
+                Partida.tablero.hexagonos.valor[10].toString());
+                Partida.tablero.hexagonos.numberOverHexagon[11].setText(
+                Partida.tablero.hexagonos.valor[11].toString());
+                Partida.tablero.hexagonos.numberOverHexagon[12].setText(
+                Partida.tablero.hexagonos.valor[12].toString());
+                Partida.tablero.hexagonos.numberOverHexagon[13].setText(
+                Partida.tablero.hexagonos.valor[13].toString());
+                Partida.tablero.hexagonos.numberOverHexagon[14].setText(
+                Partida.tablero.hexagonos.valor[14].toString());
+                Partida.tablero.hexagonos.numberOverHexagon[15].setText(
+                Partida.tablero.hexagonos.valor[15].toString());
+                Partida.tablero.hexagonos.numberOverHexagon[16].setText(
+                Partida.tablero.hexagonos.valor[16].toString());
+                Partida.tablero.hexagonos.numberOverHexagon[17].setText(
+                Partida.tablero.hexagonos.valor[17].toString());
+                Partida.tablero.hexagonos.numberOverHexagon[18].setText(
+                Partida.tablero.hexagonos.valor[18].toString());
+            }
+        });
     }
 
     private static void updateVertix() {
@@ -2124,11 +2223,11 @@ public class Gameplay {
        
         // TODO: Añadir accion cuando se hace click sobre boton compra
         sendTrade.setOnAction((ActionEvent event) -> {
-            System.out.println(offerPlayer.getValue().toString());
-            System.out.println(offerMaterial.getValue().toString());
-            System.out.println(receiveMaterial.getValue().toString());
-            System.out.println(spinnerReceive.getValue().toString());
-            System.out.println(spinnerGive.getValue().toString());
+            enviarMensajeComercioInterno(offerPlayer.getValue(),
+                                         offerMaterial.getValue(),
+                                         spinnerGive.getValue(),
+                                         receiveMaterial.getValue(),
+                                         spinnerReceive.getValue());
             popupInternalTrade.hide();
         });
         anchorPane.getChildren().add(sendTrade);
@@ -2204,6 +2303,145 @@ public class Gameplay {
      inTrade.setText((LangService.getMapping("internal_trade")));
 
 
+    }
+
+    private static void enviarMensajeComercioInterno(String jugador,
+                            String materialOfrece, Integer cantidadOfrece, 
+                            String materialSolicita,Integer cantidadSolicita) {
+
+        int player = 0;
+        if(jugador.equals(Partida.jugadores[0].nombre)) {
+            player = 0;
+        } else if(jugador.equals(Partida.jugadores[1].nombre)) {
+            player = 1;
+        } else if(jugador.equals(Partida.jugadores[2].nombre)) {
+            player = 2;
+        } else {
+            player = 3;
+        }
+    
+        JSONObject mensaje = new JSONObject();
+        JSONObject res1 = new JSONObject();
+        if(materialOfrece.equals("Lana")) {
+            res1.put("type","lana");
+        } else if(materialOfrece.equals("Mineral")) {
+            res1.put("type","mineral");
+        } else if(materialOfrece.equals("Cereal")) {
+            res1.put("type","cereales");
+        } else if(materialOfrece.equals("Madera")) {
+            res1.put("type","madera");
+        } else {
+            res1.put("type","arcilla");
+        }
+        res1.put("cuan",cantidadOfrece);
+        JSONObject res2 = new JSONObject();
+        if(materialSolicita.equals("Lana")) {
+            res2.put("type","lana");
+        } else if(materialSolicita.equals("Mineral")) {
+            res2.put("type","mineral");
+        } else if(materialSolicita.equals("Cereal")) {
+            res2.put("type","cereales");
+        } else if(materialSolicita.equals("Madera")) {
+            res2.put("type","madera");
+        } else {
+            res2.put("type","arcilla");
+        }
+        res2.put("cuan",cantidadSolicita);
+        mensaje.put("from", Partida.miTurno);
+        mensaje.put("to", player);
+        mensaje.put("game", Partida.id);
+        mensaje.put("res1",res1);
+        mensaje.put("res2",res2);
+        ws.session.send(ws.proponerComercio, mensaje.toString());
+
+
+    }
+
+    private static void newTradePopUp() {
+        AnchorPane anchorPane = new AnchorPane();
+        anchorPane.setPrefSize(150, 150);
+        anchorPane.setStyle("-fx-background-color:  #965d62; -fx-background-radius: 12px" );
+        popupNewTradeOffer = new Popup();
+        popupNewTradeOffer.getContent().add(anchorPane);
+        popupNewTradeOffer.setAutoHide(true);
+
+        Text title = new Text(10, 20, Partida.jugadores[SolicitudComercio.from-1].nombre + 
+         " ofrece " + SolicitudComercio.res1.cuan.toString() + " de " + 
+         SolicitudComercio.res1.recurso + " por " + 
+         SolicitudComercio.res2.cuan.toString() + " de " +
+         SolicitudComercio.res2.recurso);
+        title.setFont(new Font(20));
+        title.setLayoutX(anchorPane.getLayoutX());
+        title.setLayoutY(anchorPane.getLayoutY() + 20);
+        title.setFill(Color.WHITE);
+        anchorPane.getChildren().add(title);
+
+        // Boton aceptar solicitud tradeo
+        Button accepTrade = new Button();
+        accepTrade.setPrefSize(90,90);
+        accepTrade.setLayoutX(anchorPane.getLayoutX() + 80);
+        accepTrade.setLayoutY(anchorPane.getLayoutY() + 50);
+        accepTrade.setStyle("-fx-background-color: #c7956d; -fx-background-radius: 12px");
+        accepTrade.setText("Aceptar");
+        accepTrade.setOnAction((ActionEvent event) -> {
+           aceptarComercioJugador();
+            popupNewTradeOffer.hide();
+        });
+
+
+        DropShadow shadow = new DropShadow();
+        accepTrade.setEffect(shadow);
+
+
+        // Boton aceptar solicitud tradeo
+        Button denegarTrade = new Button();
+        denegarTrade.setPrefSize(90,90);
+        denegarTrade.setLayoutX(anchorPane.getLayoutX() + 240);
+        denegarTrade.setLayoutY(anchorPane.getLayoutY() + 50);
+        denegarTrade.setStyle("-fx-background-color: #c7956d; -fx-background-radius: 12px");
+        denegarTrade.setText("Denegar");
+        denegarTrade.setEffect(shadow);
+        denegarTrade.setOnAction((ActionEvent event) -> {
+            rechazarComercioJugador();
+             popupNewTradeOffer.hide();
+         });
+
+        anchorPane.getChildren().add(accepTrade);
+        anchorPane.getChildren().add(denegarTrade);
+
+    } 
+
+
+    private static void aceptarComercioJugador() {
+        if(Partida.miTurno != Partida.turnoActual) {
+            JSONObject mensaje = new JSONObject();
+            
+            JSONObject res1 = new JSONObject();
+            res1.put("type", SolicitudComercio.res1.recurso);
+            res1.put("cuan", SolicitudComercio.res1.cuan);
+
+            JSONObject res2 = new JSONObject();
+            res2.put("type", SolicitudComercio.res2.recurso);
+            res2.put("cuan", SolicitudComercio.res2.cuan);
+
+            mensaje.put("from", Partida.miTurno);
+            mensaje.put("to", SolicitudComercio.from);
+            mensaje.put("game", Partida.id);
+            mensaje.put("res1",res1);
+            mensaje.put("res2",res2);
+
+
+            ws.session.send(ws.aceptarComercio, mensaje.toString());
+        }
+    }
+
+    private static void rechazarComercioJugador() {
+        JSONObject mensaje = new JSONObject();
+        mensaje.put("from", Partida.miTurno);
+        mensaje.put("to", SolicitudComercio.from);
+        mensaje.put("game", Partida.id);
+      
+        ws.session.send(ws.rechazarComercio, mensaje.toString());
     }
 
     private void externalTradePopUp() {
@@ -2381,7 +2619,7 @@ public class Gameplay {
         } else if(recursoSolicitado.equals("Mineral")) {
             mensaje.put("material_que_recibe","mineral");
         } else if(recursoSolicitado.equals("Cereal")) {
-            mensaje.put("material_que_recibe","cereal");
+            mensaje.put("material_que_recibe","cereales");
         } else if(recursoSolicitado.equals("Madera")) {
             mensaje.put("material_que_recibe","madera");
         } else {
@@ -2480,6 +2718,7 @@ public class Gameplay {
          _chatContent = chatContent;
          _turnPlayer = turnPlayer;
          _passTurnButton = passTurnButton;
+         _mainAnchor = mainAnchor;
 
          passTurnButton.setOnAction((ActionEvent event) -> {
             if(esMiTurno()) {
@@ -2530,15 +2769,31 @@ public class Gameplay {
                 circle.setMaxSize(2*numberSize, 2*numberSize);
                 circle.setLayoutX(pol.getLayoutX() - 18);
                 circle.setLayoutY(pol.getLayoutY() - 20);
-                
+               
                 circle.setOnMouseClicked( event -> {
-                    if (event.getButton().equals(MouseButton.PRIMARY)) {
+                    if (event.getButton().equals(MouseButton.PRIMARY) && 
+                        esMiTurno() && Partida.resultadoTirada == 7 && 
+                        !Partida.movioLadron) {
+                        Partida.movioLadron = true;
                         circle.setDisable(true);
-                        for(Button aux : Partida.tablero.hexagonos.numberOverHexagon) {
+                        for(int j = 0; j < numberofHexagons; j++) {
+                            Button aux = Partida.tablero.hexagonos.numberOverHexagon[j];
                             if(aux != circle) {
                                 aux.setDisable(false);
+                            } else {
+                                JSONObject jugada = new JSONObject();
+                                JSONObject move = new JSONObject();
+                                move.put("name", Jugada.MOVER_LADRON);
+                                move.put("param", j);
+                                jugada.put("player", Partida.miTurno);
+                                jugada.put("game", Partida.id);
+                                jugada.put("move",move);
+                                ws.session.send(ws.partidaJugada, jugada.toString());
                             }
                         }
+                
+
+                        
                     }   
                 });
 

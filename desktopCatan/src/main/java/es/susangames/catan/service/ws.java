@@ -26,15 +26,23 @@ import javafx.application.Platform;
 //http://localhost:8080
 //https://catan-backend-app.herokuapp.com/
 public class ws {
-
+    public static final StompSession session;
     public static Map<String,ArrayList<JSONObject>> msgs;
+    private static final String appPrefix = "/app";
     private static final String  wsUrl = "http://localhost:8080/catan-stomp-ws-ep";
     private static final String chatUrl = "/chat/";
     private static final String newFriendReqUrl = "/peticion/";
     private static final String sendFriendRequestUrl = "/app/enviar/peticion";
     private static final String acceptFriendRequestUrl = "/app/aceptar/peticion";
     private static final String declineFriendRequestUrl = "/app/rechazar/peticion";
-    public static final StompSession session;
+    public  static final String proponerComercio = appPrefix + "/partida/comercio/proponer";
+    public  static final String aceptarComercio = appPrefix + "/partida/comercio/aceptar";
+    public  static final String rechazarComercio = appPrefix + "/partida/comercio/rechazar";
+    public  static final String enviarMensajePartida = appPrefix + "/enviar/partida";
+
+
+
+    
 
     // Partida
     public static final String partidaTestComenzar = "/app/partida/test";
@@ -43,6 +51,7 @@ public class ws {
     public static final String partida_com_topic = "/partida-com/";
     public static final String partida_test_topicUrl = "/test-partida/";
     public static final String  partidaJugada= "/app/partida/jugada";
+    
 
 
 
