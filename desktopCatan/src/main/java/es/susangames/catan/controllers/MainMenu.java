@@ -32,6 +32,12 @@ import com.jfoenix.controls.JFXTextArea;
 import javafx.scene.control.TextField;
 import org.json.*;
 import java.util.ArrayList;
+import javafx.stage.Popup;
+import javafx.stage.Stage;
+import javafx.scene.Node;
+
+
+
 
 
 
@@ -97,7 +103,7 @@ public class MainMenu {
     private Image catanLog;
 
     // Atributos busqueda de amigos
-
+    private static Popup _popupFriendInfo;
     private static Circle circleUserSearch;
     private static Button addFriend;
     private static Text userSearchName;
@@ -106,6 +112,7 @@ public class MainMenu {
     public static Boolean playOpenned;
     public static String userChatOpenned;
     public static JFXTextArea _chatContent;
+    
 
 
     public MainMenu() {
@@ -335,6 +342,52 @@ public class MainMenu {
     }
 
 
+    private static void popUpFriendInfo(String username) {
+        AnchorPane anchorPane = new AnchorPane();
+        anchorPane.setPrefSize(100, 100);
+        anchorPane.setStyle("-fx-background-color:  #414147f1;; -fx-background-radius: 12px" );
+        _popupFriendInfo = new Popup();
+        _popupFriendInfo.getContent().add(anchorPane);
+        _popupFriendInfo.setAutoHide(true);
+        
+        // Titulo
+        Text title = new Text(10, 50, username);
+        title.setFont(new Font(25));
+        title.setLayoutX(anchorPane.getLayoutX());
+        title.setLayoutY(anchorPane.getLayoutY() + 5);
+        title.setFill(Color.WHITE);
+        anchorPane.getChildren().add(title);
+        
+        Text tofferPlayer = new Text(10, 50, "Email: " );
+        tofferPlayer.setFont(new Font(20));
+        tofferPlayer.setLayoutX(anchorPane.getLayoutX() + 10 );
+        tofferPlayer.setLayoutY(anchorPane.getLayoutY() + 55);
+        tofferPlayer.setFill(Color.WHITE);
+        anchorPane.getChildren().add(tofferPlayer);
+        
+       
+     
+        
+        // Arcilla
+        Text arcilla = new Text(10, 50, "Victorias:" );
+        arcilla.setFont(new Font(20));
+        arcilla.setLayoutX(anchorPane.getLayoutX()+ 10);
+        arcilla.setLayoutY(anchorPane.getLayoutY() + 85);
+        arcilla.setFill(Color.WHITE);
+        anchorPane.getChildren().add(arcilla);
+        
+        
+        // Cereal
+        Text cereal = new Text(10, 50, "Derrotas: ");
+        cereal.setFont(new Font(20));
+        cereal.setLayoutX(anchorPane.getLayoutX()+ 10);
+        cereal.setLayoutY(anchorPane.getLayoutY() + 115);
+        cereal.setFill(Color.WHITE);
+        anchorPane.getChildren().add(cereal);
+        
+       
+    }
+
     private static void loadFriend(String username, String imgURL) {
         AnchorPane anchorPane = new AnchorPane();
         anchorPane.setPrefSize(5, 150);
@@ -350,6 +403,15 @@ public class MainMenu {
         Image imgSkin = new Image(imgURL);
         circle.setFill(new ImagePattern(imgSkin));
         anchorPane.getChildren().add(circle);
+
+        circle.setOnMouseClicked(event -> {
+            popUpFriendInfo(username);
+            Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+            _popupFriendInfo.show(stage);
+           
+        });
+
+
 
         // Nombre usuario
         Text tName = new Text(10, 10, username);
