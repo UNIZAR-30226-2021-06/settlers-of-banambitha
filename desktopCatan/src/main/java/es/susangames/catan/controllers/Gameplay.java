@@ -645,7 +645,8 @@ public class Gameplay {
                     SolicitudComercio.res1.recurso = res1_object.getString("type");
                     SolicitudComercio.res2.cuan = res2_object.getInt("cuan");
                     SolicitudComercio.res2.recurso = res2_object.getString("type");
-
+                    System.out.println(res1_object);
+                    System.out.println(res2_object);
                     try {
                         if (!popupNewTradeOffer.isShowing()) {
                             newTradePopUp();
@@ -900,7 +901,7 @@ public class Gameplay {
             }
             if(!primerosCaminos.get(MessageKeys.PLAYER_4).equals(null)) {
                 Partida.jugadores[3].primerosCaminos = 
-                        primerosCaminos.getBoolean(MessageKeys.PLAYER_3);
+                        primerosCaminos.getBoolean(MessageKeys.PLAYER_4);
             }
         } catch (Exception e) {
             System.err.println("Error procesando primeros caminos");
@@ -1348,6 +1349,11 @@ public class Gameplay {
                 Partida.tablero.hexagonos.valor[i].toString());*/
         }    
         Partida.tablero.hexagonos.numberOverHexagon[Partida.tablero.hexagonos.ladron].setDisable(true);
+        for(int i = 0; i < numberofHexagons; i++) {
+            if(i != Partida.tablero.hexagonos.ladron) {
+                Partida.tablero.hexagonos.numberOverHexagon[Partida.tablero.hexagonos.ladron].setDisable(false);
+            }
+        }
         // runLater debe usar variables final.
         Platform.runLater(new Runnable() {
             @Override public void run() {
@@ -1504,6 +1510,7 @@ public class Gameplay {
                         
                         if (!popupExternalTrade.isShowing()) {
                             idPuerto = pos;
+                            externalTradePopUp();
                             Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
                             popupExternalTrade.show(stage);
                         }
