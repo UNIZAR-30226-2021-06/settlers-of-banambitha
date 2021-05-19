@@ -1,5 +1,6 @@
 package es.susangames.catan.resource;
 
+import java.sql.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -14,16 +15,18 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import es.susangames.catan.auxiliarModel.ChangePassword;
+import es.susangames.catan.model.Estadisticas;
 import es.susangames.catan.model.Usuario;
 import es.susangames.catan.service.UsuarioService;
 
 @Controller
 @RequestMapping(value = "/usuario")
-public class UsuarioResourcee {
+public class UsuarioResource {
 	
 	private final UsuarioService usuarioService;
 
-	public UsuarioResourcee(UsuarioService usuarioService) {
+	public UsuarioResource(UsuarioService usuarioService) {
 		this.usuarioService = usuarioService;
 	}
 	
@@ -49,6 +52,9 @@ public class UsuarioResourcee {
 	 * 					"contrasenya": <contrasenya>
 	 *	 				"saldo"		 : 0,
 	 *				    "idioma"	 : "Español",
+	 *					"partida"	 : NULL,
+	 *					"bloqueado"	 : NULL,
+	 *					"informes"	 : 0,
 	 *				    "avatar"	 : "Original",
 	 *				    "apariencia" : "Clasica"
 	 *				}
@@ -77,6 +83,9 @@ public class UsuarioResourcee {
 	 * 					"contrasenya": <contrasenya>
 	 *	 				"saldo"		 : <saldo>,
 	 *				    "idioma"	 : <idioma>,
+	 *					"partida"	 : <partidaId>,
+	 *					"bloqueado"	 : <fechaBloqueo>,
+	 *					"informes"	 : <informes>,
 	 *				    "avatar"	 : <avatar>,
 	 *				    "apariencia" : <apariencia>
 	 *				}
@@ -104,6 +113,9 @@ public class UsuarioResourcee {
 	 * 						"contrasenya": <contrasenya>
 	 *	 					"saldo"		 : <saldo>,
 	 *				    	"idioma"	 : <idioma>,
+	 *						"partida"	 : <partidaId>,
+	 *						"bloqueado"	 : <fechaBloqueo>,
+	 *						"informes"	 : <informes>,
 	 *				    	"avatar"	 : <avatar>,
 	 *				    	"apariencia" : <apariencia>
 	 *					}
@@ -135,6 +147,9 @@ public class UsuarioResourcee {
 	 * 					"contrasenya": <contrasenya>,
 	 *	 				"saldo"		 : <saldo>,
 	 *				    "idioma"	 : <idioma>,
+	 *					"partida"	 : <partidaId>,
+	 *					"bloqueado"	 : <fechaBloqueo>,
+	 *					"informes"	 : <informes>,
 	 *				    "avatar"	 : <avatar>,
 	 *				    "apariencia" : <apariencia>
 	 *				}
@@ -147,6 +162,16 @@ public class UsuarioResourcee {
 		
 		if(valid) {
 			Usuario valid_usuario = usuarioService.findUsuario(usuario.getNombre());
+			
+			Date fechaBloqueo = usuario.getBloqueado();
+			Date fechaActual = new Date(System.currentTimeMillis());
+			
+			if(fechaBloqueo!=null && fechaActual.after(fechaBloqueo)) {
+				usuarioService.pardonJugador(valid_usuario);
+				valid_usuario.setBloqueado(null);
+				valid_usuario.setInformes(0);
+			}
+			
 			session.setAttribute("username", valid_usuario.getNombre() );
 			return new ResponseEntity<>(valid_usuario,HttpStatus.OK);
 		} else {
@@ -171,7 +196,7 @@ public class UsuarioResourcee {
 	 * 				{
 	 * 					"avatar" 	 : <nuevoAvatar>,
 	 * 					"apariencia" : <nuevaApariencia>,
-	 * 					"idioma"	 : <Español | English>
+	 * 					"idioma"	 : <nuevoIdioma (Español | English)>
 	 * 		
 	 * Returns: -JSON Message
 	 * 			-Format:
@@ -180,9 +205,12 @@ public class UsuarioResourcee {
 	 * 					"email" 	 : <email>,
 	 * 					"contrasenya": <contrasenya>,
 	 *	 				"saldo"		 : <saldo>,
-	 *				    "idioma"	 : <idioma>,
-	 *				    "avatar"	 : <avatar>,
-	 *				    "apariencia" : <apariencia>
+	 *				    "idioma"	 : <nuevoIdioma>,
+	 *					"partida"	 : <partidaId>,
+	 *					"bloqueado"	 : <fechaBloqueo>,
+	 *					"informes"	 : <informes>,
+	 *				    "avatar"	 : <nuevoAvatar>,
+	 *				    "apariencia" : <nuevaApariencia>
 	 *				}
 	 *			-On failure all fields are null
 	****************************************************** */
@@ -194,7 +222,71 @@ public class UsuarioResourcee {
 		return new ResponseEntity<>(updatedUsuario, HttpStatus.OK);
 		
 	}
-
+	
+	/* ******************************************************
+	 * Maps: 	Update a user's password
+	 * 
+	 * Expects: -New and Old Password in body
+	 * 			-Mapped point: 	/usuario/validate
+	 * 			-Format: 
+	 * 				{
+	 * 					"userId"	 : <usuarioId>,
+	 * 					"oldPassw" 	 : <anterior contraseña>,
+	 * 					"newPassw"	 : <nueva contraseña>
+	 * 				}
+	 * 
+	 * Returns: -JSON Message
+	 * 			-Format:
+	 * 				{
+	 * 					"nombre" 	 : <usuarioId>,
+	 * 					"email" 	 : <email>,
+	 * 					"contrasenya": <nueva contraseña>,
+	 *	 				"saldo"		 : <saldo>,
+	 *				    "idioma"	 : <idioma>,
+	 *					"partida"	 : <partidaId>,
+	 *					"bloqueado"	 : <fechaBloqueo>,
+	 *					"informes"	 : <informes>,
+	 *				    "avatar"	 : <avatar>,
+	 *				    "apariencia" : <apariencia>
+	 *				}
+	 *			-On failure all fields are null
+	****************************************************** */
+	@PutMapping("/new-password")
+	public ResponseEntity<Usuario> newPassword(@RequestBody ChangePassword changePassword) {
+		
+		Usuario updated_usuario = usuarioService.changePassw(changePassword);
+		
+		return new ResponseEntity<>(updated_usuario, HttpStatus.OK);
+		
+	}
+	
+	
+	/* ******************************************************
+	 * Maps: 	Get User Stats @get
+	 * 
+	 * Expects: -User in body
+	 * 			-Mapped point: 	/usuario/stats
+	 * 			-Format: 		/usuario/stats/{usuarioId}
+	 * 		
+	 * Returns: -JSON Message
+	 * 			-Format:
+	 * 				{
+	 * 					"usuario_id" 	 			: <nombre>,
+	 * 					"mayor_racha_de_victorias" 	: <MaxRachVic>,
+	 * 					"partidas_jugadas"			: <ParJugJ>,
+	 *	 				"porcentaje_de_victorias"	: <PorVic>,
+	 *				    "racha_de_victorias_actual"	: <RachVicAct>,
+	 *				    "total_de_victorias"	 	: <TotVic>,
+	 *				}
+	****************************************************** */
+	@GetMapping("/stats/{usuarioId}")
+	public ResponseEntity<Estadisticas> getEstadisticas(@PathVariable("usuarioId") String usuarioId) {
+		
+		Estadisticas estadisticas = usuarioService.findEstadisticas(usuarioId);
+		
+		return new ResponseEntity<>(estadisticas,HttpStatus.OK);
+	}
+	
 	@GetMapping("/session")
 	public ResponseEntity<Usuario> checkSession(HttpSession session){
 		String username = (String) session.getAttribute("username");

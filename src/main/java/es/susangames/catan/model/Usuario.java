@@ -1,6 +1,7 @@
 package es.susangames.catan.model;
 
 import java.io.Serializable;
+import java.sql.Date;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -34,6 +35,12 @@ public class Usuario implements Serializable {
 	@Column(nullable = true, updatable = true)
 	private String partida;
 	
+	@Column(nullable = true, updatable = true)
+	private Date bloqueado;
+	
+	@Column(columnDefinition = "int4 default 0 CHECK (informes >= 0)", nullable = false, updatable = true)
+	private Integer informes;
+	
 	@Column(columnDefinition = "varchar(100) default 'user_profile_image_original.png'", nullable = false, updatable = false, insertable = false)
 	private String avatar;
 	
@@ -51,13 +58,15 @@ public class Usuario implements Serializable {
 	
 	public Usuario() {}
 
-	public Usuario(String nombre, String email, String contrasenya, Integer saldo, String idioma, String partida, String avatar, String apariencia) {
+	public Usuario(String nombre, String email, String contrasenya, Integer saldo, String idioma, String partida, Date bloqueado, Integer informes, String avatar, String apariencia) {
 		this.nombre = nombre;
 		this.email = email;
 		this.contrasenya = contrasenya;
 		this.saldo = saldo;
 		this.idioma = idioma;
 		this.partida = partida;
+		this.bloqueado = bloqueado;
+		this.informes = informes;
 		this.avatar = avatar;
 		this.apariencia = apariencia;
 	}
@@ -69,6 +78,8 @@ public class Usuario implements Serializable {
 		this.saldo = null;
 		this.idioma = null;
 		this.partida = null;
+		this.bloqueado = null;
+		this.informes = null;
 		this.avatar = null;
 		this.apariencia = null;
 	}
@@ -119,6 +130,22 @@ public class Usuario implements Serializable {
 
 	public void setPartida(String partida) {
 		this.partida = partida;
+	}
+	
+	public Date getBloqueado() {
+		return bloqueado;
+	}
+
+	public void setBloqueado(Date bloqueado) {
+		this.bloqueado = bloqueado;
+	}
+
+	public Integer getInformes() {
+		return informes;
+	}
+
+	public void setInformes(Integer informes) {
+		this.informes = informes;
 	}
 
 	public String getAvatar() {

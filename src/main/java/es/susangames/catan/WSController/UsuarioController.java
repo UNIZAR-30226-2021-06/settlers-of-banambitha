@@ -93,4 +93,56 @@ public class UsuarioController {
 		template.convertAndSend(WebSocketConfig.TOPIC_USUARIO_ACT + "/" + usuario, respuesta.toString());
 	}
 	
+	/* ******************************************************
+	 * Maps: 	User Reports
+	 * 
+	 * Expects: -JSON Message
+	 * 			-Mapped point: 		/app/usuario/reportar
+	 * 			-Format:
+	 * 				{
+	 * 					"from" 	: <jugador_que_reporta>,
+	 * 					"to"	: <jugador_reportado>
+	 * 				}
+	 * 
+	 * Returns: -JSON Message
+	 * 			-Broadcast point:	/usuario-act/<jugador_que_reporta>
+	 * 			-Format:
+	 * 				{
+	 * 					"status"	: "REPORT_SENT" | "REPORT_REJECTED",
+	 * 					"player"	: <jugador_reportado>
+	 *				}
+	 *
+	 *			-Broadcast point:	/usuario-act/<jugador_reportado>
+	 * 			-Format:
+	 * 				{
+	 * 					"status"	: "REPORT_RECEIVED",
+	 * 					"player"	: <jugador_que_reporta>
+	 *				}
+	****************************************************** */
+	@MessageMapping("/usuario/reportar")
+	public void reportarUsuario(String mensaje) {
+		
+		JSONObject message 	= new JSONObject(mensaje);
+		String reportante 	= message.getString("from");
+		String reportado 	= message.getString("to");
+		
+		JSONObject respuesta = new JSONObject();
+		respuesta.put("player", reportado);
+		
+		if(usuarioService.reportJugador(reportante, reportado)) {
+			respuesta.put("status", "REPORT_SENT");
+			
+			JSONObject notificacion = new JSONObject();
+			notificacion.put("status", "REPORT_RECEIVED");
+			notificacion.put("player", reportante);
+			
+			template.convertAndSend(WebSocketConfig.TOPIC_USUARIO_ACT + "/" + reportado, notificacion.toString());
+		}
+		else {
+			respuesta.put("status", "REPORT_REJECTED");
+		}
+		
+		template.convertAndSend(WebSocketConfig.TOPIC_USUARIO_ACT + "/" + reportante, respuesta.toString());
+	}
+	
 }
