@@ -1953,6 +1953,12 @@ public class Gameplay {
 
                 buildSettle.setText(LangService.getMapping("city_upgrade"));
                 buildSettle.setDisable(!Partida.CiudadDisponible);
+                buildSettle.setOnMouseClicked( event -> {
+                    if (event.getButton().equals(MouseButton.PRIMARY)) {
+                        mejorarPueblo(posSettle);
+                        popupBuildSettle.hide();
+                    }    
+                });
 
             } else if(Partida.tablero.vertices.settlementsType[posSettle].equals(
                 miTipoCiudad())) {
@@ -1964,6 +1970,12 @@ public class Gameplay {
             } else {
                 buildSettle.setText(LangService.getMapping("build_town"));
                 buildSettle.setDisable(!Partida.PobladoDisponible);
+                buildSettle.setOnMouseClicked( event -> {
+                    if (event.getButton().equals(MouseButton.PRIMARY)) {
+                        construirAsentamiento(posSettle);
+                        popupBuildSettle.hide();
+                    }    
+                });
             }
         } else {
             buildSettle.setText(LangService.getMapping("first_settle"));
