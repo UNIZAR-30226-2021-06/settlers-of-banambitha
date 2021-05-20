@@ -35,7 +35,7 @@ public class ws {
     private static final String sendFriendRequestUrl = "/app/enviar/peticion";
     private static final String acceptFriendRequestUrl = "/app/aceptar/peticion";
     private static final String declineFriendRequestUrl = "/app/rechazar/peticion";
-    public  static final String proponerComercio = appPrefix + "/partida/comercio/proponer";
+    public  static final String proponerComercio =  "/app/partida/comercio/proponer";
     public  static final String aceptarComercio = appPrefix + "/partida/comercio/aceptar";
     public  static final String rechazarComercio = appPrefix + "/partida/comercio/rechazar";
     public  static final String enviarMensajePartida = appPrefix + "/enviar/partida";
