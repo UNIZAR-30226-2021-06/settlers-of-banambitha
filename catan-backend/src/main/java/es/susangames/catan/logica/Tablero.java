@@ -714,7 +714,7 @@ public class Tablero {
 		case "lana" : 
 			j.setLana( j.getLana() + numMaterial );
 			break;
-		case "cereal" :
+		case "cereales" :
 			j.setCereales( j.getCereales() + numMaterial);
 			break;
 		case "arcilla" :

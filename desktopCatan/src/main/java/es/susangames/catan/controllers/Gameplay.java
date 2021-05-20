@@ -525,7 +525,8 @@ public class Gameplay {
             });
 
             //Suscripción a las peticiones de comercio
-            ws.session.subscribe( ws.partida_com_topic  + Partida.id, new StompFrameHandler() {
+            ws.session.subscribe( ws.partida_com_topic  + Partida.id + "/" + 
+                                Partida.miTurno, new StompFrameHandler() {
                 @Override
                 public Type getPayloadType(StompHeaders headers) {
                     return String.class;
@@ -635,7 +636,7 @@ public class Gameplay {
 
     private static void procesarMensajeComercio(String mensajeComercio) {
         JSONObject object = new JSONObject(mensajeComercio);
-        System.out.println(object.toString(4));
+        
         try {
             String type = object.get("type").toString();
             if(type.equals(MsgComercioStatus.REQUEST)) {
@@ -2323,13 +2324,13 @@ public class Gameplay {
 
         int player = 0;
         if(jugador.equals(Partida.jugadores[0].nombre)) {
-            player = 0;
-        } else if(jugador.equals(Partida.jugadores[1].nombre)) {
             player = 1;
-        } else if(jugador.equals(Partida.jugadores[2].nombre)) {
+        } else if(jugador.equals(Partida.jugadores[1].nombre)) {
             player = 2;
-        } else {
+        } else if(jugador.equals(Partida.jugadores[2].nombre)) {
             player = 3;
+        } else {
+            player = 4;
         }
     
         JSONObject mensaje = new JSONObject();
@@ -2364,6 +2365,7 @@ public class Gameplay {
         mensaje.put("game", Partida.id);
         mensaje.put("res1",res1);
         mensaje.put("res2",res2);
+        System.out.println(mensaje.toString(4));
         ws.session.send(ws.proponerComercio, mensaje.toString());
 
 
