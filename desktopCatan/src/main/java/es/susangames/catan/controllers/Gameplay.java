@@ -2308,6 +2308,7 @@ public class Gameplay {
        inTrade.setOnAction((ActionEvent event) -> {
         
         if (!popupInternalTrade.isShowing()) {
+            inTradePopUp();
             Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
             popupInternalTrade.show(stage);
         }
