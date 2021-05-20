@@ -1285,7 +1285,8 @@ public class Tablero {
 						String material_que_recibe = comercioMaritimo.getString("material_que_recibe");
 						
 						if (v1.tieneAsentamiento() && jug.equals(v1.getPropietario())
-								|| v2.tieneAsentamiento() && jug.equals(v1.getPropietario())) {
+								|| v2.tieneAsentamiento() && jug.equals(v1.getPropietario())
+								|| jug.equals(p.getPropietario()) ) {
 							
 							// Comprobar si es especial o basico.
 							if (p.getTipoPuerto().esBasico()) {

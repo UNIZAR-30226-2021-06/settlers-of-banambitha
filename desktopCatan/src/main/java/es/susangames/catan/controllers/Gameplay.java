@@ -636,7 +636,7 @@ public class Gameplay {
 
     private static void procesarMensajeComercio(String mensajeComercio) {
         JSONObject object = new JSONObject(mensajeComercio);
-        
+        System.out.println(object.toString(4));
         try {
             String type = object.get("type").toString();
             if(type.equals(MsgComercioStatus.REQUEST)) {
@@ -843,10 +843,10 @@ public class Gameplay {
     private static void actualizarRecursoJugador(String recursos, int player) {
         JSONArray recursosArr = new JSONArray(recursos);
         Partida.jugadores[player].recursos.madera = recursosArr.getInt(0);
-        Partida.jugadores[player].recursos.mineral = recursosArr.getInt(1);
-        Partida.jugadores[player].recursos.arcilla = recursosArr.getInt(2);
-        Partida.jugadores[player].recursos.lana = recursosArr.getInt(3);
-        Partida.jugadores[player].recursos.cereales = recursosArr.getInt(4);
+        Partida.jugadores[player].recursos.lana = recursosArr.getInt(1);
+        Partida.jugadores[player].recursos.cereales = recursosArr.getInt(2);
+        Partida.jugadores[player].recursos.arcilla = recursosArr.getInt(3);
+        Partida.jugadores[player].recursos.mineral = recursosArr.getInt(4);
     }
 
 
