@@ -1033,7 +1033,7 @@ public class Tablero {
 				if (existeVertice(id_vertice)) {
 					Vertices v = getVerticePorId(id_vertice);
 					if (v.tieneAsentamiento()) {
-						if (v.getPosibleAsentamientoDeJugador(id_vertice)) {
+						if (v.getPosibleAsentamientoDeJugador(id_jugador-1)) {
 							construirAsentamiento(v, jug);
 							jug.construirAsentamiento();
 							message = "Se ha construido el poblado correctamente";
@@ -1102,7 +1102,7 @@ public class Tablero {
 				if (existeArista(id_arista)) {
 					Aristas a = getAristaPorId(id_arista);
 					if (!a.tieneCamino()) {
-						if (a.getPosibleCaminoDeJugador(id_jugador)) {
+						if (a.getPosibleCaminoDeJugador(id_jugador-1)) {
 							construirCamino(a, jug);
 							jug.construirCamino();
 							message = "Se ha construido el camino correctamente";

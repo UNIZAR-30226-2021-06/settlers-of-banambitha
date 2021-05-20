@@ -118,7 +118,9 @@ public class Jugadores {
      * @return cierto si el jugador puede construir una carretera
      */
 	public Boolean puedeConstruirCamino () {
-		return madera >= 1 && arcilla >= 1;
+		System.out.println("Madera: " + madera);
+		System.out.println("Arcilla: " + arcilla);
+		return this.madera >= 1 && this.arcilla >= 1;
 	}
 	
 	/**

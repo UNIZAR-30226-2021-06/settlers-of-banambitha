@@ -635,7 +635,7 @@ public class Gameplay {
 
     private static void procesarMensajeComercio(String mensajeComercio) {
         JSONObject object = new JSONObject(mensajeComercio);
-
+        System.out.println(object.toString(4));
         try {
             String type = object.get("type").toString();
             if(type.equals(MsgComercioStatus.REQUEST)) {
@@ -684,6 +684,7 @@ public class Gameplay {
 
     private static void actualizarPartida(String partida) throws Exception {
         JSONObject object = new JSONObject(partida);
+        System.out.println(object.toString(4));
 
         if(!object.get(MessageKeys.CLOCK).equals(null) &&
             object.getInt(MessageKeys.CLOCK) > Partida.clock) {
@@ -1355,7 +1356,7 @@ public class Gameplay {
         Partida.tablero.hexagonos.numberOverHexagon[Partida.tablero.hexagonos.ladron].setDisable(true);
         for(int i = 0; i < numberofHexagons; i++) {
             if(i != Partida.tablero.hexagonos.ladron) {
-                Partida.tablero.hexagonos.numberOverHexagon[Partida.tablero.hexagonos.ladron].setDisable(false);
+                Partida.tablero.hexagonos.numberOverHexagon[i].setDisable(false);
             }
         }
         // runLater debe usar variables final.
