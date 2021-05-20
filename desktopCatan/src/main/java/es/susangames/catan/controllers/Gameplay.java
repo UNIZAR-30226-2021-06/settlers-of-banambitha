@@ -2522,7 +2522,7 @@ public class Gameplay {
        );
 
         // Lana
-        Text lanaText = new Text(10, 50,LangService.getMapping("clay") );
+        Text lanaText = new Text(10, 50,LangService.getMapping("wool") );
         lanaText.setFont(new Font(20));
         lanaText.setLayoutX(anchorPane.getLayoutX() + 10 );
         lanaText.setLayoutY(anchorPane.getLayoutY() + 150);
@@ -2530,7 +2530,7 @@ public class Gameplay {
         anchorPane.getChildren().add(lanaText);
 
         Spinner<Integer> spinnerLana = new Spinner(0,
-                        Partida.jugadores[Partida.miTurno -1].recursos.arcilla,1);
+                        Partida.jugadores[Partida.miTurno -1].recursos.lana,1);
         spinnerLana.setStyle("-fx-background-radius: 12px;" );
         spinnerLana.setPrefSize(75, 25);
         spinnerLana.setLayoutX(anchorPane.getLayoutX() + 270 );
@@ -2590,7 +2590,7 @@ public class Gameplay {
         anchorPane.getChildren().add(spinnerMineral);
 
         // Arcilla
-        Text arcillaText = new Text(10, 50,LangService.getMapping("wool") );
+        Text arcillaText = new Text(10, 50,LangService.getMapping("clay") );
         arcillaText.setFont(new Font(20));
         arcillaText.setLayoutX(anchorPane.getLayoutX() + 10 );
         arcillaText.setLayoutY(anchorPane.getLayoutY() + 270);
