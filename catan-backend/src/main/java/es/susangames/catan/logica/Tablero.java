@@ -1236,6 +1236,7 @@ public class Tablero {
 			this.turno_jugador = (this.turno_jugador + 1) % 4; 
 			this.exit_status = 0;
 			this.haComerciado = false;
+			this.haComerciadoMaritimo = false;
 			Boolean finalizadoPrimerasConstrucciones = 
 					this.j[0].getPrimerosAsentamientosConstruidos() 
 					&& this.j[1].getPrimerosAsentamientosConstruidos() 

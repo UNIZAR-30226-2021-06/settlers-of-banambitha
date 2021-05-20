@@ -657,11 +657,15 @@ public class Gameplay {
                     System.out.println(res2_object);
                     try {
                         System.out.println("tty");
-                        if (!popupNewTradeOffer.isShowing()) {
+                        //if (!popupNewTradeOffer.isShowing()) {
+                            System.out.println("1dsd");
                             newTradePopUp();
+                            System.out.println("2dsfgd");
                             Stage stage = (Stage) _mainAnchor.getScene().getWindow();
+                            System.out.println("3dfd");
                             popupNewTradeOffer.show(stage);
-                        }
+                            System.out.println("4sdfa");
+                        //}
                     } catch(Exception e) {
                         System.out.println("Fallo cargando pop up tradeo recibido");
                     }
