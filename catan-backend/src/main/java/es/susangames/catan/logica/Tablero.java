@@ -196,6 +196,7 @@ public class Tablero {
 			if (posActualLadron.sonAdyacentes(nuevaPosLadron)) {
 				posActualLadron.moverLadron();
 				nuevaPosLadron.colocarLadron();
+				//TODO:Eliminar recursos jugadores
 			}
 		}
 	} 
@@ -557,7 +558,6 @@ public class Tablero {
 			if (vertices.containsKey(v.getCoordenadas())) {
 				if (v.tieneAsentamiento() && !v.tieneCiudad() && v.getPropietario().equals(j)) {
 					v.mejorarAsentamiento();
-					j.mejorarAsentamiento();
 				}
 			}
 		}

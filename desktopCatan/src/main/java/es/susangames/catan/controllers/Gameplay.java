@@ -639,8 +639,11 @@ public class Gameplay {
         System.out.println(object.toString(4));
         try {
             String type = object.get("type").toString();
+            System.out.println("Hola");
             if(type.equals(MsgComercioStatus.REQUEST)) {
+                System.out.println("Mensaje Request");
                 if(Partida.turnoActual != Partida.miTurno) {
+                    System.out.println("No es mi turno");
                     SolicitudComercio.from = object.getInt("from");
                     String _res1 = object.get("res1").toString();
                     String _res2 = object.get("res2").toString();
@@ -653,6 +656,7 @@ public class Gameplay {
                     System.out.println(res1_object);
                     System.out.println(res2_object);
                     try {
+                        System.out.println("tty");
                         if (!popupNewTradeOffer.isShowing()) {
                             newTradePopUp();
                             Stage stage = (Stage) _mainAnchor.getScene().getWindow();
