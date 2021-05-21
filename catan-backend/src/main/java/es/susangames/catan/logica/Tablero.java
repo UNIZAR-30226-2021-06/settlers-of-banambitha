@@ -638,7 +638,7 @@ public class Tablero {
 						
 					}
 					for (int i = 0; i < verticesAdyacentesV2.length; ++i) {
-						if (verticesAdyacentesV2 != null) {
+						if (verticesAdyacentesV2[i] != null) {
 							if (!verticesAdyacentesV2[i].equals(v1) && !verticesAdyacentesV2[i].tieneAsentamiento()) 
 								v2.posibleAsentamientoDeJugador(j);
 						}

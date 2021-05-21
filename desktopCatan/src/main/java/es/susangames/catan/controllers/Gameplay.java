@@ -2200,13 +2200,13 @@ public class Gameplay {
             String name = offerPlayer.getValue();
             Integer player;
             if(name.equals(Partida.jugadores[0].nombre)) {
-                player = 1;
+                player = 0; // Jugador 1
             } else if(name.equals(Partida.jugadores[1].nombre)) {
-                player = 2;
+                player = 1; // Jugador 2
             } else if(name.equals(Partida.jugadores[2].nombre)) {
-                player = 3;
+                player = 2; // Jugador 3
             } else {
-                player = 4;
+                player = 3; // Jugador 4
             }
             final Integer arcilla_aux = Partida.jugadores[player].recursos.arcilla;
             final Integer madera_aux = Partida.jugadores[player].recursos.madera;
