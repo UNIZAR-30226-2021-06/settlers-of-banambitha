@@ -228,6 +228,7 @@ public class Jugadores {
 		this.cereales -= 2;
 		this.numPobladosConstruidos--;
 		this.numCiudadesConstruidos++;
+		this.puntosVictoria++;
 	}
 	/**
      * Método que elimina los recusos empleados en construir una carretera y actualiza al numero de carreteras.
@@ -345,8 +346,13 @@ public class Jugadores {
      * Método que envia informacion de los recursos del jugador.
      */
 	public JSONArray recursosJugadorToJSON () throws JSONException {
-		return new JSONArray("[" + this.madera + "," + 
-				this.lana + "," + this.cereales + "," + this.arcilla + "," + this.mineral + "]");
+		JSONArray jsonArray = new JSONArray();
+		jsonArray.put(this.getMadera());
+		jsonArray.put(this.getLana());
+		jsonArray.put(this.getCereales());
+		jsonArray.put(this.getArcilla());
+		jsonArray.put(this.getMineral());
+		return jsonArray;
 	}
 	
 	/**

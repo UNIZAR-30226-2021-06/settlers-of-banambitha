@@ -197,6 +197,13 @@ public class Tablero {
 				posActualLadron.moverLadron();
 				nuevaPosLadron.colocarLadron();
 				//TODO:Eliminar recursos jugadores
+				Vertices v_nuevaPos[] = nuevaPosLadron.getVertices();
+				for (int i = 0; i < v_nuevaPos.length; ++i) {
+					if (v_nuevaPos[i].tieneAsentamiento() 
+						&& v_nuevaPos[i].getPropietario() != null) {
+							v_nuevaPos[i].getPropietario().eliminarRecursos();
+					}
+				}
 			}
 		}
 	} 
@@ -707,21 +714,27 @@ public class Tablero {
 	
 	//---------------------------------- Comercio -----------------------------------------------\\
 	private void actualizarMaterial (Jugadores j, String material, int numMaterial) {
+		int val;
 		switch (material) {
 		case "madera" : 
-			j.setMadera( j.getMadera() + numMaterial);
+			val = j.getMadera() + numMaterial;
+			j.setMadera( val );
 			break;
 		case "lana" : 
-			j.setLana( j.getLana() + numMaterial );
+			val = j.getLana() + numMaterial;
+			j.setLana( val );
 			break;
 		case "cereales" :
-			j.setCereales( j.getCereales() + numMaterial);
+			val = j.getCereales() + numMaterial;
+			j.setCereales( val );
 			break;
 		case "arcilla" :
-			j.setArcilla( j.getArcilla() + numMaterial );
+			val = j.getArcilla() + numMaterial;
+			j.setArcilla( val );
 			break;
 		case "mineral" : 
-			j.setMineral( j.getMineral() + numMaterial );
+			val = j.getMineral() + numMaterial;
+			j.setMineral( val );
 			break;
 		}
 	}
@@ -799,17 +812,28 @@ public class Tablero {
 			this.message = "El material ofrecido es menor al esperado";
 			this.exit_status = 29;
 		} else {
+			System.out.println(j1.getColor().numeroColor());
+			System.out.println("Madera jug: " + j1.getMadera() + " - Madera que ofrece: " + madera);
+			System.out.println("Lana jug: " + j1.getLana() + " - Lana que ofrece: " + lana);
+			System.out.println("Cereales jug: " + j1.getCereales() + " - Cereales que ofrece: " + cereales);
+			System.out.println("Arcilla jug: " + j1.getArcilla() + " - Arcilla que ofrece: " + arcilla);
+			System.out.println("Mineral jug: " + j1.getMineral() + " - Mineral que ofrece: " + mineral);
 			if (madera > j1.getMadera() || lana > j1.getLana() || cereales > j1.getCereales()
 					|| arcilla > j1.getArcilla() || mineral > j1.getMineral()) {
 				this.message = "El jugador no dispone de los materiales requeridos";
 				this.exit_status = 30;
 			} else {
 				this.haComerciadoMaritimo = true;
-				j1.setMadera( j1.getMadera() - madera);
-				j1.setLana( j1.getLana() - lana );
-				j1.setCereales( j1.getCereales() - cereales );
-				j1.setArcilla( j1.getArcilla() - arcilla);
-				j1.setMineral( j1.getMineral() - mineral );
+				int actualizarMadera = j1.getMadera() - madera;
+				j1.setMadera( actualizarMadera );
+				int actualizarLana = j1.getLana() - lana;
+				j1.setLana( actualizarLana );
+				int actualizarCereales = j1.getCereales() - cereales;
+				j1.setCereales( actualizarCereales );
+				int actualizarArcilla = j1.getArcilla() - arcilla;
+				j1.setArcilla( actualizarArcilla );
+				int actualizarMineral = j1.getMineral() - mineral;
+				j1.setMineral( actualizarMineral );
 				
 				this.actualizarMaterial(j1, materialRecibe, 1);
 				this.message = "Se ha realizado el comercio maritimo correctamente.";
@@ -971,7 +995,7 @@ public class Tablero {
 		recursos.put("Player_1", this.j[0].recursosJugadorToJSON());
 		recursos.put("Player_2", this.j[1].recursosJugadorToJSON());
 		recursos.put("Player_3", this.j[2].recursosJugadorToJSON());
-		recursos.put("Player_4", this.j[2].recursosJugadorToJSON());
+		recursos.put("Player_4", this.j[3].recursosJugadorToJSON());
 		respuesta.put("Recursos", recursos);
 		
 		JSONObject cartas = new JSONObject();
@@ -1032,7 +1056,7 @@ public class Tablero {
 				// Comprobar si el identificador del vertice corresponde a algún vertice
 				if (existeVertice(id_vertice)) {
 					Vertices v = getVerticePorId(id_vertice);
-					if (v.tieneAsentamiento()) {
+					if (!v.tieneAsentamiento()) {
 						if (v.getPosibleAsentamientoDeJugador(id_jugador-1)) {
 							construirAsentamiento(v, jug);
 							jug.construirAsentamiento();
@@ -1045,8 +1069,12 @@ public class Tablero {
 							exit_status = 4;
 						}
 					} else {
-						message = "[Error] Ya existe un poblado construido en ese vertice";
-						exit_status = 3;
+						//System.out.println(v.getIdentificador());
+						//System.out.println("v.tieneAsentamiento() = " + v.tieneAsentamiento());
+						//System.out.println("Propietario: " + v.getPropietario() == null);
+						//System.out.println("Asentamiento: " + v.getAsentamientoJugador());
+						this.message = "[Error] Ya existe un poblado construido en ese vertice";
+						this.exit_status = 3;
 					}
 					
 				}
