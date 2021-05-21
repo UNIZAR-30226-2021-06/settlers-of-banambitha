@@ -1,5 +1,15 @@
 package es.susangames.catan.logica;
 
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class Hexagonos {
 	private int tam = 1;
@@ -160,8 +170,9 @@ public class Hexagonos {
 	 * */
 	public void producir() {
 		if (!tieneLadron()) {
-			for (int i = 0 ; i < NUM_VERTICES_ARISTAS; i++) {
-				v[i].producir(this.tipo_terreno);
+			for (int i = 0 ; i < this.v.length; i++) {
+				System.out.println("Vertice: " + v[i].getIdentificador());
+				this.v[i].producir(this.tipo_terreno);
 			}
 		}
 	}

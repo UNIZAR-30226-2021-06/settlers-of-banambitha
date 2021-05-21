@@ -38,6 +38,8 @@ public class Vertices {
 	 * @param id			Identificador del tipo de dato Vertice.
 	 * */
 	Vertices (Coordenadas c, TipoAsentamiento asentamiento) {
+		this.id = 0;
+		this.propietario = null;
 		this.coord = c;
 		this.asentamiento = asentamiento;
 		this.puedeConstruirJugador = new Boolean[] {false, false, false, false};
@@ -55,6 +57,8 @@ public class Vertices {
 		this.coord = c;
 		this.asentamiento = TipoAsentamiento.Nada;
 		this.puedeConstruirJugador = new Boolean[] {false, false, false, false};
+		this.propietario = null;
+		this.id = 0;
 	}
 	
 	/*
@@ -101,7 +105,7 @@ public class Vertices {
 				throw new Exception ("function producir (TipoTerreno material): el parametro "
 						+ "material no puede ser nulo.");
 			}
-			if (propietario != null) {
+			if (propietario != null && this.tieneAsentamiento()) {
 				propietario.anyadirRecurso(material, tieneCiudad());
 			}
 		} catch (Exception e) {

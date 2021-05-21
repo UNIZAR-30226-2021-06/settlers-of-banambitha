@@ -2,6 +2,7 @@ package es.susangames.catan.logica;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * Esta clase define a los jugadores de la partida, sus cartas y acciones que puede realizar
@@ -32,11 +33,9 @@ public class Jugadores {
 	private Boolean granEjecitoCaballeria;
 	
 	// ASENTAMIENTO
-	/* TODO Se usa?
 	private int MAX_NUM_POBLADOS = 5;
 	private int MAX_NUM_CIUDADES = 4;
 	private int MAX_NUM_CARRETERAS = 15;
-	*/
 	
 	private int numPobladosConstruidos;
 	private int numCiudadesConstruidos;
@@ -78,21 +77,21 @@ public class Jugadores {
 		if (produceCiudad) numProducidos = 2;
 		switch (tipo) {
 		case Bosque:
-			madera+=numProducidos;
+			this.madera+=numProducidos;
 			break;
 		case Pasto:
-			lana+=numProducidos;
+			this.lana+=numProducidos;
 			break;
 		case Sembrado:
-			cereales+=numProducidos;
+			this.cereales+=numProducidos;
 			break;
 		case Cerro:
-			arcilla+=numProducidos;
+			this.arcilla+=numProducidos;
 			break;
 		case Montanya:
-			mineral+=numProducidos;
+			this.mineral+=numProducidos;
 			break;
-		default:
+		case Desierto:
 			break;
 		}
 	}
@@ -102,7 +101,7 @@ public class Jugadores {
      * @return devuelve si el jugador puede construir un pueblo
      */
 	public Boolean puedeConstruirPueblo () {
-		return madera >= 1 && lana >= 1 && cereales >= 1 && arcilla >= 1;
+		return this.madera >= 1 && this.lana >= 1 && this.cereales >= 1 && this.arcilla >= 1;
 	}
 	
 	/**
@@ -111,7 +110,7 @@ public class Jugadores {
      */
 	public Boolean puedeConstruirCiudad () {
 		// Materiales necesarios: mineral x3, cereales x2.
-		return mineral >= 3 && cereales >= 2;
+		return this.mineral >= 3 && this.cereales >= 2;
 	}
 	
 	/**
@@ -119,7 +118,9 @@ public class Jugadores {
      * @return cierto si el jugador puede construir una carretera
      */
 	public Boolean puedeConstruirCamino () {
-		return madera >= 1 && arcilla >= 1;
+		System.out.println("Madera: " + madera);
+		System.out.println("Arcilla: " + arcilla);
+		return this.madera >= 1 && this.arcilla >= 1;
 	}
 	
 	/**
@@ -150,22 +151,22 @@ public class Jugadores {
      * Método que elimina la mitad de los recursos del jugador en caso de que tenga más de 7.
      */
 	public void eliminarRecursos() {
-		int num_recursos = madera + lana + cereales + arcilla + mineral;
+		int num_recursos = this.madera + this.lana + this.cereales + this.arcilla + this.mineral;
 		// Quitamos la mitad de los recursos solamente si tiene mas de 7 en total.
 		if (num_recursos > 7) {
 			int recursos_eliminar = num_recursos / 2;
 			for (int i = 0; i < recursos_eliminar; i++) {
 				switch(i%5) {
 				case 0:
-					if(madera>0) {madera--; break;}
+					if(this.madera>0) {this.madera--; break;}
 				case 1:
-					if(lana>0) {lana--; break;}
+					if(this.lana>0) {this.lana--; break;}
 				case 2:
-					if(cereales>0) {cereales--; break;}
+					if(this.cereales>0) {this.cereales--; break;}
 				case 3:
-					if(arcilla>0) {arcilla--; break;}
+					if(this.arcilla>0) {this.arcilla--; break;}
 				case 4:
-					if(mineral>0) {mineral--; break;}
+					if(this.mineral>0) {this.mineral--; break;}
 				}
 			}
 		}
@@ -175,7 +176,7 @@ public class Jugadores {
      * @return color del jugador
      */
 	public ColorJugador getColor () {
-		return color;
+		return this.color;
 	}
 	
 	/**
@@ -184,7 +185,7 @@ public class Jugadores {
      */
 	public Boolean puedeConstruirCartasDesarrollo () {
 		// Material: lana x1, mineral x1, cereales x1
-		return lana>=1 && mineral >=1 && cereales>=1;
+		return this.lana>=1 && this.mineral >=1 && this.cereales>=1;
 	}
 	
 	/**
@@ -200,6 +201,7 @@ public class Jugadores {
 		if (numPobladosConstruidos >= 2) {
 			primerosAsentamientosConstruidos = true;
 		}
+		this.puntosVictoria++;
 	}
 	
 	public void construirPrimerAsentamiento () {
@@ -207,6 +209,7 @@ public class Jugadores {
 		if (numPobladosConstruidos >= 2) {
 			primerosAsentamientosConstruidos = true;
 		}
+		this.puntosVictoria++;
 	}
 	
 	public void construirPrimerCamino () {
@@ -225,6 +228,7 @@ public class Jugadores {
 		this.cereales -= 2;
 		this.numPobladosConstruidos--;
 		this.numCiudadesConstruidos++;
+		this.puntosVictoria++;
 	}
 	/**
      * Método que elimina los recusos empleados en construir una carretera y actualiza al numero de carreteras.
@@ -235,7 +239,7 @@ public class Jugadores {
 		this.arcilla--;
 		this.numCaminosConstruidos++;
 		if (numCaminosConstruidos >= 2) {
-			primerosCaminosConstruidos = true;
+			this.primerosCaminosConstruidos = true;
 		}
 	}
 	
@@ -342,8 +346,13 @@ public class Jugadores {
      * Método que envia informacion de los recursos del jugador.
      */
 	public JSONArray recursosJugadorToJSON () throws JSONException {
-		return new JSONArray("[" + this.madera + "," + 
-				this.lana + "," + this.cereales + "," + this.arcilla + "," + this.mineral + "]");
+		JSONArray jsonArray = new JSONArray();
+		jsonArray.put(this.getMadera());
+		jsonArray.put(this.getLana());
+		jsonArray.put(this.getCereales());
+		jsonArray.put(this.getArcilla());
+		jsonArray.put(this.getMineral());
+		return jsonArray;
 	}
 	
 	/**
@@ -360,7 +369,7 @@ public class Jugadores {
 	}
 
 	public Integer getMadera() {
-		return madera;
+		return this.madera;
 	}
 
 	public void setMadera(Integer madera) {
@@ -368,7 +377,7 @@ public class Jugadores {
 	}
 
 	public Integer getLana() {
-		return lana;
+		return this.lana;
 	}
 
 	public void setLana(Integer lana) {
@@ -376,7 +385,7 @@ public class Jugadores {
 	}
 
 	public Integer getCereales() {
-		return cereales;
+		return this.cereales;
 	}
 
 	public void setCereales(Integer cereales) {
@@ -384,7 +393,7 @@ public class Jugadores {
 	}
 
 	public Integer getArcilla() {
-		return arcilla;
+		return this.arcilla;
 	}
 
 	public void setArcilla(Integer arcilla) {
@@ -392,7 +401,7 @@ public class Jugadores {
 	}
 
 	public Integer getMineral() {
-		return mineral;
+		return this.mineral;
 	}
 
 	public void setMineral(Integer mineral) {
@@ -412,11 +421,11 @@ public class Jugadores {
 	}
 
 	public Boolean getPrimerosAsentamientosConstruidos() {
-		return primerosAsentamientosConstruidos;
+		return this.primerosAsentamientosConstruidos;
 	}
 
 	public Boolean getPrimerosCaminosConstruidos() {
-		return primerosCaminosConstruidos;
+		return this.primerosCaminosConstruidos;
 	}
 
 } //Cierre de la clase

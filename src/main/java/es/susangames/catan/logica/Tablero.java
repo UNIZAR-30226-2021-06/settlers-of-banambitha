@@ -56,6 +56,7 @@ public class Tablero {
 		j = new Jugadores[num_jugadores];
 		this.turno_jugador = 0;
 		this.haComerciado = false;
+		this.haComerciadoMaritimo = false;
 		this.exit_status = -1;
 		this.message = "";
 		this.seHaMovidoLadron = false;
@@ -195,6 +196,14 @@ public class Tablero {
 			if (posActualLadron.sonAdyacentes(nuevaPosLadron)) {
 				posActualLadron.moverLadron();
 				nuevaPosLadron.colocarLadron();
+				//TODO:Eliminar recursos jugadores
+				Vertices v_nuevaPos[] = nuevaPosLadron.getVertices();
+				for (int i = 0; i < v_nuevaPos.length; ++i) {
+					if (v_nuevaPos[i].tieneAsentamiento() 
+						&& v_nuevaPos[i].getPropietario() != null) {
+							v_nuevaPos[i].getPropietario().eliminarRecursos();
+					}
+				}
 			}
 		}
 	} 
@@ -204,7 +213,10 @@ public class Tablero {
      */
 	public void producir (Integer valor) {	
 		for (Hexagonos hex : hexagonos.values()) {
-			if (hex.getValor() == valor) hex.producir();
+			if (hex.getValor() == valor) {
+				System.out.println("ID: " + hex.getIdentificador() + " , valor: " + hex.getValor());
+				hex.producir();
+			}
 		}
 	}
 	
@@ -553,7 +565,6 @@ public class Tablero {
 			if (vertices.containsKey(v.getCoordenadas())) {
 				if (v.tieneAsentamiento() && !v.tieneCiudad() && v.getPropietario().equals(j)) {
 					v.mejorarAsentamiento();
-					j.mejorarAsentamiento();
 				}
 			}
 		}
@@ -634,7 +645,7 @@ public class Tablero {
 						
 					}
 					for (int i = 0; i < verticesAdyacentesV2.length; ++i) {
-						if (verticesAdyacentesV2 != null) {
+						if (verticesAdyacentesV2[i] != null) {
 							if (!verticesAdyacentesV2[i].equals(v1) && !verticesAdyacentesV2[i].tieneAsentamiento()) 
 								v2.posibleAsentamientoDeJugador(j);
 						}
@@ -703,33 +714,92 @@ public class Tablero {
 	
 	//---------------------------------- Comercio -----------------------------------------------\\
 	private void actualizarMaterial (Jugadores j, String material, int numMaterial) {
+		int val;
 		switch (material) {
 		case "madera" : 
-			j.setMadera( j.getMadera() + numMaterial);
+			val = j.getMadera() + numMaterial;
+			j.setMadera( val );
 			break;
 		case "lana" : 
-			j.setLana( j.getLana() + numMaterial );
+			val = j.getLana() + numMaterial;
+			j.setLana( val );
 			break;
-		case "cereal" :
-			j.setCereales( j.getCereales() + numMaterial);
+		case "cereales" :
+			val = j.getCereales() + numMaterial;
+			j.setCereales( val );
 			break;
 		case "arcilla" :
-			j.setArcilla( j.getArcilla() + numMaterial );
+			val = j.getArcilla() + numMaterial;
+			j.setArcilla( val );
 			break;
 		case "mineral" : 
-			j.setMineral( j.getMineral() + numMaterial );
+			val = j.getMineral() + numMaterial;
+			j.setMineral( val );
 			break;
+		}
+	}
+	
+	private Boolean comprobarNumMateriales (Jugadores j, String material, int numMaterial) {
+		switch (material) {
+		case "madera" : 
+			if (j.getMadera() > numMaterial) {
+				return true;
+			} else return false;
+		case "lana" : 
+			if (j.getLana() > numMaterial) {
+				return true;
+			} else return false;
+
+		case "cereales" :
+			if (j.getCereales() > numMaterial) {
+				return true;
+			} else return false;
+
+		case "arcilla" :
+			if (j.getArcilla() > numMaterial) {
+				return true;
+			} else return false;
+
+		case "mineral" : 
+			if (j.getMineral() > numMaterial) {
+				return true;
+			} else return false;
+		default:
+			return false;
 		}
 	}
 	
 	public void comerciar(Jugadores j1, String materialJ1, int numMaterialJ1, 
 			Jugadores j2, String materialJ2, int numMaterialJ2) {
 		
-		actualizarMaterial(j1,materialJ1, -numMaterialJ1);
-		actualizarMaterial(j1,materialJ2, numMaterialJ2);
+		Boolean puedeComerciarJ1 = comprobarNumMateriales(j1,materialJ1, numMaterialJ1);
+		Boolean puedeComerciarJ2 = comprobarNumMateriales(j2,materialJ2, numMaterialJ2);
 		
-		actualizarMaterial(j2,materialJ1, numMaterialJ1);
-		actualizarMaterial(j2,materialJ2, -numMaterialJ1);
+		if (puedeComerciarJ1 && puedeComerciarJ2) {
+			actualizarMaterial(j1,materialJ1, -numMaterialJ1);
+			actualizarMaterial(j1,materialJ2, numMaterialJ2);
+			
+			actualizarMaterial(j2,materialJ1, numMaterialJ1);
+			actualizarMaterial(j2,materialJ2, -numMaterialJ1);
+			
+			this.haComerciado = true;
+			this.message = "Se ha realizado el intercambio de recursos entre el jugador i y el jugador j";
+			this.exit_status = 0;
+			
+		} else if (puedeComerciarJ1 && !puedeComerciarJ2){
+			this.message = "El jugador " + j2.getColor().numeroColor() + " no puede realizar el "
+					+ "comercio porque no dispone del suficiente número de materiales.";
+			this.exit_status = 34;
+		} else if (!puedeComerciarJ1 && puedeComerciarJ2){
+			this.message = "El jugador " + j1.getColor().numeroColor() + " no puede realizar el "
+					+ "comercio porque no dispone del suficiente número de materiales.";
+			this.exit_status = 34;
+		} else {
+			this.message = "Ninguno de los jugadores dispone de los suficientes materiales"
+					+ " para realizar el comercio";
+			this.exit_status = 35;
+		}
+		
 	}
 	
 	public void comercioMaritimo ( int materialEsperado, Jugadores j1, String materialRecibe, int madera, 
@@ -742,16 +812,28 @@ public class Tablero {
 			this.message = "El material ofrecido es menor al esperado";
 			this.exit_status = 29;
 		} else {
+			System.out.println(j1.getColor().numeroColor());
+			System.out.println("Madera jug: " + j1.getMadera() + " - Madera que ofrece: " + madera);
+			System.out.println("Lana jug: " + j1.getLana() + " - Lana que ofrece: " + lana);
+			System.out.println("Cereales jug: " + j1.getCereales() + " - Cereales que ofrece: " + cereales);
+			System.out.println("Arcilla jug: " + j1.getArcilla() + " - Arcilla que ofrece: " + arcilla);
+			System.out.println("Mineral jug: " + j1.getMineral() + " - Mineral que ofrece: " + mineral);
 			if (madera > j1.getMadera() || lana > j1.getLana() || cereales > j1.getCereales()
 					|| arcilla > j1.getArcilla() || mineral > j1.getMineral()) {
 				this.message = "El jugador no dispone de los materiales requeridos";
 				this.exit_status = 30;
 			} else {
-				j1.setMadera( j1.getMadera() - madera);
-				j1.setLana( j1.getLana() - lana );
-				j1.setCereales( j1.getCereales() - cereales );
-				j1.setArcilla( j1.getArcilla() - arcilla);
-				j1.setMineral( j1.getMineral() - mineral );
+				this.haComerciadoMaritimo = true;
+				int actualizarMadera = j1.getMadera() - madera;
+				j1.setMadera( actualizarMadera );
+				int actualizarLana = j1.getLana() - lana;
+				j1.setLana( actualizarLana );
+				int actualizarCereales = j1.getCereales() - cereales;
+				j1.setCereales( actualizarCereales );
+				int actualizarArcilla = j1.getArcilla() - arcilla;
+				j1.setArcilla( actualizarArcilla );
+				int actualizarMineral = j1.getMineral() - mineral;
+				j1.setMineral( actualizarMineral );
 				
 				this.actualizarMaterial(j1, materialRecibe, 1);
 				this.message = "Se ha realizado el comercio maritimo correctamente.";
@@ -863,6 +945,7 @@ public class Tablero {
 	private int exit_status;
 	private int turno_jugador;
 	private Boolean haComerciado;
+	private Boolean haComerciadoMaritimo;
 	private Boolean seHaMovidoLadron;
 
 	/*
@@ -912,7 +995,7 @@ public class Tablero {
 		recursos.put("Player_1", this.j[0].recursosJugadorToJSON());
 		recursos.put("Player_2", this.j[1].recursosJugadorToJSON());
 		recursos.put("Player_3", this.j[2].recursosJugadorToJSON());
-		recursos.put("Player_4", this.j[2].recursosJugadorToJSON());
+		recursos.put("Player_4", this.j[3].recursosJugadorToJSON());
 		respuesta.put("Recursos", recursos);
 		
 		JSONObject cartas = new JSONObject();
@@ -947,6 +1030,11 @@ public class Tablero {
 	public JSONObject JSONmessage ( JSONObject jsObject ) throws JSONException {
 		
 		Integer id_jugador = jsObject.getInt("player");
+		if ((id_jugador - 1) > 3 || (id_jugador - 1) < 0) {
+			this.message = "[Fatal error] Identificador de jugador erroneo.";
+			this.exit_status = -2;
+			return this.returnMessage();
+		}
 		Jugadores jug = this.j[id_jugador - 1];
 		
 		// Comprobar que jugador debería de realizar el movimiento
@@ -968,8 +1056,8 @@ public class Tablero {
 				// Comprobar si el identificador del vertice corresponde a algún vertice
 				if (existeVertice(id_vertice)) {
 					Vertices v = getVerticePorId(id_vertice);
-					if (v.tieneAsentamiento()) {
-						if (v.getPosibleAsentamientoDeJugador(id_vertice)) {
+					if (!v.tieneAsentamiento()) {
+						if (v.getPosibleAsentamientoDeJugador(id_jugador-1)) {
 							construirAsentamiento(v, jug);
 							jug.construirAsentamiento();
 							message = "Se ha construido el poblado correctamente";
@@ -981,8 +1069,12 @@ public class Tablero {
 							exit_status = 4;
 						}
 					} else {
-						message = "[Error] Ya existe un poblado construido en ese vertice";
-						exit_status = 3;
+						//System.out.println(v.getIdentificador());
+						//System.out.println("v.tieneAsentamiento() = " + v.tieneAsentamiento());
+						//System.out.println("Propietario: " + v.getPropietario() == null);
+						//System.out.println("Asentamiento: " + v.getAsentamientoJugador());
+						this.message = "[Error] Ya existe un poblado construido en ese vertice";
+						this.exit_status = 3;
 					}
 					
 				}
@@ -1038,7 +1130,7 @@ public class Tablero {
 				if (existeArista(id_arista)) {
 					Aristas a = getAristaPorId(id_arista);
 					if (!a.tieneCamino()) {
-						if (a.getPosibleCaminoDeJugador(id_jugador)) {
+						if (a.getPosibleCaminoDeJugador(id_jugador-1)) {
 							construirCamino(a, jug);
 							jug.construirCamino();
 							message = "Se ha construido el camino correctamente";
@@ -1172,6 +1264,7 @@ public class Tablero {
 			this.turno_jugador = (this.turno_jugador + 1) % 4; 
 			this.exit_status = 0;
 			this.haComerciado = false;
+			this.haComerciadoMaritimo = false;
 			Boolean finalizadoPrimerasConstrucciones = 
 					this.j[0].getPrimerosAsentamientosConstruidos() 
 					&& this.j[1].getPrimerosAsentamientosConstruidos() 
@@ -1194,30 +1287,36 @@ public class Tablero {
 				int numMaterialJ2 = jsArray.getInt(4);
 				
 				this.comerciar(jug, materialJ1, numMaterialJ1, j2, materialJ2, numMaterialJ2);
-				this.haComerciado = true;
+		
 			} else {
 				this.message = "El jugador ya ha comerciado durante su turno";
 				this.exit_status = 25;
 			}
 			break;
-		case "comerciar con puerto":
+		case "comerciar con puerto": // TODO: Limitar el comercio maritmo a 1.
 			JSONObject comercioMaritimo = move.getJSONObject("param");
 			int id_puerto = comercioMaritimo.getInt("id_puerto");
-			if (existeArista(id_puerto)) {
-				Aristas p = getAristaPorId(id_puerto);
-				if (p.tienePuerto()) {
-					// Vamos a comprobar si el jugador tiene un asentamiento en la arista (puerto)
-					Vertices v1 = vertices.get(p.getCoordenadasVertice1());
-					Vertices v2 = vertices.get(p.getCoordenadasVertice2());
-					JSONObject materiales = comercioMaritimo.getJSONObject("materiales");
-					int madera = materiales.getInt("madera");
-					int lana = materiales.getInt("lana");
-					int cereales = materiales.getInt("cereales");
-					int arcilla = materiales.getInt("arcilla");
-					int mineral = materiales.getInt("mineral");
-					String material_que_recibe = comercioMaritimo.getString("material_que_recibe");
-					if (v1.tieneAsentamiento()) {
-						if (jug.equals(v1.getPropietario())) {
+			if (!this.haComerciadoMaritimo) {
+				
+				if (existeArista(id_puerto)) {
+					Aristas p = getAristaPorId(id_puerto);
+					if (p.tienePuerto()) {
+						// Vamos a comprobar si el jugador tiene un asentamiento en la arista (puerto)
+						Vertices v1 = vertices.get(p.getCoordenadasVertice1());
+						Vertices v2 = vertices.get(p.getCoordenadasVertice2());
+						
+						JSONObject materiales = comercioMaritimo.getJSONObject("materiales");
+						int madera = materiales.getInt("madera");
+						int lana = materiales.getInt("lana");
+						int cereales = materiales.getInt("cereales");
+						int arcilla = materiales.getInt("arcilla");
+						int mineral = materiales.getInt("mineral");
+						String material_que_recibe = comercioMaritimo.getString("material_que_recibe");
+						
+						if (v1.tieneAsentamiento() && jug.equals(v1.getPropietario())
+								|| v2.tieneAsentamiento() && jug.equals(v1.getPropietario())
+								|| jug.equals(p.getPropietario()) ) {
+							
 							// Comprobar si es especial o basico.
 							if (p.getTipoPuerto().esBasico()) {
 								// 3 materiales a uno
@@ -1228,41 +1327,28 @@ public class Tablero {
 								this.comercioEnPuertoEspecial(p, jug, material_que_recibe, 
 										madera, lana, cereales, arcilla, mineral);
 							}
+							
 						} else {
-							// 4 materiales por 1
-							this.comercioMaritimo(4, jug, material_que_recibe, madera, 
-									lana, cereales, arcilla, mineral);
+							// No hay asentamiento o el asentamiento no coincide con el jugador 
+							// 		--> comercio por 4 materiales a uno.
+							this.comercioMaritimo(4, jug, material_que_recibe, madera, lana, cereales, arcilla, mineral);
 						}
-					} else if (v2.tieneAsentamiento()) {
-						if (jug.equals(v1.getPropietario())) {
-							// Comprobar si es especial o basico.
-							if (p.getTipoPuerto().esBasico()) {
-								// 3 materiales a uno
-								this.comercioMaritimo(3, jug, material_que_recibe, madera, 
-										lana, cereales, arcilla, mineral);
-							} else {
-								// materiales a uno en concreto
-								this.comercioEnPuertoEspecial(p, jug, material_que_recibe, 
-										madera, lana, cereales, arcilla, mineral);
-							}
-						} else {
-							// 4 materiales por 1
-							this.comercioMaritimo(5, jug, material_que_recibe, madera, 
-									lana, cereales, arcilla, mineral);
-						}
+						
 					} else {
-						// No hay asentamiento --> comercio por 5 materiales a uno.
-						this.comercioMaritimo(5, jug, material_que_recibe, madera, lana, cereales, arcilla, mineral);
+						this.message = "La arista seleccionada no corresponde a ningún puerto";
+						this.exit_status = 27;
 					}
 				} else {
-					this.message = "La arista seleccionada no corresponde a ningún puerto";
-					this.exit_status = 27;
+					this.message = "El identificador de arista introducido no corresponde a ninguno "
+							+ "de los disponibles";
+					this.exit_status = 26;
 				}
+				
 			} else {
-				this.message = "El identificador de arista introducido no corresponde a ninguno "
-						+ "de los disponibles";
-				this.exit_status = 26;
+				this.message = "El jugador ya ha comerciado con puerto durante su turno";
+				this.exit_status = 33;
 			}
+			
 			break;
 			// Cartas
 		default:
@@ -1276,7 +1362,7 @@ public class Tablero {
 		return this.returnMessage();
 	}
 
-	private String[] listAsentamientoToJSON () {
+	private JSONArray listAsentamientoToJSON () {
 		Iterator<Vertices> it = vertices.values().iterator();
 		Vertices aux;
 		//JSONArray jsArray = new JSONArray();
@@ -1288,7 +1374,7 @@ public class Tablero {
 			listAsentamiento[id] = aux.getAsentamientoJugador();
 		}
 		
-		return listAsentamiento;
+		return new JSONArray(listAsentamiento);
 	}
 
 	private JSONArray posibleAsentamientoToJSON () {
@@ -1306,15 +1392,15 @@ public class Tablero {
 			posiblesAsentamientos[3][id] = vAux.getPosibleAsentamientoDeJugador(3);
 		}
 		
-		jsArray.put(posiblesAsentamientos[0]);
-		jsArray.put(posiblesAsentamientos[1]);
-		jsArray.put(posiblesAsentamientos[2]);
-		jsArray.put(posiblesAsentamientos[3]);
+		jsArray.put(new JSONArray(posiblesAsentamientos[0]));
+		jsArray.put(new JSONArray(posiblesAsentamientos[1]));
+		jsArray.put(new JSONArray(posiblesAsentamientos[2]));
+		jsArray.put(new JSONArray(posiblesAsentamientos[3]));
 		
 		return jsArray;
 	}
 
-	private String[] listCaminoToJSON () {
+	private JSONArray listCaminoToJSON () {
 		Iterator<Aristas> it = aristas.values().iterator();
 		//JSONArray jsArray = new JSONArray();
 		Aristas aux;
@@ -1326,7 +1412,7 @@ public class Tablero {
 			caminos[id] = aux.getCaminoJugador();
 		}
 		
-		return caminos;
+		return new JSONArray(caminos);
 	}
 
 	private JSONArray posibleCaminoToJSON () {
@@ -1344,10 +1430,10 @@ public class Tablero {
 			posiblesCaminos[3][id] = aAux.getPosibleCaminoDeJugador(3);
 		}
 		
-		jsArray.put(posiblesCaminos[0]);
-		jsArray.put(posiblesCaminos[1]);
-		jsArray.put(posiblesCaminos[2]);
-		jsArray.put(posiblesCaminos[3]);
+		jsArray.put(new JSONArray(posiblesCaminos[0]));
+		jsArray.put(new JSONArray(posiblesCaminos[1]));
+		jsArray.put(new JSONArray(posiblesCaminos[2]));
+		jsArray.put(new JSONArray(posiblesCaminos[3]));
 		
 		return jsArray;
 	}
