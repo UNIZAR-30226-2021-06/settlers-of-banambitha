@@ -3,6 +3,7 @@ package es.susangames.catan.gameDispatcher;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 
@@ -127,12 +128,13 @@ public class GameControllerThread implements Runnable {
 		//Inicializar tablero
 		tableroPartida = new Tablero(); 
 		try {
-			Thread.sleep(5000);
+			Thread.sleep(500);
 		} catch (InterruptedException e1) {
 			e1.printStackTrace();
 		}
 		//Enviar primer mensaje con el tablero vacío a todos los jugadores
 		respuesta = tableroPartida.returnMessage(); 
+		respuesta.put("playerNames", this.jugadores);
 		template.convertAndSend(WebSocketConfig.TOPIC_PARTIDA_ACT + "/" + partidaId, respuesta.toString());
 		
 		while(!finalizada) {
@@ -195,3 +197,4 @@ public class GameControllerThread implements Runnable {
 	}
 
 }
+
