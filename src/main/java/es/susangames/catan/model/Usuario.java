@@ -1,9 +1,9 @@
 package es.susangames.catan.model;
 
 import java.io.Serializable;
+
 import java.sql.Date;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -47,11 +47,11 @@ public class Usuario implements Serializable {
 	@Column(columnDefinition = "varchar(100) default 'apariencia_clasica.png'", nullable = false, updatable = false, insertable = false)
 	private String apariencia;
 	
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne
 	@JoinColumn(name = "avatar")
 	private Producto Avatar;
 	
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne
 	@JoinColumn(name = "apariencia")
 	private Producto Apariencia;
 	

@@ -2,7 +2,6 @@ package es.susangames.catan.model;
 
 import java.io.Serializable;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -30,12 +29,12 @@ public class PeticionAmistad implements Serializable {
 	private String usuario2_id;
 
 	@MapsId
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne
 	@JoinColumn(name = "usuario1_id")
 	private Usuario usuario1;
 
 	@MapsId
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne
 	@JoinColumn(name = "usuario2_id")
 	private Usuario usuario2;
 
