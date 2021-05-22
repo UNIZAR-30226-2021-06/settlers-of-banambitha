@@ -774,6 +774,10 @@ public class Tablero {
 		
 		Boolean puedeComerciarJ1 = comprobarNumMateriales(j1,materialJ1, numMaterialJ1);
 		Boolean puedeComerciarJ2 = comprobarNumMateriales(j2,materialJ2, numMaterialJ2);
+
+		System.out.println("Comercio: "); 
+		System.out.println("\tEl jugador " + j1.getColor().numeroColor() + " ofrece " + materialJ1 + "de " + materialJ1); 
+		System.out.println("\tEl jugador " + j2.getColor().numeroColor() + " ofrece " + materialJ2 + "de " + materialJ2); 
 		
 		if (puedeComerciarJ1 && puedeComerciarJ2) {
 			actualizarMaterial(j1,materialJ1, -numMaterialJ1);
@@ -783,15 +787,16 @@ public class Tablero {
 			actualizarMaterial(j2,materialJ2, -numMaterialJ1);
 			
 			this.haComerciado = true;
-			this.message = "Se ha realizado el intercambio de recursos entre el jugador i y el jugador j";
+			this.message = "Se ha realizado el intercambio de recursos entre el jugador " + j1.getColor().numeroColor() +
+			               " y el jugador " + j2.getColor().numeroColor() ;
 			this.exit_status = 0;
 			
 		} else if (puedeComerciarJ1 && !puedeComerciarJ2){
-			this.message = "El jugador " + j2.getColor().numeroColor() + " no puede realizar el "
+			this.message = "El jugador " + j2.getColor().numeroColor() + 1 + " no puede realizar el "
 					+ "comercio porque no dispone del suficiente número de materiales.";
 			this.exit_status = 34;
 		} else if (!puedeComerciarJ1 && puedeComerciarJ2){
-			this.message = "El jugador " + j1.getColor().numeroColor() + " no puede realizar el "
+			this.message = "El jugador " + j1.getColor().numeroColor() + 1 + " no puede realizar el "
 					+ "comercio porque no dispone del suficiente número de materiales.";
 			this.exit_status = 34;
 		} else {
