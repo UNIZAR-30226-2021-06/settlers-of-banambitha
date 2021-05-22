@@ -207,14 +207,14 @@ public class SalaController {
 				JSONArray players = new JSONArray(sala.getPlayers());
 				actualizacion.put("players", players);
 				
-				template.convertAndSend(WebSocketConfig.TOPIC_SALA_ACT + "/" + salaId, actualizacion);
+				template.convertAndSend(WebSocketConfig.TOPIC_SALA_ACT + "/" + salaId, actualizacion.toString());
 				
 				invitacion.put("status", "OPEN");
 				invitacion.put("leader", liderId);
 				invitacion.put("room", salaId);
 				
 				for(String invitado : sala.getInvites()) {
-					template.convertAndSend(WebSocketConfig.TOPIC_INVITACION + "/" + invitado, invitacion);
+					template.convertAndSend(WebSocketConfig.TOPIC_INVITACION + "/" + invitado, invitacion.toString());
 				}
 			}
 		}	
