@@ -73,27 +73,27 @@ export class HarborComponent implements OnInit {
     switch ( this.tipoPuerto ){
       case TipoPuerto.MADERA:
         puertoString = this.langService.get("puerto-madera")
-        this.recursosRequeridos = 3
+        this.recursosRequeridos = 4
         break;
 
       case TipoPuerto.ARCILLA:
         puertoString = this.langService.get("puerto-arcilla")
-        this.recursosRequeridos = 3
+        this.recursosRequeridos = 4
         break;
 
       case TipoPuerto.LANA:
         puertoString = this.langService.get("puerto-lana")
-        this.recursosRequeridos = 3
+        this.recursosRequeridos = 4
         break;
 
       case TipoPuerto.MINERAL:
         puertoString = this.langService.get("puerto-mineral")
-        this.recursosRequeridos = 3
+        this.recursosRequeridos = 4
         break;
 
       case TipoPuerto.CEREAL:
         puertoString = this.langService.get("puerto-cereal")
-        this.recursosRequeridos = 3
+        this.recursosRequeridos = 4
         break;
 
       case TipoPuerto.BASICO:

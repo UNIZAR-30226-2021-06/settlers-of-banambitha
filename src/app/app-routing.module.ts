@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { BannedAccountComponent } from './banned-account/banned-account.component';
 import { GameplayComponent } from './game/gameplay/gameplay.component';
+import { AuthBannedGuard } from './guards/auth-banned.guard';
 import { AuthBoardGuard } from './guards/auth-board.guard';
 import { AuthHomeGuard } from './guards/auth-home.guard';
 import { AuthLoginGuard } from './guards/auth-login.guard';
@@ -41,7 +43,10 @@ const routes: Routes = [
    },
 
   {path: 'board', component: GameplayComponent, 
-    canActivate: [AuthBoardGuard]}
+    canActivate: [AuthBoardGuard]}, 
+
+  {path: 'banned', component: BannedAccountComponent,
+    canActivate: [AuthBannedGuard]}, 
 
 ];
 

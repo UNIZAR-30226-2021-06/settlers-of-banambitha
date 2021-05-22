@@ -713,6 +713,46 @@
     "for": {
         "ESP": "por", 
         "ENG": "for"
+    }, 
+
+    "existing-mail": {
+        "ESP": "El correo electŕonico proporcionado ya está siendo utilizado.", 
+        "ENG": "The given mail is already in use."
+    }, 
+
+    "report": {
+        "ESP": "Reportar", 
+        "ENG": "Report"
+    }, 
+
+    "banned-account": {
+        "ESP": "Esta cuenta estará baneada hasta el día ",
+        "ENG": "This account will be banned until "
+    },
+
+    "behave-better-next": {
+        "ESP": "Compórtate mejor la próxima vez",
+        "ENG": "Watch your words next time"
+    }, 
+
+    "logout": {
+        "ESP": "Cerrar sesión", 
+        "ENG": "Log out"
+    }, 
+
+    "hello": {
+        "ESP": "Hola",
+        "ENG": "Hello"
+    }, 
+
+    "prices": {
+        "ESP": "Precios", 
+        "ENG": "Prices"
+    }, 
+    
+    "costs": {
+        "ESP": "Costes", 
+        "ENG": "Costs"
     }
 
 }

@@ -18,9 +18,11 @@ import { WsService } from '../ws/ws.service';
  */
 export class UserService {
 
-  private static readonly baseUrl = environment.baseUrl + "/usuario"
-  private static readonly addUrl = UserService.baseUrl + "/add"
-  private static readonly validae = UserService.baseUrl + "/validate"
+  private static readonly baseUrl:  String = environment.baseUrl + "/usuario"
+  private static readonly addUrl:   String = UserService.baseUrl + "/add"
+  private static readonly validate: String = UserService.baseUrl + "/validate"
+  private static readonly logout:   String = UserService.baseUrl + "/logout"
+
   private static readonly httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
     withCredentials: true,
@@ -38,6 +40,8 @@ export class UserService {
   public apariencia: String
   public saldo:      Number
   public partida:    string
+  public bloqued:    String
+  public reports:    number
   public validUser:  boolean = false
 
   constructor(private http: HttpClient) {}
@@ -80,12 +84,15 @@ export class UserService {
   }
 
   public updateUserData(userData: Object){
-    this.username = userData["nombre"]
+    console.log(userData)
+    this.username   = userData["nombre"]
     this.apariencia = userData["apariencia"]
-    this.saldo = userData["saldo"]
-    this.mail = userData["mail"]
-    this.avatar = userData["avatar"]
-    this.partida = userData["partida"]
+    this.saldo      = userData["saldo"]
+    this.mail       = userData["mail"]
+    this.avatar     = userData["avatar"]
+    this.partida    = userData["partida"]
+    this.bloqued    = userData["bloqueado"]
+    this.reports    = userData["informes"]
     console.log(this.partida)
   }
 
@@ -108,6 +115,15 @@ export class UserService {
     return response
   }
 
+  /**
+   * Cierra la sesión
+   */
+  public logout(router: Router){
+    console.log("logout")
+    this.http.get(UserService.baseUrl + "/logout", UserService.httpOptions).subscribe((data: any) => {
+      router.navigate(["/login"])
+    })
+  }
 
   /**
    * Devuelve la promise de una petición que solicita la 
@@ -158,6 +174,12 @@ export class UserService {
           console.log("recargar partida")
           router.navigate(["/board"])
           return false
+
+        }else if ( this.bloqued != null ){
+          console.log("Cuenta bloqueada!")
+          router.navigate(["/banned"])
+          return false
+
         }else{
           if ( urlLogin ){
             router.navigate(["/home"])
@@ -191,7 +213,6 @@ export class UserService {
    * @param router 
    */
   public checkLastMatch(router: Router, gameService: GameService, wsService: WsService): Observable<boolean> {
-    console.log("checking")
     return this.http.get(UserService.baseUrl + "/session", UserService.httpOptions).pipe(
       map(response => {
         this.updateUserData(response.body)
@@ -201,6 +222,46 @@ export class UserService {
           console.log(this.partida)
           gameService.recargarPartida(this.partida)
           return true
+
+        }else if ( this.bloqued != null ){
+          console.log("Cuenta bloqueada!")
+          router.navigate(["/banned"])
+          return false
+
+        }else{
+          router.navigate(["/home"])
+          return false
+        }
+      }
+    ), catchError(() => {
+        router.navigate(["/login"])
+        return of(false)
+    }))
+  }
+
+  /**
+   * Checkea si el usuario puede acceder a la página de baneo
+   * 
+   * @param router 
+   * @param gameService 
+   * @param wsService 
+   */
+  public checkBan(router: Router, gameService: GameService, wsService: WsService): Observable<boolean> {
+    return this.http.get(UserService.baseUrl + "/session", UserService.httpOptions).pipe(
+      map(response => {
+        this.updateUserData(response.body)
+        wsService._connect()
+        if ( this.partida != null ){
+          console.log("Partida no nula")
+          console.log(this.partida)
+          gameService.recargarPartida(this.partida)
+          return false
+
+        }else if ( this.bloqued != null ){
+          console.log("Cuenta bloqueada!")
+          router.navigate(["/banned"])
+          return true
+
         }else{
           router.navigate(["/home"])
           return false

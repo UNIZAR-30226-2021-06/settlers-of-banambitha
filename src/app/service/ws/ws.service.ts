@@ -39,6 +39,8 @@ export class WsService implements OnDestroy{
   public static readonly rechazarComercio:     String = WsService.appPrefix + "/partida/comercio/rechazar"
   public static readonly enviarMensajePrivado: String = WsService.appPrefix + "/enviar/privado"
   public static readonly enviarMensajePartida: String = WsService.appPrefix + "/enviar/partida"
+  public static readonly usuarioReportar:      String = WsService.appPrefix + "/usuario/reportar"
+  public static readonly usuarioEliminar:      String = WsService.appPrefix + "/usuario/eliminar"
 
   //topics
   public static readonly chat_topic:           string = "/chat/"
@@ -51,6 +53,7 @@ export class WsService implements OnDestroy{
   public static readonly partida_com_topic:    string = "/partida-com/"
   public static readonly partida_test_topic:   string = "/test-partida/"
   public static readonly partida_reload_topic: string = "/partida-rld/"
+  public static readonly usuario_act:          string = "/usuario-act/"
 
   //Cliente de stomp
   private stompClient: any = null;

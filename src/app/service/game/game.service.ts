@@ -62,6 +62,15 @@ enum MsgComercioStatus {
   DECLINE = "DECLINE"
 }
 
+/**
+ * Estados posibles de una mensaje de reporte
+ */
+enum MsgReporteStatus {
+  REPORT_SENT     = "REPORT_SENT", 
+  REPORT_REJECTED = "REPORT_REJECTED",
+  REPORT_RECEIVED = "REPORT_RECEIVED"
+}
+
 
 /**
  * Jugadas posibles
@@ -316,8 +325,9 @@ export interface Partida {
   PobladoDisponible:     boolean,
   CaminoDisponible:      boolean, 
   CiudadDisponible:      boolean, 
-  movioLadron:           boolean
-  yaComercio:            boolean
+  movioLadron:           boolean,
+  yaComercio:            boolean,
+  reported:              Array<Boolean>
 }
 
 
@@ -349,7 +359,8 @@ export class GameService implements Connectable{
       CiudadDisponible: false, 
       CaminoDisponible: false,
       movioLadron: false,
-      yaComercio: false
+      yaComercio: false,
+      reported: [false, false, false, false]
   }
 
   public cargandoPartida: boolean = false
@@ -362,6 +373,7 @@ export class GameService implements Connectable{
   private partida_chat_topic_id:   any
   private partida_com_topic_id:    any
   private partida_reload_topic_id: any
+  private usuario_act_topic_id:    any
 
   //Cliente de stomp
   private stompClient: any
@@ -418,7 +430,8 @@ export class GameService implements Connectable{
       CiudadDisponible: false, 
       CaminoDisponible: false,
       movioLadron: false,
-      yaComercio: false
+      yaComercio: false,
+      reported: [false, false, ,false, false]
     }
   }
 
@@ -593,9 +606,46 @@ export class GameService implements Connectable{
         }
       });
 
+      //Suscripción a las respuestas de reporte
+      this.usuario_act_topic_id = this.stompClient.subscribe(WsService.usuario_act + this.userService.getUsername(),
+      function (message) {
+        if (message.body){
+          that.procesarMensajeReporte(JSON.parse(message.body))
+        }else{
+          console.log("Error crítico")
+        }
+      });
+
     }
   }
 
+  /**
+   * Procesa un mensaje de respuesta a un reporte. 
+   * 
+   * @param msg mensaje recibido
+   */
+  private procesarMensajeReporte(msg: Object){
+    console.log(msg)
+    switch(msg["status"]){
+
+      case MsgReporteStatus.REPORT_RECEIVED: 
+        this.generarMensajePartida("¡" + msg["player"] + " te ha reportado!" )
+        break;
+
+      case MsgReporteStatus.REPORT_REJECTED: 
+        this.generarMensajeErrorPartida("¡No puedes reportar a  " + msg["player"] + " más de una vez por partida!" )
+        break;
+
+      case MsgReporteStatus.REPORT_SENT:
+        this.generarMensajePartida("¡Has reportado a " + msg["player"] + "!" )
+        break;
+
+      default: 
+        console.log("Estado desconocido")
+        break; 
+
+    }
+  }
 
   /**
    * Procesa un mensaje de partida (con información del tablero)
@@ -683,18 +733,18 @@ export class GameService implements Connectable{
             timeStamp: msg["time"]
           }
           this.openTradeOfferSnackBar()
-          infoMsg = "¡" + this.partida.jugadores[msg["from"] - 1] + " quiere comerciar contigo!"
+          infoMsg = "¡" + this.partida.jugadores[msg["from"] - 1].nombre + " quiere comerciar contigo!"
           this.generarMensajePartida(infoMsg)
         }
         break
 
       case MsgComercioStatus.ACCEPT: 
-        infoMsg = "¡" + this.partida.jugadores[msg["from"] - 1] + " ha ACEPTADO tu solicitud de comercio!"
+        infoMsg = "¡" + this.partida.jugadores[msg["from"] - 1].nombre + " ha ACEPTADO tu solicitud de comercio!"
         this.generarMensajePartida(infoMsg)
         break
 
       case MsgComercioStatus.DECLINE: 
-        infoMsg = "¡" + this.partida.jugadores[msg["from"] - 1] + " ha RECHAZADO tu solicitud de comercio!"
+        infoMsg = "¡" + this.partida.jugadores[msg["from"] - 1].nombre + " ha RECHAZADO tu solicitud de comercio!"
         this.generarMensajePartida(infoMsg)
         break
 
@@ -724,7 +774,8 @@ export class GameService implements Connectable{
       CiudadDisponible: false, 
       CaminoDisponible: false,
       movioLadron: false,
-      yaComercio: false
+      yaComercio: false ,
+      reported: [false, false, false, false]
     }
 
     if ( this.partida_act_topic_id != null ){
@@ -741,6 +792,10 @@ export class GameService implements Connectable{
 
     if ( this.partida_reload_topic_id != null ){
       this.partida_reload_topic_id.unsubscribe()
+    }
+
+    if ( this.usuario_act_topic_id != null ){
+      this.usuario_act_topic_id.unsubscribe()
     }
   }
 
@@ -968,9 +1023,9 @@ export class GameService implements Connectable{
       materiales: {
         madera:   numMadera,
         lana:     numLana, 
+        cereales: numCereales,
         arcilla:  numArcilla, 
-        mineral:  numMineral, 
-        cereales: numCereales 
+        mineral:  numMineral 
       },
       material_que_recibe: recursoSolicitado
     }
@@ -1031,6 +1086,24 @@ export class GameService implements Connectable{
       body: mensaje
     }
     this.stompClient.send(WsService.enviarMensajePartida, {}, JSON.stringify(msg) )
+  }
+
+
+  /**
+   * Reporta al jugador dado. Solo se puede reportar una vez
+   * por partida. 
+   * 
+   * @param playerId jugador que se desea reportar
+   */
+  public reportarJugador(playerId: number): void {
+    if ( !this.partida.reported[playerId - 1] ){
+      let msg = {
+        from: this.userService.getUsername(),
+        to: this.partida.jugadores[playerId - 1].nombre
+      }
+      this.stompClient.send(WsService.usuarioReportar, {}, JSON.stringify(msg) )
+      this.partida.reported[playerId - 1] = true
+    }
   }
 
 
@@ -1363,7 +1436,8 @@ export class GameService implements Connectable{
       CiudadDisponible: true, 
       CaminoDisponible: true, 
       movioLadron: false,
-      yaComercio: false
+      yaComercio: false,
+      reported: [false ,false, false, false]
     }
 
     this.partida.jugadores[0].recursos = {
@@ -1557,17 +1631,17 @@ export class GameService implements Connectable{
    * Actualiza los recursos del jugador dado, con la información en recursos.
    * 
    * @param recursos array de 5 componentes enteras tal que: 
-   * [num_madera, num_MINERAL, num_ARCILLA, num_lana, num_cereales]
+   * [num_madera, num_cereales, num_lana, num_ARCILLA,num_MINERAL]
    * @param playerIndex indice del jugador cuyos recursos se van a actualizar dentro
    * del vector de jugadores de la partida. 
    */
   private actualizarRecursosJugador(recursos: Array<number>, playerIndex: number){
     
     this.partida.jugadores[playerIndex].recursos.madera   = recursos[0]
-    this.partida.jugadores[playerIndex].recursos.mineral  = recursos[1]
-    this.partida.jugadores[playerIndex].recursos.arcilla  = recursos[2]
-    this.partida.jugadores[playerIndex].recursos.lana     = recursos[3]
-    this.partida.jugadores[playerIndex].recursos.cereales = recursos[4]
+    this.partida.jugadores[playerIndex].recursos.lana     = recursos[1]
+    this.partida.jugadores[playerIndex].recursos.cereales = recursos[2]
+    this.partida.jugadores[playerIndex].recursos.arcilla  = recursos[3]
+    this.partida.jugadores[playerIndex].recursos.mineral  = recursos[4]
   }
 
 
@@ -2025,6 +2099,9 @@ export class GameService implements Connectable{
 
       }else{
         this.generarMensajeErrorPartida(msg[MessageKeys.MENSAJE])
+        if (  (msg[MessageKeys.MENSAJE] as String).includes("ladron") ) {
+          this.partida.movioLadron = false
+        }
       }
 
     } else{

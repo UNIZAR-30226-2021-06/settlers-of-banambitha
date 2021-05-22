@@ -2,6 +2,96 @@
 class="info" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="12px">
 <mat-accordion>
 
+  <!-- PRECIOS -->
+  <mat-expansion-panel (click)="this.scrollDown()">
+    <mat-expansion-panel-header>
+      <mat-panel-title style="text-align: center;">
+        <mat-icon aria-hidden="false" aria-label="Example home icon">savings</mat-icon> &nbsp;
+        {{langService.get("costs")}} &nbsp;
+      </mat-panel-title>
+      <mat-panel-description>
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+    <mat-tab-group mat-align-tabs="center">
+
+        <mat-tab [label]="langService.get('road')">
+            <table class="mat-table center" >
+                <tr class="mat-header-row">
+                    <th class="mat-header-cell">{{langService.get("resource")}}</th>
+                    <th class="mat-header-cell">{{langService.get("quantity")}}</th>
+                </tr>
+                <tr class="mat-row">
+                    <td class="mat-cell">
+                        {{langService.get("madera")}}
+                    </td>
+                    <td class="mat-cell center_td">1</td>
+                </tr>
+                <tr class="mat-row">
+                    <td class="mat-cell">
+                        {{langService.get("arcilla")}}
+                    </td>
+                    <td class="mat-cell center_td">1</td>
+                </tr>
+            </table>
+        </mat-tab>
+
+        <mat-tab [label]="langService.get('village')">
+            <table class="mat-table center" >
+                <tr class="mat-header-row">
+                    <th class="mat-header-cell">{{langService.get("resource")}}</th>
+                    <th class="mat-header-cell">{{langService.get("quantity")}}</th>
+                </tr>
+                <tr class="mat-row">
+                    <td class="mat-cell">
+                        {{langService.get("madera")}}
+                    </td>
+                    <td class="mat-cell center_td">1</td>
+                </tr>
+                <tr class="mat-row">
+                    <td class="mat-cell">
+                        {{langService.get("mineral")}}
+                    </td>
+                    <td class="mat-cell center_td">1</td>
+                </tr>
+                <tr class="mat-row">
+                    <td class="mat-cell">
+                        {{langService.get("arcilla")}}
+                    </td>
+                    <td class="mat-cell center_td">1</td>
+                </tr>
+                <tr class="mat-row">
+                    <td class="mat-cell">
+                        {{langService.get("lana")}}
+                    </td>
+                    <td class="mat-cell center_td">1</td>
+                </tr>
+            </table>
+        </mat-tab>
+
+        <mat-tab [label]="langService.get('city')">
+            <table class="mat-table center" >
+                <tr class="mat-header-row">
+                    <th class="mat-header-cell">{{langService.get("resource")}}</th>
+                    <th class="mat-header-cell">{{langService.get("quantity")}}</th>
+                </tr>
+                <tr class="mat-row">
+                    <td class="mat-cell">
+                        {{langService.get("mineral")}}
+                    </td>
+                    <td class="mat-cell center_td">2</td>
+                </tr>
+                <tr class="mat-row">
+                    <td class="mat-cell">
+                        {{langService.get("cereales")}}
+                    </td>
+                    <td class="mat-cell center_td">1</td>
+                </tr>
+            </table>
+        </mat-tab>
+
+    </mat-tab-group>
+  </mat-expansion-panel>
+
   <mat-expansion-panel *ngFor="let user of this.gameService.partida.jugadores; index as i">
     <mat-expansion-panel-header>
       <mat-panel-title [style.font-weight]="i != this.gameService.partida.miTurno - 1 ? 'normal' : 'bold'">
@@ -12,10 +102,21 @@ class="info" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="12px">
         {{user.puntos}} {{langService.get("points")}}
       </mat-panel-description>
     </mat-expansion-panel-header>
-    <button mat-raised-button *ngIf="i != this.gameService.partida.miTurno - 1"
-    (click)="openInternalTradeDialog(i)" [disabled]="this.gameService.partida.miTurno != this.gameService.partida.turnoActual || this.gameService.partida.yaComercio">
-        {{langService.get("trade")}}
-    </button>
+    <div class="button-row" style="width: 100px; "></div>
+    <div class="button-row">
+        <button mat-raised-button *ngIf="i != this.gameService.partida.miTurno - 1"
+        (click)="openInternalTradeDialog(i)" [disabled]="this.gameService.partida.miTurno != this.gameService.partida.turnoActual || this.gameService.partida.yaComercio">
+            {{langService.get("trade")}}
+        </button>
+    </div>
+    <div class="button-row" style="width: 10px; "></div>
+    <div class="button-row">
+        <button mat-raised-button *ngIf="i != this.gameService.partida.miTurno - 1"
+        (click)="gameService.reportarJugador(i+1)" [disabled]="this.gameService.partida.reported[i]">
+            {{langService.get("report")}}
+        </button>
+    </div>
+
     <mat-tab-group mat-align-tabs="center">
         <mat-tab label="Materiales">
             <table class="mat-table center" >
@@ -55,6 +156,7 @@ class="info" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="12px">
                 </tr>
             </table>
         </mat-tab>
+        <!-- No hay cartas :(
         <mat-tab label="Cartas">
             <mat-grid-list cols="2">
                 <mat-grid-tile>
@@ -102,7 +204,7 @@ class="info" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="12px">
                     </table>
                 </mat-grid-tile>
             </mat-grid-list>
-        </mat-tab>
+        </mat-tab>-->
     </mat-tab-group>
   </mat-expansion-panel>
   <mat-expansion-panel (click)="this.scrollDown()">
@@ -120,6 +222,7 @@ class="info" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="12px">
                     <span [style.color]="playerColors[msg.remitente.turno - 1]">{{msg.remitente.nombre}} ({{msg.timeStamp}}):</span> {{msg.body}}
                 </span>
                 <span *ngIf="msg.remitente == null" [ngClass]="msg.esError? 'gameErrorMessage' : 'gameMessage'">{{msg.body}}</span>
+                {{this.scrollDown()}}
             </div>
         </div>
         <br/>
@@ -128,7 +231,7 @@ class="info" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="12px">
         <form class="example-form">
             <mat-form-field class="example-full-width">
                 <mat-label>
-                    {{langService.get("Write-your-message")}}
+                    {{langService.get("write-your-message")}}
                 </mat-label>
                 <input matInput #message maxlength="256"
                 autocomplete="off"

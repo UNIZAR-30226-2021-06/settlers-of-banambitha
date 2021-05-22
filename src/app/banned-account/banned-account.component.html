@@ -1,0 +1,14 @@
+<div class="centered_div" >
+    <h1>
+        {{langService.get("hello")}} 
+        {{userService.username}},
+        <br/>
+        {{langService.get("banned-account")}} {{userService.bloqued}}
+        <br/>
+        {{langService.get("behave-better-next")}} 
+    </h1>
+    <br/>
+    <button mat-raised-button (click) = "userService.logout(this.router)">
+        {{langService.get("logout")}}
+    </button>
+</div>
