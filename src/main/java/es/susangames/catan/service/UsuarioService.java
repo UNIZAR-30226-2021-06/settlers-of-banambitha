@@ -105,7 +105,7 @@ public class UsuarioService {
 	
 	public void deleteUsuario(String usuarioId) {
 		estadisticasRepo.deleteById(usuarioId);
-		usuarioRepo.deleteById(usuarioId);
+		usuarioRepo.deleteUsuario(usuarioId);
 	}
 	
 	public Estadisticas findEstadisticas(String usuarioId) {

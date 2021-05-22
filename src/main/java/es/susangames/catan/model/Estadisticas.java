@@ -2,7 +2,6 @@ package es.susangames.catan.model;
 
 import java.io.Serializable;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -20,7 +19,7 @@ public class Estadisticas implements Serializable {
 	private String usuarioId;
 	
 	@MapsId
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne
 	@JoinColumn(name = "usuarioId")
 	private Usuario usuario;
 	
