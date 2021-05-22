@@ -106,7 +106,7 @@ public class ws {
         });
 
         // Player act
-       session.subscribe( playerActUrl + UserService.getUsername(), new StompFrameHandler() {
+       session.subscribe(playerActUrl + UserService.getUsername(), new StompFrameHandler() {
             @Override
             public Type getPayloadType(StompHeaders headers) {
                 return String.class;
@@ -155,10 +155,6 @@ public class ws {
     }
 
     private static void handlePetition(String msgContent) {
-        JSONObject object = new JSONObject(msgContent);
-        String type = object.getString("type");
-        String from = object.getString("from");
-
         if(!MainMenu.chatOpenned) {
             Platform.runLater(new Runnable() {
                 @Override public void run() {
@@ -225,7 +221,6 @@ public class ws {
         JSONObject object = new JSONObject();
         object.put("nombre", UserService.getUsername());
         object.put("contrasenya", password);
-        System.out.println(object);
         session.send(borrarCuenta, object.toString());
     }
 

@@ -93,10 +93,11 @@ public class UserService {
         JSONObject response;
         try {
             response = netService.post(validateUrl, myObject.toString());
+            System.out.println(response);
         } catch(IOException e) {
             return false;
         }
-        if (!response.isNull("nombre") && response.isNull("bloqueado")) {
+        if (response != null && !response.isNull("nombre") && response.isNull("bloqueado")) {
             fillData(response);
             fillStatsData(getUserStats());
             return true;
@@ -205,6 +206,16 @@ public class UserService {
         JSONObject myObject;
         try {
             myObject = netService.get(estadisticasUrl + "/" + username);
+        } catch(Exception e) {
+            return null;
+        }
+        return myObject;
+    }
+
+    public static JSONObject getFriendStats(String friendName) {
+        JSONObject myObject;
+        try {
+            myObject = netService.get(estadisticasUrl + "/" + friendName);
         } catch(Exception e) {
             return null;
         }

@@ -364,6 +364,11 @@
     "write_psw": {
         "eng": "Introduce your password",
         "esp": "Introduzca su contraseña actual"
+    },
+
+    "reject": {
+        "eng": "Reject",
+        "esp": "Rechazar"
     }
 }
  

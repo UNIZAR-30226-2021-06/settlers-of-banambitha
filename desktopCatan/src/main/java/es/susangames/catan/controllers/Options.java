@@ -332,14 +332,18 @@ public class Options {
 
 
         //Botón para mostrar el cambio de idioma.
-        lang.setText("Español");
+        lang.setText(UserService.getIdioma());
+        
+        
         lang.setOnAction(e ->{
-            if ( lang.isSelected() ){
+            if (UserService.getIdioma().equals("Español")){
                 lang.setText("English"); 
                 LangService.changeLanguage(LangService.ENG);
+                UserService.updateUser(UserService.getUsername(),"idioma","English");
             }else{
                 lang.setText("Español"); 
                 LangService.changeLanguage(LangService.ESP);
+                UserService.updateUser(UserService.getUsername(),"idioma","Español");
             }
             victory.setText(LangService.getMapping("victory"));
             defeat.setText(LangService.getMapping("defeat"));
@@ -349,7 +353,10 @@ public class Options {
                                     UserService.getMayorRachaDeVictorias().toString());
             buttonChangeMail.setText((LangService.getMapping("delete")));
             buttonChangePsw.setText((LangService.getMapping("new_psw")));
-
+            MainMenu.updateStrings();
+            if(!MainMenu.chatOpenned) {
+                MainMenu.getFriends();
+            }
         });
 
 

@@ -62,14 +62,22 @@ public class MainMenu {
     @FXML
     private Button btnPlay; 
 
+    private static Button _btnPlay;
+
     @FXML
     private Button btnShop; 
+
+    private static Button _btnShop;
 
     @FXML
     private Button btnOpt; 
 
+    private static Button _btnOpt;
+ 
     @FXML
     private Button btnInst; 
+
+    private static Button _btnInst;
 
 
     @FXML
@@ -128,11 +136,11 @@ public class MainMenu {
      * Dependerá de donde se encuentre el botón para cambiar de idioma
      * (recargar la pantalla es otra opción).
      */
-    private void updateStrings(){
-        btnPlay.setText(LangService.getMapping("lobby_play"));
-        btnShop.setText(LangService.getMapping("lobby_shop"));
-        btnOpt.setText(LangService.getMapping("lobby_options"));
-        btnInst.setText(LangService.getMapping("lobby_instructions"));
+    public static  void updateStrings(){
+        _btnPlay.setText(LangService.getMapping("lobby_play"));
+        _btnShop.setText(LangService.getMapping("lobby_shop"));
+        _btnOpt.setText(LangService.getMapping("lobby_options"));
+        _btnInst.setText(LangService.getMapping("lobby_instructions"));
     }
 
 
@@ -341,8 +349,17 @@ public class MainMenu {
 
 
     private static void popUpFriendInfo(String username) {
+        JSONObject stats = UserService.getFriendStats(username);
+        Integer victorias = stats.getInt("totalDeVictorias");
+        Integer derrotas = stats.getInt("partidasJugadas") - victorias;
+        Integer rachaActual = stats.getInt("rachaDeVictoriasActual");
+        Integer rachaHistorica = stats.getInt("mayorRachaDeVictorias");
+
+        JSONObject info = UserService.getUserInfo(username);
+        String email = info.getString("email");
+        
         AnchorPane anchorPane = new AnchorPane();
-        anchorPane.setPrefSize(100, 100);
+        anchorPane.setPrefSize(350, 280);
         anchorPane.setStyle("-fx-background-color:  #414147f1;; -fx-background-radius: 12px" );
         _popupFriendInfo = new Popup();
         _popupFriendInfo.getContent().add(anchorPane);
@@ -351,12 +368,12 @@ public class MainMenu {
         // Titulo
         Text title = new Text(10, 50, username);
         title.setFont(new Font(25));
-        title.setLayoutX(anchorPane.getLayoutX());
+        title.setLayoutX(anchorPane.getLayoutX()+ 105);
         title.setLayoutY(anchorPane.getLayoutY() + 5);
         title.setFill(Color.WHITE);
         anchorPane.getChildren().add(title);
         
-        Text tofferPlayer = new Text(10, 50, "Email: " );
+        Text tofferPlayer = new Text(10, 50, "Email: " + email );
         tofferPlayer.setFont(new Font(20));
         tofferPlayer.setLayoutX(anchorPane.getLayoutX() + 10 );
         tofferPlayer.setLayoutY(anchorPane.getLayoutY() + 55);
@@ -365,23 +382,42 @@ public class MainMenu {
         
        
      
+        // Victorias
+        Text victory = new Text(10, 50,(LangService.getMapping("victory")) + ": " +
+                                victorias.toString());
+        victory.setFont(new Font(20));
+        victory.setLayoutX(anchorPane.getLayoutX()+ 10);
+        victory.setLayoutY(anchorPane.getLayoutY() + 95);
+        victory.setFill(Color.WHITE);
+        anchorPane.getChildren().add(victory);
         
-        // Arcilla
-        Text arcilla = new Text(10, 50, "Victorias:" );
-        arcilla.setFont(new Font(20));
-        arcilla.setLayoutX(anchorPane.getLayoutX()+ 10);
-        arcilla.setLayoutY(anchorPane.getLayoutY() + 85);
-        arcilla.setFill(Color.WHITE);
-        anchorPane.getChildren().add(arcilla);
         
-        
-        // Cereal
-        Text cereal = new Text(10, 50, "Derrotas: ");
-        cereal.setFont(new Font(20));
-        cereal.setLayoutX(anchorPane.getLayoutX()+ 10);
-        cereal.setLayoutY(anchorPane.getLayoutY() + 115);
-        cereal.setFill(Color.WHITE);
-        anchorPane.getChildren().add(cereal);
+        // Derrotas
+        Text defeat = new Text(10, 50, (LangService.getMapping("defeat")) + ": " +
+                                derrotas.toString());
+        defeat.setFont(new Font(20));
+        defeat.setLayoutX(anchorPane.getLayoutX()+ 10);
+        defeat.setLayoutY(anchorPane.getLayoutY() + 135);
+        defeat.setFill(Color.WHITE);
+        anchorPane.getChildren().add(defeat);
+
+        // Racha actual
+        Text actualStreak = new Text(10, 50, (LangService.getMapping("win_strike")) + " " +
+                                        rachaActual.toString());
+        actualStreak.setFont(new Font(20));
+        actualStreak.setLayoutX(anchorPane.getLayoutX() + 10);
+        actualStreak.setLayoutY(anchorPane.getLayoutY() + 175);
+        actualStreak.setFill(Color.WHITE);
+        anchorPane.getChildren().add(actualStreak);
+
+         // Racha historica
+         Text historicStreak = new Text(10, 50, (LangService.getMapping("historic_strike")) + " " +
+                                        rachaHistorica.toString());
+        historicStreak.setFont(new Font(20));
+        historicStreak.setLayoutX(anchorPane.getLayoutX() + 10);
+        historicStreak.setLayoutY(anchorPane.getLayoutY() + 215);
+        historicStreak.setFill(Color.WHITE);
+        anchorPane.getChildren().add(historicStreak);
         
        
     }
@@ -501,7 +537,7 @@ public class MainMenu {
          declineButton.setLayoutX(anchorPane.getLayoutX() + 120);
          declineButton.setLayoutY(anchorPane.getLayoutY() + 105);
          declineButton.setStyle("-fx-background-color: #c7956d; -fx-background-radius: 12px");
-         declineButton.setText(LangService.getMapping("accept_friend"));
+         declineButton.setText(LangService.getMapping("reject"));
          declineButton.setEffect(shadow);
  
          declineButton.setOnAction((ActionEvent event) -> {
@@ -556,11 +592,15 @@ public class MainMenu {
      */
     @FXML
     public void initialize(){
-        
-        updateStrings();
         _numberCoins = numberCoins;
         _playerList = playerList;
         _userImg = userImg;
+        _btnPlay = btnPlay;
+        _btnShop = btnShop;
+        _btnOpt = btnOpt;
+        _btnInst = btnInst;
+        updateStrings();
+
         _playerList.getStylesheets().add("/css/shop.css"); 
 
         mainMenuBP.prefHeightProperty().bind(mainMenu.heightProperty());
