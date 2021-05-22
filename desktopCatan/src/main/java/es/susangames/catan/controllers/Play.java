@@ -32,7 +32,7 @@ import org.springframework.web.socket.sockjs.client.SockJsClient;
 import org.springframework.web.socket.sockjs.client.Transport;
 import org.springframework.web.socket.sockjs.client.WebSocketTransport;
 import java.lang.reflect.Type;
-
+import es.susangames.catan.service.ShopService;
 
 public class Play {
  
@@ -43,8 +43,6 @@ public class Play {
     private ChoiceBox<String> skinSelector;
 
     @FXML
-    private ChoiceBox<String> typeGameSelector;
-
     private Button exitRoom;
 
     @FXML
@@ -103,7 +101,6 @@ public class Play {
         _player4Icon = player4Icon;
 
         skinSelector = new ChoiceBox<>();
-        typeGameSelector = new ChoiceBox<>();
     }
     
     @FXML
@@ -123,18 +120,31 @@ public class Play {
         if (!RoomServices.soyLider()) {
             playButton.setDisable(true);
         }
-
-        skinSelector.getItems().add((LangService.getMapping("play_skin_space")));
-        skinSelector.getItems().add("Normal");
-        skinSelector.getItems().add((LangService.getMapping("play_skin_computer")));
-        skinSelector.setValue("Normal");
-        if (!RoomServices.soyLider()) {
-            skinSelector.setDisable(true);
+        JSONArray productosJug = ShopService.obtenerProductosAdquiridos();
+        JSONObject producto;
+        ArrayList<String> list_skins_table = new ArrayList<String>();
+        for (int i = 0; i < productosJug.length(); ++i) {
+            producto = productosJug.getJSONObject(i);
+            if (producto.getString("tipo").equals("APARIENCIA")) {
+                list_skins_table.add(producto.getString("nombre"));
+            }
         }
 
-        typeGameSelector.getItems().add((LangService.getMapping("play_game_public")));
-        typeGameSelector.getItems().add((LangService.getMapping("play_game_private")));
-        typeGameSelector.setValue((LangService.getMapping("play_game_public")));
+        for (String skin : list_skins_table) {
+            if (skin.equals("Clasica")) {
+                skinSelector.getItems().add("Normal");
+                skinSelector.setValue("Normal");
+            } else if (skin.equals("Espacial")) {
+                skinSelector.getItems().add((LangService.getMapping("play_skin_space")));
+            } else if (skin.equals("Hardware")) {
+                skinSelector.getItems().add((LangService.getMapping("play_skin_computer")));
+            }
+        }
+        /*if (!RoomServices.soyLider()) {
+            skinSelector.setDisable(true);
+        }*/
+
+        salirSala();
 
         String users[] = RoomServices.room.toArrayStrings();
         if(users.length  > 0) {
@@ -247,12 +257,30 @@ public class Play {
     @FXML
     void loadGameplay(ActionEvent event)  throws IOException {
         //Ejemplo para comprobar que se guardan la cfg de busqueda
-        System.out.println(typeGameSelector.getValue());
         System.out.println(skinSelector.getValue());
         // Buscar partida
         System.out.println("___________Pulsacion___________");
         RoomServices.buscarPartida();
         // Cancelar
+        cancelarBusqueda();
+    }
+
+    void salirSala () {
+        exitRoom.setText(LangService.getMapping("exit_room"));
+        exitRoom.setOnAction((ActionEvent event_add) -> {
+            System.out.println("Abandonando la sala...");
+            ws.abandonarSala(true);
+        });
+    }
+
+    void cancelarBusqueda () {
+        // cancel_searching
+        exitRoom.setText(LangService.getMapping("cancel_searching"));
+        exitRoom.setOnAction((ActionEvent event_add) -> {
+            System.out.println("Cancelar busqueda");
+            RoomServices.cancelarBusqueda();
+            salirSala();
+        });
     }
    
 }

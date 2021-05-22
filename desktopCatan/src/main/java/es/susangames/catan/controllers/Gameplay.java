@@ -62,6 +62,8 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BackgroundImage;
 import javafx.application.Platform;
 import java.util.Timer;
+import org.springframework.messaging.simp.stomp.StompSession.Subscription;
+import es.susangames.catan.service.RoomServices;
 
 
 public class Gameplay {
@@ -413,6 +415,11 @@ public class Gameplay {
     private static Integer posRoad;
     private static Integer posSettle;
     private static Integer idPuerto;
+
+    // Subscriptions
+    private static Subscription partida_act_topic_id;
+    private static Subscription partida_chat_topic_id;
+    private static Subscription partida_com_topic_id;
     
     
     public Gameplay() {
@@ -502,6 +509,7 @@ public class Gameplay {
     private static void subscribeToTopics() {
         if(Partida.id != null) {
             //Suscripción a los mensajes de la partida (acciones de los jugadores)
+            partida_act_topic_id = 
             ws.session.subscribe( ws.partida_act_topic  + Partida.id, new StompFrameHandler() {
                 @Override
                 public Type getPayloadType(StompHeaders headers) {
@@ -513,6 +521,7 @@ public class Gameplay {
                 }
             });
             //Suscripción al chat de la partida
+            partida_chat_topic_id = 
             ws.session.subscribe( ws.partida_chat_topic  + Partida.id, new StompFrameHandler() {
                 @Override
                 public Type getPayloadType(StompHeaders headers) {
@@ -525,6 +534,7 @@ public class Gameplay {
             });
 
             //Suscripción a las peticiones de comercio
+            partida_com_topic_id = 
             ws.session.subscribe( ws.partida_com_topic  + Partida.id + "/" + 
                                 Partida.miTurno, new StompFrameHandler() {
                 @Override
@@ -539,6 +549,14 @@ public class Gameplay {
 
         }
         
+    }
+
+    private static void unsubscribeToTopic () {
+        if (Partida.id != null) {
+            partida_act_topic_id.unsubscribe();
+            partida_chat_topic_id.unsubscribe();
+            partida_com_topic_id.unsubscribe();
+        }
     }
 
     private static void procesarMnesajeChat(String mensaje) {
@@ -618,6 +636,9 @@ public class Gameplay {
         mostrarCambiosTablero();
         if(existeGanador(mensaje)) { 
             // TODO: Fin partida
+            // Desubscripcion peticiones partida.
+            unsubscribeToTopic();
+            RoomServices.crearSala();
             try {
                 App.nuevaPantalla("/view/mainMenu.fxml");
             } catch (IOException e) {
@@ -693,7 +714,7 @@ public class Gameplay {
 
     private static void actualizarPartida(String partida) throws Exception {
         JSONObject object = new JSONObject(partida);
-        System.out.println(object.toString(4));
+        System.out.println(partida);
 
         if(!object.get(MessageKeys.CLOCK).equals(null) &&
             object.getInt(MessageKeys.CLOCK) > Partida.clock) {
@@ -705,7 +726,7 @@ public class Gameplay {
 
                 // Nombre y miTurno
                 try {
-                    if(!object.get(MessageKeys.PLAYER_NAMES).equals(null)) {
+                    if(object.has(MessageKeys.PLAYER_NAMES)) {
                         JSONArray nombresJugadores = object.getJSONArray(MessageKeys.PLAYER_NAMES);
                         for (int i = 0; i < nombresJugadores.length(); i++) {
                             Partida.jugadores[i].nombre = nombresJugadores.getString(i);
@@ -716,6 +737,7 @@ public class Gameplay {
                     }
                 } catch(Exception e) {
                     System.err.println("Faltan los nombres de los jugadores");
+                    System.err.println(e.toString());
                 }
                  
                 // Turno jugador
@@ -726,6 +748,7 @@ public class Gameplay {
                     } 
                 } catch(Exception e) {
                     System.err.println("Falta el turno de la jugada");
+                    System.err.println(e.toString());
                 }
                
                 // Turno acumulado
@@ -735,6 +758,7 @@ public class Gameplay {
                     }
                 } catch(Exception e) {
                     System.err.println("Faltan los turnos totales");
+                    System.err.println(e.toString());
                 }
                  
                 //Resultado tirada
@@ -744,6 +768,7 @@ public class Gameplay {
                     }
                 } catch(Exception e) {
                     System.err.println("Falta el resultado de la tirada");
+                    System.err.println(e.toString());
                 }
             
                 //Tablero
@@ -754,6 +779,7 @@ public class Gameplay {
                     }
                 } catch(Exception e) {
                     System.err.println("Falta la información del tablero");
+                    System.err.println(e.toString());
                 }   
                  
                 // TODO: Falta terminar y editar parte visual en el tablero
@@ -768,6 +794,7 @@ public class Gameplay {
                     }
                 } catch(Exception e) {
                     System.err.println("Faltan los primeros asentamientos");
+                    System.err.println(e.toString());
                 }
                 // Primeros caminos
                 try {
@@ -778,6 +805,7 @@ public class Gameplay {
                     }
                 } catch(Exception e) {
                     System.err.println("Faltan los primeros caminos");
+                    System.err.println(e.toString());
                 }
 
                 //Pre-calculos
@@ -925,6 +953,7 @@ public class Gameplay {
 
 
     private static void actualizarTablero(JSONObject tablero) {
+        System.out.println(tablero);
         // Hexagonos
         try {
             if(!tablero.get(MessageKeys.TAB_INFO_HEXAGONOS).equals(null)) {
@@ -941,6 +970,7 @@ public class Gameplay {
             }
         } catch (Exception e) {
             System.err.println("Faltan los vértices en el mensaje");
+            System.err.println(e.toString());
         }
        
         // Aristas
@@ -951,6 +981,7 @@ public class Gameplay {
             } 
         } catch (Exception e) {
             System.err.println("Faltan las aristas en el mensaje");
+            System.err.println(e.toString());
         }      
     }
 

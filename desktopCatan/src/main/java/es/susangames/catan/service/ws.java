@@ -42,6 +42,7 @@ public class ws {
     public static Map<String,ArrayList<JSONObject>> msgs;
     private static final String appPrefix = "/app";
     private static final String  wsUrl = "http://localhost:8080/catan-stomp-ws-ep";
+    //private static final String  wsUrl = "https://catan-backend-app.herokuapp.com/catan-stomp-ws-ep";
     private static final String chatUrl = "/chat/";
     private static final String newFriendReqUrl = "/peticion/";
     private static final String sendFriendRequestUrl = "/app/enviar/peticion";
@@ -77,7 +78,7 @@ public class ws {
     public static final String partida_chat_topic = "/partida-chat/";
     public static final String partida_com_topic = "/partida-com/";
     public static final String partida_test_topicUrl = "/test-partida/";
-    public static final String  partidaJugada = "/app/partida/jugada";
+    public static final String partidaJugada = "/app/partida/jugada";
     
 
 
@@ -266,6 +267,7 @@ public class ws {
     }
 
     public static void SubscribeSalaAct () {
+        System.out.println("subscripcion:" + salaActRequestUrl + RoomServices.room.getId());
         sala_act_topic_id = session.subscribe(salaActRequestUrl + RoomServices.room.getId(), new StompFrameHandler () {
             @Override
             public Type getPayloadType(StompHeaders headers) {
@@ -292,10 +294,16 @@ public class ws {
                         RoomServices.procesarMensajeCreacionSala(payload);
                     }
                     break;
-                case "CLOSE":
+                case "CLOSED":
                     //El líder ha cerrado la sala
                     RoomServices.liderCerroSala = true;
                     sala_act_topic_id.unsubscribe();
+                    RoomServices.room = null;
+                    RoomServices.crearSala();
+                    System.out.println("creando sala...");
+                    if(MainMenu.playOpenned) {
+                        Play.recargarSalaPartida();
+                    }
                     break;
                 case "SEARCHING":
                     //Ha iniciado la búsqueda de partida
@@ -399,6 +407,7 @@ public class ws {
             myObject.put("leader", RoomServices.room.getLeader());
             myObject.put("room", RoomServices.room.getId());
             myObject.put("player", UserService.getUsername());
+            System.out.println(myObject.toString(4));
             session.send(salaAbandonar, myObject.toString());
             sala_act_topic_id.unsubscribe();
             RoomServices.buscandoPartida = false;
@@ -407,6 +416,8 @@ public class ws {
             if ( crearSala ){
                 RoomServices.crearSala();
             }   
+        } else if (RoomServices.room != null && RoomServices.soyLider()) {
+            cerrarSala(crearSala);
         }
     }
     

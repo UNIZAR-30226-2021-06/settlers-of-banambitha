@@ -315,14 +315,14 @@
                            </HBox.margin>
                         </Button>
                         <Region HBox.hgrow="ALWAYS" />
-                        <ChoiceBox fx:id="typeGameSelector" style="-fx-background-color: #965d62; -fx-background-radius: 12px;" HBox.hgrow="ALWAYS">
+                        <Button fx:id="exitRoom" style="-fx-background-color: #965d62; -fx-background-radius: 12px;" HBox.hgrow="ALWAYS">
                            <effect>
                               <DropShadow />
                            </effect>
                            <HBox.margin>
                               <Insets />
                            </HBox.margin>
-                        </ChoiceBox>
+                        </Button>
                         <Region HBox.hgrow="ALWAYS" />
                      </children>
                      <VBox.margin>

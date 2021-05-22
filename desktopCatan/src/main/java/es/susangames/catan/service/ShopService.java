@@ -8,6 +8,7 @@ import java.io.IOException;
 public class ShopService {
     private static HttpService netService;
     private static final String baseUrl = "http://localhost:8080/producto";
+    //private static final String baseUrl = "https://catan-backend-app.herokuapp.com/producto";
     private static final String adquiridosUrl = baseUrl + "/adquiridos";
     private static final String adquirirUrl = baseUrl + "/adquirir";
     private static final String disponiblesUrl = baseUrl + "/disponibles";
@@ -16,7 +17,7 @@ public class ShopService {
         netService = new HttpService();
     }
 
-   public JSONArray obtenerProductosDisponibles() {
+   public static JSONArray obtenerProductosDisponibles() {
     JSONArray response;
         try {
             response = netService.getArr(disponiblesUrl + "/" + UserService.getUsername());
@@ -26,7 +27,7 @@ public class ShopService {
         return response;
     }
 
-    public void  adquirirProducto(String id_producto) {
+    public static void adquirirProducto(String id_producto) {
         JSONObject myObject = new JSONObject();
         myObject.put("usuario_id", UserService.getUsername());
         myObject.put("producto_id", id_producto);
@@ -41,7 +42,7 @@ public class ShopService {
     }
 
 
-    public JSONArray obtenerProductosAdquiridos() {
+    public static JSONArray obtenerProductosAdquiridos() {
         JSONArray response;
         try {
             response = netService.getArr(adquiridosUrl + "/" + UserService.getUsername());

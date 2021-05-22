@@ -212,6 +212,16 @@
         "esp": "Denegar"
     },
 
+    "exit_room": {
+        "eng": "Leave the room",
+        "esp": "Salir de la sala"
+    },
+
+    "cancel_searching": {
+        "eng": "Cancel searching",
+        "esp": "Cancelar la busqueda"
+    },
+
     "accept_friend": {
         "eng": "Add",
         "esp": "Añadir"

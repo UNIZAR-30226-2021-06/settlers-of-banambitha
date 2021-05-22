@@ -191,32 +191,31 @@ public class SalaController {
 		synchronized (salas) {
 			
 			Sala sala = salas.remove(salaId);
-			
 			existente = sala!=null && sala.getLeader().contentEquals(liderId) && sala.eliminarJugador(jugador);
-				
+
 			if(!existente) {
-				
+
 				sala = cola.desencolar(salaId);
 				
 				existente = sala!=null && sala.getLeader().contentEquals(liderId) && sala.eliminarJugador(jugador);
 			}
 			
 			if(existente) {
-				
+
 				salas.put(salaId, sala);
 				
 				actualizacion.put("status", "UPDATED-PLAYERS");
 				JSONArray players = new JSONArray(sala.getPlayers());
 				actualizacion.put("players", players);
-				
-				template.convertAndSend(WebSocketConfig.TOPIC_SALA_ACT + "/" + salaId, actualizacion);
+
+				template.convertAndSend(WebSocketConfig.TOPIC_SALA_ACT + "/" + salaId, actualizacion.toString());
 				
 				invitacion.put("status", "OPEN");
 				invitacion.put("leader", liderId);
 				invitacion.put("room", salaId);
 				
 				for(String invitado : sala.getInvites()) {
-					template.convertAndSend(WebSocketConfig.TOPIC_INVITACION + "/" + invitado, invitacion);
+					template.convertAndSend(WebSocketConfig.TOPIC_INVITACION + "/" + invitado, invitacion.toString());
 				}
 			}
 		}	

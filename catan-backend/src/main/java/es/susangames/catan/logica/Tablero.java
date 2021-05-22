@@ -1477,7 +1477,9 @@ public class Tablero {
 		int pVJ2 = this.j[1].getPuntosVictoria();
 		int pVJ3 = this.j[2].getPuntosVictoria();
 		int pVJ4 = this.j[3].getPuntosVictoria();
-		return pVJ1 >= 10 || pVJ2 >= 10 || pVJ3 >= 10 || pVJ4 >= 10;
+		//TODO:CAMBIAR PUNTOS PARA GANADOR
+		//return pVJ1 >= 10 || pVJ2 >= 10 || pVJ3 >= 10 || pVJ4 >= 10;
+		return pVJ1 >= 4 || pVJ2 >= 4 || pVJ3 >= 4 || pVJ4 >= 4;
 	}
 
 	public Integer ganador () {
@@ -1486,10 +1488,10 @@ public class Tablero {
 			int pVJ2 = this.j[1].getPuntosVictoria();
 			int pVJ3 = this.j[2].getPuntosVictoria();
 			int pVJ4 = this.j[3].getPuntosVictoria();
-			if (pVJ1 >= 10) return 1;
-			else if (pVJ2 >= 10) return 2;
-			else if (pVJ3 >= 10) return 3;
-			else if (pVJ4 >= 10) return 4;
+			if (pVJ1 >= 4) return 1;
+			else if (pVJ2 >= 4) return 2;
+			else if (pVJ3 >= 4) return 3;
+			else if (pVJ4 >= 4) return 4;
 			else return -1;
 		}
 		else return null;
