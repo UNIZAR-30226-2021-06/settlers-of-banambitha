@@ -1,33 +1,86 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="858.0" prefWidth="1388.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="es.susangames.catan.controllers.InstructionsBasics">
+
+<StackPane xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="es.susangames.catan.controllers.InstructionsBasics">
    <children>
-      <AnchorPane layoutX="510.0" layoutY="55.0" prefHeight="95.0" prefWidth="369.0" style="-fx-background-radius: 12px; -fx-background-color: #965d62;">
+      <AnchorPane>
          <children>
-            <Text fx:id="menuText" fill="WHITE" layoutX="58.0" layoutY="55.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="253.0390625">
-               <font>
-                  <Font size="24.0" />
-               </font>
-            </Text>
-         </children>
-      </AnchorPane>
-      <AnchorPane layoutX="20.0" layoutY="177.0" prefHeight="662.0" prefWidth="1345.0" style="-fx-background-radius: 12px; -fx-background-color: #965d62;" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="177.0">
-         <children>
-            <Text fx:id="textContent" fill="WHITE" layoutX="14.0" layoutY="30.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="JUSTIFY" wrappingWidth="1332.0">
-               <font>
-                  <Font name="System Bold Italic" size="19.0" />
-               </font>
-            </Text>
-            <Text fx:id="textContent2" fill="WHITE" layoutX="14.0" layoutY="337.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="JUSTIFY" wrappingWidth="1332.0">
-               <font>
-                  <Font name="System Bold Italic" size="19.0" />
-               </font>
-            </Text>
+            <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <children>
+                  <Region />
+                  <HBox prefHeight="100.0" prefWidth="200.0">
+                     <VBox.margin>
+                        <Insets top="5.0" />
+                     </VBox.margin>
+                     <children>
+                        <Region HBox.hgrow="ALWAYS" />
+                        <AnchorPane style="-fx-background-radius: 12px; -fx-background-color: #965d62;">
+                           <children>
+                              <HBox prefHeight="100.0" prefWidth="312.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                 <children>
+                                    <Region HBox.hgrow="ALWAYS" />
+                                    <Text fx:id="menuText" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="253.0390625">
+                                       <font>
+                                          <Font size="24.0" />
+                                       </font>
+                                       <HBox.margin>
+                                          <Insets top="25.0" />
+                                       </HBox.margin>
+                                    </Text>
+                                    <Region HBox.hgrow="ALWAYS" />
+                                 </children>
+                              </HBox>
+                           </children>
+                        </AnchorPane>
+                        <Region HBox.hgrow="ALWAYS" />
+                     </children>
+                  </HBox>
+                  <Region />
+                  <HBox prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <Region HBox.hgrow="ALWAYS" />
+                        <AnchorPane style="-fx-background-radius: 12px; -fx-background-color: #965d62;">
+                           <children>
+                              <HBox prefHeight="343.0" prefWidth="1346.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                 <children>
+                                    <Region HBox.hgrow="ALWAYS" />
+                                    <VBox prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
+                                       <children>
+                                          <HBox VBox.vgrow="ALWAYS">
+                                             <children>
+                                                <Region HBox.hgrow="ALWAYS" />
+                                                <Region />
+                                             </children>
+                                          </HBox>
+                                          <Region VBox.vgrow="ALWAYS" />
+                                       </children>
+                                    </VBox>
+                                    <Region HBox.hgrow="ALWAYS" />
+                                 </children>
+                              </HBox>
+                           </children>
+                           <HBox.margin>
+                              <Insets bottom="5.0" left="5.0" right="5.0" />
+                           </HBox.margin>
+                        </AnchorPane>
+                        <Region HBox.hgrow="ALWAYS" />
+                     </children>
+                     <VBox.margin>
+                        <Insets top="25.0" />
+                     </VBox.margin>
+                  </HBox>
+               </children>
+            </VBox>
          </children>
       </AnchorPane>
    </children>
-</AnchorPane>
+</StackPane>

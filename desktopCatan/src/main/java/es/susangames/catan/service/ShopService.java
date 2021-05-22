@@ -7,7 +7,8 @@ import java.io.IOException;
 //https://catan-backend-app.herokuapp.com/
 public class ShopService {
     private static HttpService netService;
-    private static final String baseUrl = "http://localhost:8080/producto";
+    private static final String productionURL = "https://catan-backend-app.herokuapp.com";
+    private static final String baseUrl = productionURL + "/producto";
     private static final String adquiridosUrl = baseUrl + "/adquiridos";
     private static final String adquirirUrl = baseUrl + "/adquirir";
     private static final String disponiblesUrl = baseUrl + "/disponibles";

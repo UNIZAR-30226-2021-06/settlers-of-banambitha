@@ -17,7 +17,7 @@
          <children>
             <VBox>
                <children>
-                  <AnchorPane style="-fx-background-color: #965d62; -fx-background-radius: 12px;">
+                  <AnchorPane style="-fx-background-color: #965d62; -fx-background-radius: 12px;" VBox.vgrow="ALWAYS">
                      <children>
                         <HBox>
                            <children>
@@ -51,7 +51,7 @@
                   </Region>
                   <HBox VBox.vgrow="ALWAYS">
                      <children>
-                        <VBox style="-fx-background-color: #665d64;">
+                        <VBox style="-fx-background-color: #665d64;" HBox.hgrow="ALWAYS">
                            <children>
                               <JFXButton fx:id="buttonBasics" onAction="#loadBasics" textAlignment="CENTER" textFill="WHITE" VBox.vgrow="ALWAYS">
                                  <font>

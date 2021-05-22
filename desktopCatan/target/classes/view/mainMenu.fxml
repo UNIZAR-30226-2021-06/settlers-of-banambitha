@@ -34,25 +34,15 @@
                </BorderPane.margin>
                <children>
                   <Circle fx:id="userImg" fill="DODGERBLUE" radius="38.0" stroke="BLACK" strokeType="INSIDE" AnchorPane.bottomAnchor="20.0" AnchorPane.rightAnchor="170.0" AnchorPane.topAnchor="30.0" />
-                  <Text fx:id="userName" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="88.0" AnchorPane.rightAnchor="80.0" AnchorPane.topAnchor="15.0">
+                  <Text fx:id="userName" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="152.0" AnchorPane.rightAnchor="16.0" AnchorPane.topAnchor="15.0">
                      <font>
                         <Font name="System Bold Italic" size="19.0" />
                      </font>
                   </Text>
                   <ImageView fx:id="goldImage" fitHeight="51.0" fitWidth="57.0" pickOnBounds="true" preserveRatio="true" AnchorPane.rightAnchor="95.0" AnchorPane.topAnchor="40.0" />
-                  <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="ELO: " AnchorPane.rightAnchor="95.0" AnchorPane.topAnchor="95.0">
-                     <font>
-                        <Font name="System Bold Italic" size="19.0" />
-                     </font>
-                  </Text>
                   <Text fx:id="numberCoins" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="8" wrappingWidth="62.0" AnchorPane.rightAnchor="1.0" AnchorPane.topAnchor="52.0">
                      <font>
                         <Font name="System Bold Italic" size="18.0" />
-                     </font>
-                  </Text>
-                  <Text fx:id="numberELO" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="56.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="95.0">
-                     <font>
-                        <Font name="System Bold Italic" size="19.0" />
                      </font>
                   </Text>
                   <ImageView fx:id="catanLogo" fitHeight="97.0" fitWidth="231.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="700.0" AnchorPane.topAnchor="10.0" />

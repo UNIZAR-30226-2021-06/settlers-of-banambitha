@@ -379,6 +379,18 @@ public class Gameplay {
     private static Button _turnPlayer;
 
     private static Text _knight_card;
+    
+    @FXML
+    private Button reportPLayer1;
+
+    @FXML
+    private Button reportPLayer2;
+
+    @FXML
+    private Button reportPLayer3;
+
+    @FXML
+    private Button reportPLayer4;
 
 
     // Elementos graficos adicionales
@@ -2187,13 +2199,13 @@ public class Gameplay {
             String name = offerPlayer.getValue();
             Integer player;
             if(name.equals(Partida.jugadores[0].nombre)) {
-                player = 1;
+                player = 0;
             } else if(name.equals(Partida.jugadores[1].nombre)) {
-                player = 2;
+                player = 1;
             } else if(name.equals(Partida.jugadores[2].nombre)) {
-                player = 3;
+                player = 2;
             } else {
-                player = 4;
+                player = 3;
             }
             final Integer arcilla_aux = Partida.jugadores[player].recursos.arcilla;
             final Integer madera_aux = Partida.jugadores[player].recursos.madera;
@@ -2767,7 +2779,32 @@ public class Gameplay {
             }
          });
          
+        reportPLayer1.setOnAction((ActionEvent event) -> {
+            // TODO: Reportar jugador
+         });
 
+        reportPLayer2.setOnAction((ActionEvent event) -> {
+            // TODO: Reportar jugador
+         });
+
+
+        reportPLayer3.setOnAction((ActionEvent event) -> {
+            // TODO: Reportar jugador
+         });
+
+        reportPLayer4.setOnAction((ActionEvent event) -> {
+            // TODO: Reportar jugador
+         });
+
+        reportPLayer1.setDisable(1 == Partida.miTurno);
+        reportPLayer2.setDisable(2 == Partida.miTurno);
+        reportPLayer3.setDisable(3 == Partida.miTurno);
+        reportPLayer4.setDisable(4 == Partida.miTurno);
+        
+        reportPLayer1.setText(LangService.getMapping("report"));
+        reportPLayer2.setText(LangService.getMapping("report"));
+        reportPLayer3.setText(LangService.getMapping("report"));
+        reportPLayer4.setText(LangService.getMapping("report"));
 
         chatContent.setEditable(false);
         chatContent.setMouseTransparent(true);

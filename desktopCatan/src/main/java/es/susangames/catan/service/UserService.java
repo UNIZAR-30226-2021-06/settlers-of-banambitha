@@ -8,15 +8,20 @@ import java.util.regex.Pattern;
 //https://catan-backend-app.herokuapp.com/
 public class UserService {
     private static HttpService netService;
-    private static final String baseUrl = "http://localhost:8080/usuario";
+    private static final String productionURL = "https://catan-backend-app.herokuapp.com";
+    private static final String baseUrl = productionURL + "/usuario";
     private static final String addUrl = baseUrl + "/add";
     private static final String validateUrl = baseUrl + "/validate";
     private static final String updateUrl = baseUrl + "/update";
     private static final String findUrl = baseUrl + "/find";
-    private static final String baseFriendUrl = "http://localhost:8080/amigo";
+    private static final String baseFriendUrl = productionURL + "/amigo";
     private static final String friendsListUrl = baseFriendUrl + "/list";
     private static final String pendigReqUrl = baseFriendUrl + "/pending-r";
+    private static final String estadisticasUrl = baseUrl + "/stats";
+    private static final String newPasswordUrl = baseUrl + "/new-password";
 
+
+    // Informacion basica
     private static String username;
     private static String mail;
     private static String idioma;
@@ -24,9 +29,17 @@ public class UserService {
     private static String apariencia;
     private static Integer saldo;
     private static String partida;
+
+    // Estadisticas
+    private static Integer totalDeVictorias;
+    private static Integer partidasJugadas;
+    private static Integer rachaDeVictoriasActual;
+    private static Integer mayorRachaDeVictorias;
+    
+    // Regex comprobaciones register
     private static String regexPassword = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,32}$";
     private static String regexEmail = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$";
-    private static String regexName = "^[a-zA-Z0-9]$";
+    private static String regexName = "^[a-zA-Z0-9_-]{5,}$";
     
     public UserService() {
         netService = new HttpService();
@@ -57,6 +70,22 @@ public class UserService {
         return partida;
     }
 
+    public static Integer getTotalDeVictorias() {
+        return totalDeVictorias;
+    }
+
+    public static Integer getPartidasJugadas() {
+        return partidasJugadas;
+    }
+
+    public static Integer getRachaDeVictoriasActual() {
+        return rachaDeVictoriasActual;
+    }
+
+    public static Integer getMayorRachaDeVictorias() {
+        return mayorRachaDeVictorias;
+    }
+
     public static Boolean validate(String name, String pass) {
         JSONObject myObject = new JSONObject();
         myObject.put("nombre", name);
@@ -67,8 +96,9 @@ public class UserService {
         } catch(IOException e) {
             return false;
         }
-        if (response.get("nombre").toString() != "null") {
+        if (!response.isNull("nombre") && response.isNull("bloqueado")) {
             fillData(response);
+            fillStatsData(getUserStats());
             return true;
         } else {
             return false;
@@ -85,10 +115,10 @@ public class UserService {
         return (!response.has("error"));
     }
 
-    /* Pattern.matches(regexName, name)*/
+    /* */
     public static Boolean register(String name, String mail, String pass) {
         if(Pattern.matches(regexEmail, mail) && Pattern.matches(regexPassword, pass) 
-          && name.length() > 4) {
+          && Pattern.matches(regexName, name)) {
             JSONObject myObject = new JSONObject();
             myObject.put("nombre", name);
             myObject.put("email", mail);
@@ -97,6 +127,7 @@ public class UserService {
             try {
                 response = netService.post(addUrl, myObject.toString());
             } catch(IOException e) {
+                System.out.println("Error al registrar el usuario");
                 return false;
             }   
             return (!response.has("error"));
@@ -168,5 +199,42 @@ public class UserService {
             return null;
         }
         return response;
+    }
+
+    public static JSONObject getUserStats() {
+        JSONObject myObject;
+        try {
+            myObject = netService.get(estadisticasUrl + "/" + username);
+        } catch(Exception e) {
+            return null;
+        }
+        return myObject;
+    }
+
+    private static void fillStatsData( JSONObject stats) {
+        totalDeVictorias = stats.getInt("totalDeVictorias");
+        partidasJugadas = stats.getInt("partidasJugadas");
+        rachaDeVictoriasActual = stats.getInt("rachaDeVictoriasActual");
+        mayorRachaDeVictorias = stats.getInt("mayorRachaDeVictorias");
+    }
+
+    public static Boolean passwordMatches(String password) {
+        return Pattern.matches(regexPassword, password);
+    }
+
+    public static Boolean changePassword(String oldPassword, String newPassword)  {
+        JSONObject myObject = new JSONObject();
+        myObject.put("userId", username);
+        myObject.put("oldPassw", oldPassword);
+        myObject.put("newPassw", newPassword);
+        String response;
+        JSONObject myObjectResponse;
+        try {
+            response = netService.put(newPasswordUrl, myObject.toString());
+            myObjectResponse = new JSONObject(response);
+        } catch(Exception e) {
+            return false;
+        }
+        return !myObjectResponse.isNull("nombre");
     }
 }

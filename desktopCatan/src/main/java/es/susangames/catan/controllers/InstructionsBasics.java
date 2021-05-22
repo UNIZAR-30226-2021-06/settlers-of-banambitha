@@ -24,8 +24,8 @@ public class InstructionsBasics {
 
     @FXML
     public void initialize() {
-        textContent.setText((LangService.getMapping("instructions_basics_info_paragraph1")));
-        textContent2.setText((LangService.getMapping("instructions_basics_info_paragraph2")));
+        //textContent.setText((LangService.getMapping("instructions_basics_info_paragraph1")));
+        //textContent2.setText((LangService.getMapping("instructions_basics_info_paragraph2")));
         menuText.setText((LangService.getMapping("instructions_basics")));
     } 
 

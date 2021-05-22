@@ -86,8 +86,7 @@ public class MainMenu {
     @FXML
     private Text numberCoins;
 
-    @FXML
-    private Text numberELO;
+
 
     @FXML
     private Text userName;
@@ -580,7 +579,6 @@ public class MainMenu {
         // Actualizar informacion del
         userName.setText(UserService.getUsername());
         numberCoins.setText(UserService.getSaldo().toString());
-        numberELO.setText("835");
         catanLogo.setImage(catanLog);
 
        
