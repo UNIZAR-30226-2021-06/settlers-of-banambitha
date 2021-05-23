@@ -610,7 +610,6 @@ public class MainMenu {
         _btnOpt = btnOpt;
         _btnInst = btnInst;
         updateStrings();
-
         _playerList.getStylesheets().add("/css/shop.css"); 
 
         mainMenuBP.prefHeightProperty().bind(mainMenu.heightProperty());
@@ -619,9 +618,10 @@ public class MainMenu {
         mainMenuBP.setLeft(null);
         mainMenuBP.setStyle("-fx-background-color: #534e52");
 
+
         goldImage.setImage(goldImg);
         userImg.setFill(new ImagePattern(new Image(UserService.getUserImg(UserService.getUsername()))));
-        
+
         //TODO: Cargar amigos. (Ejemplo de prueba)
         getFriends();
 
@@ -656,7 +656,9 @@ public class MainMenu {
 
         loadScene("/view/shop.fxml", btnPlay);
 
+
         ws.initialize();
+
     }
 
 

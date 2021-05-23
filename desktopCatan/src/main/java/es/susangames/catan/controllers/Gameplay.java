@@ -663,11 +663,19 @@ public class Gameplay {
 
     private static void unsubscribeToTopic () {
         if (Partida.id != null) {
+            System.out.println("1-11111");
             partida_act_topic_id.unsubscribe();
+            System.out.println("1-22222");
             partida_chat_topic_id.unsubscribe();
+            System.out.println("1-33333");
             partida_com_topic_id.unsubscribe();
-            partida_reload_topic_id.unsubscribe();
-            //partida_usuaio_act_topic_id.unsubscribe();
+            System.out.println("1-44444");
+            if(partida_reload_topic_id != null) {
+                partida_reload_topic_id.unsubscribe();
+                System.out.println("1-555555");
+            }
+            partida_usuaio_act_topic_id.unsubscribe();
+            System.out.println("1-666666");
         }
     }
 
@@ -779,12 +787,13 @@ public class Gameplay {
             unsubscribeToTopic();
             RoomServices.crearSala();
             try {
+                JSONObject object = UserService.getUserInfo(UserService.getUsername());
+                UserService.fillData(object);
                 App.nuevaPantalla("/view/mainMenu.fxml");
             } catch (IOException e) {
                 System.err.println("Exception e: " + e.toString());
             }
-        } 
-        
+        }    
     }
 
     private static Boolean existeGanador(String mensaje) {
