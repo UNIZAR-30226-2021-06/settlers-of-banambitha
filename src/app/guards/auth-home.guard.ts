@@ -15,15 +15,11 @@ export class AuthHomeGuard implements CanActivate {
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-<<<<<<< HEAD
-        return this.userService.checkSession(this.router, false, this.gameService, this.wsService, this.roomService)
-=======
-      if ( this.userService.logedUser() ){
+      if ( this.userService.logedUser() && this.userService.partida == null && this.userService.bloqued == null){
         return true
       }else{ 
         return this.userService.checkSession(this.router, false, this.gameService, this.wsService)
       }
->>>>>>> parent of 18f141b (Corregido error al recargar partida)
   }
   
 }

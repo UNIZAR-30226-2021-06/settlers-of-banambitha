@@ -14,7 +14,7 @@ export class AuthBannedGuard implements CanActivate {
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-      if ( this.userService.bloqued != null ){
+      if ( this.userService.bloqued != null && this.userService.partida == null ){
         return true
       }else{ 
         return this.userService.checkBan(this.router, this.gameService, this.wsService)

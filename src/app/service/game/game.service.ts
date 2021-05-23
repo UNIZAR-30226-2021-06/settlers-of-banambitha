@@ -664,10 +664,14 @@ export class GameService implements Connectable{
 
       if (msg[MessageKeys.GANADOR] > 0) {
         //Finalizar la partida y mostrar estadísticas
-        this.roomService.crearSala()
-        this.router.navigate(["/home/profile"])
-        this.openWinnerSnackBar(msg[MessageKeys.GANADOR])
-        this.finalizarpartida()
+        if ( this.roomService != null ){
+          this.roomService.crearSala()
+        }
+        this.openWinnerSnackBar(msg[MessageKeys.GANADOR]); 
+        setTimeout( () => {
+          this.finalizarpartida()
+          this.router.navigate(["/home/profile"])
+        }, 2000)
       }
   }
 

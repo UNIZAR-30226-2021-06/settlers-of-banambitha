@@ -768,6 +768,11 @@
     "water": {
         "ESP": "Agua", 
         "ENG": "Water"
+    }, 
+
+    "unknown": {
+        "ESP": "Desconocido", 
+        "ENG": "Unknown"
     }
 
 }
