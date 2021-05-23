@@ -130,6 +130,12 @@ public class Gameplay {
         protected static String DECLINE = "DECLINE";
     }
 
+    protected static class  MsgReporteStatus {
+        protected static String REPORT_SENT = "REPORT_SENT"; 
+        protected static String REPORT_REJECTED = "REPORT_REJECTED";
+        protected static String REPORT_RECEIVED = "REPORT_RECEIVED";
+}
+
 
     protected static class Jugada {
         protected static String CONSTRUIR_POBLADO   = "construir poblado";
@@ -433,6 +439,7 @@ public class Gameplay {
     private static Subscription partida_chat_topic_id;
     private static Subscription partida_com_topic_id;
     private static Subscription partida_reload_topic_id;
+    private static Subscription partida_usuaio_act_topic_id;
     
     
     public Gameplay() {
@@ -523,7 +530,7 @@ public class Gameplay {
           } else{      
             System.out.println("no estabas en esa partida!");
         }
-
+        
     }
 
     public static Boolean comenzarPartida(String idPartida, String[] jugadores) {
@@ -637,6 +644,19 @@ public class Gameplay {
                 }
             });
 
+            partida_usuaio_act_topic_id = 
+            ws.session.subscribe( ws.usuario_act  + UserService.getUsername(),  
+                                new StompFrameHandler() {
+                @Override
+                public Type getPayloadType(StompHeaders headers) {
+                    return String.class;
+                }
+                @Override
+                public void handleFrame(StompHeaders headers, Object payload) {
+                    procesarMensajeReporte(payload.toString());
+                }
+            });
+
         }
         
     }
@@ -647,8 +667,31 @@ public class Gameplay {
             partida_chat_topic_id.unsubscribe();
             partida_com_topic_id.unsubscribe();
             partida_reload_topic_id.unsubscribe();
+            //partida_usuaio_act_topic_id.unsubscribe();
         }
     }
+
+    private static void procesarMensajeReporte(String mensaje) {
+        JSONObject object = new JSONObject(mensaje);
+        try {
+            if(object.getString("status").equals(MsgReporteStatus.REPORT_RECEIVED)) {
+                _chatContent.appendText("¡" + object.getString("player") + 
+                                        " te ha reportado!" + "\n");
+
+            } else if (object.getString("status").equals(MsgReporteStatus.REPORT_REJECTED)) {
+                _chatContent.appendText("¡No puedes reportar a " + object.getString("player") + 
+                                        " mas de una vez por partida!" + "\n");
+
+            } else if (object.getString("status").equals(MsgReporteStatus.REPORT_SENT)) {
+                _chatContent.appendText("¡Has reportado a " + object.getString("player") + 
+                                        "!" + "\n");
+            }
+
+        } catch (Exception e) {
+            System.out.println("Error procesando mensaje reporte");
+        }
+    }
+
 
     private static void procesarMnesajeChat(String mensaje) {
         JSONObject object = new JSONObject(mensaje);
@@ -929,6 +972,9 @@ public class Gameplay {
                 // TODO: Recibido codigo erroneo
                 _chatContent.appendText(object.getString(
                             MessageKeys.MENSAJE) + "\n");
+                if(object.getString(MessageKeys.MENSAJE).contains("ladron")) {
+                    Partida.movioLadron = false;
+                }
             }
         }
 
@@ -2921,6 +2967,13 @@ public class Gameplay {
        
     }
 
+    private static void reportarJugador(Integer playerId) {
+        JSONObject report = new JSONObject();
+        report.put("from", UserService.getUsername());
+        report.put("to", Partida.jugadores[playerId].nombre);
+        ws.session.send(ws.usuarioReportar, report.toString());
+    }
+
     @FXML
     public void initialize() throws IOException {
         System.out.println("Initialize");
@@ -2955,20 +3008,24 @@ public class Gameplay {
 
         System.out.println("Pass Turn Button");
         reportPLayer1.setOnAction((ActionEvent event) -> {
-            // TODO: Reportar jugador
+                reportarJugador(0);
+                reportPLayer1.setDisable(true);
          });
 
         reportPLayer2.setOnAction((ActionEvent event) -> {
-            // TODO: Reportar jugador
+                reportarJugador(1);
+                reportPLayer2.setDisable(true);
          });
 
 
         reportPLayer3.setOnAction((ActionEvent event) -> {
-            // TODO: Reportar jugador
+                reportarJugador(2);
+                reportPLayer3.setDisable(true);
          });
 
         reportPLayer4.setOnAction((ActionEvent event) -> {
-            // TODO: Reportar jugador
+                reportarJugador(3);
+                reportPLayer4.setDisable(true);
          });
 
         reportPLayer1.setDisable(1 == Partida.miTurno);
@@ -2987,15 +3044,10 @@ public class Gameplay {
         chatContent.setFocusTraversable(false);  
 
         resourcesPopUp();
-        System.out.println("resourcesPopUp");
         //buildSettlementPopUp();
-        System.out.println("buildSettlementPopUp");
         //buildRoadPopUp();
-        System.out.println("buildRoadPopUp");
         inTradePopUp();
-        System.out.println("inTradePopUp");
         //externalTradePopUp();
-        System.out.println("externalTradePopUp");
         updateDice();
         System.out.println("updateDice");
         settingsPopup();
