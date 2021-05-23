@@ -39,6 +39,8 @@ public class Play {
     @FXML
     private Button playButton;
 
+    private static Button _playButton;
+
     @FXML
     private ChoiceBox<String> skinSelector;
 
@@ -116,7 +118,9 @@ public class Play {
         _player3Icon = player3Icon;
         _player4Icon = player4Icon;
 
-        playButton.setText((LangService.getMapping("play_button")));
+        _playButton = playButton;
+
+        _playButton.setText((LangService.getMapping("play_button")));
         if (!RoomServices.soyLider()) {
             playButton.setDisable(true);
         }
@@ -197,6 +201,9 @@ public class Play {
     // TODO: ELIMINAR ESTA FUNCION.
     @FXML
     public static void recargarSalaPartida () {
+        if (!RoomServices.soyLider()) {
+            _playButton.setDisable(true);
+        }
         System.out.println("Intentando recargar la sala...");
         String users[] = RoomServices.room.toArrayStrings();
         System.out.println("Users length: " + users.length);

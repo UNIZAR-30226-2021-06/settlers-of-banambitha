@@ -439,12 +439,22 @@ public class ws {
     }
     
     public static void sendInvitation (String friend) {
-        JSONObject js = new JSONObject();
-        js.put("leader", RoomServices.room.getLeader());
-        js.put("room", RoomServices.room.getId());
-        js.put("invite", friend);
+        Boolean esJugador = false;
+        String jugadores[] = RoomServices.room.toArrayStrings();
+        for (int i = 0; i < jugadores.length && !esJugador
+            ; ++i) {
+                esJugador = jugadores[i] == friend;
+        }
+        if (RoomServices.room.getInvites().contains(friend)
+            || esJugador) {
+            JSONObject js = new JSONObject();
+            js.put("leader", RoomServices.room.getLeader());
+            js.put("room", RoomServices.room.getId());
+            js.put("invite", friend);
 
-        session.send(invitacionEnviar, js.toString());
+            session.send(invitacionEnviar, js.toString());
+        }
+        
     }
 
     public static void acceptMatchRequest(String friend, String room) {
