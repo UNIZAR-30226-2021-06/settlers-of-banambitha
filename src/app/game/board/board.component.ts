@@ -45,7 +45,6 @@ export class BoardComponent implements OnInit {
   }
 
   public getSkinUrl(tp: TipoTerreno): String{
-    console.log( BoardComponent.imageBaseUrl + "/" + this.userService.apariencia  + "/" + tp + ".jpg")
     return BoardComponent.imageBaseUrl + "/" + this.userService.apariencia  + "/" + tp + ".jpg"
   }
 
