@@ -1,21 +1,25 @@
 package es.susangames.catan.service;
 
+import es.susangames.catan.controllers.Gameplay;
+import es.susangames.catan.controllers.Login;
 import org.json.*;
 import java.io.IOException;
 import java.util.regex.Pattern;
+
+import javax.xml.crypto.Data;
 
 //http://localhost:8080/
 //https://catan-backend-app.herokuapp.com/
 public class UserService {
     private static HttpService netService;
-    private static final String baseUrl = "http://localhost:8080/usuario";
-    //private static final String baseUrl = "https://catan-backend-app.herokuapp.com/usuario";
+    //private static final String baseUrl = "http://localhost:8080/usuario";
+    private static final String baseUrl = "https://catan-backend-app.herokuapp.com/usuario";
     private static final String addUrl = baseUrl + "/add";
     private static final String validateUrl = baseUrl + "/validate";
     private static final String updateUrl = baseUrl + "/update";
     private static final String findUrl = baseUrl + "/find";
-    private static final String baseFriendUrl = "http://localhost:8080/amigo";
-    //private static final String baseFriendUrl = "https://catan-backend-app.herokuapp.com/amigo";
+    //private static final String baseFriendUrl = "http://localhost:8080/amigo";
+    private static final String baseFriendUrl = "https://catan-backend-app.herokuapp.com/amigo";
     private static final String friendsListUrl = baseFriendUrl + "/list";
     private static final String pendigReqUrl = baseFriendUrl + "/pending-r";
     private static final String estadisticasUrl = baseUrl + "/stats";
@@ -30,6 +34,7 @@ public class UserService {
     private static String apariencia;
     private static Integer saldo;
     private static String partida;
+    private static String bloqueado;
 
     // Estadisticas
     private static Integer totalDeVictorias;
@@ -87,6 +92,10 @@ public class UserService {
         return mayorRachaDeVictorias;
     }
 
+    public static String getBloqueado() {
+        return bloqueado;
+    }
+
     public static Boolean validate(String name, String pass) {
         JSONObject myObject = new JSONObject();
         myObject.put("nombre", name);
@@ -94,17 +103,27 @@ public class UserService {
         JSONObject response;
         try {
             response = netService.post(validateUrl, myObject.toString());
-            System.out.println(response);
         } catch(IOException e) {
             return false;
         }
-        if (response != null && !response.isNull("nombre") && response.isNull("bloqueado")) {
+        if (response != null && !response.isNull("nombre")) {
             fillData(response);
             fillStatsData(getUserStats());
+            System.out.println(partida);
+            if(partida != null) {
+                System.out.println("entraa");
+                Gameplay.reanudarPartida(partida);
+                return false;
+            } else if(bloqueado != null) {
+                Login.wrongLoginText("Su cuenta esta bloqueada hasta " + 
+                                      bloqueado + ", comportese mejor la proxima vez");                  
+                return false;
+            }
             return true;
-        } else {
-            return false;
-        }
+        } 
+        Login.wrongLoginText("Nombre o contraseña incorrectos");    
+        return false;
+        
     }
 
     public static Boolean userExists(String name) {
@@ -139,13 +158,28 @@ public class UserService {
     }
 
     public static void fillData(JSONObject data) {
+        System.out.println(data);
         username = data.get("nombre").toString();
         mail = data.get("email").toString();
         idioma = data.get("idioma").toString();
         avatar = data.get("avatar").toString();
         apariencia = data.get("apariencia").toString();
         saldo = Integer.parseInt(data.get("saldo").toString());
-        partida = data.get("partida").toString();
+        if(data.isNull("partida")) {
+            System.out.println("heyouu");
+            partida = null;
+        } else {
+            System.out.println("byeeee");
+            partida = data.get("partida").toString();
+        }
+
+        if(data.isNull("bloqueado")) {
+            bloqueado = null;
+        } else {
+            bloqueado = data.getString("bloqueado");
+        }
+        
+        
     }
 
     

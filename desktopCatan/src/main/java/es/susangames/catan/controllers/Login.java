@@ -5,17 +5,17 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-
 import javafx.event.ActionEvent;
-
 import java.io.IOException;
-
 import es.susangames.catan.App;
 
 public class Login {
  
     @FXML
     private Label wrongLogIn;
+
+    public static Label _wrongLogIn;
+
     @FXML
     private TextField email;
     @FXML
@@ -45,17 +45,23 @@ public class Login {
     
 
     private void comprobar_login() throws IOException {
-        if(UserService.validate(email.getText().toString(),password.getText().toString())) {
+        if(email.getText().isEmpty() ||  password.getText().isEmpty()) {
+            wrongLogIn.setText("Rellene los campos");
+        } else if(UserService.validate(email.getText().toString(),password.getText().toString())) {
+            System.out.println("NO deberia salir");
             App.nuevaPantalla("/view/mainMenu.fxml");
         }
+        System.out.println("falla");
+    }
+     
+    @FXML
+    public void initialize() throws IOException {
+        _wrongLogIn = wrongLogIn;
+    }
 
-        else if(email.getText().isEmpty() ||  password.getText().isEmpty()) {
-            wrongLogIn.setText("Rellene los campos");
-        }
-
-        else {
-            wrongLogIn.setText("Email o Contraseña incorrectos!");
-        }
+    @FXML
+    public static void wrongLoginText(String text)  {
+        _wrongLogIn.setText(text);
     }
 
 

@@ -43,8 +43,8 @@ public class ws {
     private static final String productionURL = "https://catan-backend-app.herokuapp.com";
     public static Map<String,ArrayList<JSONObject>> msgs;
     private static final String appPrefix = "/app";
-    private static final String  wsUrl = "http://localhost:8080/catan-stomp-ws-ep";
-    //private static final String  wsUrl = "https://catan-backend-app.herokuapp.com/catan-stomp-ws-ep";
+    //private static final String  wsUrl = "http://localhost:8080/catan-stomp-ws-ep";
+    private static final String  wsUrl = "https://catan-backend-app.herokuapp.com/catan-stomp-ws-ep";
     private static final String chatUrl = "/chat/";
     private static final String newFriendReqUrl = "/peticion/";
     private static final String playerActUrl = "/usuario-act/";
@@ -73,6 +73,7 @@ public class ws {
     public static final String partidaTestComenzar = "/app/partida/test";
     public static final String partidaRecargar = "/app/partida/recargar";
     public static final String enviarMensajePrivado = "/app/enviar/privado";
+    public static final String usuarioReportar=  "/app/usuario/reportar";
 
     private static Subscription invitacion_topic_id;
     private static Subscription sala_crear_topic_id;
@@ -84,6 +85,7 @@ public class ws {
     public static final String partida_test_topicUrl = "/test-partida/";
     public static final String partidaJugada = "/app/partida/jugada";
     public static final String partida_reload_topic = "/partida-rld/";
+    public static final String usuario_act = "/usuario-act/";
     
 
 
