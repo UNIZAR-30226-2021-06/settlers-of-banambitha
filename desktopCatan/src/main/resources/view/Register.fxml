@@ -12,7 +12,6 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-
 <StackPane style="-fx-background-color: #414147f1;" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="es.susangames.catan.controllers.Register">
    <children>
       <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity">
@@ -20,30 +19,30 @@
             <AnchorPane prefHeight="679.0" prefWidth="745.0" style="-fx-background-color: #965d62; -fx-background-radius: 12px;">
                <children>
                   			 
-                                                                        <Button layoutX="448.0" layoutY="536.0" mnemonicParsing="false" onAction="#register_user" prefHeight="57.0" prefWidth="148.0" style="-fx-background-radius: 12; -fx-background-color: #414147f1;" styleClass="trans-btn-white-border" text="Register" textAlignment="CENTER" textFill="WHITE">
+                                                                        <Button layoutX="448.0" layoutY="536.0" mnemonicParsing="false" onAction="#register_user" prefHeight="57.0" prefWidth="148.0" style="-fx-background-radius: 12; -fx-background-color: #414147f1;" styleClass="trans-btn-white-border" text="Crear" textAlignment="CENTER" textFill="WHITE">
                      <font>
                         <Font name="Lohit Kannada" size="22.0" />
                      </font>
                   </Button>
-                  <TextField fx:id="email" layoutX="126.0" layoutY="294.0" prefHeight="54.0" prefWidth="507.0" promptText="Enter your email*" style="-fx-background-radius: 12;" AnchorPane.leftAnchor="126.0" AnchorPane.rightAnchor="126.0" />
+                  <TextField fx:id="email" layoutX="126.0" layoutY="294.0" prefHeight="54.0" prefWidth="507.0" promptText="Introduzca su email*" style="-fx-background-radius: 12;" AnchorPane.leftAnchor="126.0" AnchorPane.rightAnchor="126.0" />
                   			 
-                                                                        <Text fill="WHITE" fontSmoothingType="LCD" layoutX="258.0" layoutY="118.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Register" textAlignment="CENTER" wrappingWidth="204.560546875" AnchorPane.leftAnchor="258.0" AnchorPane.rightAnchor="257.439453125">
+                                                                        <Text fill="WHITE" fontSmoothingType="LCD" layoutX="258.0" layoutY="81.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Registrar" textAlignment="CENTER" wrappingWidth="215.560546875" AnchorPane.leftAnchor="258.0" AnchorPane.rightAnchor="271.0">
                      <font>
                         <Font name="System Bold" size="40.0" />
                      </font>
                   </Text>
-                  <PasswordField fx:id="password" layoutX="126.0" layoutY="390.0" prefHeight="54.0" prefWidth="507.0" promptText="Enter your password*" style="-fx-background-radius: 12;" AnchorPane.leftAnchor="126.0" AnchorPane.rightAnchor="126.0" />
+                  <PasswordField fx:id="password" layoutX="126.0" layoutY="390.0" prefHeight="54.0" prefWidth="507.0" promptText="Introduzca su contraseña*" style="-fx-background-radius: 12;" AnchorPane.leftAnchor="126.0" AnchorPane.rightAnchor="126.0" />
                   <Label fx:id="wrongLogIn" layoutX="201.0" layoutY="145.0" prefHeight="36.0" prefWidth="333.0" textAlignment="CENTER" textFill="WHITE">
                      <font>
                         <Font size="19.0" />
                      </font>
                   </Label>
-                  <Hyperlink layoutX="126.0" layoutY="509.0" onAction="#account_exists" text="Do you have an account?" textFill="#0000ee">
+                  <Hyperlink layoutX="126.0" layoutY="509.0" onAction="#account_exists" text="¿Ya tiene una cuenta?" textFill="#0000ee">
                      <font>
                         <Font size="18.0" />
                      </font>
                   </Hyperlink>
-                  <TextField fx:id="username" layoutX="126.0" layoutY="199.0" prefHeight="54.0" prefWidth="507.0" promptText="Enter your username*" style="-fx-background-radius: 12;" AnchorPane.leftAnchor="126.0" AnchorPane.rightAnchor="126.0" />
+                  <TextField fx:id="username" layoutX="126.0" layoutY="199.0" prefHeight="54.0" prefWidth="507.0" promptText="Introduzca su nombre de usuario*" style="-fx-background-radius: 12;" AnchorPane.leftAnchor="126.0" AnchorPane.rightAnchor="126.0" />
                   <Label fx:id="wrongRegister" layoutX="131.0" layoutY="151.0" prefHeight="24.0" prefWidth="506.0" textFill="WHITE">
                      <font>
                         <Font name="System Bold Italic" size="19.0" />

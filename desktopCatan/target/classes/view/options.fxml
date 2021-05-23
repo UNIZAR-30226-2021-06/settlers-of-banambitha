@@ -88,7 +88,7 @@
                               <HBox VBox.vgrow="ALWAYS">
                                  <children>
                                     <Region HBox.hgrow="ALWAYS" />
-                                    <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Victorias: " textAlignment="CENTER" wrappingWidth="185.7294921875" HBox.hgrow="ALWAYS">
+                                    <Text fx:id="victory" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Victorias: " textAlignment="CENTER" wrappingWidth="185.7294921875" HBox.hgrow="ALWAYS">
                                        <font>
                                           <Font name="System Bold Italic" size="22.0" />
                                        </font>
@@ -109,7 +109,7 @@
                               <HBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                                  <children>
                                     <Region HBox.hgrow="ALWAYS" />
-                                    <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Derrotas:" textAlignment="CENTER" wrappingWidth="185.7294921875" HBox.hgrow="ALWAYS">
+                                    <Text fx:id="defeat" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Derrotas:" textAlignment="CENTER" wrappingWidth="185.7294921875" HBox.hgrow="ALWAYS">
                                        <font>
                                           <Font name="System Bold Italic" size="22.0" />
                                        </font>
@@ -145,9 +145,9 @@
                                           <HBox VBox.vgrow="ALWAYS">
                                              <children>
                                                 <Region HBox.hgrow="ALWAYS" />
-                                                <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Racha Actual: 5 victorias " textAlignment="CENTER" wrappingWidth="488.7294921875" HBox.hgrow="ALWAYS">
+                                                <Text fx:id="actual_streak" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Racha Actual: 5 victorias " textAlignment="CENTER" wrappingWidth="488.7294921875" HBox.hgrow="ALWAYS">
                                                    <font>
-                                                      <Font name="System Bold Italic" size="32.0" />
+                                                      <Font name="System Bold Italic" size="31.0" />
                                                    </font>
                                                 </Text>
                                                 <Region HBox.hgrow="ALWAYS" />
@@ -167,9 +167,9 @@
                                           <HBox VBox.vgrow="ALWAYS">
                                              <children>
                                                 <Region HBox.hgrow="ALWAYS" />
-                                                <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Racha Histórica: 7 victorias" textAlignment="CENTER" wrappingWidth="529.7294921875" HBox.hgrow="ALWAYS">
+                                                <Text fx:id="historic_streak" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Racha Histórica: 7 victorias" textAlignment="CENTER" wrappingWidth="529.7294921875" HBox.hgrow="ALWAYS">
                                                    <font>
-                                                      <Font name="System Bold Italic" size="32.0" />
+                                                      <Font name="System Bold Italic" size="31.0" />
                                                    </font>
                                                 </Text>
                                                 <Region HBox.hgrow="ALWAYS" />

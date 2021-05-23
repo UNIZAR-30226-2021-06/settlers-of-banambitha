@@ -29,7 +29,11 @@ public class LangService {
 
     //Constructor estático
     static {
-        language = ESP; //Español es el lenguaje por defecto.
+        if(UserService.getIdioma().equals("Español")) {
+            language = ESP;
+        } else {
+            language = ENG;
+        }
         readStringsJSON();
     }
 

@@ -25,7 +25,15 @@
                         <Region VBox.vgrow="ALWAYS" />
                         <AnchorPane style="-fx-background-color: #006CFF; -fx-background-radius: 12px;" VBox.vgrow="ALWAYS">
                            <children>
-                              <Text fx:id="player1Name" fill="WHITE" layoutX="31.0" layoutY="44.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" textAlignment="CENTER" wrappingWidth="238.1845703125">
+                              <Button fx:id="reportPLayer1" layoutX="14.0" layoutY="2.0" mnemonicParsing="false" style="-fx-background-color: #C6CAA7; -fx-background-radius: 12px;" text="Button" textFill="WHITE" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="5.0">
+                                 <font>
+                                    <Font name="System Bold Italic" size="13.0" />
+                                 </font>
+                                 <effect>
+                                    <DropShadow />
+                                 </effect>
+                              </Button>
+                              <Text fx:id="player1Name" fill="WHITE" layoutX="98.0" layoutY="26.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" textAlignment="CENTER" wrappingWidth="171.1845703125" AnchorPane.bottomAnchor="30.0">
                                  <font>
                                     <Font name="System Bold Italic" size="19.0" />
                                  </font>
@@ -35,7 +43,15 @@
                         <Region VBox.vgrow="ALWAYS" />
                         <AnchorPane style="-fx-background-color: #965d62; -fx-background-radius: 12px;" VBox.vgrow="ALWAYS">
                            <children>
-                              <Text fx:id="player2Name" fill="WHITE" layoutX="31.0" layoutY="44.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" textAlignment="CENTER" wrappingWidth="238.1845703125">
+                              <Button fx:id="reportPLayer2" mnemonicParsing="false" style="-fx-background-color: #C6CAA7; -fx-background-radius: 12px;" text="Button" textFill="WHITE" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="5.0">
+                                 <font>
+                                    <Font name="System Bold Italic" size="13.0" />
+                                 </font>
+                                 <effect>
+                                    <DropShadow />
+                                 </effect>
+                              </Button>
+                              <Text fx:id="player2Name" fill="WHITE" layoutX="102.0" layoutY="8.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" textAlignment="CENTER" wrappingWidth="163.1845703125" AnchorPane.bottomAnchor="30.0">
                                  <font>
                                     <Font name="System Bold Italic" size="19.0" />
                                  </font>
@@ -45,7 +61,15 @@
                         <Region VBox.vgrow="ALWAYS" />
                         <AnchorPane style="-fx-background-color: #f2d974; -fx-background-radius: 12px;" VBox.vgrow="ALWAYS">
                            <children>
-                              <Text fx:id="player3Name" fill="WHITE" layoutX="31.0" layoutY="44.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" textAlignment="CENTER" wrappingWidth="238.1845703125">
+                              <Button fx:id="reportPLayer3" mnemonicParsing="false" style="-fx-background-color: #C6CAA7; -fx-background-radius: 12px;" text="Button" textFill="WHITE" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="5.0">
+                                 <font>
+                                    <Font name="System Bold Italic" size="13.0" />
+                                 </font>
+                                 <effect>
+                                    <DropShadow />
+                                 </effect>
+                              </Button>
+                              <Text fx:id="player3Name" fill="WHITE" layoutX="106.0" layoutY="26.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" textAlignment="CENTER" wrappingWidth="163.1845703125" AnchorPane.bottomAnchor="30.0">
                                  <font>
                                     <Font name="System Bold Italic" size="19.0" />
                                  </font>
@@ -55,7 +79,15 @@
                         <Region VBox.vgrow="ALWAYS" />
                         <AnchorPane style="-fx-background-color: #619B4A; -fx-background-radius: 12px;" VBox.vgrow="ALWAYS">
                            <children>
-                              <Text fx:id="player4Name" fill="WHITE" layoutX="31.0" layoutY="44.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" textAlignment="CENTER" wrappingWidth="238.1845703125">
+                              <Button fx:id="reportPLayer4" mnemonicParsing="false" style="-fx-background-color: #C6CAA7; -fx-background-radius: 12px;" text="Button" textFill="WHITE" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="5.0">
+                                 <font>
+                                    <Font name="System Bold Italic" size="13.0" />
+                                 </font>
+                                 <effect>
+                                    <DropShadow />
+                                 </effect>
+                              </Button>
+                              <Text fx:id="player4Name" fill="WHITE" layoutX="106.0" layoutY="26.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" textAlignment="CENTER" wrappingWidth="163.1845703125" AnchorPane.bottomAnchor="30.0">
                                  <font>
                                     <Font name="System Bold Italic" size="19.0" />
                                  </font>

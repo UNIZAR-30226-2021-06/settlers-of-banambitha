@@ -381,6 +381,18 @@ public class Gameplay {
     private static Button _turnPlayer;
 
     private static Text _knight_card;
+    
+    @FXML
+    private Button reportPLayer1;
+
+    @FXML
+    private Button reportPLayer2;
+
+    @FXML
+    private Button reportPLayer3;
+
+    @FXML
+    private Button reportPLayer4;
 
 
     // Elementos graficos adicionales
@@ -1454,29 +1466,28 @@ public class Gameplay {
         i == 15 || i == 21 || i == 22 || i == 27 ||
         i == 28 || i >= 32) {
 
-            pol.setFill(Color.DEEPSKYBLUE);
+            pol.setFill(Color.web("5c86ae"));
         } 
     }
 
     private static void updateHexagonBackground() {
         for(int i = 0; i < numberofHexagons; i++) {
             if (Partida.tablero.hexagonos.tipo[i].equals(TipoTerreno.BOSQUE) ) {
-                Partida.tablero.hexagonos.hexagons[i].setFill(Color.CADETBLUE);
+                Partida.tablero.hexagonos.hexagons[i].setFill(Color.web("536d35"));
             } else if (Partida.tablero.hexagonos.tipo[i].equals(TipoTerreno.CERRO)) {
-                Partida.tablero.hexagonos.hexagons[i].setFill(Color.ORANGERED);
+                Partida.tablero.hexagonos.hexagons[i].setFill(Color.web("636363"));
             } else if (Partida.tablero.hexagonos.tipo[i].equals(TipoTerreno.DESIERTO)) {
-                Partida.tablero.hexagonos.hexagons[i].setFill(Color.BLANCHEDALMOND);
+                Partida.tablero.hexagonos.hexagons[i].setFill(Color.web("ba9e5c"));
             } else if (Partida.tablero.hexagonos.tipo[i].equals(TipoTerreno.MONTANYA)) {
-                Partida.tablero.hexagonos.hexagons[i].setFill(Color.MAROON);
+                Partida.tablero.hexagonos.hexagons[i].setFill(Color.web("97593c"));
             } else if (Partida.tablero.hexagonos.tipo[i].equals(TipoTerreno.PASTO)) {
-                Partida.tablero.hexagonos.hexagons[i].setFill(Color.GREEN);
+                Partida.tablero.hexagonos.hexagons[i].setFill(Color.web("93b248"));
             } else if (Partida.tablero.hexagonos.tipo[i].equals(TipoTerreno.SEMBRADO)) {
-                Partida.tablero.hexagonos.hexagons[i].setFill(Color.PERU);
+                Partida.tablero.hexagonos.hexagons[i].setFill(Color.YELLOW);
             } else {
                 Partida.tablero.hexagonos.hexagons[i].setFill(Color.GRAY);
             }
-            /*Partida.tablero.hexagonos.numberOverHexagon[i].setText(
-                Partida.tablero.hexagonos.valor[i].toString());*/
+
         }    
         Partida.tablero.hexagonos.numberOverHexagon[Partida.tablero.hexagonos.ladron].setDisable(true);
         for(int i = 0; i < numberofHexagons; i++) {
@@ -1557,18 +1568,33 @@ public class Gameplay {
                          setBackground(new Background(new BackgroundFill(
                              Partida.tablero.aristas.colorRoads[i], null, null)));
             }
-            if(Partida.tablero.aristas.puertos.arcilla == i ||
-               Partida.tablero.aristas.puertos.madera == i  ||
-               Partida.tablero.aristas.puertos.mineral == i ||
-               Partida.tablero.aristas.puertos.lana == i    ||
-               Partida.tablero.aristas.puertos.cereal == i  || 
-               Partida.tablero.aristas.puertos.basico[0] == i ||
-               Partida.tablero.aristas.puertos.basico[1] == i ||
-               Partida.tablero.aristas.puertos.basico[2] == i ||
-               Partida.tablero.aristas.puertos.basico[3] == i) {
+            if(Partida.tablero.aristas.puertos.arcilla == i) {
+                Partida.tablero.aristas.roads[i].setStyle(
+                    "-fx-border-color:#636363;-fx-border-width: 3;");
+
+            } else if (Partida.tablero.aristas.puertos.madera == i) {
+                Partida.tablero.aristas.roads[i].setStyle(
+                    "-fx-border-color:#536d35;-fx-border-width: 3;");
+
+            } else if (Partida.tablero.aristas.puertos.mineral == i) {
+                Partida.tablero.aristas.roads[i].setStyle(
+                    "-fx-border-color:#97593c;-fx-border-width: 3;");
+
+            } else if (Partida.tablero.aristas.puertos.lana == i ) {
+                Partida.tablero.aristas.roads[i].setStyle(
+                    "-fx-border-color:#93b248;-fx-border-width: 3;");
+
+            } else if (Partida.tablero.aristas.puertos.cereal == i) {
+                Partida.tablero.aristas.roads[i].setStyle(
+                    "-fx-border-color:yellow;-fx-border-width: 3;");
+
+            } else if (Partida.tablero.aristas.puertos.basico[0] == i ||
+                       Partida.tablero.aristas.puertos.basico[1] == i ||
+                       Partida.tablero.aristas.puertos.basico[2] == i ||
+                       Partida.tablero.aristas.puertos.basico[3] == i) {
                 Partida.tablero.aristas.roads[i].setStyle(
                     "-fx-border-color:#BA55D3;-fx-border-width: 3;");
-               }
+            }
          }
     }
     // Creacion del tablero
@@ -2896,7 +2922,32 @@ public class Gameplay {
             }
          });
          
+        reportPLayer1.setOnAction((ActionEvent event) -> {
+            // TODO: Reportar jugador
+         });
 
+        reportPLayer2.setOnAction((ActionEvent event) -> {
+            // TODO: Reportar jugador
+         });
+
+
+        reportPLayer3.setOnAction((ActionEvent event) -> {
+            // TODO: Reportar jugador
+         });
+
+        reportPLayer4.setOnAction((ActionEvent event) -> {
+            // TODO: Reportar jugador
+         });
+
+        reportPLayer1.setDisable(1 == Partida.miTurno);
+        reportPLayer2.setDisable(2 == Partida.miTurno);
+        reportPLayer3.setDisable(3 == Partida.miTurno);
+        reportPLayer4.setDisable(4 == Partida.miTurno);
+        
+        reportPLayer1.setText(LangService.getMapping("report"));
+        reportPLayer2.setText(LangService.getMapping("report"));
+        reportPLayer3.setText(LangService.getMapping("report"));
+        reportPLayer4.setText(LangService.getMapping("report"));
 
         chatContent.setEditable(false);
         chatContent.setMouseTransparent(true);

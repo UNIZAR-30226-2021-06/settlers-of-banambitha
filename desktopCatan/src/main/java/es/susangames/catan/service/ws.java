@@ -13,6 +13,7 @@ import es.susangames.catan.controllers.Gameplay;
 import es.susangames.catan.controllers.MainMenu;
 import es.susangames.catan.controllers.Play;
 
+
 import org.json.JSONObject;
 import org.springframework.messaging.converter.StringMessageConverter;
 import org.springframework.messaging.simp.stomp.StompFrameHandler;
@@ -39,12 +40,14 @@ import es.susangames.catan.service.RoomServices;
 //https://catan-backend-app.herokuapp.com/
 public class ws {
     public static final StompSession session;
+    private static final String productionURL = "https://catan-backend-app.herokuapp.com";
     public static Map<String,ArrayList<JSONObject>> msgs;
     private static final String appPrefix = "/app";
     private static final String  wsUrl = "http://localhost:8080/catan-stomp-ws-ep";
     //private static final String  wsUrl = "https://catan-backend-app.herokuapp.com/catan-stomp-ws-ep";
     private static final String chatUrl = "/chat/";
     private static final String newFriendReqUrl = "/peticion/";
+    private static final String playerActUrl = "/usuario-act/";
     private static final String sendFriendRequestUrl = "/app/enviar/peticion";
     private static final String acceptFriendRequestUrl = "/app/aceptar/peticion";
     private static final String declineFriendRequestUrl = "/app/rechazar/peticion";
@@ -55,6 +58,7 @@ public class ws {
     public  static final String aceptarComercio = appPrefix + "/partida/comercio/aceptar";
     public  static final String rechazarComercio = appPrefix + "/partida/comercio/rechazar";
     public  static final String enviarMensajePartida = appPrefix + "/enviar/partida";
+    public static final String  borrarCuenta = appPrefix + "/usuario/eliminar";
 
     
 
@@ -146,6 +150,18 @@ public class ws {
             }
         });
 
+        //playerAct
+        session.subscribe(playerActUrl + UserService.getUsername(), new StompFrameHandler() {
+            @Override
+            public Type getPayloadType(StompHeaders headers) {
+                return String.class;
+            }
+            @Override
+            public void handleFrame(StompHeaders headers, Object payload) {
+                handlePetitionPlayerAct(payload.toString());
+            }
+        });
+
         // sala crear createRoomRequestUrl
         sala_crear_topic_id = session.subscribe( createRoomRequestUrl + UserService.getUsername(), new StompFrameHandler() {
             @Override
@@ -201,10 +217,6 @@ public class ws {
     }
 
     private static void handlePetition(String msgContent) {
-        JSONObject object = new JSONObject(msgContent);
-        String type = object.getString("type");
-        String from = object.getString("from");
-
         if(!MainMenu.chatOpenned) {
             Platform.runLater(new Runnable() {
                 @Override public void run() {
@@ -478,5 +490,21 @@ public class ws {
                 }
               });
         } catch(Exception e){}
+    }
+
+    public static void borrarCuenta(String password) {
+        JSONObject object = new JSONObject();
+        object.put("nombre", UserService.getUsername());
+        object.put("contrasenya", password);
+        session.send(borrarCuenta, object.toString());
+    }
+
+    public static void handlePetitionPlayerAct(String petition) {
+        JSONObject object = new JSONObject(petition);
+        if(object.getString("status").equals("DELETED")) {
+            try {
+                App.nuevaPantalla("/view/Login.fxml");
+            } catch(Exception e) {}
+        }
     }
 }

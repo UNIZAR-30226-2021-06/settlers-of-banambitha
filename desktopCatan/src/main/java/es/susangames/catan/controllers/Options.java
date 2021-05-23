@@ -4,6 +4,7 @@ import es.susangames.catan.service.LangService;
 import es.susangames.catan.service.ShopService;
 import es.susangames.catan.service.UserService;
 import es.susangames.catan.controllers.MainMenu;
+import es.susangames.catan.service.ws;
 import javafx.fxml.FXML;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.*;
@@ -28,6 +29,7 @@ import javafx.scene.effect.DropShadow;
 import com.jfoenix.controls.JFXListView;
 import javafx.scene.control.ToggleButton;
 import org.json.*;
+import javafx.scene.control.PasswordField;
 
 
 
@@ -63,6 +65,18 @@ public class Options {
     private Button buttonChangePsw;
 
     @FXML
+    private Text defeat;
+
+    @FXML
+    private Text victory;
+
+    @FXML
+    private Text actual_streak;
+
+    @FXML
+    private Text historic_streak;
+
+    @FXML
     private ToggleButton lang;
 
     private Popup popupChangeMail, popupChangePsw;
@@ -80,7 +94,7 @@ public class Options {
         shop = new ShopService();
     }
 
-    private void changeMailPopUp() {
+    private void deleteAccountPopUp() {
         AnchorPane anchorPane = new AnchorPane();
         anchorPane.setPrefSize(210, 210);
         anchorPane.setStyle("-fx-background-color:  #c7956d; -fx-background-radius: 12px" );
@@ -89,14 +103,15 @@ public class Options {
         popupChangeMail.setAutoHide(true);
 
          // Titulo
-         Text title = new Text(10, 50, (LangService.getMapping("new_mail")));
+         Text title = new Text(10, 50, (LangService.getMapping("delete")));
          title.setFont(new Font(40));
          title.setLayoutX(anchorPane.getLayoutX() - 4);
          title.setLayoutY(anchorPane.getLayoutY() + 20);
          title.setFill(Color.WHITE);
          anchorPane.getChildren().add(title);
 
-         TextField textField = new TextField();
+         PasswordField textField = new PasswordField();
+         textField.setPromptText((LangService.getMapping("write_psw")));  
          textField.setStyle("-fx-background-radius: 12px" );
          textField.setPrefSize(340,40);
          textField.setLayoutX(anchorPane.getLayoutX() + 10 );
@@ -107,7 +122,7 @@ public class Options {
 
          Button accept = new Button();
          accept.setPrefSize(100,30);
-         accept.setLayoutX(anchorPane.getLayoutX() + 220);
+         accept.setLayoutX(anchorPane.getLayoutX() + 230);
          accept.setLayoutY(anchorPane.getLayoutY() + 170);
          accept.setStyle("-fx-background-color: #665d64; -fx-background-radius: 12px");
          accept.setText((LangService.getMapping("accept")));
@@ -117,27 +132,30 @@ public class Options {
 
 
          accept.setOnAction((ActionEvent event) -> {
-            System.out.println(textField.getText().toString());
-            popupChangeMail.hide();
-            textField.clear();    
+            if(UserService.passwordMatches(textField.getText())) {
+                ws.borrarCuenta(textField.getText());
+                popupChangeMail.hide();
+            } else {
+                textField.clear();    
+            }
          });
 
         buttonChangeMail.setOnAction((ActionEvent event) -> {
             
             if (!popupChangeMail.isShowing()) {
+                deleteAccountPopUp();
                 Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
                 popupChangeMail.show(stage);
             }
             
          });
-         
-         buttonChangeMail.setText((LangService.getMapping("new_mail")));
+         buttonChangeMail.setText((LangService.getMapping("delete")));
     }
 
 
     private void changePasswordPopUp() {
         AnchorPane anchorPane = new AnchorPane();
-        anchorPane.setPrefSize(210, 210);
+        anchorPane.setPrefSize(350, 300);
         anchorPane.setStyle("-fx-background-color:  #c7956d; -fx-background-radius: 12px" );
         popupChangePsw = new Popup();
         popupChangePsw.getContent().add(anchorPane);
@@ -147,37 +165,61 @@ public class Options {
          Text title = new Text(10, 50, (LangService.getMapping("new_psw")));
          title.setFont(new Font(40));
          title.setLayoutX(anchorPane.getLayoutX() - 4);
-         title.setLayoutY(anchorPane.getLayoutY() + 20);
+         title.setLayoutY(anchorPane.getLayoutY() + 15);
          title.setFill(Color.WHITE);
          anchorPane.getChildren().add(title);
+         
+         PasswordField oldPassword = new PasswordField();
+         oldPassword.setPromptText((LangService.getMapping("write_old_psw")));         
+         oldPassword.setStyle("-fx-background-radius: 12px" );
+         oldPassword.setPrefSize(425,40);
+         oldPassword.setLayoutX(anchorPane.getLayoutX() + 10 );
+         oldPassword.setLayoutY(anchorPane.getLayoutY() + 130);
+         anchorPane.getChildren().add(oldPassword);
 
-         TextField textField = new TextField();
-         textField.setStyle("-fx-background-radius: 12px" );
-         textField.setPrefSize(425,40);
-         textField.setLayoutX(anchorPane.getLayoutX() + 10 );
-         textField.setLayoutY(anchorPane.getLayoutY() + 110);
-         anchorPane.getChildren().add(textField);
+         PasswordField newPassword = new PasswordField();
+         newPassword.setPromptText((LangService.getMapping("write_new_psw")));       
+         newPassword.setStyle("-fx-background-radius: 12px" );
+         newPassword.setPrefSize(425,40);
+         newPassword.setLayoutX(anchorPane.getLayoutX() + 10 );
+         newPassword.setLayoutY(anchorPane.getLayoutY() + 190);
+         anchorPane.getChildren().add(newPassword);
 
+
+    
          Button accept = new Button();
          accept.setPrefSize(100,30);
          accept.setLayoutX(anchorPane.getLayoutX() + 330);
-         accept.setLayoutY(anchorPane.getLayoutY() + 170);
+         accept.setLayoutY(anchorPane.getLayoutY() + 250);
          accept.setStyle("-fx-background-color: #665d64; -fx-background-radius: 12px");
          accept.setText((LangService.getMapping("accept")));
          DropShadow shadow = new DropShadow();
          accept.setEffect(shadow);
          anchorPane.getChildren().add(accept);
-
-
+         
          accept.setOnAction((ActionEvent event) -> {
-            System.out.println(textField.getText().toString());
-            popupChangePsw.hide();
-            textField.clear();    
+            if(UserService.passwordMatches(oldPassword.getText()) &&  
+              UserService.passwordMatches(newPassword.getText())) {
+                if(UserService.changePassword(oldPassword.getText(),newPassword.getText())) {
+                    popupChangePsw.hide();
+                } else {
+                    Text titleError =  new Text(10, 50, (LangService.getMapping("psw_fails")) );
+                    titleError.setFont(new Font(20));
+                    titleError.setLayoutX(anchorPane.getLayoutX() + 120 );
+                    titleError.setLayoutY(anchorPane.getLayoutY() + 50);
+                    titleError.setFill(Color.BLACK);
+                    anchorPane.getChildren().add(titleError);
+                }
+                oldPassword.clear();
+                newPassword.clear(); 
+              }
+           
          });
 
          buttonChangePsw.setOnAction((ActionEvent event) -> {
             
             if (!popupChangeMail.isShowing()) {
+                changePasswordPopUp();
                 Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
                 popupChangePsw.show(stage);
             }
@@ -271,26 +313,49 @@ public class Options {
         userName.setText(UserService.getUsername());
         userEmail.setText(UserService.getMail());
         
-        // TODO: Integrar con backend
-        numberVictory.setText("23");
-        numberDefeat.setText("7");
+        
+        numberVictory.setText(UserService.getTotalDeVictorias().toString());
+        Integer derrotas = (UserService.getPartidasJugadas() - UserService.getTotalDeVictorias());
+        numberDefeat.setText(derrotas.toString());
         imgWin.setImage(win);
         imgSettings.setFill(new ImagePattern(settings));
+        victory.setText(LangService.getMapping("victory"));
+        defeat.setText(LangService.getMapping("defeat"));
+        actual_streak.setText(LangService.getMapping("win_strike") + " " + 
+                                UserService.getRachaDeVictoriasActual().toString());
+        historic_streak.setText(LangService.getMapping("historic_strike") + " " + 
+                                UserService.getMayorRachaDeVictorias().toString());
 
-        changeMailPopUp();
+        deleteAccountPopUp();
         changePasswordPopUp();
         changeUserImage();
 
 
         //Botón para mostrar el cambio de idioma.
-        lang.setText("Español");
+        lang.setText(UserService.getIdioma());
+        
+        
         lang.setOnAction(e ->{
-            if ( lang.isSelected() ){
+            if (UserService.getIdioma().equals("Español")){
                 lang.setText("English"); 
-                //LangService.changeLanguage(LangService.ENG);
+                LangService.changeLanguage(LangService.ENG);
+                UserService.updateUser(UserService.getUsername(),"idioma","English");
             }else{
                 lang.setText("Español"); 
-                //LangService.changeLanguage(LangService.ESP);
+                LangService.changeLanguage(LangService.ESP);
+                UserService.updateUser(UserService.getUsername(),"idioma","Español");
+            }
+            victory.setText(LangService.getMapping("victory"));
+            defeat.setText(LangService.getMapping("defeat"));
+            actual_streak.setText(LangService.getMapping("win_strike") + " " + 
+                                    UserService.getRachaDeVictoriasActual().toString());
+            historic_streak.setText(LangService.getMapping("historic_strike") + " " + 
+                                    UserService.getMayorRachaDeVictorias().toString());
+            buttonChangeMail.setText((LangService.getMapping("delete")));
+            buttonChangePsw.setText((LangService.getMapping("new_psw")));
+            MainMenu.updateStrings();
+            if(!MainMenu.chatOpenned) {
+                MainMenu.getFriends();
             }
         });
 

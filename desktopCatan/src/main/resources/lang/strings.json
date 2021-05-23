@@ -197,9 +197,9 @@
         "esp": "Ajustes"
     },
 
-    "new_mail": {
-        "eng": "Change your email",
-        "esp": "Cambie su correo"
+    "delete": {
+        "eng": "Delete your account",
+        "esp": "Eliminar su cuenta"
     },
 
     "accept": {
@@ -339,6 +339,56 @@
     "send": {
         "eng": "Send",
         "esp": "Enviar"
+    },
+
+    "report": {
+        "eng": "Report",
+        "esp": "Reportar"
+    },
+
+    "victory": {
+        "eng": "Victories",
+        "esp": "Victorias"
+    },
+
+    "defeat": {
+        "eng": "Defeats",
+        "esp": "Derrotas"
+    },
+
+    "win_strike": {
+        "eng": "Current win streak:",
+        "esp": "Racha de victorias actual:"
+    },
+
+    "historic_strike": {
+        "eng": "Longest winning streak:",
+        "esp": "Racha de victorias historia:"
+    }, 
+
+    "write_old_psw": {
+        "eng": "Introduce your current password",
+        "esp": "Introduzca su contraseña actual"
+    },
+
+    "write_new_psw": {
+        "eng": "Introduce your new password",
+        "esp": "Introduzca su nueva contraseña "
+    },
+
+    "psw_fails": {
+        "eng": "Updating process failed",
+        "esp": "Actualizacion erronea"
+    },
+
+    "write_psw": {
+        "eng": "Introduce your password",
+        "esp": "Introduzca su contraseña actual"
+    },
+
+    "reject": {
+        "eng": "Reject",
+        "esp": "Rechazar"
     }
 }
  
