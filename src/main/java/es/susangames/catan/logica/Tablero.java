@@ -504,6 +504,7 @@ public class Tablero {
 				
 				if (existeCaminoDeJugador) {
 					v.construirAsentamiento(j);
+					j.construirAsentamiento();
 					
 					for (int i = 0; i < verticesAdyacentes.length; ++i) {
 						if (verticesAdyacentes[i] != null)
@@ -549,7 +550,12 @@ public class Tablero {
 				} else {
 					System.out.println("\tNull");
 				}*/
-				
+
+				for (int i = 0; i < vAdyacentes.length; ++i) {
+					if (vAdyacentes[i] != null)
+						vAdyacentes[i].asentamientoAdyacente();
+				}
+			
 				for (int i = 0 ; i < posiblesCamino.length; ++i) {
 					//System.out.println("Posible camino en " + posiblesCamino[i].getIdentificador());
 					aristasPorID.get(posiblesCamino[i].getIdentificador()).posibleCaminoDeJugador(j.getColor().numeroColor());
@@ -742,26 +748,26 @@ public class Tablero {
 	private Boolean comprobarNumMateriales (Jugadores j, String material, int numMaterial) {
 		switch (material) {
 		case "madera" : 
-			if (j.getMadera() > numMaterial) {
+			if (j.getMadera() >= numMaterial) {
 				return true;
 			} else return false;
 		case "lana" : 
-			if (j.getLana() > numMaterial) {
+			if (j.getLana() >= numMaterial) {
 				return true;
 			} else return false;
 
 		case "cereales" :
-			if (j.getCereales() > numMaterial) {
+			if (j.getCereales() >= numMaterial) {
 				return true;
 			} else return false;
 
 		case "arcilla" :
-			if (j.getArcilla() > numMaterial) {
+			if (j.getArcilla() >= numMaterial) {
 				return true;
 			} else return false;
 
 		case "mineral" : 
-			if (j.getMineral() > numMaterial) {
+			if (j.getMineral() >= numMaterial) {
 				return true;
 			} else return false;
 		default:
@@ -776,8 +782,8 @@ public class Tablero {
 		Boolean puedeComerciarJ2 = comprobarNumMateriales(j2,materialJ2, numMaterialJ2);
 
 		System.out.println("Comercio: "); 
-		System.out.println("\tEl jugador " + j1.getColor().numeroColor() + " ofrece " + materialJ1 + "de " + materialJ1); 
-		System.out.println("\tEl jugador " + j2.getColor().numeroColor() + " ofrece " + materialJ2 + "de " + materialJ2); 
+		System.out.println("\tEl jugador " + (j1.getColor().numeroColor() + 1) + " ofrece " + numMaterialJ1 + " de " + materialJ1); 
+		System.out.println("\tEl jugador " + (j2.getColor().numeroColor() + 1) + " ofrece " + numMaterialJ2 + " de " + materialJ2); 
 		
 		if (puedeComerciarJ1 && puedeComerciarJ2) {
 			actualizarMaterial(j1,materialJ1, -numMaterialJ1);
@@ -792,11 +798,11 @@ public class Tablero {
 			this.exit_status = 0;
 			
 		} else if (puedeComerciarJ1 && !puedeComerciarJ2){
-			this.message = "El jugador " + j2.getColor().numeroColor() + 1 + " no puede realizar el "
+			this.message = "El jugador " + (j2.getColor().numeroColor() + 1)  + " no puede realizar el "
 					+ "comercio porque no dispone del suficiente número de materiales.";
 			this.exit_status = 34;
 		} else if (!puedeComerciarJ1 && puedeComerciarJ2){
-			this.message = "El jugador " + j1.getColor().numeroColor() + 1 + " no puede realizar el "
+			this.message = "El jugador " + (j1.getColor().numeroColor() + 1) + " no puede realizar el "
 					+ "comercio porque no dispone del suficiente número de materiales.";
 			this.exit_status = 34;
 		} else {
@@ -1064,7 +1070,6 @@ public class Tablero {
 					if (!v.tieneAsentamiento()) {
 						if (v.getPosibleAsentamientoDeJugador(id_jugador-1)) {
 							construirAsentamiento(v, jug);
-							jug.construirAsentamiento();
 							message = "Se ha construido el poblado correctamente";
 							exit_status = 0;
 						}
