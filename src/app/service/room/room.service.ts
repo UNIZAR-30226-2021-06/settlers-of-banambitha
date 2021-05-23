@@ -132,9 +132,7 @@ export class RoomService implements Connectable{
       }
     });
 
-    if ( this.userService.partida == null){
-      this.crearSala()
-    }
+    this.crearSala()
   }
 
 
