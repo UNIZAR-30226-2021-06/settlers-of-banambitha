@@ -20,10 +20,6 @@ export class AuthLoginGuard implements CanActivate {
         this.router.navigate(["/home"])
         return false
 
-      } else if ( this.userService.logedUser() && this.userService.partida != null){
-        this.router.navigate(["/board"])
-        return false
-
       } else{
         return this.userService.checkSession(this.router, true, this.gameService, this.wsService, this.roomService)
       }
