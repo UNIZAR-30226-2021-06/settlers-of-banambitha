@@ -667,7 +667,7 @@ public class Gameplay {
             partida_chat_topic_id.unsubscribe();
             partida_com_topic_id.unsubscribe();
             partida_reload_topic_id.unsubscribe();
-            //partida_usuaio_act_topic_id.unsubscribe();
+            partida_usuaio_act_topic_id.unsubscribe();
         }
     }
 
