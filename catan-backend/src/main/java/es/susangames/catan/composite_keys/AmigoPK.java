@@ -2,11 +2,9 @@ package es.susangames.catan.composite_keys;
 
 import java.io.Serializable;
 
-import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-@AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
 public class AmigoPK implements Serializable {
@@ -16,6 +14,10 @@ public class AmigoPK implements Serializable {
 	private String usuario1_id;
 	private String usuario2_id;
 	
+	public AmigoPK(String remitente, String destinatario) {
+		usuario1_id = remitente;
+		usuario2_id = destinatario;
+	}
 	public String getUsuario1_id() {
 		return usuario1_id;
 	}
