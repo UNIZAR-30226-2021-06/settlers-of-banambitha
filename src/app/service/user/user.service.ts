@@ -141,8 +141,8 @@ export class UserService {
     this.http.put<any>(UserService.baseUrl + "/update", JSON.stringify(msg),
                                              UserService.httpOptions).subscribe( (response) => {
 
-    console.log("apariencia actualizada a " + skin)
-    that.updateUserData(response.body)
+      console.log("apariencia actualizada a " + skin)
+      that.updateUserData(response.body)
     })
   }
 

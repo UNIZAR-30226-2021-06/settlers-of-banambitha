@@ -2,7 +2,7 @@ import { Component, Inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Connectable, WsService } from '../ws/ws.service';
 import { UserService } from '../user/user.service';
-import { UserCardInfo } from '../room/room.service';
+import { RoomService, UserCardInfo } from '../room/room.service';
 import { MatSnackBar, MatSnackBarRef, MAT_SNACK_BAR_DATA } from '@angular/material/snack-bar';
 import { LangService } from '../lang/lang.service';
 
@@ -106,7 +106,7 @@ export enum Recurso {
   MADERA  = "madera", 
   MINERAL = "mineral", 
   LANA    = "lana", 
-  CEREAL  = "cereal", 
+  CEREAL  = "cereales", 
   ARCILLA = "arcilla"
 }
 
@@ -366,6 +366,8 @@ export class GameService implements Connectable{
   public cargandoPartida: boolean = false
   public ultimaSolicitudComercio: SolicitudComercio
 
+  private roomService: RoomService; 
+
   //Identificadores de los topics a los que se suscribe 
   //el jugador
   private test_partida_topic_id:   any
@@ -511,7 +513,7 @@ export class GameService implements Connectable{
    * @param simulateMoves ordenar al servidor simular jugadas en 
    * la partida de prueba
    */
-  public comenzarPartidaPrueba( simulateMoves: boolean){
+  public comenzarPartidaPrueba( simulateMoves: boolean, roomService: RoomService){
 
     let that = this
     this.test_partida_topic_id = this.stompClient.subscribe(WsService.partida_test_topic +
@@ -522,7 +524,7 @@ export class GameService implements Connectable{
         console.log("Comenzando partida de prueba...")
         that.comenzarPartida(msg["game"],
                             [that.userService.getUsername(),
-                            "Some1" ,"Some2", "Some3"])
+                            "Some1" ,"Some2", "Some3"], roomService)
 
       }else{
         console.log("Error crítico")
@@ -543,8 +545,10 @@ export class GameService implements Connectable{
    * @Return true si ha podido inicializar la partida, false en 
    * caso contrario
    */
-  public comenzarPartida(idPartida: String, jugadores: Array<String>): boolean{
+  public comenzarPartida(idPartida: String, jugadores: Array<String>, roomService: RoomService): boolean{
     
+    this.roomService = roomService
+
     console.log("Iniciando partida...")
     console.log(jugadores)
     this.cargandoPartida = true
@@ -659,6 +663,7 @@ export class GameService implements Connectable{
 
       if (msg[MessageKeys.GANADOR] > 0) {
         //Finalizar la partida y mostrar estadísticas
+        this.roomService.crearSala()
         this.router.navigate(["/home/profile"])
         this.openWinnerSnackBar(msg[MessageKeys.GANADOR])
         this.finalizarpartida()

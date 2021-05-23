@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Recurso } from '../game/game.service';
+import { Recurso, TipoTerreno } from '../game/game.service';
 import dictionaryJSON from './strings.json';
 
 
@@ -48,6 +48,32 @@ export class LangService {
       
       default: 
         return "FAILED"
+    }
+  }
+
+  public getTipoTerreno(tipo: TipoTerreno): string {
+    switch(tipo) {
+      case TipoTerreno.BOSQUE: 
+        return this.dictionary["bosque"][this.selectedLang]
+
+      case TipoTerreno.PASTO: 
+        return this.dictionary["prado"][this.selectedLang]
+
+      case TipoTerreno.SEMBRADO: 
+        return this.dictionary["sembrado"][this.selectedLang]
+
+      case TipoTerreno.DESIERTO: 
+        return this.dictionary["desierto"][this.selectedLang]
+
+      case TipoTerreno.CERRO: 
+        return this.dictionary["cerro"][this.selectedLang]
+
+      case TipoTerreno.MONTANYA: 
+        return this.dictionary["mountain"][this.selectedLang]
+
+      default: 
+        return this.dictionary["unknown"][this.selectedLang]
+
     }
   }
 }

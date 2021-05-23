@@ -32,7 +32,7 @@ import { MatDividerModule} from '@angular/material/divider';
 import { MatInputModule } from '@angular/material/input';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner'; 
 import {MatSnackBarModule} from '@angular/material/snack-bar'; 
-
+import {MatTooltipModule} from '@angular/material/tooltip'; 
 
 
 @NgModule({
@@ -71,7 +71,8 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
     ReactiveFormsModule,
     MatInputModule,
     MatProgressSpinnerModule,
-    MatSnackBarModule
+    MatSnackBarModule, 
+    MatTooltipModule
   ],
   exports: [GameplayComponent],
   entryComponents: [InternalTradeDialog, ExternalTradeDialog],

@@ -540,6 +540,11 @@
         "ENG": "Hill"
     },
 
+    "desierto": {
+        "ESP": "Desierto", 
+        "ENG": "Desert"
+    },
+
     "mountain": {
         "ESP": "Montaña",
         "ENG": "mountain"
@@ -753,6 +758,16 @@
     "costs": {
         "ESP": "Costes", 
         "ENG": "Costs"
+    }, 
+
+    "build-your-first": {
+        "ESP": "Construye dos asentamientos y dos caminos", 
+        "ENG": "Build two settlements and two roads"
+    },
+
+    "water": {
+        "ESP": "Agua", 
+        "ENG": "Water"
     }
 
 }

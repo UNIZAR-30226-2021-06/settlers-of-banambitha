@@ -1,4 +1,7 @@
 import { Component, OnInit , Input} from '@angular/core';
+import { Router } from '@angular/router';
+import { LangService } from 'src/app/service/lang/lang.service';
+import { UserService } from 'src/app/service/user/user.service';
 
 @Component({
   selector: 'app-profile-card',
@@ -12,7 +15,7 @@ export class ProfileCardComponent implements OnInit {
   @Input() playerCoins: bigint
   @Input() playerAvatar: string
 
-  constructor() { }
+  constructor(public userService: UserService, public langService: LangService, public router: Router) { }
 
   ngOnInit(): void {
   }

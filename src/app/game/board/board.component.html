@@ -20,24 +20,28 @@
             <li class='hex spacer'></li>
 
             <li class='hex water'
-            [style.background-image]="'url( ' + getWaterUrl() +   ')'">
+            [style.background-image]="'url( ' + getWaterUrl() +   ')'"
+            [matTooltip]="langService.get('water')">
                 <board-harbor posicion='br' arista=4></board-harbor>
             </li>
 
             <li class='hex water'
-            [style.background-image]="'url( ' + getWaterUrl() +   ')'">
+            [style.background-image]="'url( ' + getWaterUrl() +   ')'"
+            [matTooltip]="langService.get('water')">
                 <board-harbor posicion='bl' arista=5></board-harbor>
                 <board-harbor posicion='br' arista=9></board-harbor>
             </li>
 
             <li class='hex water'
-            [style.background-image]="'url( ' + getWaterUrl() +   ')'">
+            [style.background-image]="'url( ' + getWaterUrl() +   ')'"
+            [matTooltip]="langService.get('water')">
                 <board-harbor posicion='bl' arista=10></board-harbor>
                 <board-harbor posicion='br' arista=14></board-harbor>
             </li>
 
             <li class='hex water'
-            [style.background-image]="'url( ' + getWaterUrl() +   ')'">
+            [style.background-image]="'url( ' + getWaterUrl() +   ')'"
+            [matTooltip]="langService.get('water')">
                 <board-harbor posicion='bl' arista=15></board-harbor>
             </li>
         </ol>
@@ -48,7 +52,8 @@
             <li class='hex spacer'></li>
 
             <li class='hex water'
-            [style.background-image]="'url( ' + getWaterUrl() +   ')'">
+            [style.background-image]="'url( ' + getWaterUrl() +   ')'"
+            [matTooltip]="langService.get('water')">
                 <board-harbor posicion='r' arista=3></board-harbor>
                 <board-harbor posicion='br' arista=20></board-harbor>
             </li>
@@ -57,7 +62,8 @@
 
             <!--HEXAGONO 0-->
             <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[0])"
-            [style.background-image]="'url( ' + getSkinUrl(this.gameService.partida.tablero.hexagonos.tipo[0]) + ')'">
+            [style.background-image]="'url( ' + getSkinUrl(this.gameService.partida.tablero.hexagonos.tipo[0]) + ')'"
+            [matTooltip]="langService.getTipoTerreno(this.gameService.partida.tablero.hexagonos.tipo[0])">
                 <board-hex-number hexagono=0></board-hex-number>
 
                 <!--ASENTAMIENTOS-->
@@ -73,7 +79,8 @@
 
             <!--HEXAGONO 1-->
             <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[1])"
-            [style.background-image]="'url( ' + getSkinUrl(this.gameService.partida.tablero.hexagonos.tipo[1]) + ')'">
+            [style.background-image]="'url( ' + getSkinUrl(this.gameService.partida.tablero.hexagonos.tipo[1]) + ')'"
+            [matTooltip]="langService.getTipoTerreno(this.gameService.partida.tablero.hexagonos.tipo[1])">
                 <board-hex-number hexagono=1></board-hex-number>
 
                 <!--ASENTAMIENTOS-->
@@ -88,7 +95,8 @@
 
             <!--HEXAGONO 2-->
             <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[2])"
-            [style.background-image]="'url( ' + getSkinUrl(this.gameService.partida.tablero.hexagonos.tipo[2]) + ')'">
+            [style.background-image]="'url( ' + getSkinUrl(this.gameService.partida.tablero.hexagonos.tipo[2]) + ')'"
+            [matTooltip]="langService.getTipoTerreno(this.gameService.partida.tablero.hexagonos.tipo[2])">
                 <board-hex-number hexagono=2></board-hex-number>
 
                 <!--ASENTAMIENTOS-->
@@ -103,7 +111,8 @@
             <!--FIN TERRENOS FILA 1-->
 
             <li class='hex water'
-            [style.background-image]="'url( ' + getWaterUrl() +   ')'">
+            [style.background-image]="'url( ' + getWaterUrl() +   ')'"
+            [matTooltip]="langService.get('water')">
                 <board-harbor posicion='l' arista=11></board-harbor>
                 <board-harbor posicion='bl' arista=30></board-harbor>
 
@@ -116,7 +125,8 @@
         <!-- FILA 2 -->
         <ol class="even">
             <li class='hex water'
-            [style.background-image]="'url( ' + getWaterUrl() +   ')'">
+            [style.background-image]="'url( ' + getWaterUrl() +   ')'"
+            [matTooltip]="langService.get('water')">
                 <board-harbor posicion='r' arista=19></board-harbor>
                 <board-harbor posicion='br' arista=35></board-harbor>
             </li>
@@ -126,7 +136,8 @@
 
             <!--HEXAGONO 3-->
             <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[3])"
-            [style.background-image]="'url( ' + getSkinUrl(this.gameService.partida.tablero.hexagonos.tipo[3]) + ')'">
+            [style.background-image]="'url( ' + getSkinUrl(this.gameService.partida.tablero.hexagonos.tipo[3]) + ')'"
+            [matTooltip]="langService.getTipoTerreno(this.gameService.partida.tablero.hexagonos.tipo[3])">
                 <board-hex-number hexagono=3></board-hex-number>
 
                 <!--ASENTAMIENTOS-->
@@ -141,7 +152,8 @@
 
             <!--HEXAGONO 4-->
             <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[4])"
-            [style.background-image]="'url( ' + getSkinUrl(this.gameService.partida.tablero.hexagonos.tipo[4]) + ')'">
+            [style.background-image]="'url( ' + getSkinUrl(this.gameService.partida.tablero.hexagonos.tipo[4]) + ')'"
+            [matTooltip]="langService.getTipoTerreno(this.gameService.partida.tablero.hexagonos.tipo[4])">
                 <board-hex-number hexagono=4></board-hex-number>
 
                 <!--ASENTAMIENTOS-->
@@ -157,7 +169,8 @@
 
             <!--HEXAGONO 5-->
             <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[5])"
-            [style.background-image]="'url( ' + getSkinUrl(this.gameService.partida.tablero.hexagonos.tipo[5]) + ')'">
+            [style.background-image]="'url( ' + getSkinUrl(this.gameService.partida.tablero.hexagonos.tipo[5]) + ')'"
+            [matTooltip]="langService.getTipoTerreno(this.gameService.partida.tablero.hexagonos.tipo[5])">
                 <board-hex-number hexagono=5></board-hex-number>
 
                 <!--ASENTAMIENTOS-->
@@ -173,7 +186,8 @@
 
             <!--HEXAGONO 6-->
             <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[6])"
-            [style.background-image]="'url( ' + getSkinUrl(this.gameService.partida.tablero.hexagonos.tipo[6]) + ')'">
+            [style.background-image]="'url( ' + getSkinUrl(this.gameService.partida.tablero.hexagonos.tipo[6]) + ')'"
+            [matTooltip]="langService.getTipoTerreno(this.gameService.partida.tablero.hexagonos.tipo[6])">
                 <board-hex-number hexagono=6></board-hex-number>
 
                 <!--ASENTAMIENTOS-->
@@ -190,7 +204,8 @@
 
 
             <li class='hex water'
-            [style.background-image]="'url( ' + getWaterUrl() +   ')'">
+            [style.background-image]="'url( ' + getWaterUrl() +   ')'"
+            [matTooltip]="langService.get('water')">
                 <board-harbor posicion='l' arista=27></board-harbor>
                 <board-harbor posicion='bl' arista=48></board-harbor>
 
@@ -204,7 +219,8 @@
         <ol class="odd">
 
             <li class='hex water'
-            [style.background-image]="'url( ' + getWaterUrl() +   ')'">
+            [style.background-image]="'url( ' + getWaterUrl() +   ')'"
+            [matTooltip]="langService.get('water')">
                 <board-harbor posicion='r' arista=34></board-harbor>
             </li>
 
@@ -212,7 +228,8 @@
 
             <!--HEXAGONO 7-->
             <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[7])"
-            [style.background-image]="'url( ' + getSkinUrl(this.gameService.partida.tablero.hexagonos.tipo[7]) + ')'">
+            [style.background-image]="'url( ' + getSkinUrl(this.gameService.partida.tablero.hexagonos.tipo[7]) + ')'"
+            [matTooltip]="langService.getTipoTerreno(this.gameService.partida.tablero.hexagonos.tipo[7])">
                 <board-hex-number hexagono=7></board-hex-number>
 
                 <!--ASENTAMIENTOS-->
@@ -228,7 +245,8 @@
 
             <!--HEXAGONO 8-->
             <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[8])"
-            [style.background-image]="'url( ' + getSkinUrl(this.gameService.partida.tablero.hexagonos.tipo[8]) + ')'">
+            [style.background-image]="'url( ' + getSkinUrl(this.gameService.partida.tablero.hexagonos.tipo[8]) + ')'"
+            [matTooltip]="langService.getTipoTerreno(this.gameService.partida.tablero.hexagonos.tipo[8])">
                 <board-hex-number hexagono=8></board-hex-number>
 
                 <!--ASENTAMIENTOS-->
@@ -244,7 +262,8 @@
 
             <!--HEXAGONO 9-->
             <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[9])"
-            [style.background-image]="'url( ' + getSkinUrl(this.gameService.partida.tablero.hexagonos.tipo[9]) + ')'">
+            [style.background-image]="'url( ' + getSkinUrl(this.gameService.partida.tablero.hexagonos.tipo[9]) + ')'"
+            [matTooltip]="langService.getTipoTerreno(this.gameService.partida.tablero.hexagonos.tipo[9])">
                 <board-hex-number hexagono=9></board-hex-number>
 
                 <!--ASENTAMIENTOS-->
@@ -260,7 +279,8 @@
 
             <!--HEXAGONO 10-->
             <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[10])"
-            [style.background-image]="'url( ' + getSkinUrl(this.gameService.partida.tablero.hexagonos.tipo[10]) + ')'">
+            [style.background-image]="'url( ' + getSkinUrl(this.gameService.partida.tablero.hexagonos.tipo[10]) + ')'"
+            [matTooltip]="langService.getTipoTerreno(this.gameService.partida.tablero.hexagonos.tipo[10])">
                 <board-hex-number hexagono=10></board-hex-number>
 
                 <!--ASENTAMIENTOS-->
@@ -276,7 +296,8 @@
 
             <!--HEXAGONO 11-->
             <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[11])"
-            [style.background-image]="'url( ' + getSkinUrl(this.gameService.partida.tablero.hexagonos.tipo[11]) + ')'">
+            [style.background-image]="'url( ' + getSkinUrl(this.gameService.partida.tablero.hexagonos.tipo[11]) + ')'"
+            [matTooltip]="langService.getTipoTerreno(this.gameService.partida.tablero.hexagonos.tipo[11])">
                 <board-hex-number hexagono=11></board-hex-number>
 
                 <!--ASENTAMIENTOS-->
@@ -292,7 +313,8 @@
             <!--FIN TERRENOS FILA 3-->
 
             <li class='hex water'
-            [style.background-image]="'url( ' + getWaterUrl() +   ')'">
+            [style.background-image]="'url( ' + getWaterUrl() +   ')'"
+            [matTooltip]="langService.get('water')">
                 <board-harbor posicion='l' arista=45></board-harbor>
 
                 <board-settlement vertice=35 posicion="tl"></board-settlement>
@@ -304,7 +326,8 @@
         <!-- FILA 4 -->
         <ol class="even">
             <li class='hex water'
-            [style.background-image]="'url( ' + getWaterUrl() +   ')'">
+            [style.background-image]="'url( ' + getWaterUrl() +   ')'"
+            [matTooltip]="langService.get('water')">
                 <board-harbor posicion='tr' arista=33></board-harbor>
                 <board-harbor posicion='r' arista=52></board-harbor>
 
@@ -316,7 +339,8 @@
 
             <!--HEXAGONO 12-->
             <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[12])"
-            [style.background-image]="'url( ' + getSkinUrl(this.gameService.partida.tablero.hexagonos.tipo[12]) + ')'">
+            [style.background-image]="'url( ' + getSkinUrl(this.gameService.partida.tablero.hexagonos.tipo[12]) + ')'"
+            [matTooltip]="langService.getTipoTerreno(this.gameService.partida.tablero.hexagonos.tipo[12])">
                 <board-hex-number hexagono=12></board-hex-number>
 
                 <!--ASENTAMIENTOS-->
@@ -332,7 +356,8 @@
 
             <!--HEXAGONO 13-->
             <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[13])"
-            [style.background-image]="'url( ' + getSkinUrl(this.gameService.partida.tablero.hexagonos.tipo[13]) + ')'">
+            [style.background-image]="'url( ' + getSkinUrl(this.gameService.partida.tablero.hexagonos.tipo[13]) + ')'"
+            [matTooltip]="langService.getTipoTerreno(this.gameService.partida.tablero.hexagonos.tipo[13])">
                 <board-hex-number hexagono=13></board-hex-number>
 
                 <!--ASENTAMIENTOS-->
@@ -348,7 +373,8 @@
 
             <!--HEXAGONO 14-->
             <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[14])"
-            [style.background-image]="'url( ' + getSkinUrl(this.gameService.partida.tablero.hexagonos.tipo[14]) + ')'">
+            [style.background-image]="'url( ' + getSkinUrl(this.gameService.partida.tablero.hexagonos.tipo[14]) + ')'"
+            [matTooltip]="langService.getTipoTerreno(this.gameService.partida.tablero.hexagonos.tipo[14])">
                 <board-hex-number hexagono=14></board-hex-number>
 
                 <!--ASENTAMIENTOS-->
@@ -364,7 +390,8 @@
 
             <!--HEXAGONO 15-->
             <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[15])"
-            [style.background-image]="'url( ' + getSkinUrl(this.gameService.partida.tablero.hexagonos.tipo[15]) + ')'">
+            [style.background-image]="'url( ' + getSkinUrl(this.gameService.partida.tablero.hexagonos.tipo[15]) + ')'"
+            [matTooltip]="langService.getTipoTerreno(this.gameService.partida.tablero.hexagonos.tipo[15])">
                 <board-hex-number hexagono=15></board-hex-number>
 
                 <!--ASENTAMIENTOS-->
@@ -380,7 +407,8 @@
             <!--FIN TERRENOS FILA 4-->
 
             <li class='hex water'
-            [style.background-image]="'url( ' + getWaterUrl() +   ')'">
+            [style.background-image]="'url( ' + getWaterUrl() +   ')'"
+            [matTooltip]="langService.get('water')">
                 <board-harbor posicion='tl' arista=46></board-harbor>
                 <board-harbor posicion='l' arista=59></board-harbor>
 
@@ -397,7 +425,8 @@
             <li class='hex spacer'></li>
 
             <li class='hex water'
-            [style.background-image]="'url( ' + getWaterUrl() +   ')'">
+            [style.background-image]="'url( ' + getWaterUrl() +   ')'"
+            [matTooltip]="langService.get('water')">
                 <board-harbor posicion='tr' arista=51></board-harbor>
                 <board-harbor posicion='r' arista=65></board-harbor>
 
@@ -409,7 +438,8 @@
 
             <!--HEXAGONO 16-->
             <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[16])"
-            [style.background-image]="'url( ' + getSkinUrl(this.gameService.partida.tablero.hexagonos.tipo[16]) + ')'">
+            [style.background-image]="'url( ' + getSkinUrl(this.gameService.partida.tablero.hexagonos.tipo[16]) + ')'"
+            [matTooltip]="langService.getTipoTerreno(this.gameService.partida.tablero.hexagonos.tipo[16])">
                 <board-hex-number hexagono=16></board-hex-number>
 
                 <!--ASENTAMIENTOS-->
@@ -425,7 +455,8 @@
 
             <!--HEXAGONO 17-->
             <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[17])"
-            [style.background-image]="'url( ' + getSkinUrl(this.gameService.partida.tablero.hexagonos.tipo[17]) + ')'">
+            [style.background-image]="'url( ' + getSkinUrl(this.gameService.partida.tablero.hexagonos.tipo[17]) + ')'"
+            [matTooltip]="langService.getTipoTerreno(this.gameService.partida.tablero.hexagonos.tipo[17])">
                 <board-hex-number hexagono=17></board-hex-number>
 
                 <!--ASENTAMIENTOS-->
@@ -441,7 +472,8 @@
 
             <!--HEXAGONO 18-->
             <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[18])"
-            [style.background-image]="'url( ' + getSkinUrl(this.gameService.partida.tablero.hexagonos.tipo[18]) + ')'">
+            [style.background-image]="'url( ' + getSkinUrl(this.gameService.partida.tablero.hexagonos.tipo[18]) + ')'"
+            [matTooltip]="langService.getTipoTerreno(this.gameService.partida.tablero.hexagonos.tipo[18])">
                 <board-hex-number hexagono=18></board-hex-number>
 
                 <!--ASENTAMIENTOS-->
@@ -457,7 +489,8 @@
             <!--FIN TERRENOS FILA 5-->
 
             <li class='hex water'
-            [style.background-image]="'url( ' + getWaterUrl() +   ')'">
+            [style.background-image]="'url( ' + getWaterUrl() +   ')'"
+            [matTooltip]="langService.get('water')">
                 <board-harbor posicion='tl' arista=60></board-harbor>
                 <board-harbor posicion='l' arista=69></board-harbor>
 
@@ -474,7 +507,8 @@
             <li class='hex spacer'></li>
 
             <li class='hex water'
-            [style.background-image]="'url( ' + getWaterUrl() +   ')'">
+            [style.background-image]="'url( ' + getWaterUrl() +   ')'"
+            [matTooltip]="langService.get('water')">
                 <board-harbor posicion='tr' arista=64></board-harbor>
 
                 <board-settlement vertice=49 posicion="t"></board-settlement>
@@ -482,7 +516,8 @@
             </li>
 
             <li class='hex water'
-            [style.background-image]="'url( ' + getWaterUrl() +   ')'">
+            [style.background-image]="'url( ' + getWaterUrl() +   ')'"
+            [matTooltip]="langService.get('water')">
                 <board-harbor posicion='tl' arista=63></board-harbor>
                 <board-harbor posicion='tr' arista=68></board-harbor>
 
@@ -493,7 +528,8 @@
             </li>
 
             <li class='hex water'
-            [style.background-image]="'url( ' + getWaterUrl() +   ')'">
+            [style.background-image]="'url( ' + getWaterUrl() +   ')'"
+            [matTooltip]="langService.get('water')">
                 <board-harbor posicion='tl' arista=67></board-harbor>
                 <board-harbor posicion='tr' arista=71></board-harbor>
 
@@ -504,7 +540,8 @@
             </li>
 
             <li class='hex water'
-            [style.background-image]="'url( ' + getWaterUrl() +   ')'">
+            [style.background-image]="'url( ' + getWaterUrl() +   ')'"
+            [matTooltip]="langService.get('water')">
                 <board-harbor posicion='tl' arista=70></board-harbor>
                 
                 <board-settlement vertice=53 posicion="tl"></board-settlement>
@@ -519,12 +556,21 @@
     <div class="resultadoTirada">
         {{( gameService.partida.totalTurnos > 3 ) ?
             langService.get("roll-result") + gameService.partida.jugadores[gameService.partida.turnoActual - 1].nombre + ": " + gameService.partida.resultadoTirada : 
-            langService.get("initial-stage") }}
+            langService.get("initial-stage") }} <br/>
+        <span *ngIf="gameService.partida.turnoActual == gameService.partida.miTurno && 
+                     (!gameService.partida.jugadores[gameService.partida.miTurno - 1].primerosAsentamientos || 
+                      !gameService.partida.jugadores[gameService.partida.miTurno - 1].primerosCaminos ) ">
+            {{langService.get("build-your-first")}}
+        </span>
     </div>
 
     <br/>
     <!-- BOTONES -->
-    <button class="botonTurno" mat-raised-button [disabled]="gameService.partida.turnoActual != gameService.partida.miTurno" (click)="gameService.pasarTurno()">
+    <button class="botonTurno" mat-raised-button
+    [disabled]="gameService.partida.turnoActual != gameService.partida.miTurno ||
+                !gameService.partida.jugadores[gameService.partida.miTurno - 1].primerosAsentamientos || 
+                !gameService.partida.jugadores[gameService.partida.miTurno - 1].primerosCaminos "
+    (click)="gameService.pasarTurno()">
         <span *ngIf="gameService.partida.turnoActual == gameService.partida.miTurno">
             {{langService.get("pass-turn")}}
         </span>

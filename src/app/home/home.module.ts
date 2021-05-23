@@ -34,6 +34,7 @@ import { IngameComponent } from './rules/ingame/ingame.component';
 import { StadisticCardComponent } from './profile/stadistic-card/stadistic-card.component';
 import { MainHomeComponent } from './main-home/main-home.component';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner'; 
+import { MatMenuModule} from '@angular/material/menu';
 
 
 @NgModule({
@@ -60,6 +61,7 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
     MatListModule,
     MatIconModule, 
     MatProgressSpinnerModule, 
+    MatMenuModule
   ],
   exports: [
     NavBarComponent, SocialBarComponent, PlayComponent, ShopComponent, ProfileComponent ,RulesComponent
