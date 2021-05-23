@@ -24,6 +24,7 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class Tablero {
 //Campos de la clase
+	private static int maxPuntos = 2; 
 
 	// Mapa con las coordenadas de los centros de los 19 hexagonos del tablero. 
 	private Map<Integer, Hexagonos> hexagonos;
@@ -1487,7 +1488,7 @@ public class Tablero {
 		int pVJ2 = this.j[1].getPuntosVictoria();
 		int pVJ3 = this.j[2].getPuntosVictoria();
 		int pVJ4 = this.j[3].getPuntosVictoria();
-		return pVJ1 >= 10 || pVJ2 >= 10 || pVJ3 >= 10 || pVJ4 >= 10;
+		return pVJ1 >= Tablero.maxPuntos || pVJ2 >= Tablero.maxPuntos || pVJ3 >= Tablero.maxPuntos || pVJ4 >= Tablero.maxPuntos;
 	}
 
 	public Integer ganador () {
@@ -1496,10 +1497,10 @@ public class Tablero {
 			int pVJ2 = this.j[1].getPuntosVictoria();
 			int pVJ3 = this.j[2].getPuntosVictoria();
 			int pVJ4 = this.j[3].getPuntosVictoria();
-			if (pVJ1 >= 10) return 1;
-			else if (pVJ2 >= 10) return 2;
-			else if (pVJ3 >= 10) return 3;
-			else if (pVJ4 >= 10) return 4;
+			if (pVJ1 >= Tablero.maxPuntos) return 1;
+			else if (pVJ2 >= Tablero.maxPuntos) return 2;
+			else if (pVJ3 >= Tablero.maxPuntos) return 3;
+			else if (pVJ4 >= Tablero.maxPuntos) return 4;
 			else return -1;
 		}
 		else return null;
