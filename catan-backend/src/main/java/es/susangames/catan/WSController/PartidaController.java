@@ -74,6 +74,7 @@ public class PartidaController {
 	public void recargarPartida(String mensaje) {
 		
 		JSONObject jugada = new JSONObject(mensaje);
+		System.out.println(jugada.toString(4));
 		
 		String partida = jugada.getString("game");
 		

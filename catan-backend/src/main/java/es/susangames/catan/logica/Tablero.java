@@ -1269,7 +1269,11 @@ public class Tablero {
 					this.j[0].getPrimerosAsentamientosConstruidos() 
 					&& this.j[1].getPrimerosAsentamientosConstruidos() 
 					&& this.j[2].getPrimerosAsentamientosConstruidos()
-					&& this.j[3].getPrimerosAsentamientosConstruidos();
+					&& this.j[3].getPrimerosAsentamientosConstruidos()
+					&& this.j[0].getPrimerosCaminosConstruidos()
+					&& this.j[1].getPrimerosCaminosConstruidos()
+					&& this.j[2].getPrimerosCaminosConstruidos()
+					&& this.j[3].getPrimerosCaminosConstruidos();
 			if (finalizadoPrimerasConstrucciones) {
 				this.seHaMovidoLadron = false;
 				this.dados = generarNumero();
@@ -1351,6 +1355,8 @@ public class Tablero {
 			
 			break;
 			// Cartas
+		case "recargar partida":
+			break;
 		default:
 			// No existe la accion solicitada.
 			message = "La acción solicitada no se encuentra disponible";

@@ -79,6 +79,7 @@ public class ws {
     public static final String partida_com_topic = "/partida-com/";
     public static final String partida_test_topicUrl = "/test-partida/";
     public static final String partidaJugada = "/app/partida/jugada";
+    public static final String partida_reload_topic = "/partida-rld/";
     
 
 

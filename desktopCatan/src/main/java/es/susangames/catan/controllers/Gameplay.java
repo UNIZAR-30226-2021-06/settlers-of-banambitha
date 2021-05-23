@@ -420,6 +420,7 @@ public class Gameplay {
     private static Subscription partida_act_topic_id;
     private static Subscription partida_chat_topic_id;
     private static Subscription partida_com_topic_id;
+    private static Subscription partida_reload_topic_id;
     
     
     public Gameplay() {
@@ -434,6 +435,79 @@ public class Gameplay {
                                                 "Jugador_2",
                                                 "Jugador_3",
                                                 "Jugador_4"});
+
+    }
+
+    public static void reanudarPartida (String idPartida) {
+        
+        esperandoTableroInicial = true;
+        Partida.miTurno = 1;
+        Partida.id = idPartida;
+        String jugadores[] = new String[4];
+        jugadores[0] = ""; jugadores[1] = ""; jugadores[2] = ""; jugadores[3] = "";
+        Partida.jugadores = inicializarJugadores(jugadores);
+        Partida.tablero = new Tablero();
+        initTablero();
+        subscribeToTopics();
+
+        Partida.clock = -1;
+        Partida.turnoActual = 0;
+        Partida.totalTurnos = 0;
+        Partida.resultadoTirada = 0;
+        Partida.PobladoDisponible = false;
+        Partida.CiudadDisponible = false;
+        Partida.CaminoDisponible = false;
+        Partida.movioLadron = false;
+        Partida.yaComercio = false;
+
+        partida_reload_topic_id = 
+            ws.session.subscribe( ws.partida_reload_topic  + UserService.getUsername(), new StompFrameHandler() {
+                @Override
+                public Type getPayloadType(StompHeaders headers) {
+                    return String.class;
+                }
+                @Override
+                public void handleFrame(StompHeaders headers, Object payload) {
+                    procesarMensajeRecarga (payload.toString());
+                }
+            });
+
+        JSONObject jsObj = new JSONObject();
+        jsObj.put("player", UserService.getUsername());
+        jsObj.put("game", idPartida);
+        jsObj.put("reload", true);
+
+        System.out.println(jsObj.toString(4));
+        
+        ws.session.send(ws.partidaRecargar, jsObj.toString());
+
+        cargandoPartida = true;
+    }
+
+    private static void procesarMensajeRecarga (String mensaje) {
+        System.out.println("Ahora la partida es: " + Partida.id);
+        JSONObject obj = new JSONObject(mensaje);
+
+        JSONArray playerNames = obj.getJSONArray(MessageKeys.PLAYER_NAMES);
+        System.out.println(playerNames.toString());
+        int miTurno = 0;
+        for (int i = 0; i < playerNames.length(); ++i) {
+            if (playerNames.getString(i).equals(UserService.getUsername())) {
+                miTurno = i;
+            }
+        }
+
+        if (  miTurno >= 0 ){
+            System.out.println("comenzando partida");
+            Partida.miTurno = miTurno + 1;
+            Partida.clock = -1;
+      
+            procesarMensaje(mensaje);
+            System.out.println("la partida: " + Partida.id);
+      
+          } else{      
+            System.out.println("no estabas en esa partida!");
+        }
 
     }
 
@@ -507,6 +581,7 @@ public class Gameplay {
     }
 
     private static void subscribeToTopics() {
+        System.out.println("subscribeToTopics() " + Partida.id);
         if(Partida.id != null) {
             //Suscripción a los mensajes de la partida (acciones de los jugadores)
             partida_act_topic_id = 
@@ -556,6 +631,7 @@ public class Gameplay {
             partida_act_topic_id.unsubscribe();
             partida_chat_topic_id.unsubscribe();
             partida_com_topic_id.unsubscribe();
+            partida_reload_topic_id.unsubscribe();
         }
     }
 
@@ -626,6 +702,7 @@ public class Gameplay {
             actualizarPartida(mensaje);
         } catch (Exception e) {
             System.err.println("No se pudo procesar el mensaje");
+            System.err.println("Exception e: " + e.toString());
         }
         if(esperandoTableroInicial) {
             esperandoTableroInicial = false;
@@ -714,15 +791,16 @@ public class Gameplay {
 
     private static void actualizarPartida(String partida) throws Exception {
         JSONObject object = new JSONObject(partida);
-        System.out.println(partida);
+        System.out.println(object.toString(4));
 
         if(!object.get(MessageKeys.CLOCK).equals(null) &&
             object.getInt(MessageKeys.CLOCK) > Partida.clock) {
 
             Partida.clock =  object.getInt(MessageKeys.CLOCK);
-            if(object.getInt(MessageKeys.EXIT_STATUS) <= 0) {
+            if(!object.isNull(MessageKeys.EXIT_STATUS) 
+                && (object.getInt(MessageKeys.EXIT_STATUS) <= 0 || esperandoTableroInicial)) {
                 // TODO: Enviar mensaje al chat de la partida
-
+                System.out.println("MessageKeys.EXIT_STATUS <= 0");
 
                 // Nombre y miTurno
                 try {
@@ -809,7 +887,13 @@ public class Gameplay {
                 }
 
                 //Pre-calculos
-                actualizarPrecalculos();
+                try {
+                    actualizarPrecalculos();
+                } catch(Exception e) {
+                    System.err.println("Error precalculos");
+                    System.err.println(e.toString());
+                }
+                
 
             } else {
                 // TODO: Recibido codigo erroneo
@@ -828,6 +912,7 @@ public class Gameplay {
             }
         } catch(Exception e) {
             System.err.println("Faltan los recursos en el mensaje");
+            System.err.println("Exception e: " + e.toString());
         }
         
         try {
@@ -953,7 +1038,7 @@ public class Gameplay {
 
 
     private static void actualizarTablero(JSONObject tablero) {
-        System.out.println(tablero);
+        //System.out.println(tablero);
         // Hexagonos
         try {
             if(!tablero.get(MessageKeys.TAB_INFO_HEXAGONOS).equals(null)) {
