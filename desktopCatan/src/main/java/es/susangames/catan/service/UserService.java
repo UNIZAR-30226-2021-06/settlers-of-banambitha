@@ -8,13 +8,13 @@ import java.util.regex.Pattern;
 //https://catan-backend-app.herokuapp.com/
 public class UserService {
     private static HttpService netService;
-    private static final String baseUrl = "http://localhost:8080/usuario";
+    //private static final String baseUrl = "http://localhost:8080/usuario";
     private static final String baseUrl = "https://catan-backend-app.herokuapp.com/usuario";
     private static final String addUrl = baseUrl + "/add";
     private static final String validateUrl = baseUrl + "/validate";
     private static final String updateUrl = baseUrl + "/update";
     private static final String findUrl = baseUrl + "/find";
-    private static final String baseFriendUrl = "http://localhost:8080/amigo";
+    //private static final String baseFriendUrl = "http://localhost:8080/amigo";
     private static final String baseFriendUrl = "https://catan-backend-app.herokuapp.com/amigo";
     private static final String friendsListUrl = baseFriendUrl + "/list";
     private static final String pendigReqUrl = baseFriendUrl + "/pending-r";

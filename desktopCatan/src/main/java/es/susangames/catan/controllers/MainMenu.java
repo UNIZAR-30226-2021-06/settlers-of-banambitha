@@ -573,10 +573,8 @@ public class MainMenu {
         ArrayList<RoomServices.Invite> invitaciones = RoomServices.invites;
 
         for (RoomServices.Invite i : invitaciones) {
-            if (i.noHaSidoContestada()) {
                 System.out.println("Invitacion de " + i.getLeader());
                 loadInvitation(i.getLeader(), i.getId(), UserService.getUserImg(i.getLeader()));
-            }
         }
 
         JSONArray pendingReqs = UserService.pendingFriendReq();

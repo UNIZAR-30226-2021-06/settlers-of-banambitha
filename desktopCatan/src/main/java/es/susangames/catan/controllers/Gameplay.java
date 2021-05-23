@@ -460,7 +460,6 @@ public class Gameplay {
         Partida.jugadores = inicializarJugadores(jugadores);
         Partida.tablero = new Tablero();
         initTablero();
-        subscribeToTopics();
 
         Partida.clock = -1;
         Partida.turnoActual = 0;
@@ -471,6 +470,9 @@ public class Gameplay {
         Partida.CaminoDisponible = false;
         Partida.movioLadron = false;
         Partida.yaComercio = false;
+
+        SolicitudComercio.res1 = new Gameplay().new ProductoComercio();
+        SolicitudComercio.res2 = new Gameplay().new ProductoComercio();
 
         partida_reload_topic_id = 
             ws.session.subscribe( ws.partida_reload_topic  + UserService.getUsername(), new StompFrameHandler() {
@@ -514,6 +516,7 @@ public class Gameplay {
             Partida.miTurno = miTurno + 1;
             Partida.clock = -1;
       
+            subscribeToTopics();
             procesarMensaje(mensaje);
             System.out.println("la partida: " + Partida.id);
       
@@ -720,7 +723,11 @@ public class Gameplay {
             esperandoTableroInicial = false;
             try {
                 App.nuevaPantalla("/view/gameplay.fxml");
-            } catch(Exception e) {}
+            } catch(Exception e) {
+                System.err.println("Exception e: " + e.toString());
+                System.err.println("Exception e: " + e.getMessage());
+                e.printStackTrace();
+            }
         }
         mostrarCambiosTablero();
         if(existeGanador(mensaje)) { 
@@ -731,7 +738,7 @@ public class Gameplay {
             try {
                 App.nuevaPantalla("/view/mainMenu.fxml");
             } catch (IOException e) {
-        
+                System.err.println("Exception e: " + e.toString());
             }
         } 
         
@@ -773,11 +780,22 @@ public class Gameplay {
                             System.out.println("2dsfgd");
                             Stage stage = (Stage) _mainAnchor.getScene().getWindow();
                             System.out.println("3dfd");
-                            popupNewTradeOffer.show(stage);
+                            try{
+                                Platform.runLater(new Runnable() {
+                                    @Override public void run() {
+                                        popupNewTradeOffer.show(stage);
+                                    }
+                                  });
+                            } catch(Exception e){
+                                System.out.println(e.toString());
+                                e.printStackTrace();
+                            }
                             System.out.println("4sdfa");
                         //}
                     } catch(Exception e) {
                         System.out.println("Fallo cargando pop up tradeo recibido");
+                        System.out.println(e.toString());
+                        e.printStackTrace();
                     }
                     
                 }
@@ -1648,10 +1666,10 @@ public class Gameplay {
                 esMiTurno()) {
                 posRoad = pos;
                 buildRoadPopUp();
-                if (!popupCards.isShowing()) {
+                //if (!popupCards.isShowing()) {
                     Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
                     popupCards.show(stage);
-                }
+                //}
             } else if((Partida.tablero.aristas.puertos.arcilla == pos ||
                       Partida.tablero.aristas.puertos.madera == pos  ||
                       Partida.tablero.aristas.puertos.mineral == pos ||
@@ -1663,13 +1681,14 @@ public class Gameplay {
                       Partida.tablero.aristas.puertos.basico[3] == pos) && 
                       event.getButton().equals(MouseButton.SECONDARY) && 
                       esMiTurno()) {
-                        
-                        if (!popupExternalTrade.isShowing()) {
-                            idPuerto = pos;
-                            externalTradePopUp();
-                            Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
-                            popupExternalTrade.show(stage);
-                        }
+                idPuerto = pos;
+                System.out.println("externalTradePopUp");
+                externalTradePopUp();   
+                if (!popupExternalTrade.isShowing()) {
+                    
+                    Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+                    popupExternalTrade.show(stage);
+                }
             }   
         });
     }
@@ -2622,6 +2641,7 @@ public class Gameplay {
     }
 
     private void externalTradePopUp() {
+        System.out.println("AnchorPane");
         AnchorPane anchorPane = new AnchorPane();
         anchorPane.setPrefSize(500, 400);
         anchorPane.setStyle("-fx-background-color:  #965d62; -fx-background-radius: 12px" );
@@ -2630,6 +2650,7 @@ public class Gameplay {
         popupExternalTrade.setAutoHide(true);
 
         // Titulo
+        System.out.println("titulo");
         Text title = new Text(10, 50, (LangService.getMapping("external_trade")));
         title.setFont(new Font(40));
         title.setLayoutX(anchorPane.getLayoutX() + 55 );
@@ -2639,6 +2660,7 @@ public class Gameplay {
 
 
         // Selecciona una material
+        System.out.println("Selecciona una material");
         Text tratio = new Text(10, 50, "Material solicitado");
         tratio.setFont(new Font(20));
         tratio.setLayoutX(anchorPane.getLayoutX() + 10 );
@@ -2648,6 +2670,7 @@ public class Gameplay {
 
 
         // Select material solicitado
+        System.out.println("ChoiceBox");
         ratio = new ChoiceBox<>();
         ratio.setStyle("-fx-background-radius: 12px;" );
         ratio.getItems().add(LangService.getMapping("clay") );
@@ -2668,6 +2691,7 @@ public class Gameplay {
        );
 
         // Lana
+        System.out.println("Lana");
         Text lanaText = new Text(10, 50,LangService.getMapping("wool") );
         lanaText.setFont(new Font(20));
         lanaText.setLayoutX(anchorPane.getLayoutX() + 10 );
@@ -2685,6 +2709,7 @@ public class Gameplay {
 
 
          // Madera
+         System.out.println("Madera");
          Text maderaText = new Text(10, 50,LangService.getMapping("wood") );
          maderaText.setFont(new Font(20));
          maderaText.setLayoutX(anchorPane.getLayoutX() + 10 );
@@ -2702,6 +2727,7 @@ public class Gameplay {
 
       
         // Cereal
+        System.out.println("Cereal");
         Text cerealText = new Text(10, 50,LangService.getMapping("cereal") );
         cerealText.setFont(new Font(20));
         cerealText.setLayoutX(anchorPane.getLayoutX() + 10 );
@@ -2719,6 +2745,7 @@ public class Gameplay {
 
 
         // Mineral
+        System.out.println("Mineral");
         Text mineralText = new Text(10, 50,LangService.getMapping("mineral") );
         mineralText.setFont(new Font(20));
         mineralText.setLayoutX(anchorPane.getLayoutX() + 10 );
@@ -2736,6 +2763,7 @@ public class Gameplay {
         anchorPane.getChildren().add(spinnerMineral);
 
         // Arcilla
+        System.out.println("Arcilla");
         Text arcillaText = new Text(10, 50,LangService.getMapping("clay") );
         arcillaText.setFont(new Font(20));
         arcillaText.setLayoutX(anchorPane.getLayoutX() + 10 );
@@ -2753,6 +2781,7 @@ public class Gameplay {
         anchorPane.getChildren().add(spinnerArcilla);
 
         // Boton enviar solicitud tradeo
+        System.out.println("Boton enviar solicitud tradeo");
         sendTradeExternal = new Button();
         sendTradeExternal.setPrefSize(200,40);
         sendTradeExternal.setLayoutX(anchorPane.getLayoutX() + 150);
@@ -2894,6 +2923,7 @@ public class Gameplay {
 
     @FXML
     public void initialize() throws IOException {
+        System.out.println("Initialize");
          _player1Name = player1Name; 
          _player2Name = player2Name; 
          _player3Name = player3Name; 
@@ -2909,6 +2939,7 @@ public class Gameplay {
          _passTurnButton = passTurnButton;
          _mainAnchor = mainAnchor;
 
+         System.out.println("Pass Turn Button");
          passTurnButton.setOnAction((ActionEvent event) -> {
             if(esMiTurno()) {
                 JSONObject jugada = new JSONObject();
@@ -2920,8 +2951,9 @@ public class Gameplay {
                 jugada.put("move",move);
                 ws.session.send(ws.partidaJugada, jugada.toString());
             }
-         });
-         
+        });
+
+        System.out.println("Pass Turn Button");
         reportPLayer1.setOnAction((ActionEvent event) -> {
             // TODO: Reportar jugador
          });
@@ -2949,27 +2981,37 @@ public class Gameplay {
         reportPLayer3.setText(LangService.getMapping("report"));
         reportPLayer4.setText(LangService.getMapping("report"));
 
+        System.out.println("Report system");
         chatContent.setEditable(false);
         chatContent.setMouseTransparent(true);
         chatContent.setFocusTraversable(false);  
 
         resourcesPopUp();
-        buildSettlementPopUp();
-        buildRoadPopUp();
+        System.out.println("resourcesPopUp");
+        //buildSettlementPopUp();
+        System.out.println("buildSettlementPopUp");
+        //buildRoadPopUp();
+        System.out.println("buildRoadPopUp");
         inTradePopUp();
-        externalTradePopUp();
+        System.out.println("inTradePopUp");
+        //externalTradePopUp();
+        System.out.println("externalTradePopUp");
         updateDice();
+        System.out.println("updateDice");
         settingsPopup();
+        System.out.println("settingsPopup");
         passTurnButton.setText((LangService.getMapping("next_turn")));
         cards.setText(LangService.getMapping("player_resources"));
 
+        System.out.println("Cartas xD");
         cards.setOnAction((ActionEvent event) -> {
             if (!popupResources.isShowing()) {
                 Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
                 popupResources.show(stage);
             }
-         });
+        });
        
+        System.out.println("Crear hexagonos");
         // Crear hexagonos
         Integer numberHexagonAux = 0;
         for(Integer i =0; i < 37; i++) {
@@ -3020,6 +3062,8 @@ public class Gameplay {
             assignRoads(pol, i);
             assignSettlements(pol,i);        
         }
+
+        System.out.println("Hexagonos colocados");
     } 
 }
 

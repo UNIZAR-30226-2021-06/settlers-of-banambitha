@@ -154,7 +154,10 @@ public class Play {
             _player1Name.setText(info_player1.getString("nombre"));
             Image imgUser1 = new Image("/img/users/" + info_player1.getString("avatar"));
             _player1Icon.setFill(new ImagePattern(imgUser1));
-        } 
+        } else {
+            Image imgUser1 = new Image("/img/no_user.png");
+            _player1Icon.setFill(new ImagePattern(imgUser1));
+        }
         if (users.length > 1 ) {
             JSONObject info_player2 = UserService.getUserInfo(users[1]);
             System.out.println("Player 2:\n" + info_player2.toString(4));
@@ -162,7 +165,10 @@ public class Play {
             _player2Name.setText(info_player2.getString("nombre"));
             Image imgUser2 = new Image("/img/users/" + info_player2.getString("avatar"));
             _player2Icon.setFill(new ImagePattern(imgUser2));
-        } 
+        } else {
+            Image imgUser1 = new Image("/img/no_user.png");
+            _player2Icon.setFill(new ImagePattern(imgUser1));
+        }
         if (users.length > 2) {
             JSONObject info_player3 = UserService.getUserInfo(users[2]);
             System.out.println("Player 3:\n" + info_player3.toString(4));
@@ -170,7 +176,10 @@ public class Play {
             _player3Name.setText(info_player3.getString("nombre"));
             Image imgUser3 = new Image("/img/users/" + info_player3.getString("avatar"));
             _player3Icon.setFill(new ImagePattern(imgUser3));
-        } 
+        } else {
+            Image imgUser1 = new Image("/img/no_user.png");
+            _player3Icon.setFill(new ImagePattern(imgUser1));
+        }
         if (users.length > 3) {
             JSONObject info_player4 = UserService.getUserInfo(users[3]);
             System.out.println("Player 4:\n" + info_player4.toString(4));
@@ -178,7 +187,10 @@ public class Play {
             _player4Name.setText(info_player4.getString("nombre"));
             Image imgUser4 = new Image("/img/users/" + info_player4.getString("avatar"));
             _player4Icon.setFill(new ImagePattern(imgUser4));
-        } 
+        } else {
+            Image imgUser1 = new Image("/img/no_user.png");
+            _player4Icon.setFill(new ImagePattern(imgUser1));
+        }
         
     } 
 
@@ -187,7 +199,7 @@ public class Play {
     public static void recargarSalaPartida () {
         System.out.println("Intentando recargar la sala...");
         String users[] = RoomServices.room.toArrayStrings();
-        System.out.println(users.length);
+        System.out.println("Users length: " + users.length);
         if(users.length  > 0) {
             JSONObject info_player1 = UserService.getUserInfo(users[0]);
             System.out.println("Player 1:\n" + info_player1.toString(4));
@@ -195,11 +207,11 @@ public class Play {
             _player1Name.setText(info_player1.getString("nombre"));
             Image imgUser1 = new Image("/img/users/" + info_player1.getString("avatar"));
             _player1Icon.setFill(new ImagePattern(imgUser1));
-        } /*else {
-            _player1Name.setText("Jugador 1");
-            Image imgUser1 = new Image("/img/users/user_profile_image_original.png");
+        } else {
+            _player1Name.setText("");
+            Image imgUser1 = new Image("/img/no_user.png");
             _player1Icon.setFill(new ImagePattern(imgUser1));
-        }*/
+        }
         if (users.length > 1 ) {
             JSONObject info_player2 = UserService.getUserInfo(users[1]);
             System.out.println("Player 2:\n" + info_player2.toString(4));
@@ -207,11 +219,11 @@ public class Play {
             _player2Name.setText(info_player2.getString("nombre"));
             Image imgUser2 = new Image("/img/users/" + info_player2.getString("avatar"));
             _player2Icon.setFill(new ImagePattern(imgUser2));
-        } /*else {
-            _player2Name.setText("Jugador 2");
-            Image imgUser2 = new Image("/img/users/user_profile_image_original.png");
+        } else {
+            _player2Name.setText("");
+            Image imgUser2 = new Image("/img/no_user.png");
             _player2Icon.setFill(new ImagePattern(imgUser2));
-        }*/
+        }
         if (users.length > 2) {
             JSONObject info_player3 = UserService.getUserInfo(users[2]);
             System.out.println("Player 3:\n" + info_player3.toString(4));
@@ -219,11 +231,11 @@ public class Play {
             _player3Name.setText(info_player3.getString("nombre"));
             Image imgUser3 = new Image("/img/users/" + info_player3.getString("avatar"));
             _player3Icon.setFill(new ImagePattern(imgUser3));
-        } /*else {
-            _player3Name.setText("Jugador 3");
-            Image imgUser3 = new Image("/img/users/user_profile_image_original.png");
+        } else {
+            _player3Name.setText("");
+            Image imgUser3 = new Image("/img/no_user.png");
             _player3Icon.setFill(new ImagePattern(imgUser3));
-        }*/
+        }
         if (users.length > 3) {
             JSONObject info_player4 = UserService.getUserInfo(users[3]);
             System.out.println("Player 4:\n" + info_player4.toString(4));
@@ -231,11 +243,11 @@ public class Play {
             _player4Name.setText(info_player4.getString("nombre"));
             Image imgUser4 = new Image("/img/users/" + info_player4.getString("avatar"));
             _player4Icon.setFill(new ImagePattern(imgUser4));
-        } /*else {
-            _player4Name.setText("Jugador 4");
-            Image imgUser4 = new Image("/img/users/user_profile_image_original.png");
+        } else {
+            _player4Name.setText("");
+            Image imgUser4 = new Image("/img/no_user.png");
             _player4Icon.setFill(new ImagePattern(imgUser4));
-        }*/
+        }
     }
 
     @FXML

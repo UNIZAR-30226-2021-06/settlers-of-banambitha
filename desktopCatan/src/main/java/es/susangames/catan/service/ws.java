@@ -138,18 +138,6 @@ public class ws {
             }
         });
 
-        // invitacion
-        invitacion_topic_id = session.subscribe( invitationRequestUrl + UserService.getUsername(), new StompFrameHandler() {
-            @Override
-            public Type getPayloadType(StompHeaders headers) {
-                return String.class;
-            }
-            @Override
-            public void handleFrame(StompHeaders headers, Object payload) {
-                RoomServices.procesarMensajeInvitacion(payload.toString());
-            }
-        });
-
         //playerAct
         session.subscribe(playerActUrl + UserService.getUsername(), new StompFrameHandler() {
             @Override
@@ -175,6 +163,18 @@ public class ws {
         });
 
         RoomServices.crearSala();
+
+        // invitacion
+        invitacion_topic_id = session.subscribe( invitationRequestUrl + UserService.getUsername(), new StompFrameHandler() {
+            @Override
+            public Type getPayloadType(StompHeaders headers) {
+                return String.class;
+            }
+            @Override
+            public void handleFrame(StompHeaders headers, Object payload) {
+                RoomServices.procesarMensajeInvitacion(payload.toString());
+            }
+        });
 
         JSONObject JSUserInfo = UserService.getUserInfo(UserService.getUsername());
         System.out.println(JSUserInfo.toString(4));
@@ -295,6 +295,15 @@ public class ws {
         System.out.println("sala creada");
     }
 
+    public static void actualizarPlayers(ArrayList<String> updated_players) {
+        RoomServices.updatePlayers(updated_players);
+
+        System.out.println("actualizando sala... " + "Recargar sala? " + MainMenu.playOpenned);
+        if(MainMenu.playOpenned) {
+            Play.recargarSalaPartida();
+        }
+    }
+
     public static void procesarMensajeAccionSala (Object payload) {
         if (RoomServices.room != null) {
             JSONObject jsObj = new JSONObject(payload.toString());
@@ -313,10 +322,7 @@ public class ws {
                     sala_act_topic_id.unsubscribe();
                     RoomServices.room = null;
                     RoomServices.crearSala();
-                    System.out.println("creando sala...");
-                    if(MainMenu.playOpenned) {
-                        Play.recargarSalaPartida();
-                    }
+                    
                     break;
                 case "SEARCHING":
                     //Ha iniciado la búsqueda de partida
@@ -342,12 +348,8 @@ public class ws {
                         System.out.println("Player: " + playersJSArray.getString(i));
                         updated_players.add(playersJSArray.getString(i));
                     }
-                    RoomServices.updatePlayers(updated_players);
 
-                    //MainMenu.loadPlay();
-                    if(MainMenu.playOpenned) {
-                        Play.recargarSalaPartida();
-                    }
+                    actualizarPlayers(updated_players);
 
                     break;
                 case "FOUND":
@@ -453,7 +455,7 @@ public class ws {
         System.out.println("Enviar invitacion aceptar.");
         for (RoomServices.Invite i : RoomServices.invites) {
             if (i.getLeader().equals(friend)) {
-                i.aceptarInvitacion();
+                RoomServices.invites.remove(i);
                 break;
             }
         }
@@ -477,7 +479,7 @@ public class ws {
         session.send(invitacionCancelar, js.toString());
         for (RoomServices.Invite i : RoomServices.invites) {
             if (i.getLeader().equals(friend)) {
-                i.cancelarInvitacion();
+                RoomServices.invites.remove(i);
                 break;
             }
         }

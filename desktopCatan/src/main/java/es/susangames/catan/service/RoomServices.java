@@ -141,12 +141,10 @@ public class RoomServices {
     public static class Invite {
         private String _leader;
         private String _id;
-        private String _status;
 
         public Invite (String leader, String id) {
             this._leader = leader;
             this._id = id;
-            _status = "No contestada";
         }
 
         public void setLeader (String leader) {
@@ -163,18 +161,6 @@ public class RoomServices {
 
         public String getId () {
             return this._id;
-        }
-
-        public void cancelarInvitacion () {
-            _status = "Cancelada";
-        }
-
-        public void aceptarInvitacion () {
-            _status = "Aceptada";
-        }
-
-        public Boolean noHaSidoContestada () {
-            return _status == "No contestada";
         }
     }
 
@@ -212,7 +198,7 @@ public class RoomServices {
     }
 
     public static void procesarMensajeCreacionSala (Object payload) {
-        System.out.println(payload.toString());
+        System.out.println("procesarMensajeCreacionSala" + payload.toString());
         JSONObject jsObj = new JSONObject(payload.toString());
         String status = jsObj.getString("status");
         if (room == null && status.equals(RoomStatus.CREATED.toString())) {
@@ -227,6 +213,11 @@ public class RoomServices {
                 invites, players, status);
             
             ws.SubscribeSalaAct();
+
+            System.out.println("creando sala... " + "Recargar sala? " + MainMenu.playOpenned);
+            if(MainMenu.playOpenned) {
+                Play.recargarSalaPartida();
+            }
         }
     }
 
@@ -335,6 +326,11 @@ public class RoomServices {
 
                 ws.SubscribeSalaAct();
 
+                System.out.println("creando sala... " + "Recargar sala? " + MainMenu.playOpenned);
+                if(MainMenu.playOpenned) {
+                    Play.recargarSalaPartida();
+                }
+
                 break;
             case "OPEN":
                 uniendoseASala = false;
@@ -372,6 +368,7 @@ public class RoomServices {
     public static void crearSala () {
         System.out.println("crearSala");
         if (room == null && !uniendoseASala && !creandoSala) {
+            System.out.println("Mensaje crear sala");
             JSONObject myObject = new JSONObject();
             myObject.put("leader", UserService.getUsername());
             ws.session.send(ws.crearSala, myObject.toString());
