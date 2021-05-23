@@ -652,7 +652,6 @@ export class GameService implements Connectable{
     }
   }
 
-  
   /**
    * Procesa un mensaje de partida (con información del tablero)
    * 
