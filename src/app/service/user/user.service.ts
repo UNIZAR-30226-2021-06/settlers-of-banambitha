@@ -7,6 +7,13 @@ import { environment } from '../../../environments/environment';
 import { GameService } from '../game/game.service';
 import { WsService } from '../ws/ws.service';
 
+export enum BoardSkin {
+  CLASICA  = "Clasica", 
+  HARDWARE = "Hardware",
+  ESPACIAL = "Espacial" 
+}
+
+
 
 @Injectable({
   providedIn: 'root'
@@ -37,7 +44,7 @@ export class UserService {
   public mail:       String
   public idioma:     String
   public avatar:     String
-  public apariencia: String
+  public apariencia: BoardSkin
   public saldo:      Number
   public partida:    string
   public bloqued:    String
@@ -86,14 +93,57 @@ export class UserService {
   public updateUserData(userData: Object){
     console.log(userData)
     this.username   = userData["nombre"]
-    this.apariencia = userData["apariencia"]
     this.saldo      = userData["saldo"]
     this.mail       = userData["mail"]
     this.avatar     = userData["avatar"]
     this.partida    = userData["partida"]
     this.bloqued    = userData["bloqueado"]
     this.reports    = userData["informes"]
-    console.log(this.partida)
+    this.apariencia = this.getSkinFromUrl(userData["apariencia"])
+  }
+
+  public getSkinFromUrl(url: String): BoardSkin{
+    switch (url){
+      case "espacial_shop_image.jpg": 
+        return BoardSkin.ESPACIAL; 
+
+      case "hardware_shop_image.jpg": 
+        return BoardSkin.HARDWARE; 
+
+      default: 
+        return BoardSkin.CLASICA; 
+    }
+  }
+
+  public getUrlFromSkin(skin: BoardSkin): String {
+    switch (skin){
+
+      case BoardSkin.HARDWARE: 
+        return "hardware_shop_image.jpg" 
+
+      case BoardSkin.ESPACIAL: 
+        return "espacial_shop_image.jpg"
+
+      default: 
+        return "apariencia_clasica.png"
+
+    }
+  }
+
+  public updateApariencia(skin: BoardSkin){
+    let msg = {
+      nombre : this.username,
+      apariencia : this.getUrlFromSkin(skin)
+    }
+
+    let that = this
+
+    this.http.put<any>(UserService.baseUrl + "/update", JSON.stringify(msg),
+                                             UserService.httpOptions).subscribe( (response) => {
+
+    console.log("apariencia actualizada a " + skin)
+    that.updateUserData(response.body)
+    })
   }
 
   /**

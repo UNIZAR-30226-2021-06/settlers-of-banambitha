@@ -6,7 +6,7 @@
     <mat-menu  #usarPuerto >
         <div style="text-align: center; color: white;">
             {{tipoPuertoString}} <br/> 
-            {{ this.gameService.partida.tablero.aristas.camino[this.arista] == this.gameService.miTipoCamino() ? recursosRequeridos - 1 : recursosRequeridos }}:1
+            <!-- {{ this.gameService.partida.tablero.aristas.camino[this.arista] == this.gameService.miTipoCamino() ? recursosRequeridos - 1 : recursosRequeridos }}:1 -->
         </div>
         <mat-divider></mat-divider>
         <button mat-menu-item (click)="openExternalTradeDialog()">

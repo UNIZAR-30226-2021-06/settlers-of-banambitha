@@ -18,7 +18,7 @@
         [displayWith]="formatLabelMadera"
         tickInterval="1"
         min="0"
-        [max]="min(recursosRequeridos - numArcilla - numCereal - numMineral - numLana, me.recursos.madera)"></mat-slider>
+        [max]="me.recursos.madera"></mat-slider>
       </mat-grid-tile>
 
       <mat-grid-tile colspan=1>
@@ -31,7 +31,7 @@
         [displayWith]="formatLabelMineral"
         tickInterval="1"
         min="0"
-        [max]="min(recursosRequeridos - numArcilla - numCereal - numMadera - numLana, me.recursos.mineral)"></mat-slider>
+        [max]="me.recursos.mineral"></mat-slider>
       </mat-grid-tile>
 
       <mat-grid-tile colspan=1>
@@ -44,7 +44,7 @@
         [displayWith]="formatLabelLana"
         tickInterval="1"
         min="0"
-        [max]="min(recursosRequeridos - numArcilla - numCereal - numMineral - numMadera, me.recursos.lana)"></mat-slider>
+        [max]="me.recursos.lana"></mat-slider>
       </mat-grid-tile>
 
       <mat-grid-tile colspan=1>
@@ -70,12 +70,12 @@
         [displayWith]="formatLabelCereal"
         tickInterval="1"
         min="0"
-        [max]="min(recursosRequeridos - numArcilla - numMadera - numMineral - numLana, me.recursos.cereales)"></mat-slider>
+        [max]="me.recursos.cereales"></mat-slider>
       </mat-grid-tile>
     </mat-grid-list>
 
 
-    <div *ngIf="tipoPuerto == tiposPuerto().BASICO">
+    <div>
       <p> {{langService.get("requested-resource")}} </p>
       <mat-form-field appearance="fill" fxLayout="column" fxLayoutAlign="center stretch">
         <mat-label>
@@ -93,7 +93,7 @@
       <button class="boton" mat-raised-button mat-dialog-close
               (click)="onSubmit()"
               [disabled] = "numMadera + numArcilla + numCereal
-              + numLana + numMineral != recursosRequeridos || materialSolicitado == null" >
+              + numLana + numMineral == 0 || materialSolicitado == null" >
          {{langService.get("trade")}}
       </button>
     </div>

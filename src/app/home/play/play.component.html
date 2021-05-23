@@ -15,15 +15,9 @@
             <mat-label>
                 {{langService.get("select-appearence")}}
             </mat-label>
-            <mat-select>
-                <mat-option>
-                    {{langService.get("skin-spacial")}}
-                </mat-option>
-                <mat-option>
-                    {{langService.get("skin-normal")}}
-                </mat-option>
-                <mat-option>
-                    {{langService.get("skin-hardware")}}
+            <mat-select [(ngModel)]="formatLabelSelectedSkin" name="skin" (selectionChange)="change($event)">
+                <mat-option *ngFor="let skin of this.availableSkins" [value]="skin">
+                    {{skin}}
                 </mat-option>
             </mat-select>
         </mat-form-field>

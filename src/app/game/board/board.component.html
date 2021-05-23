@@ -19,21 +19,25 @@
 
             <li class='hex spacer'></li>
 
-            <li class='hex water'>
+            <li class='hex water'
+            [style.background-image]="'url( ' + getWaterUrl() +   ')'">
                 <board-harbor posicion='br' arista=4></board-harbor>
             </li>
 
-            <li class='hex water'>
+            <li class='hex water'
+            [style.background-image]="'url( ' + getWaterUrl() +   ')'">
                 <board-harbor posicion='bl' arista=5></board-harbor>
                 <board-harbor posicion='br' arista=9></board-harbor>
             </li>
 
-            <li class='hex water'>
+            <li class='hex water'
+            [style.background-image]="'url( ' + getWaterUrl() +   ')'">
                 <board-harbor posicion='bl' arista=10></board-harbor>
                 <board-harbor posicion='br' arista=14></board-harbor>
             </li>
 
-            <li class='hex water'>
+            <li class='hex water'
+            [style.background-image]="'url( ' + getWaterUrl() +   ')'">
                 <board-harbor posicion='bl' arista=15></board-harbor>
             </li>
         </ol>
@@ -43,7 +47,8 @@
         <ol class="odd">
             <li class='hex spacer'></li>
 
-            <li class='hex water'>
+            <li class='hex water'
+            [style.background-image]="'url( ' + getWaterUrl() +   ')'">
                 <board-harbor posicion='r' arista=3></board-harbor>
                 <board-harbor posicion='br' arista=20></board-harbor>
             </li>
@@ -51,7 +56,8 @@
             <!--TERRENOS FILA 1-->
 
             <!--HEXAGONO 0-->
-            <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[0])">
+            <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[0])"
+            [style.background-image]="'url( ' + getSkinUrl(this.gameService.partida.tablero.hexagonos.tipo[0]) + ')'">
                 <board-hex-number hexagono=0></board-hex-number>
 
                 <!--ASENTAMIENTOS-->
@@ -66,7 +72,8 @@
             </li>
 
             <!--HEXAGONO 1-->
-            <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[1])">
+            <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[1])"
+            [style.background-image]="'url( ' + getSkinUrl(this.gameService.partida.tablero.hexagonos.tipo[1]) + ')'">
                 <board-hex-number hexagono=1></board-hex-number>
 
                 <!--ASENTAMIENTOS-->
@@ -80,7 +87,8 @@
             </li>
 
             <!--HEXAGONO 2-->
-            <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[2])">
+            <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[2])"
+            [style.background-image]="'url( ' + getSkinUrl(this.gameService.partida.tablero.hexagonos.tipo[2]) + ')'">
                 <board-hex-number hexagono=2></board-hex-number>
 
                 <!--ASENTAMIENTOS-->
@@ -94,7 +102,8 @@
             </li>
             <!--FIN TERRENOS FILA 1-->
 
-            <li class='hex water'>
+            <li class='hex water'
+            [style.background-image]="'url( ' + getWaterUrl() +   ')'">
                 <board-harbor posicion='l' arista=11></board-harbor>
                 <board-harbor posicion='bl' arista=30></board-harbor>
 
@@ -106,7 +115,8 @@
 
         <!-- FILA 2 -->
         <ol class="even">
-            <li class='hex water'>
+            <li class='hex water'
+            [style.background-image]="'url( ' + getWaterUrl() +   ')'">
                 <board-harbor posicion='r' arista=19></board-harbor>
                 <board-harbor posicion='br' arista=35></board-harbor>
             </li>
@@ -115,7 +125,8 @@
             <!--TERRENOS FILA 2-->
 
             <!--HEXAGONO 3-->
-            <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[3])">
+            <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[3])"
+            [style.background-image]="'url( ' + getSkinUrl(this.gameService.partida.tablero.hexagonos.tipo[3]) + ')'">
                 <board-hex-number hexagono=3></board-hex-number>
 
                 <!--ASENTAMIENTOS-->
@@ -129,7 +140,8 @@
             </li>
 
             <!--HEXAGONO 4-->
-            <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[4])">
+            <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[4])"
+            [style.background-image]="'url( ' + getSkinUrl(this.gameService.partida.tablero.hexagonos.tipo[4]) + ')'">
                 <board-hex-number hexagono=4></board-hex-number>
 
                 <!--ASENTAMIENTOS-->
@@ -144,7 +156,8 @@
             </li>
 
             <!--HEXAGONO 5-->
-            <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[5])">
+            <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[5])"
+            [style.background-image]="'url( ' + getSkinUrl(this.gameService.partida.tablero.hexagonos.tipo[5]) + ')'">
                 <board-hex-number hexagono=5></board-hex-number>
 
                 <!--ASENTAMIENTOS-->
@@ -159,7 +172,8 @@
             </li>
 
             <!--HEXAGONO 6-->
-            <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[6])">
+            <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[6])"
+            [style.background-image]="'url( ' + getSkinUrl(this.gameService.partida.tablero.hexagonos.tipo[6]) + ')'">
                 <board-hex-number hexagono=6></board-hex-number>
 
                 <!--ASENTAMIENTOS-->
@@ -175,7 +189,8 @@
             <!--FIN TERRENOS FILA 2-->
 
 
-            <li class='hex water'>
+            <li class='hex water'
+            [style.background-image]="'url( ' + getWaterUrl() +   ')'">
                 <board-harbor posicion='l' arista=27></board-harbor>
                 <board-harbor posicion='bl' arista=48></board-harbor>
 
@@ -188,14 +203,16 @@
         <!-- FILA 3 -->
         <ol class="odd">
 
-            <li class='hex water'>
+            <li class='hex water'
+            [style.background-image]="'url( ' + getWaterUrl() +   ')'">
                 <board-harbor posicion='r' arista=34></board-harbor>
             </li>
 
             <!--TERRENOS FILA 3-->
 
             <!--HEXAGONO 7-->
-            <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[7])">
+            <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[7])"
+            [style.background-image]="'url( ' + getSkinUrl(this.gameService.partida.tablero.hexagonos.tipo[7]) + ')'">
                 <board-hex-number hexagono=7></board-hex-number>
 
                 <!--ASENTAMIENTOS-->
@@ -210,7 +227,8 @@
             </li>
 
             <!--HEXAGONO 8-->
-            <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[8])">
+            <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[8])"
+            [style.background-image]="'url( ' + getSkinUrl(this.gameService.partida.tablero.hexagonos.tipo[8]) + ')'">
                 <board-hex-number hexagono=8></board-hex-number>
 
                 <!--ASENTAMIENTOS-->
@@ -225,7 +243,8 @@
             </li>
 
             <!--HEXAGONO 9-->
-            <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[9])">
+            <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[9])"
+            [style.background-image]="'url( ' + getSkinUrl(this.gameService.partida.tablero.hexagonos.tipo[9]) + ')'">
                 <board-hex-number hexagono=9></board-hex-number>
 
                 <!--ASENTAMIENTOS-->
@@ -240,7 +259,8 @@
             </li>
 
             <!--HEXAGONO 10-->
-            <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[10])">
+            <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[10])"
+            [style.background-image]="'url( ' + getSkinUrl(this.gameService.partida.tablero.hexagonos.tipo[10]) + ')'">
                 <board-hex-number hexagono=10></board-hex-number>
 
                 <!--ASENTAMIENTOS-->
@@ -255,7 +275,8 @@
             </li>
 
             <!--HEXAGONO 11-->
-            <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[11])">
+            <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[11])"
+            [style.background-image]="'url( ' + getSkinUrl(this.gameService.partida.tablero.hexagonos.tipo[11]) + ')'">
                 <board-hex-number hexagono=11></board-hex-number>
 
                 <!--ASENTAMIENTOS-->
@@ -270,7 +291,8 @@
             </li>
             <!--FIN TERRENOS FILA 3-->
 
-            <li class='hex water'>
+            <li class='hex water'
+            [style.background-image]="'url( ' + getWaterUrl() +   ')'">
                 <board-harbor posicion='l' arista=45></board-harbor>
 
                 <board-settlement vertice=35 posicion="tl"></board-settlement>
@@ -281,7 +303,8 @@
 
         <!-- FILA 4 -->
         <ol class="even">
-            <li class='hex water'>
+            <li class='hex water'
+            [style.background-image]="'url( ' + getWaterUrl() +   ')'">
                 <board-harbor posicion='tr' arista=33></board-harbor>
                 <board-harbor posicion='r' arista=52></board-harbor>
 
@@ -292,7 +315,8 @@
             <!--TERRENOS FILA 4-->
 
             <!--HEXAGONO 12-->
-            <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[12])">
+            <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[12])"
+            [style.background-image]="'url( ' + getSkinUrl(this.gameService.partida.tablero.hexagonos.tipo[12]) + ')'">
                 <board-hex-number hexagono=12></board-hex-number>
 
                 <!--ASENTAMIENTOS-->
@@ -307,7 +331,8 @@
             </li>
 
             <!--HEXAGONO 13-->
-            <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[13])">
+            <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[13])"
+            [style.background-image]="'url( ' + getSkinUrl(this.gameService.partida.tablero.hexagonos.tipo[13]) + ')'">
                 <board-hex-number hexagono=13></board-hex-number>
 
                 <!--ASENTAMIENTOS-->
@@ -322,7 +347,8 @@
             </li>
 
             <!--HEXAGONO 14-->
-            <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[14])">
+            <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[14])"
+            [style.background-image]="'url( ' + getSkinUrl(this.gameService.partida.tablero.hexagonos.tipo[14]) + ')'">
                 <board-hex-number hexagono=14></board-hex-number>
 
                 <!--ASENTAMIENTOS-->
@@ -337,7 +363,8 @@
             </li>
 
             <!--HEXAGONO 15-->
-            <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[15])">
+            <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[15])"
+            [style.background-image]="'url( ' + getSkinUrl(this.gameService.partida.tablero.hexagonos.tipo[15]) + ')'">
                 <board-hex-number hexagono=15></board-hex-number>
 
                 <!--ASENTAMIENTOS-->
@@ -352,7 +379,8 @@
             </li>
             <!--FIN TERRENOS FILA 4-->
 
-            <li class='hex water'>
+            <li class='hex water'
+            [style.background-image]="'url( ' + getWaterUrl() +   ')'">
                 <board-harbor posicion='tl' arista=46></board-harbor>
                 <board-harbor posicion='l' arista=59></board-harbor>
 
@@ -368,7 +396,8 @@
         <ol class="odd">
             <li class='hex spacer'></li>
 
-            <li class='hex water'>
+            <li class='hex water'
+            [style.background-image]="'url( ' + getWaterUrl() +   ')'">
                 <board-harbor posicion='tr' arista=51></board-harbor>
                 <board-harbor posicion='r' arista=65></board-harbor>
 
@@ -379,7 +408,8 @@
             <!--TERRENOS FILA 5-->
 
             <!--HEXAGONO 16-->
-            <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[16])">
+            <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[16])"
+            [style.background-image]="'url( ' + getSkinUrl(this.gameService.partida.tablero.hexagonos.tipo[16]) + ')'">
                 <board-hex-number hexagono=16></board-hex-number>
 
                 <!--ASENTAMIENTOS-->
@@ -394,7 +424,8 @@
             </li>
 
             <!--HEXAGONO 17-->
-            <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[17])">
+            <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[17])"
+            [style.background-image]="'url( ' + getSkinUrl(this.gameService.partida.tablero.hexagonos.tipo[17]) + ')'">
                 <board-hex-number hexagono=17></board-hex-number>
 
                 <!--ASENTAMIENTOS-->
@@ -409,7 +440,8 @@
             </li>
 
             <!--HEXAGONO 18-->
-            <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[18])">
+            <li class='hex' [ngClass]="this.hexMapping.get(this.gameService.partida.tablero.hexagonos.tipo[18])"
+            [style.background-image]="'url( ' + getSkinUrl(this.gameService.partida.tablero.hexagonos.tipo[18]) + ')'">
                 <board-hex-number hexagono=18></board-hex-number>
 
                 <!--ASENTAMIENTOS-->
@@ -424,7 +456,8 @@
             </li>
             <!--FIN TERRENOS FILA 5-->
 
-            <li class='hex water'>
+            <li class='hex water'
+            [style.background-image]="'url( ' + getWaterUrl() +   ')'">
                 <board-harbor posicion='tl' arista=60></board-harbor>
                 <board-harbor posicion='l' arista=69></board-harbor>
 
@@ -440,14 +473,16 @@
         <ol class="even">
             <li class='hex spacer'></li>
 
-            <li class='hex water'>
+            <li class='hex water'
+            [style.background-image]="'url( ' + getWaterUrl() +   ')'">
                 <board-harbor posicion='tr' arista=64></board-harbor>
 
                 <board-settlement vertice=49 posicion="t"></board-settlement>
                 <board-road arista=64 posicion="tr"></board-road>
             </li>
 
-            <li class='hex water'>
+            <li class='hex water'
+            [style.background-image]="'url( ' + getWaterUrl() +   ')'">
                 <board-harbor posicion='tl' arista=63></board-harbor>
                 <board-harbor posicion='tr' arista=68></board-harbor>
 
@@ -457,7 +492,8 @@
                 <board-road arista=68 posicion="tr"></board-road>
             </li>
 
-            <li class='hex water'>
+            <li class='hex water'
+            [style.background-image]="'url( ' + getWaterUrl() +   ')'">
                 <board-harbor posicion='tl' arista=67></board-harbor>
                 <board-harbor posicion='tr' arista=71></board-harbor>
 
@@ -467,7 +503,8 @@
                 <board-road arista=71 posicion="tr"></board-road>
             </li>
 
-            <li class='hex water'>
+            <li class='hex water'
+            [style.background-image]="'url( ' + getWaterUrl() +   ')'">
                 <board-harbor posicion='tl' arista=70></board-harbor>
                 
                 <board-settlement vertice=53 posicion="tl"></board-settlement>

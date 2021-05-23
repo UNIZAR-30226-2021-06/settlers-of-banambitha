@@ -47,6 +47,8 @@ ol.odd {
     display: inline-block;
     margin-right: 60px;
     transition: all 150ms ease-in-out;
+    background-repeat: no-repeat;
+    background-position: 50%;
 }
 
 .hex:before,

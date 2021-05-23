@@ -3,6 +3,7 @@ import { MatDialog,MAT_DIALOG_DATA,MatDialogRef } from '@angular/material/dialog
 import { Router } from '@angular/router';
 import { GameService, TipoAsentamiento, TipoTerreno } from 'src/app/service/game/game.service';
 import { LangService } from 'src/app/service/lang/lang.service';
+import { UserService } from 'src/app/service/user/user.service';
 
 
 @Component({
@@ -17,17 +18,19 @@ export class BoardComponent implements OnInit {
   public static readonly player3Color: String = "#d2eb34"
   public static readonly player4Color: String = "#49a607"
 
+  public static readonly imageBaseUrl = "../../../assets/images/board"
+
   public readonly hexMapping: Map<TipoTerreno, String> = new Map<TipoTerreno,String>([
    [TipoTerreno.BOSQUE,   "wood"], 
-   [TipoTerreno.CERRO ,   "coal"], 
+   [TipoTerreno.CERRO ,   "brick"], 
    [TipoTerreno.DESIERTO, "sand"], 
-   [TipoTerreno.MONTANYA, "brick"], 
+   [TipoTerreno.MONTANYA, "coal"], 
    [TipoTerreno.PASTO,    "sheep"], 
    [TipoTerreno.SEMBRADO, "wheat"], 
   ]
   );
 
-  constructor(public dialog: MatDialog, public gameService: GameService, public langService: LangService) { }
+  constructor(public dialog: MatDialog, public gameService: GameService, public langService: LangService, public userService: UserService) { }
 
   ngOnInit(): void {
   }
@@ -39,6 +42,15 @@ export class BoardComponent implements OnInit {
 
   public tipoTerreno(): typeof TipoTerreno {
     return TipoTerreno
+  }
+
+  public getSkinUrl(tp: TipoTerreno): String{
+    console.log( BoardComponent.imageBaseUrl + "/" + this.userService.apariencia  + "/" + tp + ".jpg")
+    return BoardComponent.imageBaseUrl + "/" + this.userService.apariencia  + "/" + tp + ".jpg"
+  }
+
+  public getWaterUrl(): String {
+    return BoardComponent.imageBaseUrl + "/" + this.userService.apariencia + "/" + "Agua.jpg"
   }
 
 }

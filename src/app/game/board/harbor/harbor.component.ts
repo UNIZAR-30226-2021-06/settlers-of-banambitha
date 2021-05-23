@@ -173,7 +173,8 @@ export class ExternalTradeDialog {
     this.nombrePuerto       = data["nombre"]
     this.aristaPuerto       = data["arista"]
     this.me = this.gameService.partida.jugadores[this.gameService.partida.miTurno - 1]
-    this.checkRecursoPuerto()
+    this.materialSolicitado = null; 
+    //this.checkRecursoPuerto()
     this.formatLabelMadera  = this.formatLabelMadera.bind(this);
     this.formatLabelLana    = this.formatLabelLana.bind(this);
     this.formatLabelCereal  = this.formatLabelCereal.bind(this);
