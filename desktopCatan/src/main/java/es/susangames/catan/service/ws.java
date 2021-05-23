@@ -443,10 +443,14 @@ public class ws {
         String jugadores[] = RoomServices.room.toArrayStrings();
         for (int i = 0; i < jugadores.length && !esJugador
             ; ++i) {
-                esJugador = jugadores[i] == friend;
+                System.out.println("jugador " + i + ": " + jugadores[i]);
+                esJugador = jugadores[i].equals(friend);
         }
-        if (RoomServices.room.getInvites().contains(friend)
-            || esJugador) {
+        System.out.println("RoomServices.room.getInvites().contains(friend) " + (RoomServices.room.getInvites().contains(friend)) 
+            + "esJugador" + (esJugador));
+        if (!RoomServices.room.getInvites().contains(friend)
+            && !esJugador) {
+                System.out.println("sendInvitation");
             JSONObject js = new JSONObject();
             js.put("leader", RoomServices.room.getLeader());
             js.put("room", RoomServices.room.getId());
