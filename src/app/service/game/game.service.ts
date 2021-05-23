@@ -923,7 +923,7 @@ export class GameService implements Connectable{
     if ( this.esMiTurno() &&
          this.verticeValido(vertice) && 
          this.partida.tablero.vertices.asentamiento[vertice] == this.miTipoPueblo() &&
-         this.puedeConstruirPoblado() ){ 
+         this.puedeConstruirCiudad() ){ 
       
       let msg = this.construirJugada(Jugada.MEJORAR_POBLADO, vertice)
 
