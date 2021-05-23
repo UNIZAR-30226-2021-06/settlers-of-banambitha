@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { GameService } from '../service/game/game.service';
+import { RoomService } from '../service/room/room.service';
 import { UserService } from '../service/user/user.service';
 import { WsService } from '../service/ws/ws.service';
 
@@ -9,7 +10,7 @@ import { WsService } from '../service/ws/ws.service';
   providedIn: 'root'
 })
 export class AuthBannedGuard implements CanActivate {
-  constructor(private router: Router, private userService: UserService, private gameService: GameService, private wsService: WsService){}
+  constructor(private router: Router, private userService: UserService, private gameService: GameService, private wsService: WsService, private roomService: RoomService){}
   
   canActivate(
     route: ActivatedRouteSnapshot,
@@ -17,7 +18,7 @@ export class AuthBannedGuard implements CanActivate {
       if ( this.userService.bloqued != null ){
         return true
       }else{ 
-        return this.userService.checkBan(this.router, this.gameService, this.wsService)
+        return this.userService.checkBan(this.router, this.gameService, this.wsService, this.roomService)
       }
   }
   

@@ -476,9 +476,10 @@ export class GameService implements Connectable{
    * 
    * @param idPartida id de la partida a recargar
    */
-  public recargarPartida(idPartida: string): void {
+  public recargarPartida(idPartida: string, roomService: RoomService): void {
     
     this.finalizarpartida()
+    this.roomService = roomService
 
     this.partida.id = idPartida
 

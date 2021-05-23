@@ -5,6 +5,7 @@ import { Observable, of, throwError } from 'rxjs';
 import { catchError, retry, map } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { GameService } from '../game/game.service';
+import { RoomService } from '../room/room.service';
 import { WsService } from '../ws/ws.service';
 
 export enum BoardSkin {
@@ -214,15 +215,16 @@ export class UserService {
    * @param urlLogin True si la url solicitada es login o hijas, false en caso 
    *                 contrario
    */
-  public checkSession(router: Router, urlLogin: boolean, gameService: GameService, wsService: WsService): Observable<boolean>{
+  public checkSession(router: Router, urlLogin: boolean, gameService: GameService, wsService: WsService, roomService: RoomService): Observable<boolean>{
 
     return this.http.get(UserService.baseUrl + "/session", UserService.httpOptions).pipe(
       map(response => {
         this.updateUserData(response.body)
         wsService._connect()
         if ( this.partida != null ){
-          console.log("recargar partida")
-          router.navigate(["/board"])
+          console.log("Partida no nula")
+          console.log(this.partida)
+          gameService.recargarPartida(this.partida, roomService)
           return false
 
         }else if ( this.bloqued != null ){
@@ -262,7 +264,7 @@ export class UserService {
    * 
    * @param router 
    */
-  public checkLastMatch(router: Router, gameService: GameService, wsService: WsService): Observable<boolean> {
+  public checkLastMatch(router: Router, gameService: GameService, wsService: WsService, roomService: RoomService): Observable<boolean> {
     return this.http.get(UserService.baseUrl + "/session", UserService.httpOptions).pipe(
       map(response => {
         this.updateUserData(response.body)
@@ -270,7 +272,7 @@ export class UserService {
         if ( this.partida != null ){
           console.log("Partida no nula")
           console.log(this.partida)
-          gameService.recargarPartida(this.partida)
+          gameService.recargarPartida(this.partida, roomService)
           return true
 
         }else if ( this.bloqued != null ){
@@ -296,7 +298,7 @@ export class UserService {
    * @param gameService 
    * @param wsService 
    */
-  public checkBan(router: Router, gameService: GameService, wsService: WsService): Observable<boolean> {
+  public checkBan(router: Router, gameService: GameService, wsService: WsService, roomService: RoomService): Observable<boolean> {
     return this.http.get(UserService.baseUrl + "/session", UserService.httpOptions).pipe(
       map(response => {
         this.updateUserData(response.body)
@@ -304,7 +306,7 @@ export class UserService {
         if ( this.partida != null ){
           console.log("Partida no nula")
           console.log(this.partida)
-          gameService.recargarPartida(this.partida)
+          gameService.recargarPartida(this.partida, roomService)
           return false
 
         }else if ( this.bloqued != null ){
