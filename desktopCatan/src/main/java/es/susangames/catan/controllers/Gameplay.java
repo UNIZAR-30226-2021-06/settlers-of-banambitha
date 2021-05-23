@@ -663,19 +663,13 @@ public class Gameplay {
 
     private static void unsubscribeToTopic () {
         if (Partida.id != null) {
-            System.out.println("1-11111");
             partida_act_topic_id.unsubscribe();
-            System.out.println("1-22222");
             partida_chat_topic_id.unsubscribe();
-            System.out.println("1-33333");
             partida_com_topic_id.unsubscribe();
-            System.out.println("1-44444");
             if(partida_reload_topic_id != null) {
                 partida_reload_topic_id.unsubscribe();
-                System.out.println("1-555555");
             }
             partida_usuaio_act_topic_id.unsubscribe();
-            System.out.println("1-666666");
         }
     }
 
