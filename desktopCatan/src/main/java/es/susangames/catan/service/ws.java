@@ -43,8 +43,8 @@ public class ws {
     private static final String productionURL = "https://catan-backend-app.herokuapp.com";
     public static Map<String,ArrayList<JSONObject>> msgs;
     private static final String appPrefix = "/app";
-    private static final String  wsUrl = "http://localhost:8080/catan-stomp-ws-ep";
-    //private static final String  wsUrl = "https://catan-backend-app.herokuapp.com/catan-stomp-ws-ep";
+    //private static final String  wsUrl = "http://localhost:8080/catan-stomp-ws-ep";
+    private static final String  wsUrl = "https://catan-backend-app.herokuapp.com/catan-stomp-ws-ep";
     private static final String chatUrl = "/chat/";
     private static final String newFriendReqUrl = "/peticion/";
     private static final String playerActUrl = "/usuario-act/";

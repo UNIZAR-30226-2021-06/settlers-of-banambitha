@@ -1,5 +1,7 @@
 package es.susangames.catan.repo;
 
+import java.sql.Date;
+
 import javax.transaction.Transactional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,6 +17,11 @@ public interface UsuarioRepo extends JpaRepository<Usuario, String> {
 	
 	@Query(value = "SELECT contrasenya FROM Usuario WHERE usuario_id = :usuarioId", nativeQuery = true)
 	public String getConstrasenya(@Param("usuarioId") String usuarioId);
+	
+	@Modifying
+	@Transactional
+	@Query(value = "UPDATE usuario SET contrasenya = :newContrasenya WHERE usuario_id = :usuarioId", nativeQuery = true)
+	public void newPassw(@Param("usuarioId") String usuarioId, @Param("newContrasenya") String newContrasenya);
 	
 	@Modifying
 	@Transactional
@@ -43,12 +50,28 @@ public interface UsuarioRepo extends JpaRepository<Usuario, String> {
 	
 	@Modifying
 	@Transactional
-	@Query(value = "UPDATE usuario SET partida = NULL, saldo = :newSaldo  WHERE usuario_id = :usuarioId", nativeQuery = true)
+	@Query(value = "UPDATE usuario SET partida = NULL, saldo = :newSaldo WHERE usuario_id = :usuarioId", nativeQuery = true)
 	public void endPartida(@Param("usuarioId") String usuarioId, @Param("newSaldo") int newSaldo);
 	
 	@Modifying
 	@Transactional
-	@Query(value = "UPDATE usuario SET saldo = :newSaldo  WHERE usuario_id = :usuarioId", nativeQuery = true)
+	@Query(value = "UPDATE usuario SET saldo = :newSaldo WHERE usuario_id = :usuarioId", nativeQuery = true)
 	public void updateSaldo(@Param("usuarioId") String usuarioId, @Param("newSaldo") int newSaldo);
+	
+	@Modifying
+	@Transactional
+	@Query(value = "UPDATE usuario SET bloqueado = :fechaBloqueo, informes = 0 WHERE usuario_id = :usuarioId", nativeQuery = true)
+	public void bloquear(@Param("usuarioId") String usuarioId, @Param("fechaBloqueo") Date fechaBloqueo);
+	
+	@Modifying
+	@Transactional
+	@Query(value = "UPDATE usuario SET bloqueado = NULL WHERE usuario_id = :usuarioId", nativeQuery = true)
+	public void desbloquear(@Param("usuarioId") String usuarioId);
+	
+	@Modifying
+	@Transactional
+	@Query(value = "UPDATE usuario SET informes = informes + 1 WHERE usuario_id = :usuarioId", nativeQuery = true)
+	public void reportar(@Param("usuarioId") String usuarioId);
+	
 	
 }

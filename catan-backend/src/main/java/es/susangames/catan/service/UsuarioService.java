@@ -2,11 +2,16 @@ package es.susangames.catan.service;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import es.susangames.catan.auxiliarModel.ChangePassword;
 import es.susangames.catan.exception.UserNotFoundException;
 
 import es.susangames.catan.model.Estadisticas;
@@ -19,6 +24,12 @@ public class UsuarioService {
 	
 	private final UsuarioRepo usuarioRepo;
 	private final EstadisticasRepo estadisticasRepo;
+	
+	private static final Integer 	maxInformes = 5;
+	private static final long 		diaMilis = 86400000;
+	private static final long 		diasBloqueo = 3;
+	
+	private static final Map<String, List<String>> InGameReports = new HashMap<String, List<String>>();
 	
 	@Autowired
 	public UsuarioService(UsuarioRepo usuarioRepo, EstadisticasRepo estadisticasRepo) {
@@ -72,7 +83,28 @@ public class UsuarioService {
 		return new Usuario();
 	}
 	
+	public Usuario changePassw(ChangePassword changePassword) {
+		
+		String usuarioId 	= changePassword.getUserId();
+		String oldPassw		= changePassword.getOldPassw();
+		String newPassw 	= changePassword.getNewPassw();
+		
+		String EncryptedOldPassword = EncryptPassword(oldPassw);
+		String EncryptedNewPassword = EncryptPassword(newPassw);
+		String StoredPassword = usuarioRepo.getConstrasenya(usuarioId);
+		
+		if(usuarioRepo.existsById(usuarioId) && EncryptedOldPassword.contentEquals(StoredPassword)) {
+			
+			usuarioRepo.newPassw(usuarioId, EncryptedNewPassword);
+			
+			return usuarioRepo.findById(usuarioId).orElseThrow(() -> new UserNotFoundException(usuarioId));
+		}
+		
+		return new Usuario();
+	}
+	
 	public void deleteUsuario(String usuarioId) {
+		estadisticasRepo.deleteById(usuarioId);
 		usuarioRepo.deleteById(usuarioId);
 	}
 	
@@ -120,6 +152,10 @@ public class UsuarioService {
 	
 	public void setPartida(String usuarioId, String partidaId) {
 		
+		synchronized (InGameReports) {
+			InGameReports.put(usuarioId, new ArrayList<String>());
+		}
+		
 		usuarioRepo.setPartida(usuarioId, partidaId);
 		
 	}
@@ -128,12 +164,45 @@ public class UsuarioService {
 		
 		Usuario usuario = usuarioRepo.findById(usuarioId).orElseThrow(() -> new UserNotFoundException(usuarioId));
 		
+		synchronized (InGameReports) {
+			InGameReports.remove(usuarioId);
+		}
+		
 		if(puntosVictoria == 10) updateOnVictory(usuarioId);
 		else updateOnDefeat(usuarioId);
 		
 		int newSaldo = usuario.getSaldo() + puntosVictoria;
 		
 		usuarioRepo.endPartida(usuarioId, newSaldo);
+	}
+	
+	public boolean reportJugador(String reportante_id, String reportado_id) {
+		
+		Usuario reportado = usuarioRepo.findById(reportado_id).orElseThrow(() -> new UserNotFoundException(reportado_id));
+		
+		synchronized (InGameReports) {
+			List<String> reportantes = InGameReports.get(reportado_id);
+			
+			if(reportado.getBloqueado()==null && usuarioRepo.existsById(reportante_id) && !reportantes.contains(reportante_id)) {
+				
+				reportantes.add(reportante_id);
+				InGameReports.put(reportado_id, reportantes);
+				
+				if(reportado.getInformes() + 1 < maxInformes) {
+					usuarioRepo.reportar(reportado_id);
+				}
+				else {
+					usuarioRepo.bloquear(reportado_id, new Date(System.currentTimeMillis() + diaMilis*diasBloqueo));
+				}
+				return true;
+			}
+			return false;
+		}
+	}
+	
+	public void pardonJugador(Usuario usuario) {
+		
+		usuarioRepo.desbloquear(usuario.getNombre());
 	}
 	
 	//Función que devuelve el resultado de encriptar mediante MD5 una cadena de caracteres 

@@ -88,4 +88,8 @@ public class ProductoService {
 		}
 		return map;
 	}
+	
+	public void eliminarProductos(String usuarioId) {
+		disponeRepo.eliminarProductos(usuarioId);
+	}
 }

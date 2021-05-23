@@ -41,11 +41,20 @@ public class AmigoController {
 	 * 				}
 	 * 
 	 * Returns: -JSON Message
-	 * 			-Broadcast point:	/peticion/<el que acepta la peticion>
+	 * 			-Broadcast point:	/peticion/<el que recibe la peticion>
 	 * 			-Format:
 	 * 				{
-	 * 					"type"	: "REQUEST",
+	 * 					"type"	: "REQUEST" | "ACCEPT",
 	 * 					"from"	: <el que hace la peticion>,
+	 * 					"time"	: <marca de tiempo H:M>
+	 *				}
+	 *
+	 *			OPTIONAL
+	 *			-Broadcast point:	/peticion/<el que hace la peticion>
+	 * 			-Format:
+	 * 				{
+	 * 					"type"	: "ACCEPT",
+	 * 					"from"	: <el que recibe la peticion>,
 	 * 					"time"	: <marca de tiempo H:M>
 	 *				}
 	****************************************************** */
@@ -58,20 +67,39 @@ public class AmigoController {
 		String remitente = obj.getString("from");
 		String destinatario = obj.getString("to");
 		
-		amigoService.addPeticionAmistad(new PeticionAmistad(remitente, destinatario));
+		if(!amigoService.alradyFriends(remitente, destinatario) && !amigoService.alradyInvited(remitente, destinatario)) {
 		
-		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-		int Hours = timestamp.getHours();
-		int Mins = timestamp.getMinutes();
-		String H_M = String.format("%d:%02d",Hours,Mins); 
-		
-		JSONObject nuevoMensaje = new JSONObject();
-		nuevoMensaje.put("type", REQUEST);
-		nuevoMensaje.put("from", remitente);
-		nuevoMensaje.put("time", H_M);
-		
-		template.convertAndSend(WebSocketConfig.TOPIC_PETICION + "/" + destinatario, nuevoMensaje.toString());
-		
+			JSONObject nuevoMensaje = new JSONObject();
+			
+			Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+			int Hours = timestamp.getHours();
+			int Mins = timestamp.getMinutes();
+			String H_M = String.format("%d:%02d",Hours,Mins); 
+			
+			if(amigoService.alradyInvited(destinatario, remitente)) {
+				
+				amigoService.aceptarPeticionAmistad(new PeticionAmistad(destinatario, remitente));
+				
+				JSONObject instantReply = new JSONObject();
+				instantReply.put("type", ACCEPT);
+				instantReply.put("from", destinatario);
+				instantReply.put("time", H_M);
+				
+				template.convertAndSend(WebSocketConfig.TOPIC_PETICION + "/" + remitente, instantReply.toString());
+				
+				nuevoMensaje.put("type", ACCEPT);
+				
+			} else {
+				
+				amigoService.addPeticionAmistad(new PeticionAmistad(remitente, destinatario));
+				nuevoMensaje.put("type", REQUEST);
+			}
+			
+			nuevoMensaje.put("from", remitente);
+			nuevoMensaje.put("time", H_M);
+			
+			template.convertAndSend(WebSocketConfig.TOPIC_PETICION + "/" + destinatario, nuevoMensaje.toString());
+		}
 	}
 	
 	
