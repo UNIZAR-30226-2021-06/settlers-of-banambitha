@@ -12,7 +12,7 @@ import javafx.scene.Parent;
 
 
 /**
- * JavaFX App
+ * JavaFX App v2
  */
 public class App extends Application {
 
