@@ -200,8 +200,10 @@ public class Tablero {
 				//TODO:Eliminar recursos jugadores
 				Vertices v_nuevaPos[] = nuevaPosLadron.getVertices();
 				for (int i = 0; i < v_nuevaPos.length; ++i) {
+					System.out.print("Vertices: " + v_nuevaPos[i].getIdentificador());
 					if (v_nuevaPos[i].tieneAsentamiento() 
 						&& v_nuevaPos[i].getPropietario() != null) {
+							System.out.println("Jugador: " + v_nuevaPos[i].getPropietario());
 							v_nuevaPos[i].getPropietario().eliminarRecursos();
 					}
 				}
@@ -791,7 +793,7 @@ public class Tablero {
 			actualizarMaterial(j1,materialJ2, numMaterialJ2);
 			
 			actualizarMaterial(j2,materialJ1, numMaterialJ1);
-			actualizarMaterial(j2,materialJ2, -numMaterialJ1);
+			actualizarMaterial(j2,materialJ2, -numMaterialJ2);
 			
 			this.haComerciado = true;
 			this.message = "Se ha realizado el intercambio de recursos entre el jugador " + j1.getColor().numeroColor() +
