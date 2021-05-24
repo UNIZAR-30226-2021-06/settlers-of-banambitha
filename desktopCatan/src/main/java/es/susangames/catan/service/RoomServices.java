@@ -327,10 +327,22 @@ public class RoomServices {
                 ws.SubscribeSalaAct();
 
                 System.out.println("creando sala... " + "Recargar sala? " + MainMenu.playOpenned);
+                cancelarBusqueda();
                 if(MainMenu.playOpenned) {
                     Play.recargarSalaPartida();
+                    try{
+                        Platform.runLater(new Runnable() {
+                            @Override public void run() {
+                                Play.salirSala();
+                            }
+                          });
+                    } catch(Exception e){
+                        System.out.println(e.toString());
+                        e.printStackTrace();
+                    }
                 }
 
+                
                 break;
             case "OPEN":
                 uniendoseASala = false;

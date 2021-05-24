@@ -47,6 +47,8 @@ public class Play {
     @FXML
     private Button exitRoom;
 
+    private static Button _exitRoom;
+
     @FXML
     private Text player1Name;
 
@@ -119,6 +121,8 @@ public class Play {
         _player4Icon = player4Icon;
 
         _playButton = playButton;
+
+        _exitRoom = exitRoom;
 
         _playButton.setText((LangService.getMapping("play_button")));
         if (!RoomServices.soyLider()) {
@@ -198,11 +202,14 @@ public class Play {
         
     } 
 
-    // TODO: ELIMINAR ESTA FUNCION.
     @FXML
     public static void recargarSalaPartida () {
+        System.out.println("Lider: " + RoomServices.room.getLeader());
+        System.out.println("RoomServices.soyLider(): " + RoomServices.soyLider());
         if (!RoomServices.soyLider()) {
             _playButton.setDisable(true);
+        } else {
+            _playButton.setDisable(false);
         }
         System.out.println("Intentando recargar la sala...");
         String users[] = RoomServices.room.toArrayStrings();
@@ -275,18 +282,18 @@ public class Play {
         
     }
 
-    void salirSala () {
-        exitRoom.setText(LangService.getMapping("exit_room"));
-        exitRoom.setOnAction((ActionEvent event_add) -> {
+    public static void salirSala () {
+        _exitRoom.setText(LangService.getMapping("exit_room"));
+        _exitRoom.setOnAction((ActionEvent event_add) -> {
             System.out.println("Abandonando la sala...");
             ws.abandonarSala(true);
         });
     }
 
-    void cancelarBusqueda () {
+    public static void cancelarBusqueda () {
         // cancel_searching
-        exitRoom.setText(LangService.getMapping("cancel_searching"));
-        exitRoom.setOnAction((ActionEvent event_add) -> {
+        _exitRoom.setText(LangService.getMapping("cancel_searching"));
+        _exitRoom.setOnAction((ActionEvent event_add) -> {
             System.out.println("Cancelar busqueda");
             RoomServices.cancelarBusqueda();
             salirSala();

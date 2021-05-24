@@ -300,6 +300,10 @@ public class ws {
     public static void actualizarPlayers(ArrayList<String> updated_players) {
         RoomServices.updatePlayers(updated_players);
 
+        for (String players : updated_players) {
+            RoomServices.room.getInvites().remove(players);
+        }
+        
         System.out.println("actualizando sala... " + "Recargar sala? " + MainMenu.playOpenned);
         if(MainMenu.playOpenned) {
             Play.recargarSalaPartida();
@@ -356,9 +360,10 @@ public class ws {
                     break;
                 case "FOUND":
                     System.out.println("_____FOUND_____");
-                    RoomServices.room = null;
-                    RoomServices.buscandoPartida = false;
-                    sala_act_topic_id.unsubscribe();
+                    //RoomServices.room = null;
+                    //RoomServices.buscandoPartida = false;
+                    //sala_act_topic_id.unsubscribe();
+                    abandonarSala(false);
 
                     JSONArray players = jsObj.getJSONArray("players");
                     String stringPlayers[] = new String[players.length()];
@@ -449,7 +454,7 @@ public class ws {
         System.out.println("RoomServices.room.getInvites().contains(friend) " + (RoomServices.room.getInvites().contains(friend)) 
             + "esJugador" + (esJugador));
         if (!RoomServices.room.getInvites().contains(friend)
-            && !esJugador) {
+            && !esJugador && !RoomServices.buscandoPartida) {
                 System.out.println("sendInvitation");
             JSONObject js = new JSONObject();
             js.put("leader", RoomServices.room.getLeader());
