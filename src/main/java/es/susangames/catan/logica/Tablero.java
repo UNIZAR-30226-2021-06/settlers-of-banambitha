@@ -1069,13 +1069,13 @@ public class Tablero {
 				if (existeVertice(id_vertice)) {
 					Vertices v = getVerticePorId(id_vertice);
 					if (!v.tieneAsentamiento()) {
-						if (v.getPosibleAsentamientoDeJugador(id_jugador-1)) {
+						if (v.getPosibleAsentamientoDeJugador(jug.getColor().numeroColor())) {
 							if (!v.tieneAsentamientoAdyacente()){
 								construirAsentamiento(v, jug);
 								message = "Se ha construido el poblado correctamente";
 								exit_status = 0;
 							} else {
-								v.setPosibleAsentamientoDeJugador(id_jugador);
+								v.setPosibleAsentamientoDeJugador(jug.getColor().numeroColor());
 								message = "[Error] Estaba marcado como posible cuando no " + 
 									"podía ser";
 								exit_status = 50;
@@ -1148,7 +1148,7 @@ public class Tablero {
 				if (existeArista(id_arista)) {
 					Aristas a = getAristaPorId(id_arista);
 					if (!a.tieneCamino()) {
-						if (a.getPosibleCaminoDeJugador(id_jugador-1)) {
+						if (a.getPosibleCaminoDeJugador(jug.getColor().numeroColor())) {
 							construirCamino(a, jug);
 							jug.construirCamino();
 							message = "Se ha construido el camino correctamente";
