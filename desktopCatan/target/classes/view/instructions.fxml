@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXTextArea?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
@@ -13,71 +13,140 @@
 
 <StackPane xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="es.susangames.catan.controllers.Instructions">
    <children>
-      <AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity">
+      <AnchorPane fx:id="anchorPane">
          <children>
-            <VBox>
+            <VBox AnchorPane.bottomAnchor="2.0" AnchorPane.leftAnchor="2.0" AnchorPane.rightAnchor="2.0" AnchorPane.topAnchor="2.0">
                <children>
-                  <AnchorPane style="-fx-background-color: #965d62; -fx-background-radius: 12px;" VBox.vgrow="ALWAYS">
+                  <HBox>
                      <children>
-                        <HBox>
+                        <AnchorPane style="-fx-background-color: #965d62; -fx-background-radius: 12px;" HBox.hgrow="ALWAYS">
                            <children>
-                              <Region />
-                              <Text fx:id="menuText" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="117.0">
-                                 <font>
-                                    <Font name="System Bold Italic" size="31.0" />
-                                 </font>
-                                 <HBox.margin>
-                                    <Insets />
-                                 </HBox.margin>
-                              </Text>
-                              <Region />
-                              <Text fx:id="rulesInstructions" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="430.0">
-                                 <font>
-                                    <Font name="System Bold Italic" size="31.0" />
-                                 </font>
-                              </Text>
-                              <Region />
+                              <HBox>
+                                 <children>
+                                    <Region HBox.hgrow="ALWAYS" />
+                                    <Text fx:id="menuText" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="117.0">
+                                       <font>
+                                          <Font name="System Bold Italic" size="31.0" />
+                                       </font>
+                                    </Text>
+                                    <Region HBox.hgrow="ALWAYS" />
+                                    <Text fx:id="rulesInstructions" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="430.0">
+                                       <font>
+                                          <Font name="System Bold Italic" size="31.0" />
+                                       </font>
+                                    </Text>
+                                 </children>
+                              </HBox>
                            </children>
-                        </HBox>
+                           <HBox.margin>
+                              <Insets top="5.0" />
+                           </HBox.margin>
+                        </AnchorPane>
+                        <Region HBox.hgrow="NEVER" />
                      </children>
-                     <VBox.margin>
-                        <Insets top="5.0" />
-                     </VBox.margin>
-                  </AnchorPane>
-                  <Region>
+                  </HBox>
+                  <Region VBox.vgrow="NEVER">
                      <VBox.margin>
                         <Insets top="10.0" />
                      </VBox.margin>
                   </Region>
                   <HBox VBox.vgrow="ALWAYS">
                      <children>
-                        <VBox style="-fx-background-color: #665d64;" HBox.hgrow="ALWAYS">
+                        <VBox maxWidth="200.0" style="-fx-background-color: #665d64;" HBox.hgrow="ALWAYS">
                            <children>
-                              <JFXButton fx:id="buttonBasics" onAction="#loadBasics" textAlignment="CENTER" textFill="WHITE" VBox.vgrow="ALWAYS">
-                                 <font>
-                                    <Font size="15.0" />
-                                 </font>
-                              </JFXButton>
-                              <Region />
-                              <JFXButton fx:id="buttonFigures" onAction="#loadFigures" textAlignment="CENTER" textFill="WHITE" VBox.vgrow="ALWAYS">
-                                 <font>
-                                    <Font size="15.0" />
-                                 </font>
-                              </JFXButton>
-                              <Region />
-                              <JFXButton fx:id="buttonDevelopment" onAction="#loadDevelopment" textAlignment="CENTER" textFill="WHITE" VBox.vgrow="ALWAYS">
-                                 <font>
-                                    <Font size="15.0" />
-                                 </font>
-                              </JFXButton>
-                              <Region />
+                              <HBox VBox.vgrow="NEVER">
+                                 <children>
+                                    <JFXButton fx:id="buttonBasics" onAction="#loadBasics" textAlignment="CENTER" textFill="WHITE">
+                                       <font>
+                                          <Font size="15.0" />
+                                       </font>
+                                       <HBox.margin>
+                                          <Insets />
+                                       </HBox.margin>
+                                    </JFXButton>
+                                 </children>
+                                 <VBox.margin>
+                                    <Insets top="5.0" />
+                                 </VBox.margin>
+                              </HBox>
+                              <Region VBox.vgrow="NEVER" />
+                              <HBox VBox.vgrow="NEVER">
+                                 <children>
+                                    <JFXButton fx:id="buttonFigures" onAction="#loadFigures" textAlignment="CENTER" textFill="WHITE">
+                                       <font>
+                                          <Font size="15.0" />
+                                       </font>
+                                    </JFXButton>
+                                 </children>
+                                 <VBox.margin>
+                                    <Insets />
+                                 </VBox.margin>
+                              </HBox>
+                              <Region VBox.vgrow="NEVER" />
+                              <HBox VBox.vgrow="NEVER">
+                                 <children>
+                                    <JFXButton fx:id="buttonDevelopment" onAction="#loadDevelopment" textAlignment="CENTER" textFill="WHITE">
+                                       <font>
+                                          <Font size="15.0" />
+                                       </font>
+                                    </JFXButton>
+                                 </children>
+                              </HBox>
+                              <Region VBox.vgrow="NEVER" />
                            </children>
                         </VBox>
-                        <ScrollPane HBox.hgrow="ALWAYS">
-                           <content>
-                              <AnchorPane fx:id="anchorContent" />
-                           </content>
-                        </ScrollPane>
+                        <VBox HBox.hgrow="ALWAYS">
+                           <children>
+                              <HBox maxHeight="100.0" VBox.vgrow="ALWAYS">
+                                 <children>
+                                    <Region HBox.hgrow="ALWAYS" />
+                                    <VBox HBox.hgrow="ALWAYS">
+                                       <HBox.margin>
+                                          <Insets />
+                                       </HBox.margin>
+                                       <children>
+                                          <Region />
+                                          <AnchorPane style="-fx-background-color: #965d62; -fx-background-radius: 12px;" VBox.vgrow="ALWAYS">
+                                             <children>
+                                                <VBox layoutX="-0.0380859375" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                   <children>
+                                                      <HBox VBox.vgrow="ALWAYS">
+                                                         <children>
+                                                            <Region HBox.hgrow="ALWAYS" />
+                                                            <VBox>
+                                                               <children>
+                                                                  <Region VBox.vgrow="ALWAYS" />
+                                                                  <Text fx:id="title" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Text">
+                                                                     <font>
+                                                                        <Font name="System Bold Italic" size="19.0" />
+                                                                     </font>
+                                                                  </Text>
+                                                                  <Region VBox.vgrow="ALWAYS" />
+                                                               </children>
+                                                            </VBox>
+                                                            <Region HBox.hgrow="ALWAYS" />
+                                                         </children>
+                                                      </HBox>
+                                                   </children>
+                                                </VBox>
+                                             </children></AnchorPane>
+                                          <Region />
+                                       </children>
+                                    </VBox>
+                                    <Region HBox.hgrow="ALWAYS" />
+                                 </children>
+                              </HBox>
+                              <Region VBox.vgrow="NEVER" />
+                              <AnchorPane fx:id="anchorContent" style="-fx-background-color: #965d62; -fx-background-radius: 12px;" VBox.vgrow="ALWAYS">
+                                 <VBox.margin>
+                                    <Insets left="1.0" top="15.0" />
+                                 </VBox.margin>
+                                 <children>
+                                    <JFXTextArea fx:id="text1" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="1.0" AnchorPane.rightAnchor="1.0" AnchorPane.topAnchor="1.0" />
+                                 </children>
+                              </AnchorPane>
+                           </children>
+                        </VBox>
                      </children>
                   </HBox>
                </children>

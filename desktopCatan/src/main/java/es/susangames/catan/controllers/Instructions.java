@@ -9,8 +9,7 @@ import com.jfoenix.controls.JFXButton;
 import javafx.event.ActionEvent;
 import java.io.IOException;
 import javafx.fxml.FXMLLoader;
-
-
+import com.jfoenix.controls.JFXTextArea;
 
 public class Instructions {
  
@@ -35,6 +34,13 @@ public class Instructions {
     @FXML
     private AnchorPane anchorContent;
 
+    @FXML
+    private Text title;
+
+    @FXML
+    private JFXTextArea text1;
+
+
    
     public Instructions() {}
     
@@ -46,26 +52,32 @@ public class Instructions {
         buttonBasics.setText((LangService.getMapping("instructions_basics")));
         buttonFigures.setText((LangService.getMapping("instructions_figures")));
         buttonDevelopment.setText((LangService.getMapping("instructions_development")));
-        
-        anchorContent.getChildren().clear();
-        anchorContent.getChildren().add(FXMLLoader.load(getClass().getResource("/view/basics.fxml")));
+        text1.setMaxWidth(3500);
+        text1.setFont(new Font(20));
+        title.setText((LangService.getMapping("instructions_basics")));
+        text1.setText((LangService.getMapping("instructions_basics_info_paragraph1")));
     } 
     
-    
+    @FXML
     public void loadDevelopment(ActionEvent event) throws IOException {
-        anchorContent.getChildren().clear();
-        anchorContent.getChildren().add(FXMLLoader.load(getClass().getResource("/view/development.fxml")));
+        text1.setMaxWidth(3500);
+        text1.setFont(new Font(20));
+        title.setText((LangService.getMapping("instructions_development")));
+        text1.setText((LangService.getMapping("instructions_development_paragraph1")));
     }
 
 
+    @FXML
     public void loadBasics(ActionEvent event) throws IOException {
-        anchorContent.getChildren().clear();
-        anchorContent.getChildren().add(FXMLLoader.load(getClass().getResource("/view/basics.fxml")));
+        text1.setMaxWidth(3500);
+        text1.setFont(new Font(20));
+        title.setText((LangService.getMapping("instructions_basics")));
+        text1.setText((LangService.getMapping("instructions_basics_info_paragraph1")));
     }
 
+    @FXML
     public void loadFigures(ActionEvent event) throws IOException {
-        anchorContent.getChildren().clear();
-        anchorContent.getChildren().add(FXMLLoader.load(getClass().getResource("/view/figures.fxml")));
+        
     }
 
 }
