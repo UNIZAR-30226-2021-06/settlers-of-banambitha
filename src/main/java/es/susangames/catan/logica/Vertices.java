@@ -28,6 +28,8 @@ public class Vertices {
 	 * Representa cual de los 4 jugadores que juegan una partida puede construir en este Vertice. 
 	 * */
 	private Boolean puedeConstruirJugador[]; 
+
+	private Boolean asentamientoAdyacente;
 	
 	/*
 	 * Crear un tipo de dato Vertice que representa una intersección donde se pueden colocar
@@ -43,6 +45,7 @@ public class Vertices {
 		this.coord = c;
 		this.asentamiento = asentamiento;
 		this.puedeConstruirJugador = new Boolean[] {false, false, false, false};
+		this.asentamientoAdyacente = false;
 	}
 	
 	/*
@@ -116,6 +119,10 @@ public class Vertices {
 	public void construirPrimerAsentamiento (Jugadores j) {
 		this.asentamiento = TipoAsentamiento.Pueblo;
 		this.propietario = j;
+		puedeConstruirJugador[0] = false;
+		puedeConstruirJugador[1] = false;
+		puedeConstruirJugador[2] = false;
+		puedeConstruirJugador[3] = false;
 	}
 	
 	/*
@@ -124,7 +131,8 @@ public class Vertices {
 	 * @param j jugador que desea construir
 	 * */
 	public void construirAsentamiento (Jugadores j) {
-		if (!asentamiento.tieneAsentamiento() && puedeConstruirJugador[j.getColor().numeroColor()]) {
+		if (!asentamiento.tieneAsentamiento() && puedeConstruirJugador[j.getColor().numeroColor()]
+			&& !this.asentamientoAdyacente) {
 			this.asentamiento = TipoAsentamiento.Pueblo;
 			this.propietario = j;
 			// Ninguno podrá ya construir un asentamiento --> Todo a false.
@@ -132,6 +140,8 @@ public class Vertices {
 			puedeConstruirJugador[1] = false;
 			puedeConstruirJugador[2] = false;
 			puedeConstruirJugador[3] = false;
+		} else if (this.asentamientoAdyacente) {
+			asentamientoAdyacente();
 		}
 	}
 	
@@ -170,10 +180,17 @@ public class Vertices {
 	}
 	
 	public void asentamientoAdyacente () {
+		this.asentamientoAdyacente = true;
 		puedeConstruirJugador[0] = false;
 		puedeConstruirJugador[1] = false;
 		puedeConstruirJugador[2] = false;
 		puedeConstruirJugador[3] = false;
+	}
+
+	public void setPosibleAsentamientoDeJugador(int i) {
+		if (i>3 || i<0) {
+			puedeConstruirJugador[i] = false;
+		}
 	}
 	
 	/*
@@ -191,6 +208,10 @@ public class Vertices {
 			return false;
 		}
 		return puedeConstruirJugador[i];
+	}
+
+	public Boolean tieneAsentamientoAdyacente () {
+		return this.asentamientoAdyacente;
 	}
 	
 }

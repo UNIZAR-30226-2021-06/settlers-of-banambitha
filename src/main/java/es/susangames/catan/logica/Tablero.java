@@ -248,7 +248,7 @@ public class Tablero {
 	 * */
 	private int generarNumero () {
 		// return (int) Math.floor( Math.random()*5 + 1 );
-		return ThreadLocalRandom.current().nextInt(2, 13);
+		return ThreadLocalRandom.current().nextInt(1, 6) + ThreadLocalRandom.current().nextInt(1, 6);
 	}
 	
 	//--------------------------- Partida pausada -----------------------------------------------\\
@@ -1069,9 +1069,16 @@ public class Tablero {
 					Vertices v = getVerticePorId(id_vertice);
 					if (!v.tieneAsentamiento()) {
 						if (v.getPosibleAsentamientoDeJugador(id_jugador-1)) {
-							construirAsentamiento(v, jug);
-							message = "Se ha construido el poblado correctamente";
-							exit_status = 0;
+							if (!v.tieneAsentamientoAdyacente()){
+								construirAsentamiento(v, jug);
+								message = "Se ha construido el poblado correctamente";
+								exit_status = 0;
+							} else {
+								v.setPosibleAsentamientoDeJugador(id_jugador);
+								message = "[Error] Estaba marcado como posible cuando no " + 
+									"podía ser";
+								exit_status = 50;
+							}
 						}
 						else {
 							message = "[Error] La posición del asentamiento no está disponible para el "
