@@ -693,7 +693,7 @@ public class MainMenu {
         chatButton.setLayoutX(anchorPane.getLayoutX() + 120);
         chatButton.setLayoutY(anchorPane.getLayoutY() + 65);
         chatButton.setStyle("-fx-background-color: #c7956d; -fx-background-radius: 12px");
-        chatButton.setText(LangService.getMapping("accept"));
+        chatButton.setText(LangService.getMapping("accept_invitation"));
         DropShadow shadow = new DropShadow();
         chatButton.setEffect(shadow);
 
@@ -707,7 +707,7 @@ public class MainMenu {
          declineButton.setLayoutX(anchorPane.getLayoutX() + 120);
          declineButton.setLayoutY(anchorPane.getLayoutY() + 105);
          declineButton.setStyle("-fx-background-color: #c7956d; -fx-background-radius: 12px");
-         declineButton.setText(LangService.getMapping("decline"));
+         declineButton.setText(LangService.getMapping("decline_invitation"));
          declineButton.setEffect(shadow);
  
          declineButton.setOnAction((ActionEvent event) -> {

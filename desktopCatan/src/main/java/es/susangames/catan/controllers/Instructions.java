@@ -52,32 +52,81 @@ public class Instructions {
         buttonBasics.setText((LangService.getMapping("instructions_basics")));
         buttonFigures.setText((LangService.getMapping("instructions_figures")));
         buttonDevelopment.setText((LangService.getMapping("instructions_development")));
-        text1.setMaxWidth(3500);
-        text1.setFont(new Font(20));
+        
+        text1.setMaxWidth(3200);
+        text1.setFont(new Font(15));
         title.setText((LangService.getMapping("instructions_basics")));
-        text1.setText((LangService.getMapping("instructions_basics_info_paragraph1")));
+        text1.setText(( "\n" +
+            LangService.getMapping("instructions_basics_info_paragraph1")) + "\n\n" +
+            LangService.getMapping("instructions_basics_info_paragraph2") + "\n\n" +
+            LangService.getMapping("instructions_basics_info_paragraph3") + "\n\n" +
+            LangService.getMapping("instructions_basics_info_paragraph4") + "\n\n" +
+            LangService.getMapping("instructions_basics_info_paragraph5") + "\n\n" +
+            LangService.getMapping("instructions_basics_info_paragraph6") + "\n\n" +
+            LangService.getMapping("instructions_basics_info_paragraph7") + "\n\n" +
+            LangService.getMapping("instructions_basics_info_paragraph8") + "\n\n" +
+            LangService.getMapping("instructions_basics_info_paragraph9") + "\n\n" +
+            LangService.getMapping("instructions_basics_info_paragraph10") + "\n\n" +
+            LangService.getMapping("instructions_basics_info_paragraph11") + "\n\n" +
+            LangService.getMapping("instructions_basics_info_paragraph12") + "\n\n" +
+            LangService.getMapping("instructions_basics_info_paragraph13") + "\n\n" +
+            LangService.getMapping("instructions_basics_info_paragraph14") + "\n\n" 
+            );
     } 
     
+    // TODO: Eliminar esto.
     @FXML
     public void loadDevelopment(ActionEvent event) throws IOException {
-        text1.setMaxWidth(3500);
-        text1.setFont(new Font(20));
+        text1.setMaxWidth(3200);
+        text1.setFont(new Font(15));
         title.setText((LangService.getMapping("instructions_development")));
-        text1.setText((LangService.getMapping("instructions_development_paragraph1")));
+        text1.setText(( "\n" +
+            LangService.getMapping("instructions_development_paragraph1")) + "\n\n" +
+            LangService.getMapping("instructions_development_paragraph2") + "\n\n" +
+            LangService.getMapping("instructions_development_paragraph3") + "\n\n" +
+            LangService.getMapping("instructions_development_paragraph4") + "\n\n" +
+            LangService.getMapping("instructions_development_paragraph5") + "\n\n" +
+            LangService.getMapping("instructions_development_paragraph6") + "\n\n" +
+            LangService.getMapping("instructions_development_paragraph7") + "\n\n" +
+            LangService.getMapping("instructions_development_paragraph8") + "\n\n" 
+            );
     }
 
 
     @FXML
     public void loadBasics(ActionEvent event) throws IOException {
-        text1.setMaxWidth(3500);
-        text1.setFont(new Font(20));
+        text1.setMaxWidth(3200);
+        text1.setFont(new Font(15));
         title.setText((LangService.getMapping("instructions_basics")));
-        text1.setText((LangService.getMapping("instructions_basics_info_paragraph1")));
+        text1.setText(( "\n" +
+            LangService.getMapping("instructions_basics_info_paragraph1")) + "\n\n" +
+            LangService.getMapping("instructions_basics_info_paragraph2") + "\n\n" +
+            LangService.getMapping("instructions_basics_info_paragraph3") + "\n\n" +
+            LangService.getMapping("instructions_basics_info_paragraph4") + "\n\n" +
+            LangService.getMapping("instructions_basics_info_paragraph5") + "\n\n" +
+            LangService.getMapping("instructions_basics_info_paragraph6") + "\n\n" +
+            LangService.getMapping("instructions_basics_info_paragraph7") + "\n\n" +
+            LangService.getMapping("instructions_basics_info_paragraph8") + "\n\n" +
+            LangService.getMapping("instructions_basics_info_paragraph9") + "\n\n" +
+            LangService.getMapping("instructions_basics_info_paragraph10") + "\n\n" +
+            LangService.getMapping("instructions_basics_info_paragraph11") + "\n\n" +
+            LangService.getMapping("instructions_basics_info_paragraph12") + "\n\n" +
+            LangService.getMapping("instructions_basics_info_paragraph13") + "\n\n" +
+            LangService.getMapping("instructions_basics_info_paragraph14") + "\n\n" 
+            );
     }
 
     @FXML
     public void loadFigures(ActionEvent event) throws IOException {
-        
+        text1.setMaxWidth(3200);
+        text1.setFont(new Font(15));
+        title.setText((LangService.getMapping("instructions_figures")));
+        text1.setText((
+            LangService.getMapping("instructions_figures_info_paragraph1")) + "\n\n" +
+            LangService.getMapping("instructions_figures_info_paragraph2") + "\n\n" +
+            LangService.getMapping("instructions_figures_info_paragraph3") + "\n\n" +
+            LangService.getMapping("instructions_figures_info_paragraph4") + "\n\n" 
+            );
     }
 
 }
