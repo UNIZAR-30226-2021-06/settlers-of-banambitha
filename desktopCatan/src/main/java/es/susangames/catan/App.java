@@ -8,6 +8,8 @@ import javafx.stage.Stage;
 import javafx.scene.layout.Pane;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.application.Platform;
+import javafx.fxml.FXML;
 
 
 
@@ -37,9 +39,21 @@ public class App extends Application {
         launch();
     }
 
+	@FXML
 	public static void nuevaPantalla(String fxml) throws IOException {
-		Parent scene = FXMLLoader.load(App.class.getResource(fxml));
-        estado.getScene().setRoot(scene);
+		try {
+			Parent scene = FXMLLoader.load(App.class.getResource(fxml));
+			Platform.runLater(new Runnable() {
+				@Override
+				public void run() {
+					estado.getScene().setRoot(scene);
+				}
+			});
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+        
 	}
 
 }
