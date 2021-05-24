@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
@@ -9,23 +10,22 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-
 <StackPane xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="es.susangames.catan.controllers.InstructionsBasics">
    <children>
-      <AnchorPane>
+      <AnchorPane style="-fx-background-color: pink;">
          <children>
-            <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <VBox AnchorPane.bottomAnchor="2.0" AnchorPane.leftAnchor="2.0" AnchorPane.rightAnchor="2.0" AnchorPane.topAnchor="2.0">
                <children>
-                  <Region />
-                  <HBox prefHeight="100.0" prefWidth="200.0">
+                  <Region VBox.vgrow="NEVER" />
+                  <HBox VBox.vgrow="ALWAYS">
                      <VBox.margin>
                         <Insets top="5.0" />
                      </VBox.margin>
                      <children>
                         <Region HBox.hgrow="ALWAYS" />
-                        <AnchorPane style="-fx-background-radius: 12px; -fx-background-color: #965d62;">
+                        <AnchorPane style="-fx-background-radius: 12px; -fx-background-color: #965d62;" HBox.hgrow="NEVER">
                            <children>
-                              <HBox prefHeight="100.0" prefWidth="312.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                              <HBox>
                                  <children>
                                     <Region HBox.hgrow="ALWAYS" />
                                     <Text fx:id="menuText" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="253.0390625">
@@ -44,27 +44,23 @@
                         <Region HBox.hgrow="ALWAYS" />
                      </children>
                   </HBox>
-                  <Region />
-                  <HBox prefHeight="100.0" prefWidth="200.0">
+                  <Region VBox.vgrow="NEVER" />
+                  <HBox VBox.vgrow="ALWAYS">
                      <children>
-                        <Region HBox.hgrow="ALWAYS" />
-                        <AnchorPane style="-fx-background-radius: 12px; -fx-background-color: #965d62;">
+                        <Region HBox.hgrow="NEVER" />
+                        <AnchorPane style="-fx-background-radius: 12px; -fx-background-color: #965d62;" HBox.hgrow="ALWAYS">
                            <children>
-                              <HBox prefHeight="343.0" prefWidth="1346.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                              <HBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                  <children>
-                                    <Region HBox.hgrow="ALWAYS" />
-                                    <VBox prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
+                                    <Region HBox.hgrow="NEVER" />
+                                    <VBox HBox.hgrow="ALWAYS">
                                        <children>
-                                          <HBox VBox.vgrow="ALWAYS">
-                                             <children>
-                                                <Region HBox.hgrow="ALWAYS" />
-                                                <Region />
-                                             </children>
-                                          </HBox>
-                                          <Region VBox.vgrow="ALWAYS" />
+                                          <Region VBox.vgrow="NEVER" />
+                                          <TextArea fx:id="textContent" VBox.vgrow="ALWAYS" />
+                                          <Region VBox.vgrow="NEVER" />
                                        </children>
                                     </VBox>
-                                    <Region HBox.hgrow="ALWAYS" />
+                                    <Region HBox.hgrow="NEVER" />
                                  </children>
                               </HBox>
                            </children>
@@ -72,7 +68,7 @@
                               <Insets bottom="5.0" left="5.0" right="5.0" />
                            </HBox.margin>
                         </AnchorPane>
-                        <Region HBox.hgrow="ALWAYS" />
+                        <Region HBox.hgrow="NEVER" />
                      </children>
                      <VBox.margin>
                         <Insets top="25.0" />
