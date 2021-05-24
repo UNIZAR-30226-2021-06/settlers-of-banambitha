@@ -62,6 +62,7 @@ public class Vertices {
 		this.puedeConstruirJugador = new Boolean[] {false, false, false, false};
 		this.propietario = null;
 		this.id = 0;
+		this.asentamientoAdyacente = false;
 	}
 	
 	/*
