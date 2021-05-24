@@ -154,7 +154,13 @@ public class Play {
 
         salirSala();
 
-        String users[] = RoomServices.room.toArrayStrings();
+        String users[]; 
+        try {
+            users = RoomServices.room.toArrayStrings();
+        } catch (Exception e) {
+            System.out.println(e.toString());
+            users = new String[0];
+        }
         if(users.length  > 0) {
             JSONObject info_player1 = UserService.getUserInfo(users[0]);
             System.out.println("Player 1:\n" + info_player1.toString(4));
@@ -212,7 +218,13 @@ public class Play {
             _playButton.setDisable(false);
         }
         System.out.println("Intentando recargar la sala...");
-        String users[] = RoomServices.room.toArrayStrings();
+        String users[]; 
+        try {
+            users = RoomServices.room.toArrayStrings();
+        } catch (Exception e) {
+            System.out.println(e.toString());
+            users = new String[0];
+        }
         System.out.println("Users length: " + users.length);
         if(users.length  > 0) {
             JSONObject info_player1 = UserService.getUserInfo(users[0]);
