@@ -820,7 +820,7 @@ public class Gameplay {
                 JSONObject object = UserService.getUserInfo(UserService.getUsername());
                 UserService.fillData(object);
                 if(UserService.getBloqueado() != null) {
-                    App.nuevaPantalla("view/Login.fxml");
+                    App.nuevaPantalla("/view/Login.fxml");
                 } else {
                     App.nuevaPantalla("/view/mainMenu.fxml");
                 }
