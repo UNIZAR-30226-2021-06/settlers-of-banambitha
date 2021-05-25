@@ -198,7 +198,9 @@ public class Tablero {
 				posActualLadron.moverLadron();
 				nuevaPosLadron.colocarLadron();
 				//TODO:Eliminar recursos jugadores
+				System.out.println(nuevaPosicion);
 				Vertices v_nuevaPos[] = nuevaPosLadron.getVertices();
+				System.out.println(nuevaPosLadron.length);
 				for (int i = 0; i < v_nuevaPos.length; ++i) {
 					System.out.print("Vertices: " + v_nuevaPos[i].getIdentificador());
 					if (v_nuevaPos[i].tieneAsentamiento() 
