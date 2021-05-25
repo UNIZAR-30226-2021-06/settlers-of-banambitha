@@ -2494,22 +2494,22 @@ public class Gameplay {
             Platform.runLater(new Runnable() {
                 @Override public void run() {
                     anchorPane.getChildren().remove(spinnerGive);
-                    if(materialSeleccionado.equals("Lana")) {
+                    if(materialSeleccionado.equals(LangService.getMapping("wool"))) {
                         spinnerGive = 
                                     new Spinner(0,
                                     Partida.jugadores[Partida.miTurno -1].recursos.lana,
                                      1);
-                    } else if(materialSeleccionado.equals("Madera")) {
+                    } else if(materialSeleccionado.equals(LangService.getMapping("wood"))) {
                         spinnerGive = 
                                     new Spinner(0, 
                                     Partida.jugadores[Partida.miTurno -1].recursos.madera,
                                      1);
-                    } else if(materialSeleccionado.equals("Mineral")) {
+                    } else if(materialSeleccionado.equals(LangService.getMapping("mineral"))) {
                         spinnerGive = 
                                     new Spinner(0,
                                     Partida.jugadores[Partida.miTurno -1].recursos.mineral,
                                     1);
-                    } else if(materialSeleccionado.equals("Cereal")) {
+                    } else if(materialSeleccionado.equals(LangService.getMapping("cereal"))) {
                         spinnerGive = 
                                     new Spinner(0,
                                     Partida.jugadores[Partida.miTurno -1].recursos.cereales,
