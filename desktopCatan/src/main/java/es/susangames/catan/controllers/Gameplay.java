@@ -1517,12 +1517,16 @@ public class Gameplay {
 
     @FXML
     void send_msg(ActionEvent event) {
-        JSONObject msg = new JSONObject();
-        msg.put("from", Partida.miTurno);
-        msg.put("game", Partida.id);
-        msg.put("body", chatInput.getText().toString() );
-        ws.session.send(ws.enviarMensajePartida, msg.toString());  
-        chatInput.clear();    
+        if(chatInput.getText().toString().length() > 0) {
+            JSONObject msg = new JSONObject();
+            msg.put("from", Partida.miTurno);
+            msg.put("game", Partida.id);
+            msg.put("body", chatInput.getText().toString() );
+            ws.session.send(ws.enviarMensajePartida, msg.toString());  
+            chatInput.clear();    
+        } 
+        
+        
 
     }
 
