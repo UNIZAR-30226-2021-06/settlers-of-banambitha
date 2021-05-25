@@ -600,8 +600,9 @@ public class Tablero {
 			// las aristas adyacentes.
 			
 			// V1 tiene asentamiento del jugador
-			if ( (v1.tieneAsentamiento() && v1.getPropietario().equals(j) ) || 
-					( v2.tieneAsentamiento() && v2.getPropietario().equals(j) ) ){
+			Boolean asentamientoJugadorV1 = v1.tieneAsentamiento() && v1.getPropietario().equals(j);
+			Boolean asentamientoJugadorV2 = v2.tieneAsentamiento() && v2.getPropietario().equals(j);
+			if ( asentamientoJugadorV1  || asentamientoJugadorV2 ) {
 				// No podemos marcar ningun vertice como posible asentamiento ya que no cumplir�a 
 				// la regla de la distancia
 				Boolean resul = a.setCamino(j);
@@ -617,7 +618,7 @@ public class Tablero {
 				}
 				
 			}
-			else if (!v1.tieneAsentamiento() && !v2.tieneAsentamiento()){
+			else if ( !asentamientoJugadorV1 && !asentamientoJugadorV2 ){
 				// Existe camino en alguno de las aristas adyacentes a v1 y esta arista no es a.
 				for (int i = 0; i < aristasAdyacentesAv1.length && !sePuedeConstruir; ++i) {
 					if (!aristasAdyacentesAv1[i].equals(a) && aristasAdyacentesAv1[i].tieneCamino() && 
