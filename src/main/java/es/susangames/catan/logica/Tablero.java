@@ -199,7 +199,7 @@ public class Tablero {
 				posActualLadron.moverLadron();
 				nuevaPosLadron.colocarLadron();
 				//TODO:Eliminar recursos jugadores
-				Vertices v_nuevaPos[] = nuevaPosLadron.getVerticWes();
+				Vertices v_nuevaPos[] = nuevaPosLadron.getVertices();
 				//System.out.println("Vector vertices: " + v_nuevaPos.length);
 				Boolean jugRobados [] = new Boolean[4];
 				jugRobados[0] = jugRobados[1] = jugRobados[2] = jugRobados[3] = false;
