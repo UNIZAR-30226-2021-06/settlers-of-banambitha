@@ -3131,7 +3131,7 @@ public class Gameplay {
         reportPLayer4.setText(LangService.getMapping("report"));
 
         System.out.println("Report system");
-        //chatContent.setEditable(false);
+        chatContent.setEditable(false);
         //chatContent.setMouseTransparent(true);
         //chatContent.setFocusTraversable(false);  
 
