@@ -4,7 +4,9 @@
     border-left: solid map-get($palette, darkerRed)
     position: relative
     height: 100%
+    width: 100%
     align-items: center
+    box-sizing: border-box
     padding: 0px 12px
 
 .user-image
@@ -36,19 +38,22 @@
     width: 40%
 
 .profile-elo
-    display: flex
-    justify-content: space-between
     height: 100%
     width: 100%
 
+.pic-div 
+    float: left
+    height: 100%
+    width: 40%
+
 .name-coins
-    float: right
     display: flex
+    justify-content: center
+    align-content: space-between
+    flex-direction: column
+    float: right
     height: 100%
     width: 60%
-    justify-content: center
-    align-content: center
-    flex-direction: column
 
 .name
     font-size: large
@@ -69,9 +74,6 @@
 .gem-image
     height: 100%
 
-.money-icon
-    height: 100%
-    width: 40%
 
 .money-text
     border: solid black

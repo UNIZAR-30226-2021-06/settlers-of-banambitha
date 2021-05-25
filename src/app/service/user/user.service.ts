@@ -21,6 +21,7 @@ export class UserService {
   private static readonly baseUrl = environment.baseUrl + "/usuario"
   private static readonly addUrl = UserService.baseUrl + "/add"
   private static readonly validae = UserService.baseUrl + "/validate"
+  private static readonly stats =  UserService.baseUrl + "/stats"
   private static readonly httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
     withCredentials: true,
@@ -83,7 +84,7 @@ export class UserService {
     this.username = userData["nombre"]
     this.apariencia = userData["apariencia"]
     this.saldo = userData["saldo"]
-    this.mail = userData["mail"]
+    this.mail = userData["email"]
     this.avatar = userData["avatar"]
     this.partida = userData["partida"]
     console.log(this.partida)
@@ -211,4 +212,11 @@ export class UserService {
         return of(false)
     }))
   }
+
+  public ObtenerEstadisticasJugador(){
+    return this.http.get(UserService.stats + "/" + this.getUsername(), UserService.httpOptions)
+  }
 }
+
+
+

@@ -33,7 +33,7 @@ import { ActionsComponent } from './rules/actions/actions.component';
 import { IngameComponent } from './rules/ingame/ingame.component';
 import { StadisticCardComponent } from './profile/stadistic-card/stadistic-card.component';
 import { MainHomeComponent } from './main-home/main-home.component';
-import {MatProgressSpinnerModule} from '@angular/material/progress-spinner'; 
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 
 @NgModule({
