@@ -259,7 +259,6 @@ public class Options {
     }
 
     private void newShopElement(String name, String imgURL, JFXListView<AnchorPane> elementsList) {
-        
         AnchorPane anchorPane = new AnchorPane();
         anchorPane.setPrefSize(150, 300);
         anchorPane.setStyle("-fx-background-color: #965d62");

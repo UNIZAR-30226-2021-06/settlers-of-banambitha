@@ -783,7 +783,12 @@ public class Gameplay {
             try {
                 JSONObject object = UserService.getUserInfo(UserService.getUsername());
                 UserService.fillData(object);
-                App.nuevaPantalla("/view/mainMenu.fxml");
+                if(UserService.getBloqueado() != null) {
+                    App.nuevaPantalla("view/Login.fxml");
+                } else {
+                    App.nuevaPantalla("/view/mainMenu.fxml");
+                }
+                
             } catch (IOException e) {
                 System.err.println("Exception e: " + e.toString());
             }

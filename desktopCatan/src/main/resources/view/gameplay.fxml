@@ -225,7 +225,7 @@
                      <children>
                         <JFXTextArea fx:id="chatContent" prefColumnCount="1" style="-fx-background-color: #965d62; -fx-background-radius: 12px;" VBox.vgrow="ALWAYS">
                            <VBox.margin>
-                              <Insets bottom="15.0" top="15.0" />
+                              <Insets bottom="15.0" right="8.0" top="15.0" />
                            </VBox.margin></JFXTextArea>
                         <HBox>
                            <children>
