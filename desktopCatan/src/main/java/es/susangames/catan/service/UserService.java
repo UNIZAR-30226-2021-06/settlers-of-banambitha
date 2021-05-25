@@ -25,7 +25,7 @@ public class UserService {
     private static final String estadisticasUrl = baseUrl + "/stats";
     private static final String newPasswordUrl = baseUrl + "/new-password";
     public static final String aparienciaClasica = "apariencia_clasica.png";
-    public static final String aparienciaHardware = "hardware_shop_image.png";
+    public static final String aparienciaHardware = "hardware_shop_image.jpg";
     public static final String aparienciaEspacial = "espacial_shop_image.jpg";
 
 
