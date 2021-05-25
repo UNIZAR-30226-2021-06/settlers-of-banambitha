@@ -357,6 +357,21 @@ public class Gameplay {
     private static Button _passTurnButton;
 
     @FXML
+    private Text player1Name1; // MAdera
+
+    @FXML
+    private Text player1Name11; // Arcilla
+
+    @FXML
+    private Text player1Name111; // Cereal
+
+    @FXML
+    private Text player1Name1111; // LANA
+
+    @FXML
+    private Text player1Name1113; // Mineral
+
+    @FXML
     private Text lanaCant;
 
     private static Text _lanaCant;
@@ -2211,7 +2226,7 @@ public class Gameplay {
         Integer _lana = Partida.jugadores[_offerPlayer].recursos.lana;
         
         // Arcilla
-        Text arcilla = new Text(10, 50, (LangService.getMapping("clay")) + "\t\t\t\t\t\t " 
+        Text arcilla = new Text(10, 50, formatearString(LangService.getMapping("clay"), 35) 
                                             + _arcilla.toString());
         arcilla.setFont(new Font(20));
         arcilla.setLayoutX(anchorPane.getLayoutX()+ 10);
@@ -2220,7 +2235,7 @@ public class Gameplay {
         anchorPane.getChildren().add(arcilla);
         
         // Madera
-        Text madera = new Text(10, 50, (LangService.getMapping("wood")) + "\t\t\t\t\t\t " 
+        Text madera = new Text(10, 50, formatearString(LangService.getMapping("wood"), 35) 
                                             + _madera.toString());
         madera.setFont(new Font(20));
         madera.setLayoutX(anchorPane.getLayoutX()+ 10);
@@ -2229,7 +2244,7 @@ public class Gameplay {
         anchorPane.getChildren().add(madera);
  
         // Cereal
-        Text cereal = new Text(10, 50, (LangService.getMapping("cereal")) + "\t\t\t\t\t\t " 
+        Text cereal = new Text(10, 50, formatearString(LangService.getMapping("cereal"), 35) 
                                             + _cereal.toString());
         cereal.setFont(new Font(20));
         cereal.setLayoutX(anchorPane.getLayoutX()+ 10);
@@ -2238,7 +2253,7 @@ public class Gameplay {
         anchorPane.getChildren().add(cereal);
         
         // Mineral
-        Text mineral = new Text(10, 50, (LangService.getMapping("mineral")) + "\t\t\t\t\t\t " 
+        Text mineral = new Text(10, 50, formatearString(LangService.getMapping("mineral"), 35) 
                                             + _mineral.toString());
         mineral.setFont(new Font(20));
         mineral.setLayoutX(anchorPane.getLayoutX()+ 10);
@@ -2247,7 +2262,7 @@ public class Gameplay {
         anchorPane.getChildren().add(mineral);
 
         // Lana
-        Text lana = new Text(10, 50, (LangService.getMapping("wool")) + "\t\t\t\t\t\t\t " 
+        Text lana = new Text(10, 50, formatearString(LangService.getMapping("wool"), 35)
                                         + _lana.toString());
         lana.setFont(new Font(20));
         lana.setLayoutX(anchorPane.getLayoutX()+ 10);
@@ -2278,15 +2293,15 @@ public class Gameplay {
 
                Platform.runLater(new Runnable() {
                    @Override public void run() {
-                       arcilla.setText((LangService.getMapping("clay")) + "\t\t\t\t\t\t " 
+                       arcilla.setText( formatearString(LangService.getMapping("clay"), 35) 
                                        + arcilla_aux.toString());
-                       madera.setText((LangService.getMapping("wood")) + "\t\t\t\t\t\t " 
+                       madera.setText(formatearString(LangService.getMapping("wood"), 35)  
                                        + madera_aux.toString());
-                       mineral.setText((LangService.getMapping("mineral")) + "\t\t\t\t\t\t " 
-                                       + cereal_aux.toString());
-                       cereal.setText((LangService.getMapping("cereal")) + "\t\t\t\t\t\t " 
+                       mineral.setText(formatearString(LangService.getMapping("mineral"), 35) 
                                        + mineral_aux.toString());
-                       lana.setText((LangService.getMapping("wool")) + "\t\t\t\t\t\t\t " 
+                       cereal.setText(formatearString(LangService.getMapping("cereal"), 35) 
+                                       + cereal_aux.toString());
+                       lana.setText(formatearString(LangService.getMapping("wood"), 35) 
                                        + lana_aux.toString());
                    }
                });
@@ -2298,6 +2313,15 @@ public class Gameplay {
        anchorPane.getChildren().add(offerPlayerResources);
     }
     
+    private String formatearString (String word, int length) {
+        int lonWord = word.length();
+        while (lonWord < length) {
+            word += " ";
+            lonWord = word.length();
+        }
+        return word;
+    }
+
     private void buildSettlementPopUp() {
         AnchorPane anchorPane = new AnchorPane();
         anchorPane.setPrefSize(310, 115);
@@ -2602,7 +2626,7 @@ public class Gameplay {
         sendTrade.setLayoutX(anchorPane.getLayoutX() + 100);
         sendTrade.setLayoutY(anchorPane.getLayoutY() + 520);
         sendTrade.setStyle("-fx-background-color: #c7956d; -fx-background-radius: 12px");
-        sendTrade.setText("Aceptar");
+        sendTrade.setText(LangService.getMapping("accept"));
         DropShadow shadow = new DropShadow();
         sendTrade.setEffect(shadow);
        
@@ -2769,7 +2793,7 @@ public class Gameplay {
         accepTrade.setLayoutX(anchorPane.getLayoutX() + 80);
         accepTrade.setLayoutY(anchorPane.getLayoutY() + 50);
         accepTrade.setStyle("-fx-background-color: #c7956d; -fx-background-radius: 12px");
-        accepTrade.setText("Aceptar");
+        accepTrade.setText(LangService.getMapping("accept"));
         accepTrade.setOnAction((ActionEvent event) -> {
            aceptarComercioJugador();
             popupNewTradeOffer.hide();
@@ -2786,7 +2810,7 @@ public class Gameplay {
         denegarTrade.setLayoutX(anchorPane.getLayoutX() + 240);
         denegarTrade.setLayoutY(anchorPane.getLayoutY() + 50);
         denegarTrade.setStyle("-fx-background-color: #c7956d; -fx-background-radius: 12px");
-        denegarTrade.setText("Denegar");
+        denegarTrade.setText(LangService.getMapping("decline"));
         denegarTrade.setEffect(shadow);
         denegarTrade.setOnAction((ActionEvent event) -> {
             rechazarComercioJugador();
@@ -3136,6 +3160,12 @@ public class Gameplay {
          _turnPlayer = turnPlayer;
          _passTurnButton = passTurnButton;
          _mainAnchor = mainAnchor;
+
+        player1Name1.setText(LangService.getMapping("wood"));
+        player1Name11.setText(LangService.getMapping("clay"));
+        player1Name111.setText(LangService.getMapping("cereal"));
+        player1Name1111.setText(LangService.getMapping("wool"));
+        player1Name1113.setText(LangService.getMapping("mineral"));
 
          System.out.println("Pass Turn Button");
          passTurnButton.setOnAction((ActionEvent event) -> {

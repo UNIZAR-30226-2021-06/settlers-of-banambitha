@@ -120,6 +120,7 @@ public class MainMenu {
     public static String userChatOpenned;
     public static JFXTextArea _chatContent;
     
+    public static String skinSelected;
 
 
     public MainMenu() {
@@ -625,6 +626,7 @@ public class MainMenu {
         //TODO: Cargar amigos. (Ejemplo de prueba)
         getFriends();
 
+        skinSelected = "Normal";
 
         // Actualizar informacion del
         userName.setText(UserService.getUsername());

@@ -140,28 +140,29 @@ public class Play {
 
         for (String skin : list_skins_table) {
             if (skin.equals("Clasica")) {
-                skinSelector.getItems().add("Normal");
-                skinSelector.setValue("Normal");
+                skinSelector.getItems().add("Normal");                
             } else if (skin.equals("Espacial")) {
                 skinSelector.getItems().add((LangService.getMapping("play_skin_space")));
             } else if (skin.equals("Hardware")) {
                 skinSelector.getItems().add((LangService.getMapping("play_skin_computer")));
             }
         }
-        /*if (!RoomServices.soyLider()) {
-            skinSelector.setDisable(true);
-        }*/
+
+        skinSelector.setValue(MainMenu.skinSelected);
 
         skinSelector.getSelectionModel().selectedItemProperty().addListener( (v, oldValue, newValue) -> 
         {
             skinSelector.setValue(newValue);  
             if(newValue.equals("Normal")) {
+                MainMenu.skinSelected = "Normal";
                 UserService.updateUser(UserService.getUsername(),"apariencia", UserService.aparienciaClasica);
             } 
             else if(newValue.equals((LangService.getMapping("play_skin_space")))) {
+                MainMenu.skinSelected = LangService.getMapping("play_skin_space");
                 UserService.updateUser(UserService.getUsername(),"apariencia", UserService.aparienciaEspacial);
             } 
             else if(newValue.equals((LangService.getMapping("play_skin_computer")))) {
+                MainMenu.skinSelected = LangService.getMapping("play_skin_computer");
                 UserService.updateUser(UserService.getUsername(),"apariencia", UserService.aparienciaHardware);
             }
         }
