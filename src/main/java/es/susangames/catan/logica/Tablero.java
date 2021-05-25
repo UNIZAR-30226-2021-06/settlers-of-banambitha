@@ -24,7 +24,7 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class Tablero {
 //Campos de la clase
-	private static int maxPuntos = 6; 
+	private static int maxPuntos = 2; 
 
 	// Mapa con las coordenadas de los centros de los 19 hexagonos del tablero. 
 	private Map<Integer, Hexagonos> hexagonos;
