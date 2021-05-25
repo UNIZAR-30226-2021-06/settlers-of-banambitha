@@ -188,19 +188,21 @@ public class Tablero {
      * Método que mueve el ladron al hexagono indicado
      */
 	public void moverLadron (Integer nuevaPosicion) {
+		System.out.println("moverLadron");
 		Hexagonos posActualLadron = getPosicionLadron();
-		
+		System.out.println("Posicion actual: " + posActualLadron.getIdentificador());
+		System.out.println("Nueva posicion ladron: " + nuevaPosicion);
 		Hexagonos nuevaPosLadron = hexagonos.get(nuevaPosicion);
 		// Si el hexagono al que se puede mover existe
 		if (nuevaPosLadron != null) {
 			// Comprobamos que los dos hexagonos son adyacentes.
 			if (posActualLadron.sonAdyacentes(nuevaPosLadron)) {
+				System.out.println("Posicion valida. Moviendo ladron...");
 				posActualLadron.moverLadron();
 				nuevaPosLadron.colocarLadron();
 				//TODO:Eliminar recursos jugadores
-				System.out.println(nuevaPosicion);
 				Vertices v_nuevaPos[] = nuevaPosLadron.getVertices();
-				System.out.println(nuevaPosLadron.length);
+				System.out.println("Vector vertices: " + nuevaPosLadron.length);
 				for (int i = 0; i < v_nuevaPos.length; ++i) {
 					System.out.print("Vertices: " + v_nuevaPos[i].getIdentificador());
 					if (v_nuevaPos[i].tieneAsentamiento() 
