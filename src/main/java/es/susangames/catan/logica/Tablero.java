@@ -202,7 +202,7 @@ public class Tablero {
 				nuevaPosLadron.colocarLadron();
 				//TODO:Eliminar recursos jugadores
 				Vertices v_nuevaPos[] = nuevaPosLadron.getVertices();
-				System.out.println("Vector vertices: " + nuevaPosLadron.length);
+				System.out.println("Vector vertices: " + v_nuevaPos.length);
 				for (int i = 0; i < v_nuevaPos.length; ++i) {
 					System.out.print("Vertices: " + v_nuevaPos[i].getIdentificador());
 					if (v_nuevaPos[i].tieneAsentamiento() 
