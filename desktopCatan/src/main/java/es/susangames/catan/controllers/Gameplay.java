@@ -2301,7 +2301,7 @@ public class Gameplay {
                                        + mineral_aux.toString());
                        cereal.setText(formatearString(LangService.getMapping("cereal"), 35) 
                                        + cereal_aux.toString());
-                       lana.setText(formatearString(LangService.getMapping("wood"), 35) 
+                       lana.setText(formatearString(LangService.getMapping("wool"), 35) 
                                        + lana_aux.toString());
                    }
                });
