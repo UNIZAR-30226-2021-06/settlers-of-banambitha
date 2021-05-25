@@ -702,20 +702,56 @@ public class Gameplay {
             String body = object.getString("body");
             switch (user) {
                 case 1:
-                _chatContent.appendText( Partida.jugadores[0].nombre + ": " +
-                                         body + "\n");
+                    try{
+                        Platform.runLater(new Runnable() {
+                            @Override public void run() {
+                                _chatContent.appendText( Partida.jugadores[0].nombre + ": " +
+                                body + "\n");
+                            }
+                        });
+                    } catch(Exception e){
+                        System.out.println(e.toString());
+                        e.printStackTrace();
+                    }
                     break;
                 case 2:
-                _chatContent.appendText( Partida.jugadores[1].nombre + ": " +
-                                         body + "\n");
+                    try{
+                        Platform.runLater(new Runnable() {
+                            @Override public void run() {
+                                _chatContent.appendText( Partida.jugadores[1].nombre + ": " +
+                                            body + "\n");
+                            }
+                        });
+                    } catch(Exception e){
+                        System.out.println(e.toString());
+                        e.printStackTrace();
+                    }
                     break;
                 case 3:
-                _chatContent.appendText( Partida.jugadores[2].nombre + ": " + 
-                                         body + "\n");
+                    try{
+                        Platform.runLater(new Runnable() {
+                            @Override public void run() {
+                                _chatContent.appendText( Partida.jugadores[2].nombre + ": " + 
+                                            body + "\n");
+                            }
+                        });
+                    } catch(Exception e){
+                        System.out.println(e.toString());
+                        e.printStackTrace();
+                    }
                     break;
                 case 4:
-                _chatContent.appendText( Partida.jugadores[3].nombre + ": " + 
+                    try{
+                        Platform.runLater(new Runnable() {
+                            @Override public void run() {
+                                _chatContent.appendText( Partida.jugadores[3].nombre + ": " + 
                                          body + "\n");
+                            }
+                        });
+                    } catch(Exception e){
+                        System.out.println(e.toString());
+                        e.printStackTrace();
+                    }
                     break;
                 default:
                     System.out.println("Jugador erroneo");
@@ -1539,15 +1575,28 @@ public class Gameplay {
         i == 28 || i >= 32) {
             Image imgSea;
             if(UserService.getApariencia().equals(UserService.aparienciaClasica)) {
-                pol.setFill(Color.web("5c86ae"));
-
+                Platform.runLater(new Runnable() {
+                    @Override public void run() {
+                        pol.setFill(Color.web("5c86ae"));
+                    }
+                });
+               
             } else if(UserService.getApariencia().equals(UserService.aparienciaEspacial)) {
                 imgSea = new Image("/img/board/Espacial/Agua.jpg");
-                pol.setFill(new ImagePattern(imgSea));
-
+                Platform.runLater(new Runnable() {
+                    @Override public void run() {
+                        pol.setFill(new ImagePattern(imgSea));
+                    }
+                });
+                
             } else if(UserService.getApariencia().equals(UserService.aparienciaHardware)) {
                 imgSea = new Image("/img/board/Hardware/Agua.jpg");
-                pol.setFill(new ImagePattern(imgSea));
+                Platform.runLater(new Runnable() {
+                    @Override public void run() {
+                        pol.setFill(new ImagePattern(imgSea));
+                    }
+                });
+                
             }
         } 
     }
