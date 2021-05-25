@@ -1532,26 +1532,110 @@ public class Gameplay {
         if ( i <= 4 || i == 8 || i == 9 || i == 14 ||
         i == 15 || i == 21 || i == 22 || i == 27 ||
         i == 28 || i >= 32) {
+            Image imgSea;
+            if(UserService.getApariencia().equals(UserService.aparienciaClasica)) {
+                pol.setFill(Color.web("5c86ae"));
 
-            pol.setFill(Color.web("5c86ae"));
+            } else if(UserService.getApariencia().equals(UserService.aparienciaEspacial)) {
+                imgSea = new Image("/img/board/Espacial/Agua.jpg");
+                Partida.tablero.hexagonos.hexagons[i].setFill(new ImagePattern(imgSea));
+
+            } else if(UserService.getApariencia().equals(UserService.aparienciaHardware)) {
+                imgSea = new Image("/img/board/Hardware/Agua.jpg");
+                Partida.tablero.hexagonos.hexagons[i].setFill(new ImagePattern(imgSea));
+            }
         } 
     }
 
     private static void updateHexagonBackground() {
         for(int i = 0; i < numberofHexagons; i++) {
+            // Bosque
             if (Partida.tablero.hexagonos.tipo[i].equals(TipoTerreno.BOSQUE) ) {
-                Partida.tablero.hexagonos.hexagons[i].setFill(Color.web("536d35"));
-            } else if (Partida.tablero.hexagonos.tipo[i].equals(TipoTerreno.CERRO)) {
-                Partida.tablero.hexagonos.hexagons[i].setFill(Color.web("636363"));
-            } else if (Partida.tablero.hexagonos.tipo[i].equals(TipoTerreno.DESIERTO)) {
-                Partida.tablero.hexagonos.hexagons[i].setFill(Color.web("ba9e5c"));
-            } else if (Partida.tablero.hexagonos.tipo[i].equals(TipoTerreno.MONTANYA)) {
-                Partida.tablero.hexagonos.hexagons[i].setFill(Color.web("97593c"));
-            } else if (Partida.tablero.hexagonos.tipo[i].equals(TipoTerreno.PASTO)) {
-                Partida.tablero.hexagonos.hexagons[i].setFill(Color.web("93b248"));
-            } else if (Partida.tablero.hexagonos.tipo[i].equals(TipoTerreno.SEMBRADO)) {
-                Partida.tablero.hexagonos.hexagons[i].setFill(Color.YELLOW);
+                Image imgBosque;
+                if(UserService.getApariencia().equals(UserService.aparienciaClasica)) {
+                    Partida.tablero.hexagonos.hexagons[i].setFill(Color.web("536d35"));
+
+                } else if(UserService.getApariencia().equals(UserService.aparienciaEspacial)) {
+                    imgBosque = new Image("/img/board/Espacial/Bosque.jpg");
+                    Partida.tablero.hexagonos.hexagons[i].setFill(new ImagePattern(imgBosque));
+
+                } else if(UserService.getApariencia().equals(UserService.aparienciaHardware)) {
+                    imgBosque = new Image("/img/board/Hardware/Bosque.jpg");
+                    Partida.tablero.hexagonos.hexagons[i].setFill(new ImagePattern(imgBosque));
+                }
+                
+            }  // Cerro
+            else if (Partida.tablero.hexagonos.tipo[i].equals(TipoTerreno.CERRO)) {
+                Image imgCerro;
+                if(UserService.getApariencia().equals(UserService.aparienciaClasica)) {
+                    Partida.tablero.hexagonos.hexagons[i].setFill(Color.web("636363"));
+
+                } else if(UserService.getApariencia().equals(UserService.aparienciaEspacial)) {
+                    imgCerro = new Image("/img/board/Espacial/Cerro.jpg");
+                    Partida.tablero.hexagonos.hexagons[i].setFill(new ImagePattern(imgCerro));
+
+                } else if(UserService.getApariencia().equals(UserService.aparienciaHardware)) {
+                    imgCerro = new Image("/img/board/Hardware/Cerro.jpg");
+                    Partida.tablero.hexagonos.hexagons[i].setFill(new ImagePattern(imgCerro));
+                }
+            } // Desierto 
+            else if (Partida.tablero.hexagonos.tipo[i].equals(TipoTerreno.DESIERTO)) {
+                Image imgDesierto;
+                if(UserService.getApariencia().equals(UserService.aparienciaClasica)) {
+                    Partida.tablero.hexagonos.hexagons[i].setFill(Color.web("ba9e5c"));
+
+                } else if(UserService.getApariencia().equals(UserService.aparienciaEspacial)) {
+                    imgDesierto = new Image("/img/board/Espacial/Desierto.jpg");
+                    Partida.tablero.hexagonos.hexagons[i].setFill(new ImagePattern(imgDesierto));
+
+                } else if(UserService.getApariencia().equals(UserService.aparienciaHardware)) {
+                    imgDesierto = new Image("/img/board/Hardware/Desierto.jpg");
+                    Partida.tablero.hexagonos.hexagons[i].setFill(new ImagePattern(imgDesierto));
+                }
+            } // Montaña
+            else if (Partida.tablero.hexagonos.tipo[i].equals(TipoTerreno.MONTANYA)) {
+                Image imgMontanya;
+                if(UserService.getApariencia().equals(UserService.aparienciaClasica)) {
+                    Partida.tablero.hexagonos.hexagons[i].setFill(Color.web("97593c"));
+
+                } else if(UserService.getApariencia().equals(UserService.aparienciaEspacial)) {
+                    imgMontanya = new Image("/img/board/Espacial/Montanya.jpg");
+                    Partida.tablero.hexagonos.hexagons[i].setFill(new ImagePattern(imgMontanya));
+
+                } else if(UserService.getApariencia().equals(UserService.aparienciaHardware)) {
+                    imgMontanya = new Image("/img/board/Hardware/Montanya.jpg");
+                    Partida.tablero.hexagonos.hexagons[i].setFill(new ImagePattern(imgMontanya));
+                }
+            } // Pasto
+            else if (Partida.tablero.hexagonos.tipo[i].equals(TipoTerreno.PASTO)) {
+                Image imgPasto;
+                if(UserService.getApariencia().equals(UserService.aparienciaClasica)) {
+                    Partida.tablero.hexagonos.hexagons[i].setFill(Color.web("93b248"));
+
+                } else if(UserService.getApariencia().equals(UserService.aparienciaEspacial)) {
+                    imgPasto = new Image("/img/board/Espacial/Pasto.jpg");
+                    Partida.tablero.hexagonos.hexagons[i].setFill(new ImagePattern(imgPasto));
+
+                } else if(UserService.getApariencia().equals(UserService.aparienciaHardware)) {
+                    imgPasto = new Image("/img/board/Hardware/Pasto.jpg");
+                    Partida.tablero.hexagonos.hexagons[i].setFill(new ImagePattern(imgPasto));
+                }
+            } // Sembrado 
+            else if (Partida.tablero.hexagonos.tipo[i].equals(TipoTerreno.SEMBRADO)) {
+                Image imgSembrado;
+                if(UserService.getApariencia().equals(UserService.aparienciaClasica)) {
+                    Partida.tablero.hexagonos.hexagons[i].setFill(Color.YELLOW);
+                } else if(UserService.getApariencia().equals(UserService.aparienciaEspacial)) {
+                    imgSembrado = new Image("/img/board/Espacial/Sembrado.jpg");
+                    Partida.tablero.hexagonos.hexagons[i].setFill(new ImagePattern(imgSembrado));
+
+                } else if(UserService.getApariencia().equals(UserService.aparienciaHardware)) {
+                    imgSembrado = new Image("/img/board/Hardware/Sembrado.jpg");
+                    Partida.tablero.hexagonos.hexagons[i].setFill(new ImagePattern(imgSembrado));
+                }
+
             } else {
+
                 Partida.tablero.hexagonos.hexagons[i].setFill(Color.GRAY);
             }
 
@@ -2537,7 +2621,7 @@ public class Gameplay {
        // Hacer comprobacion fuera para bloquear si no es su turno o ya comercio
        inTrade.setOnAction((ActionEvent event) -> {
         
-        if (!popupInternalTrade.isShowing()) {
+        if (!popupInternalTrade.isShowing() && esMiTurno()) {
             inTradePopUp();
             Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
             popupInternalTrade.show(stage);
@@ -3047,14 +3131,8 @@ public class Gameplay {
         chatContent.setFocusTraversable(false);  
 
         resourcesPopUp();
-        //buildSettlementPopUp();
-        //buildRoadPopUp();
         inTradePopUp();
-        //externalTradePopUp();
         updateDice();
-        System.out.println("updateDice");
-        settingsPopup();
-        System.out.println("settingsPopup");
         passTurnButton.setText((LangService.getMapping("next_turn")));
         cards.setText(LangService.getMapping("player_resources"));
 

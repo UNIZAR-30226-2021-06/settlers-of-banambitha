@@ -24,6 +24,9 @@ public class UserService {
     private static final String pendigReqUrl = baseFriendUrl + "/pending-r";
     private static final String estadisticasUrl = baseUrl + "/stats";
     private static final String newPasswordUrl = baseUrl + "/new-password";
+    public static final String aparienciaClasica = "apariencia_clasica.png";
+    public static final String aparienciaHardware = "apariencia_hardware.png";
+    public static final String aparienciaEspacial = "apariencia_espacial.png";
 
 
     // Informacion basica
@@ -166,10 +169,8 @@ public class UserService {
         apariencia = data.get("apariencia").toString();
         saldo = Integer.parseInt(data.get("saldo").toString());
         if(data.isNull("partida")) {
-            System.out.println("heyouu");
             partida = null;
         } else {
-            System.out.println("byeeee");
             partida = data.get("partida").toString();
         }
 

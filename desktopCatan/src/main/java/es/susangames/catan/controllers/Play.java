@@ -152,8 +152,21 @@ public class Play {
             skinSelector.setDisable(true);
         }*/
 
+        skinSelector.getSelectionModel().selectedItemProperty().addListener( (v, oldValue, newValue) -> 
+        {
+            skinSelector.setValue(newValue);  
+            if(newValue.equals("Normal")) {
+                UserService.updateUser(UserService.getUsername(),"apariencia", UserService.aparienciaClasica);
+            } 
+            else if(newValue.equals((LangService.getMapping("play_skin_space")))) {
+                UserService.updateUser(UserService.getUsername(),"apariencia", UserService.aparienciaClasica);
+            } 
+            else if(newValue.equals((LangService.getMapping("play_skin_computer")))) {
+                UserService.updateUser(UserService.getUsername(),"apariencia", UserService.aparienciaHardware);
+            }
+        }
+        );
         salirSala();
-
         String users[]; 
         try {
             users = RoomServices.room.toArrayStrings();
