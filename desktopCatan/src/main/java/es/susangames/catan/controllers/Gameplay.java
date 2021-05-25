@@ -3131,9 +3131,9 @@ public class Gameplay {
         reportPLayer4.setText(LangService.getMapping("report"));
 
         System.out.println("Report system");
-        chatContent.setEditable(false);
-        chatContent.setMouseTransparent(true);
-        chatContent.setFocusTraversable(false);  
+        //chatContent.setEditable(false);
+        //chatContent.setMouseTransparent(true);
+        //chatContent.setFocusTraversable(false);  
 
         resourcesPopUp();
         inTradePopUp();
@@ -3172,6 +3172,7 @@ public class Gameplay {
                         circle.setDisable(true);
                         for(int j = 0; j < numberofHexagons; j++) {
                             Button aux = Partida.tablero.hexagonos.numberOverHexagon[j];
+                            aux.setStyle("-fx-effect:null");
                             if(aux != circle) {
                                 aux.setDisable(false);
                             } else {
