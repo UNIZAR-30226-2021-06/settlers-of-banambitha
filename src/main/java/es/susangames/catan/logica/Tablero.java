@@ -210,6 +210,7 @@ public class Tablero {
 						&& !jugRobados[v_nuevaPos[i].getPropietario().getColor().numeroColor()]) {
 							System.out.println("Jugador: " + v_nuevaPos[i].getPropietario().getColor().numeroColor());
 							v_nuevaPos[i].getPropietario().eliminarRecursos();
+							jugRobados[v_nuevaPos[i].getPropietario().getColor().numeroColor()] = true;
 					}
 				}
 			}
@@ -807,15 +808,15 @@ public class Tablero {
 			this.exit_status = 0;
 			
 		} else if (puedeComerciarJ1 && !puedeComerciarJ2){
-			this.message = "El jugador " + (j2.getColor().numeroColor() + 1)  + " no puede realizar el "
+			this.message = "[Error] El jugador " + (j2.getColor().numeroColor() + 1)  + " no puede realizar el "
 					+ "comercio porque no dispone del suficiente número de materiales.";
 			this.exit_status = 34;
 		} else if (!puedeComerciarJ1 && puedeComerciarJ2){
-			this.message = "El jugador " + (j1.getColor().numeroColor() + 1) + " no puede realizar el "
+			this.message = "[Error] El jugador " + (j1.getColor().numeroColor() + 1) + " no puede realizar el "
 					+ "comercio porque no dispone del suficiente número de materiales.";
 			this.exit_status = 34;
 		} else {
-			this.message = "Ninguno de los jugadores dispone de los suficientes materiales"
+			this.message = "[Error] Ninguno de los jugadores dispone de los suficientes materiales"
 					+ " para realizar el comercio";
 			this.exit_status = 35;
 		}
@@ -826,10 +827,10 @@ public class Tablero {
 			int lana, int cereales, int arcilla, int mineral) {
 		int totalMaterial = madera + lana +  cereales + arcilla + mineral; 
 		if (materialEsperado < totalMaterial) {
-			this.message = "El material ofrecido es mayor al esperado";
+			this.message = "[Error] El material ofrecido es mayor al esperado";
 			this.exit_status = 28;
 		} else if (materialEsperado > totalMaterial) {
-			this.message = "El material ofrecido es menor al esperado";
+			this.message = "[Error] El material ofrecido es menor al esperado";
 			this.exit_status = 29;
 		} else {
 			System.out.println(j1.getColor().numeroColor());
@@ -840,7 +841,7 @@ public class Tablero {
 			System.out.println("Mineral jug: " + j1.getMineral() + " - Mineral que ofrece: " + mineral);
 			if (madera > j1.getMadera() || lana > j1.getLana() || cereales > j1.getCereales()
 					|| arcilla > j1.getArcilla() || mineral > j1.getMineral()) {
-				this.message = "El jugador no dispone de los materiales requeridos";
+				this.message = "[Error] El jugador no dispone de los materiales requeridos";
 				this.exit_status = 30;
 			} else {
 				this.haComerciadoMaritimo = true;
@@ -1058,7 +1059,7 @@ public class Tablero {
 		
 		// Comprobar que jugador debería de realizar el movimiento
 		if (!jug.getColor().numeroColor().equals(turno_jugador)) {
-			this.message = "El jugador " + (jug.getColor().numeroColor() + 1) + " no puede realizar"
+			this.message = "[Error] El jugador " + (jug.getColor().numeroColor() + 1) + " no puede realizar"
 					+ " ninguna acción. Por favor, espere a su turno.";
 			this.exit_status = -1;
 			return this.returnMessage();
@@ -1314,7 +1315,7 @@ public class Tablero {
 				this.comerciar(jug, materialJ1, numMaterialJ1, j2, materialJ2, numMaterialJ2);
 		
 			} else {
-				this.message = "El jugador ya ha comerciado durante su turno";
+				this.message = "[Error] El jugador ya ha comerciado durante su turno";
 				this.exit_status = 25;
 			}
 			break;
@@ -1360,17 +1361,17 @@ public class Tablero {
 						}
 						
 					} else {
-						this.message = "La arista seleccionada no corresponde a ningún puerto";
+						this.message = "[Error] La arista seleccionada no corresponde a ningún puerto";
 						this.exit_status = 27;
 					}
 				} else {
-					this.message = "El identificador de arista introducido no corresponde a ninguno "
+					this.message = "[Error] El identificador de arista introducido no corresponde a ninguno "
 							+ "de los disponibles";
 					this.exit_status = 26;
 				}
 				
 			} else {
-				this.message = "El jugador ya ha comerciado con puerto durante su turno";
+				this.message = "[Error] El jugador ya ha comerciado con puerto durante su turno";
 				this.exit_status = 33;
 			}
 			
@@ -1378,7 +1379,7 @@ public class Tablero {
 			// Cartas
 		default:
 			// No existe la accion solicitada.
-			message = "La acción solicitada no se encuentra disponible";
+			message = "[Error] La acción solicitada no se encuentra disponible";
 			exit_status = -1;
 		}
 		
