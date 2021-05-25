@@ -159,7 +159,7 @@ public class Play {
                 UserService.updateUser(UserService.getUsername(),"apariencia", UserService.aparienciaClasica);
             } 
             else if(newValue.equals((LangService.getMapping("play_skin_space")))) {
-                UserService.updateUser(UserService.getUsername(),"apariencia", UserService.aparienciaClasica);
+                UserService.updateUser(UserService.getUsername(),"apariencia", UserService.aparienciaEspacial);
             } 
             else if(newValue.equals((LangService.getMapping("play_skin_computer")))) {
                 UserService.updateUser(UserService.getUsername(),"apariencia", UserService.aparienciaHardware);
