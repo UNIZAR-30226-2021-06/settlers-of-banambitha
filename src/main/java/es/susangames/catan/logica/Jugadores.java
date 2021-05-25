@@ -155,6 +155,7 @@ public class Jugadores {
 		// Quitamos la mitad de los recursos solamente si tiene mas de 7 en total.
 		if (num_recursos > 7) {
 			int recursos_eliminar = num_recursos / 2;
+			System.out.println("Recursos a eliminar del jugador " + this.color.numeroColor() + ": " + recursos_eliminar);
 			for (int i = 0; i < recursos_eliminar; i++) {
 				switch(i%5) {
 				case 0:

@@ -188,7 +188,6 @@ public class Tablero {
      * Método que mueve el ladron al hexagono indicado
      */
 	public void moverLadron (Integer nuevaPosicion) {
-		System.out.println("moverLadron");
 		Hexagonos posActualLadron = getPosicionLadron();
 		System.out.println("Posicion actual: " + posActualLadron.getIdentificador());
 		System.out.println("Nueva posicion ladron: " + nuevaPosicion);
@@ -197,17 +196,19 @@ public class Tablero {
 		if (nuevaPosLadron != null) {
 			// Comprobamos que los dos hexagonos son adyacentes.
 			if (posActualLadron.sonAdyacentes(nuevaPosLadron)) {
-				System.out.println("Posicion valida. Moviendo ladron...");
 				posActualLadron.moverLadron();
 				nuevaPosLadron.colocarLadron();
 				//TODO:Eliminar recursos jugadores
-				Vertices v_nuevaPos[] = nuevaPosLadron.getVertices();
-				System.out.println("Vector vertices: " + v_nuevaPos.length);
+				Vertices v_nuevaPos[] = nuevaPosLadron.getVerticWes();
+				//System.out.println("Vector vertices: " + v_nuevaPos.length);
+				Boolean jugRobados [] = new Boolean[4];
+				jugRobados[0] = jugRobados[1] = jugRobados[2] = jugRobados[3] = false;
 				for (int i = 0; i < v_nuevaPos.length; ++i) {
-					System.out.print("Vertices: " + v_nuevaPos[i].getIdentificador());
-					if (v_nuevaPos[i].tieneAsentamiento() 
-						&& v_nuevaPos[i].getPropietario() != null) {
-							System.out.println("Jugador: " + v_nuevaPos[i].getPropietario());
+					System.out.println("Vertices: " + v_nuevaPos[i].getIdentificador());
+
+					if (v_nuevaPos[i].tieneAsentamiento() && v_nuevaPos[i].getPropietario() != null 
+						&& !jugRobados[v_nuevaPos[i].getPropietario().getColor().numeroColor()]) {
+							System.out.println("Jugador: " + v_nuevaPos[i].getPropietario().getColor().numeroColor());
 							v_nuevaPos[i].getPropietario().eliminarRecursos();
 					}
 				}
@@ -1047,9 +1048,6 @@ public class Tablero {
 	 * y comercio maritimo. Posibles problemas con JSON de lista caminos y lista asentamientos.
 	 * */
 	public JSONObject JSONmessage ( JSONObject jsObject ) throws JSONException {
-		
-		System.out.println(jsObject.toString(4));
-
 		Integer id_jugador = jsObject.getInt("player");
 		if ((id_jugador - 1) > 3 || (id_jugador - 1) < 0) {
 			this.message = "[Fatal error] Identificador de jugador erroneo.";
