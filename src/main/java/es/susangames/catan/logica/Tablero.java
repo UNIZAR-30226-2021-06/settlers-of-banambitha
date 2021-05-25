@@ -1187,8 +1187,7 @@ public class Tablero {
 					if (this.dados == 7) {
 						if (!seHaMovidoLadron) {
 							this.seHaMovidoLadron = true;
-							posActualLadron.moverLadron();
-							nuevaPosLadron.colocarLadron();
+							moverLadron(id_hexagono);
 							message = "Se ha movido correctamente el ladrón de hexagono";
 							exit_status = 0;
 						} else {
