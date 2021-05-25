@@ -1543,11 +1543,11 @@ public class Gameplay {
 
             } else if(UserService.getApariencia().equals(UserService.aparienciaEspacial)) {
                 imgSea = new Image("/img/board/Espacial/Agua.jpg");
-                Partida.tablero.hexagonos.hexagons[i].setFill(new ImagePattern(imgSea));
+                pol.setFill(new ImagePattern(imgSea));
 
             } else if(UserService.getApariencia().equals(UserService.aparienciaHardware)) {
                 imgSea = new Image("/img/board/Hardware/Agua.jpg");
-                Partida.tablero.hexagonos.hexagons[i].setFill(new ImagePattern(imgSea));
+                pol.setFill(new ImagePattern(imgSea));
             }
         } 
     }
