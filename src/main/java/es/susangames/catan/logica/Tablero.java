@@ -221,7 +221,7 @@ public class Tablero {
 	public void producir (Integer valor) {	
 		for (Hexagonos hex : hexagonos.values()) {
 			if (hex.getValor() == valor) {
-				System.out.println("ID: " + hex.getIdentificador() + " , valor: " + hex.getValor());
+				System.out.println("ID hexagono : " + hex.getIdentificador() + " , valor: " + hex.getValor());
 				hex.producir();
 			}
 		}
@@ -1048,6 +1048,8 @@ public class Tablero {
 	 * */
 	public JSONObject JSONmessage ( JSONObject jsObject ) throws JSONException {
 		
+		System.out.println(jsObject.toString(4));
+
 		Integer id_jugador = jsObject.getInt("player");
 		if ((id_jugador - 1) > 3 || (id_jugador - 1) < 0) {
 			this.message = "[Fatal error] Identificador de jugador erroneo.";
