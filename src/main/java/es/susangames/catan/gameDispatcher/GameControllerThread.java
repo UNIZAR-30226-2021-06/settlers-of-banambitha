@@ -190,7 +190,7 @@ public class GameControllerThread implements Runnable {
 		
 		for(int i=0 ; i<4 ; i++) {
 			
-			usuarioService.endPartida(jugadores.get(i), puntuacionesList.get(i));
+			usuarioService.endPartida(jugadores.get(i), puntuacionesList.get(i), tableroPartida.ganador() == (i + 1) );
 		}
 		
 		MoveCarrierHeap.deleteGame(partidaId);
