@@ -595,6 +595,8 @@ public class SalaController {
 			
 			Sala sala = salas.get(salaId);
 			
+			if(sala==null) sala = cola.desencolar(salaId);
+			
 			if(sala!=null) {
 				
 				String liderId = sala.getLeader();
