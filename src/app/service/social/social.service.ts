@@ -1,9 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { GameService } from '../game/game.service';
+import { LangService } from '../lang/lang.service';
 import { UserService } from '../user/user.service';
 import { Connectable, WsService } from '../ws/ws.service';
 
@@ -57,6 +59,7 @@ export class SocialService implements Connectable{
 
   public amigos: Array<Usuario> = []
   public peticionesAmistad : Array<PeticionAmistad> = []
+  public peticionesAmistadEnviadas: Array<String> = []
   public chats: Map<String, Array<MsgPrivado>> = new Map<String, Array<MsgPrivado>>()
 
   private myChatTopic_id:   any
@@ -71,17 +74,43 @@ export class SocialService implements Connectable{
    * @param router  router de la aplicación
    * @param userService servicio de usuario a utilizar (singleton)
    */
-  constructor(private wsService: WsService, private router: Router, private userService: UserService, private gameService: GameService, private http: HttpClient) {
+  constructor(private wsService: WsService, private router: Router, private userService: UserService,
+              private gameService: GameService, private http: HttpClient, private snackBar: MatSnackBar,
+              private langService: LangService) {
     if ( ! wsService.atatchConnectable(this)){
       this.onConnect();
     }
   }
+
+  public openSnackBar(message: string, action: string) {
+    this.snackBar.open(message, action);
+  }
+
+  public isFriend(user: String): boolean {
+    for ( let i = 0; i < this.amigos.length; i++ ){
+      if (this.amigos[i].username == user) {
+        return true
+      }
+    }
+    return false
+  }
+
+  public peticionPendiente(user: String): boolean {
+    for ( let i = 0; i < this.peticionesAmistadEnviadas.length; i++ ){
+      if (this.peticionesAmistadEnviadas[i] == user) {
+        return true
+      }
+    }
+    return false
+  }
+
 
   public lazyReload(): void {
     let that = this
     setTimeout( () => {
       this.cargarListaAmigos()
       this.cargarPeticiones()
+      this.cargarPeticionesEnviadas()
     }, 200)
   }
 
@@ -91,6 +120,7 @@ export class SocialService implements Connectable{
 
     this.cargarListaAmigos()
     this.cargarPeticiones()
+    this.cargarPeticionesEnviadas()
 
     //Suscripción a las invitaciones
     this.myChatTopic_id = this.stompClient.subscribe(WsService.chat_topic + this.userService.getUsername(),
@@ -153,11 +183,15 @@ export class SocialService implements Connectable{
       case PeticionStatus.ACCEPT:
         //Recargar lista de amigos
         this.cargarListaAmigos()
+        this.cargarPeticionesEnviadas()
+        this.openSnackBar(msg[ChatMsgKeys.FROM] + " "  + this.langService.get("accepted-friendship"), "OK")
         break
 
       case PeticionStatus.DECLINE:
         //No pasa nada
         this.cargarPeticiones()
+        this.cargarPeticionesEnviadas()
+        this.openSnackBar(msg[ChatMsgKeys.FROM] + " "  + this.langService.get("declined-friendship"), "OK")
         break
 
       case PeticionStatus.REQUEST:
@@ -165,6 +199,7 @@ export class SocialService implements Connectable{
           emisor: msg[ChatMsgKeys.FROM],
           ts:     msg[ChatMsgKeys.TIME]
         })
+        this.openSnackBar(msg[ChatMsgKeys.FROM] + " "  + this.langService.get("wants-friendship"), "OK")
         break
 
       default: 
@@ -260,6 +295,16 @@ export class SocialService implements Connectable{
     })
   }
 
+  public cargarPeticionesEnviadas(): void {
+
+    let that = this
+    this.peticionesAmistadEnviadas = []
+    this.http.get(SocialService.baseUrl + "/pending-s/" + this.userService.username).subscribe( (response) => {
+      for ( var index in response ){
+        that.peticionesAmistadEnviadas.push( response[index]["to"])
+      }
+    })
+  }
 
   /**
    * Actualiza la información del usuario con respecto al 

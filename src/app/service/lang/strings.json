@@ -863,7 +863,63 @@
     "join": {
         "ESP": "Unirse", 
         "ENG": "Join"
+    },
+
+    "is-friend": {
+        "ESP": "ya es tu amigo", 
+        "ENG": "is already your friend"
+    }, 
+
+    "hasnt-answered": {
+        "ESP": "todavía no ha contestado tu petición", 
+        "ENG": "hasn't answered yet"
+    },
+
+    "accepted-friendship": {
+        "ESP": "ha aceptado tu solicitud de amistad",
+        "ENG": "is now your friend"
+    }, 
+
+    "declined-friendship": {
+        "ESP": "ha rechazado tu solicitud de amistad", 
+        "ENG": "has rejected your friendship"
+    }, 
+
+    "wants-friendship": {
+        "ESP": "quiere ser tu amigo", 
+        "ENG": "wants to be your friend"
+    },
+
+    "closed-room": {
+        "ESP": "ha cerrado la sala", 
+        "ENG": "has closed the room"
+    }, 
+    
+    "searching-stopped": {
+        "ESP": "se ha parado la búsqueda", 
+        "ENG": "the searching has been stopped"
+    },
+
+    "has-invited-you": {
+        "ESP": "te ha invitado a su sala",
+        "ENG": "has invited you"
+    }, 
+
+    "full-room": {
+        "ESP": "La sala está completa", 
+        "ENG": "The room is full"
+    }, 
+
+    "queue-room": {
+        "ESP": "La sala está buscando partida", 
+        "ENG": "The room is in queue"
+    }, 
+
+    "invite-cancelled": {
+        "ESP": "Se ha cancelado tu invitación", 
+        "ENG": "Your invite has been cancelled"
     }
+
 
 
 }

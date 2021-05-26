@@ -14,7 +14,8 @@
                         </mat-panel-title>
                         <mat-panel-description>
                             <button mat-raised-button class="in-button-sm"
-                            (click)="roomService.aceptarInvitacion(invite.leader, invite.id)">
+                            (click)="roomService.aceptarInvitacion(invite.leader, invite.id)"
+                            [disabled]="!invite.enabled">
                                 {{langService.get("join")}}
                             </button>
                             <button mat-raised-button class="in-button-sm"
@@ -56,7 +57,8 @@
                         {{friend.username}}
                     </mat-panel-description>
                     </mat-expansion-panel-header>
-                    <button mat-raised-button class="in-button" [disabled]="roomService.room == null || !roomService.soyLider()"
+                    <button mat-raised-button class="in-button"
+                    [disabled]="roomService.room == null || !roomService.soyLider() || roomService.buscandoPartida"
                     (click)="roomService.enviarInvitacion(friend.username)">
                         {{langService.get("invite")}}
                     </button>
@@ -160,7 +162,7 @@
             </div>
             <div *ngIf="!errorBusqueda && lastSearchedUser.username != null">
                 <mat-accordion>
-                <mat-expansion-panel >
+                <mat-expansion-panel style="text-align: center;">
                     <mat-expansion-panel-header [collapsedHeight]="'80px'">
                     <mat-panel-title>
                         <img mat-card-image class="user-image" src="../../../assets/images/shop/user/{{lastSearchedUser.avatar}}">
@@ -169,8 +171,16 @@
                         {{this.lastSearchedUser.username}}
                     </mat-panel-description>
                     </mat-expansion-panel-header>
+                    <span *ngIf="socialService.isFriend(lastSearchedUser.username)" >
+                        {{lastSearchedUser.username}} {{langService.get("is-friend")}}
+                    </span>
+                    <span *ngIf="socialService.peticionPendiente(lastSearchedUser.username)" >
+                        {{lastSearchedUser.username}} {{langService.get("hasnt-answered")}}
+                    </span>
                     <button mat-raised-button class="in-button"
-                    [disabled]="lastSearchedUser.username == userService.username || sent"
+                    [disabled]="lastSearchedUser.username == userService.username || sent ||
+                                socialService.isFriend(lastSearchedUser.username) ||
+                                socialService.peticionPendiente(lastSearchedUser.username)"
                     (click)="enviarPeticion()">
                         {{langService.get("friend-request")}}
                     </button>

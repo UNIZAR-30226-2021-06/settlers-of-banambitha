@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { GameService } from '../game/game.service';
+import { LangService } from '../lang/lang.service';
 import { UserService } from '../user/user.service';
 import { Connectable, WsService } from '../ws/ws.service';
 
@@ -62,6 +64,7 @@ export interface Room {
 export interface invite {
   leader: String
   id:     String
+  enabled: boolean
 }
 
 @Injectable({
@@ -90,6 +93,7 @@ export class RoomService implements Connectable{
   public liderCerroSala:     boolean = false
   public errorAlUnirseASala: boolean = false;
 
+  private lastAcceptedInvite: String
 
   /**
    * Constructor. Se suscribe a los topics necesarios para poder gestionar
@@ -98,7 +102,8 @@ export class RoomService implements Connectable{
    * @param router  router de la aplicación
    * @param userService servicio de usuario a utilizar (singleton)
    */
-  constructor(private wsService: WsService, private router: Router, private userService: UserService, private gameService: GameService) {
+  constructor(private wsService: WsService, private router: Router, private userService: UserService,
+              private gameService: GameService, private snackBar: MatSnackBar, private langService: LangService) {
     if ( ! wsService.atatchConnectable(this)){
       this.onConnect();
     }
@@ -135,6 +140,9 @@ export class RoomService implements Connectable{
     this.crearSala()
   }
 
+  public openSnackBar(message: string, action: string) {
+    this.snackBar.open(message, action);
+  }
 
   /**
    * Devuelve true si el usuario es el líder de la sala. Si no 
@@ -239,6 +247,7 @@ export class RoomService implements Connectable{
           this.room = null
           this.buscandoPartida = false
           this.crearSala()
+          this.openSnackBar(msg["leader"] + " "  + this.langService.get("closed-room"), "OK")
           break
 
         case RoomMsgStatus.SEARCHING: 
@@ -277,8 +286,38 @@ export class RoomService implements Connectable{
         case RoomMsgStatus.CANCELLED: 
           this.room.status = RoomStatus.CREATED
           this.buscandoPartida = false
+          this.openSnackBar(this.langService.get("searching-stopped"), "OK")
 
         default: 
+      }
+    }
+  }
+
+
+  public duplicatedInvite(invite: invite): boolean{
+    for ( let i = 0; i < this.invites.length; i++ ){
+      if (this.invites[i].id == invite.id) {
+        return true
+      }
+    }
+    return false
+  }
+
+  public deleteInvite(roomId: String){
+    for ( let i = 0; i < this.invites.length; i++ ){
+      if (this.invites[i].id == roomId) {
+        this.invites.splice(i, 1)
+        console.log("deleted")
+        return
+      }
+    }
+  }
+
+  public setEnabled(value: boolean, inviteRoomId: String){
+    for ( let i = 0; i < this.invites.length; i++ ){
+      if (this.invites[i].id == inviteRoomId) {
+        this.invites[i].enabled = value
+        return
       }
     }
   }
@@ -295,11 +334,13 @@ export class RoomService implements Connectable{
         //Llega una nueva invitación
         invitacion = {
           leader: msg["leader"],
-          id: msg["room"]
+          id: msg["room"], 
+          enabled: true
         }
-        if ( ! this.invites.includes(invitacion)){
+        if ( ! this.duplicatedInvite(invitacion)){
           this.invites.push(invitacion)
         }
+        this.openSnackBar(msg["leader"] + " "  + this.langService.get("has-invited-you"), "OK")
         break 
 
       case InviteMsgstatus.ACCEPTED: 
@@ -318,6 +359,8 @@ export class RoomService implements Connectable{
             }
           ]
         }
+
+        this.deleteInvite(this.room.id)
         
         let updated_players: Array<String> = msg["players"]
         this.updatePlayers(updated_players)
@@ -329,37 +372,43 @@ export class RoomService implements Connectable{
         break 
 
       case InviteMsgstatus.OPEN: 
-        this.uniendoseASala = false
-        this.errorAlUnirseASala = true
-        this.crearSala()
+        this.setEnabled(true, msg["room"])
         break 
 
       case InviteMsgstatus.CANCELLED: 
-        invitacion = {
-          leader: msg["leader"],
-          id: msg["room"]
-        }
-        if ( this.invites.includes(invitacion)){
-          this.invites.splice(this.invites.indexOf(invitacion),1)
+        this.deleteInvite(msg["room"])
+        if ( this.uniendoseASala ){
+          this.uniendoseASala = false
+          this.crearSala()
+          this.openSnackBar(this.langService.get("invite-cancelled"), "OK")
         }
         break 
 
       case InviteMsgstatus.CLOSED: 
         this.uniendoseASala = false
         this.errorAlUnirseASala = true
+        this.deleteInvite(msg["room"])
         this.crearSala()
         break 
 
       case InviteMsgstatus.FULL: 
-        this.uniendoseASala = false
-        this.errorAlUnirseASala = true
-        this.crearSala()
+        this.setEnabled(false, msg["room"])
+        if ( this.uniendoseASala ){
+          this.uniendoseASala = false
+          this.errorAlUnirseASala = true
+          this.crearSala()
+          this.openSnackBar(this.langService.get("full-room"), "OK")
+        }
         break 
 
       case InviteMsgstatus.QUEUING: 
-        this.uniendoseASala = false
-        this.errorAlUnirseASala = true
-        this.crearSala()
+        this.setEnabled(false, msg["room"])
+        if ( this.uniendoseASala ){
+          this.uniendoseASala = false
+          this.errorAlUnirseASala = true
+          this.crearSala()
+          this.openSnackBar(this.langService.get("queue-room"), "OK")
+        }
         break 
 
       default: 
@@ -496,6 +545,7 @@ export class RoomService implements Connectable{
       }
       this.stompClient.send(WsService.invitacionAceptar, {}, JSON.stringify(msg) )
       this.uniendoseASala = true
+      this.lastAcceptedInvite = roomId
     }
   }
 

@@ -19,7 +19,8 @@ export class SocialBarComponent implements OnInit {
   public lastSearchedUser : Usuario = null
   public sent = false
  
-  constructor(public langService: LangService, public userService: UserService, public socialService: SocialService, public roomService: RoomService) {
+  constructor(public langService: LangService, public userService: UserService,
+              public socialService: SocialService, public roomService: RoomService) {
     this.lastSearchedUser = {
       username: null, 
       avatar: null, 
@@ -56,6 +57,7 @@ export class SocialBarComponent implements OnInit {
   enviarPeticion(): void {
     this.sent = true
     this.socialService.enviarPeticionAmistad(this.lastSearchedUser.username)
+    this.socialService.lazyReload()
   }
 
   public sendMessage(user:String, message: any): void{
