@@ -287,6 +287,28 @@ public class UsuarioResource {
 		return new ResponseEntity<>(estadisticas,HttpStatus.OK);
 	}
 	
+	/* ******************************************************
+	 * Maps: 	Get a user by Id @get
+	 * 
+	 * Expects: -Parameter in url
+	 * 			-Mapped point: 	/usuario/session
+	 * 			-Format: 		/usuario/session
+	 * 				
+	 * Returns: -JSON Message
+	 * 			-Format:
+	 * 				{
+	 * 					"nombre" 	 : <nombre>,
+	 * 					"email" 	 : <email>,
+	 * 					"contrasenya": <contrasenya>
+	 *	 				"saldo"		 : <saldo>,
+	 *				    "idioma"	 : <idioma>,
+	 *					"partida"	 : <partidaId>,
+	 *					"bloqueado"	 : <fechaBloqueo>,
+	 *					"informes"	 : <informes>,
+	 *				    "avatar"	 : <avatar>,
+	 *				    "apariencia" : <apariencia>
+	 *				}
+	****************************************************** */
 	@GetMapping("/session")
 	public ResponseEntity<Usuario> checkSession(HttpSession session){
 		String username = (String) session.getAttribute("username");
@@ -296,6 +318,14 @@ public class UsuarioResource {
 		}else{
 			return new ResponseEntity<>(new Usuario(),HttpStatus.NOT_FOUND);
 		}
+	}
+
+	//Invalida la sesión del usuario
+	@GetMapping("/logout")
+	public ResponseEntity<Boolean> logOut(HttpSession session){
+		System.out.println("invalidando sesión de " + session.getAttribute("username")); 
+		session.invalidate();
+		return new ResponseEntity<>(true,HttpStatus.OK);
 	}
 
 }

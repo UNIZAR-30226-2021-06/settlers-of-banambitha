@@ -24,6 +24,7 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class Tablero {
 //Campos de la clase
+	private static int maxPuntos = 2; 
 
 	// Mapa con las coordenadas de los centros de los 19 hexagonos del tablero. 
 	private Map<Integer, Hexagonos> hexagonos;
@@ -188,7 +189,8 @@ public class Tablero {
      */
 	public void moverLadron (Integer nuevaPosicion) {
 		Hexagonos posActualLadron = getPosicionLadron();
-		
+		System.out.println("Posicion actual: " + posActualLadron.getIdentificador());
+		System.out.println("Nueva posicion ladron: " + nuevaPosicion);
 		Hexagonos nuevaPosLadron = hexagonos.get(nuevaPosicion);
 		// Si el hexagono al que se puede mover existe
 		if (nuevaPosLadron != null) {
@@ -198,10 +200,17 @@ public class Tablero {
 				nuevaPosLadron.colocarLadron();
 				//TODO:Eliminar recursos jugadores
 				Vertices v_nuevaPos[] = nuevaPosLadron.getVertices();
+				//System.out.println("Vector vertices: " + v_nuevaPos.length);
+				Boolean jugRobados [] = new Boolean[4];
+				jugRobados[0] = jugRobados[1] = jugRobados[2] = jugRobados[3] = false;
 				for (int i = 0; i < v_nuevaPos.length; ++i) {
-					if (v_nuevaPos[i].tieneAsentamiento() 
-						&& v_nuevaPos[i].getPropietario() != null) {
+					System.out.println("Vertices: " + v_nuevaPos[i].getIdentificador());
+
+					if (v_nuevaPos[i].tieneAsentamiento() && v_nuevaPos[i].getPropietario() != null 
+						&& !jugRobados[v_nuevaPos[i].getPropietario().getColor().numeroColor()]) {
+							System.out.println("Jugador: " + v_nuevaPos[i].getPropietario().getColor().numeroColor());
 							v_nuevaPos[i].getPropietario().eliminarRecursos();
+							jugRobados[v_nuevaPos[i].getPropietario().getColor().numeroColor()] = true;
 					}
 				}
 			}
@@ -214,7 +223,7 @@ public class Tablero {
 	public void producir (Integer valor) {	
 		for (Hexagonos hex : hexagonos.values()) {
 			if (hex.getValor() == valor) {
-				System.out.println("ID: " + hex.getIdentificador() + " , valor: " + hex.getValor());
+				System.out.println("ID hexagono : " + hex.getIdentificador() + " , valor: " + hex.getValor());
 				hex.producir();
 			}
 		}
@@ -248,7 +257,7 @@ public class Tablero {
 	 * */
 	private int generarNumero () {
 		// return (int) Math.floor( Math.random()*5 + 1 );
-		return ThreadLocalRandom.current().nextInt(2, 13);
+		return ThreadLocalRandom.current().nextInt(1, 6) + ThreadLocalRandom.current().nextInt(1, 6);
 	}
 	
 	//--------------------------- Partida pausada -----------------------------------------------\\
@@ -504,6 +513,7 @@ public class Tablero {
 				
 				if (existeCaminoDeJugador) {
 					v.construirAsentamiento(j);
+					j.construirAsentamiento();
 					
 					for (int i = 0; i < verticesAdyacentes.length; ++i) {
 						if (verticesAdyacentes[i] != null)
@@ -549,7 +559,12 @@ public class Tablero {
 				} else {
 					System.out.println("\tNull");
 				}*/
-				
+
+				for (int i = 0; i < vAdyacentes.length; ++i) {
+					if (vAdyacentes[i] != null)
+						vAdyacentes[i].asentamientoAdyacente();
+				}
+			
 				for (int i = 0 ; i < posiblesCamino.length; ++i) {
 					//System.out.println("Posible camino en " + posiblesCamino[i].getIdentificador());
 					aristasPorID.get(posiblesCamino[i].getIdentificador()).posibleCaminoDeJugador(j.getColor().numeroColor());
@@ -591,8 +606,9 @@ public class Tablero {
 			// las aristas adyacentes.
 			
 			// V1 tiene asentamiento del jugador
-			if ( (v1.tieneAsentamiento() && v1.getPropietario().equals(j) ) || 
-					( v2.tieneAsentamiento() && v2.getPropietario().equals(j) ) ){
+			Boolean asentamientoJugadorV1 = v1.tieneAsentamiento() && v1.getPropietario().equals(j);
+			Boolean asentamientoJugadorV2 = v2.tieneAsentamiento() && v2.getPropietario().equals(j);
+			if ( asentamientoJugadorV1  || asentamientoJugadorV2 ) {
 				// No podemos marcar ningun vertice como posible asentamiento ya que no cumplir�a 
 				// la regla de la distancia
 				Boolean resul = a.setCamino(j);
@@ -608,7 +624,7 @@ public class Tablero {
 				}
 				
 			}
-			else if (!v1.tieneAsentamiento() && !v2.tieneAsentamiento()){
+			else if ( !asentamientoJugadorV1 && !asentamientoJugadorV2 ){
 				// Existe camino en alguno de las aristas adyacentes a v1 y esta arista no es a.
 				for (int i = 0; i < aristasAdyacentesAv1.length && !sePuedeConstruir; ++i) {
 					if (!aristasAdyacentesAv1[i].equals(a) && aristasAdyacentesAv1[i].tieneCamino() && 
@@ -742,26 +758,26 @@ public class Tablero {
 	private Boolean comprobarNumMateriales (Jugadores j, String material, int numMaterial) {
 		switch (material) {
 		case "madera" : 
-			if (j.getMadera() > numMaterial) {
+			if (j.getMadera() >= numMaterial) {
 				return true;
 			} else return false;
 		case "lana" : 
-			if (j.getLana() > numMaterial) {
+			if (j.getLana() >= numMaterial) {
 				return true;
 			} else return false;
 
 		case "cereales" :
-			if (j.getCereales() > numMaterial) {
+			if (j.getCereales() >= numMaterial) {
 				return true;
 			} else return false;
 
 		case "arcilla" :
-			if (j.getArcilla() > numMaterial) {
+			if (j.getArcilla() >= numMaterial) {
 				return true;
 			} else return false;
 
 		case "mineral" : 
-			if (j.getMineral() > numMaterial) {
+			if (j.getMineral() >= numMaterial) {
 				return true;
 			} else return false;
 		default:
@@ -774,28 +790,33 @@ public class Tablero {
 		
 		Boolean puedeComerciarJ1 = comprobarNumMateriales(j1,materialJ1, numMaterialJ1);
 		Boolean puedeComerciarJ2 = comprobarNumMateriales(j2,materialJ2, numMaterialJ2);
+
+		System.out.println("Comercio: "); 
+		System.out.println("\tEl jugador " + (j1.getColor().numeroColor() + 1) + " ofrece " + numMaterialJ1 + " de " + materialJ1); 
+		System.out.println("\tEl jugador " + (j2.getColor().numeroColor() + 1) + " ofrece " + numMaterialJ2 + " de " + materialJ2); 
 		
 		if (puedeComerciarJ1 && puedeComerciarJ2) {
 			actualizarMaterial(j1,materialJ1, -numMaterialJ1);
 			actualizarMaterial(j1,materialJ2, numMaterialJ2);
 			
 			actualizarMaterial(j2,materialJ1, numMaterialJ1);
-			actualizarMaterial(j2,materialJ2, -numMaterialJ1);
+			actualizarMaterial(j2,materialJ2, -numMaterialJ2);
 			
 			this.haComerciado = true;
-			this.message = "Se ha realizado el intercambio de recursos entre el jugador i y el jugador j";
+			this.message = "Se ha realizado el intercambio de recursos entre el jugador " + j1.getColor().numeroColor() +
+			               " y el jugador " + j2.getColor().numeroColor() ;
 			this.exit_status = 0;
 			
 		} else if (puedeComerciarJ1 && !puedeComerciarJ2){
-			this.message = "El jugador " + j2.getColor().numeroColor() + " no puede realizar el "
+			this.message = "[Error] El jugador " + (j2.getColor().numeroColor() + 1)  + " no puede realizar el "
 					+ "comercio porque no dispone del suficiente número de materiales.";
 			this.exit_status = 34;
 		} else if (!puedeComerciarJ1 && puedeComerciarJ2){
-			this.message = "El jugador " + j1.getColor().numeroColor() + " no puede realizar el "
+			this.message = "[Error] El jugador " + (j1.getColor().numeroColor() + 1) + " no puede realizar el "
 					+ "comercio porque no dispone del suficiente número de materiales.";
 			this.exit_status = 34;
 		} else {
-			this.message = "Ninguno de los jugadores dispone de los suficientes materiales"
+			this.message = "[Error] Ninguno de los jugadores dispone de los suficientes materiales"
 					+ " para realizar el comercio";
 			this.exit_status = 35;
 		}
@@ -806,10 +827,10 @@ public class Tablero {
 			int lana, int cereales, int arcilla, int mineral) {
 		int totalMaterial = madera + lana +  cereales + arcilla + mineral; 
 		if (materialEsperado < totalMaterial) {
-			this.message = "El material ofrecido es mayor al esperado";
+			this.message = "[Error] El material ofrecido es mayor al esperado";
 			this.exit_status = 28;
 		} else if (materialEsperado > totalMaterial) {
-			this.message = "El material ofrecido es menor al esperado";
+			this.message = "[Error] El material ofrecido es menor al esperado";
 			this.exit_status = 29;
 		} else {
 			System.out.println(j1.getColor().numeroColor());
@@ -820,7 +841,7 @@ public class Tablero {
 			System.out.println("Mineral jug: " + j1.getMineral() + " - Mineral que ofrece: " + mineral);
 			if (madera > j1.getMadera() || lana > j1.getLana() || cereales > j1.getCereales()
 					|| arcilla > j1.getArcilla() || mineral > j1.getMineral()) {
-				this.message = "El jugador no dispone de los materiales requeridos";
+				this.message = "[Error] El jugador no dispone de los materiales requeridos";
 				this.exit_status = 30;
 			} else {
 				this.haComerciadoMaritimo = true;
@@ -1028,7 +1049,6 @@ public class Tablero {
 	 * y comercio maritimo. Posibles problemas con JSON de lista caminos y lista asentamientos.
 	 * */
 	public JSONObject JSONmessage ( JSONObject jsObject ) throws JSONException {
-		
 		Integer id_jugador = jsObject.getInt("player");
 		if ((id_jugador - 1) > 3 || (id_jugador - 1) < 0) {
 			this.message = "[Fatal error] Identificador de jugador erroneo.";
@@ -1039,7 +1059,7 @@ public class Tablero {
 		
 		// Comprobar que jugador debería de realizar el movimiento
 		if (!jug.getColor().numeroColor().equals(turno_jugador)) {
-			this.message = "El jugador " + (jug.getColor().numeroColor() + 1) + " no puede realizar"
+			this.message = "[Error] El jugador " + (jug.getColor().numeroColor() + 1) + " no puede realizar"
 					+ " ninguna acción. Por favor, espere a su turno.";
 			this.exit_status = -1;
 			return this.returnMessage();
@@ -1057,11 +1077,17 @@ public class Tablero {
 				if (existeVertice(id_vertice)) {
 					Vertices v = getVerticePorId(id_vertice);
 					if (!v.tieneAsentamiento()) {
-						if (v.getPosibleAsentamientoDeJugador(id_jugador-1)) {
-							construirAsentamiento(v, jug);
-							jug.construirAsentamiento();
-							message = "Se ha construido el poblado correctamente";
-							exit_status = 0;
+						if (v.getPosibleAsentamientoDeJugador(jug.getColor().numeroColor())) {
+							if (!v.tieneAsentamientoAdyacente()){
+								construirAsentamiento(v, jug);
+								message = "Se ha construido el poblado correctamente";
+								exit_status = 0;
+							} else {
+								v.setPosibleAsentamientoDeJugador(jug.getColor().numeroColor());
+								message = "[Error] Estaba marcado como posible cuando no " + 
+									"podía ser";
+								exit_status = 50;
+							}
 						}
 						else {
 							message = "[Error] La posición del asentamiento no está disponible para el "
@@ -1130,7 +1156,7 @@ public class Tablero {
 				if (existeArista(id_arista)) {
 					Aristas a = getAristaPorId(id_arista);
 					if (!a.tieneCamino()) {
-						if (a.getPosibleCaminoDeJugador(id_jugador-1)) {
+						if (a.getPosibleCaminoDeJugador(jug.getColor().numeroColor())) {
 							construirCamino(a, jug);
 							jug.construirCamino();
 							message = "Se ha construido el camino correctamente";
@@ -1163,9 +1189,9 @@ public class Tablero {
 				if (posActualLadron.sonAdyacentes(nuevaPosLadron)) {
 					if (this.dados == 7) {
 						if (!seHaMovidoLadron) {
-							this.seHaMovidoLadron = true;
-							posActualLadron.moverLadron();
-							nuevaPosLadron.colocarLadron();
+							System.out.print("id_hexagono : " + id_hexagono);
+							moverLadron(id_hexagono);
+							this.seHaMovidoLadron = true;							
 							message = "Se ha movido correctamente el ladrón de hexagono";
 							exit_status = 0;
 						} else {
@@ -1289,7 +1315,7 @@ public class Tablero {
 				this.comerciar(jug, materialJ1, numMaterialJ1, j2, materialJ2, numMaterialJ2);
 		
 			} else {
-				this.message = "El jugador ya ha comerciado durante su turno";
+				this.message = "[Error] El jugador ya ha comerciado durante su turno";
 				this.exit_status = 25;
 			}
 			break;
@@ -1335,17 +1361,17 @@ public class Tablero {
 						}
 						
 					} else {
-						this.message = "La arista seleccionada no corresponde a ningún puerto";
+						this.message = "[Error] La arista seleccionada no corresponde a ningún puerto";
 						this.exit_status = 27;
 					}
 				} else {
-					this.message = "El identificador de arista introducido no corresponde a ninguno "
+					this.message = "[Error] El identificador de arista introducido no corresponde a ninguno "
 							+ "de los disponibles";
 					this.exit_status = 26;
 				}
 				
 			} else {
-				this.message = "El jugador ya ha comerciado con puerto durante su turno";
+				this.message = "[Error] El jugador ya ha comerciado con puerto durante su turno";
 				this.exit_status = 33;
 			}
 			
@@ -1353,7 +1379,7 @@ public class Tablero {
 			// Cartas
 		default:
 			// No existe la accion solicitada.
-			message = "La acción solicitada no se encuentra disponible";
+			message = "[Error] La acción solicitada no se encuentra disponible";
 			exit_status = -1;
 		}
 		
@@ -1477,7 +1503,7 @@ public class Tablero {
 		int pVJ2 = this.j[1].getPuntosVictoria();
 		int pVJ3 = this.j[2].getPuntosVictoria();
 		int pVJ4 = this.j[3].getPuntosVictoria();
-		return pVJ1 >= 10 || pVJ2 >= 10 || pVJ3 >= 10 || pVJ4 >= 10;
+		return pVJ1 >= Tablero.maxPuntos || pVJ2 >= Tablero.maxPuntos || pVJ3 >= Tablero.maxPuntos || pVJ4 >= Tablero.maxPuntos;
 	}
 
 	public Integer ganador () {
@@ -1486,10 +1512,10 @@ public class Tablero {
 			int pVJ2 = this.j[1].getPuntosVictoria();
 			int pVJ3 = this.j[2].getPuntosVictoria();
 			int pVJ4 = this.j[3].getPuntosVictoria();
-			if (pVJ1 >= 10) return 1;
-			else if (pVJ2 >= 10) return 2;
-			else if (pVJ3 >= 10) return 3;
-			else if (pVJ4 >= 10) return 4;
+			if (pVJ1 >= Tablero.maxPuntos) return 1;
+			else if (pVJ2 >= Tablero.maxPuntos) return 2;
+			else if (pVJ3 >= Tablero.maxPuntos) return 3;
+			else if (pVJ4 >= Tablero.maxPuntos) return 4;
 			else return -1;
 		}
 		else return null;

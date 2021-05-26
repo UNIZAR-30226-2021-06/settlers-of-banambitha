@@ -79,7 +79,7 @@ public class GameControllerThread implements Runnable {
 	 * 				"Resultado_Tirada": 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12,
 	 * 
 	 * 				"Recursos": {
-	 * 					"Player_1": [num_madera, num_mineral, num_arcilla, num_lana, num_cereales], // integer array
+	 * 					"Player_1": [num_madera, num_lana, num_cereales, num_arcilla, num_mineral], // integer array
 	 * 					"Player_2": [num_madera, num_mineral, num_arcilla, num_lana, num_cereales], // integer array
 	 * 					"Player_3": [num_madera, num_mineral, num_arcilla, num_lana, num_cereales], // integer array
 	 * 					"Player_4": [num_madera, num_mineral, num_arcilla, num_lana, num_cereales], // integer array
@@ -143,7 +143,9 @@ public class GameControllerThread implements Runnable {
 
 			synchronized (listaJugadas) {
 				try {
-					listaJugadas.wait();
+					if (listaJugadas.size() == 0){
+						listaJugadas.wait();
+					}
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}	
@@ -188,7 +190,7 @@ public class GameControllerThread implements Runnable {
 		
 		for(int i=0 ; i<4 ; i++) {
 			
-			usuarioService.endPartida(jugadores.get(i), puntuacionesList.get(i));
+			usuarioService.endPartida(jugadores.get(i), puntuacionesList.get(i), tableroPartida.ganador() == (i + 1) );
 		}
 		
 		MoveCarrierHeap.deleteGame(partidaId);

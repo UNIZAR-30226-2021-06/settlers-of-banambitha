@@ -160,7 +160,7 @@ public class UsuarioService {
 		
 	}
 	
-	public void endPartida(String usuarioId, int puntosVictoria) {
+	public void endPartida(String usuarioId, int puntosVictoria, boolean esGanador) {
 		
 		Usuario usuario = usuarioRepo.findById(usuarioId).orElseThrow(() -> new UserNotFoundException(usuarioId));
 		
@@ -168,7 +168,7 @@ public class UsuarioService {
 			InGameReports.remove(usuarioId);
 		}
 		
-		if(puntosVictoria == 10) updateOnVictory(usuarioId);
+		if( esGanador ) updateOnVictory(usuarioId);
 		else updateOnDefeat(usuarioId);
 		
 		int newSaldo = usuario.getSaldo() + puntosVictoria;
