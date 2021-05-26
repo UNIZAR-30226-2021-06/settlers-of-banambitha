@@ -5,6 +5,7 @@ import { UserService } from '../user/user.service';
 import { RoomService, UserCardInfo } from '../room/room.service';
 import { MatSnackBar, MatSnackBarRef, MAT_SNACK_BAR_DATA } from '@angular/material/snack-bar';
 import { LangService } from '../lang/lang.service';
+import { SocialService } from '../social/social.service';
 
 
 /**
@@ -387,7 +388,8 @@ export class GameService implements Connectable{
    * @param router      router de la aplicación
    * @param userService servicio de usuario a utilizar (singleton)
    */
-  constructor(private wsService: WsService, private router: Router, private userService: UserService, private _snackBar: MatSnackBar) {
+  constructor(private wsService: WsService, private router: Router, private userService: UserService,
+              private _snackBar: MatSnackBar, private socialService: SocialService) {
 
     if ( ! wsService.atatchConnectable(this)){
       this.onConnect();
@@ -670,6 +672,7 @@ export class GameService implements Connectable{
         this.openWinnerSnackBar(msg[MessageKeys.GANADOR]); 
         setTimeout( () => {
           this.finalizarpartida()
+          this.socialService.lazyReload()
           this.router.navigate(["/home/profile"])
         }, 2000)
       }
