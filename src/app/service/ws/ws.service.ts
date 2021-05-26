@@ -41,6 +41,9 @@ export class WsService implements OnDestroy{
   public static readonly enviarMensajePartida: String = WsService.appPrefix + "/enviar/partida"
   public static readonly usuarioReportar:      String = WsService.appPrefix + "/usuario/reportar"
   public static readonly usuarioEliminar:      String = WsService.appPrefix + "/usuario/eliminar"
+  public static readonly enviarPeticion:       String = WsService.appPrefix + "/enviar/peticion"
+  public static readonly aceptarPeticion:      String = WsService.appPrefix + "/aceptar/peticion"
+  public static readonly rechazarPeticion:     String = WsService.appPrefix + "/rechazar/peticion"
 
   //topics
   public static readonly chat_topic:           string = "/chat/"

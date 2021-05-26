@@ -32,8 +32,14 @@
             </div>
             <div style="width: 10px; "></div>
             <div class="button-row">
-                <button mat-raised-button (click)="this.roomService.cerrarSala(true)" [disabled]="this.roomService.room.players.length == 1">
-                   {{this.roomService.soyLider() ? langService.get("delete-room") : langService.get("leave-room")}}
+                <button *ngIf="this.roomService.soyLider()" mat-raised-button
+                (click)="this.roomService.cerrarSala(true)"
+                [disabled]="this.roomService.room.players.length == 1">
+                  {{ langService.get("delete-room") }}
+                </button>
+                <button *ngIf="!this.roomService.soyLider()" mat-raised-button
+                (click)="this.roomService.abandonarSala(true)">
+                    {{langService.get("leave-room")}}
                 </button>
             </div>
         </section>

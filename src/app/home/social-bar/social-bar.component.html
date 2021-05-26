@@ -1,8 +1,141 @@
 <div class= "sidebar">
     <mat-tab-group mat-align-tabs="center">
-    <mat-tab [label]="langService.get('friends')">
-        Content 1
+
+    <!--LISTA DE AMIGOS-->
+    <mat-tab [label]="langService.get('friends')" >
+        <div class="tabContent">
+            <mat-accordion>
+
+                <!--INVITACIONES A PARTIDA-->
+                <mat-expansion-panel hideToggle disabled *ngFor="let invite of roomService.invites">
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            {{langService.get("room-of")}} {{invite.leader}}
+                        </mat-panel-title>
+                        <mat-panel-description>
+                            <button mat-raised-button class="in-button-sm"
+                            (click)="roomService.aceptarInvitacion(invite.leader, invite.id)">
+                                {{langService.get("join")}}
+                            </button>
+                            <button mat-raised-button class="in-button-sm"
+                            (click)="roomService.eliminarInvitacion(invite)">
+                                <mat-icon >
+                                    delete_forever
+                                </mat-icon>
+                            </button>
+                        </mat-panel-description>
+                    </mat-expansion-panel-header>
+                </mat-expansion-panel>
+
+                <!--PETICIONES DE AMISTAD-->
+                <mat-expansion-panel hideToggle disabled *ngFor="let peticion of socialService.peticionesAmistad">
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            {{peticion.emisor}}
+                        </mat-panel-title>
+                        <mat-panel-description>
+                            <button mat-raised-button class="in-button-sm"
+                            (click)="socialService.aceptarPeticionAmistad(peticion.emisor)">
+                                {{langService.get("add-friend")}}
+                            </button>
+                            <button mat-raised-button class="in-button-sm"
+                            (click)="socialService.rechazarPeticionAmistad(peticion.emisor)">
+                                {{langService.get("reject")}}
+                            </button>
+                        </mat-panel-description>
+                    </mat-expansion-panel-header>
+                </mat-expansion-panel>
+
+                <!--AMIGOS-->
+                <mat-expansion-panel *ngFor="let friend of socialService.amigos">
+                    <mat-expansion-panel-header [collapsedHeight]="'80px'">
+                    <mat-panel-title>
+                        <img mat-card-image class="user-image" src="../../../assets/images/shop/user/{{friend.avatar}}">
+                    </mat-panel-title>
+                    <mat-panel-description>
+                        {{friend.username}}
+                    </mat-panel-description>
+                    </mat-expansion-panel-header>
+                    <button mat-raised-button class="in-button" [disabled]="roomService.room == null || !roomService.soyLider()"
+                    (click)="roomService.enviarInvitacion(friend.username)">
+                        {{langService.get("invite")}}
+                    </button>
+                    <mat-tab-group mat-align-tabs="center">
+                        <mat-tab label="Chat">
+                            <div class="chatbox" [id]="friend.username">
+                                <br/>
+                                <div class="chatMessage" *ngFor="let msg of socialService.chats.get(friend.username)">
+                                    <span>
+                                        {{msg.emisor}}
+                                        <span *ngIf="msg.ts != null">
+                                            ({{msg.ts}})
+                                        </span>
+                                        : {{msg.body}}
+                                    </span>
+                                    {{this.scrollDown(friend.username)}}
+                                </div>
+                            </div>
+                            <br/>
+                            <mat-divider></mat-divider>
+                            <br/>
+                            <form class="example-form">
+                                <mat-form-field class="example-full-width">
+                                    <mat-label>
+                                        {{langService.get("write-your-message")}}
+                                    </mat-label>
+                                    <input matInput #message maxlength="256"
+                                    autocomplete="off"
+                                    (keyup.enter)="sendMessage(friend.username,message)">
+                                    <mat-hint align="start"><strong></strong> </mat-hint>
+                                    <mat-hint align="end">{{message.value.length}} / 256</mat-hint>
+                                </mat-form-field>
+                            </form>
+                        </mat-tab>
+                        <mat-tab [label]="'sats'">
+                            <table class="mat-table center" >
+                                <tr class="mat-header-row">
+                                    <th class="mat-header-cell">{{langService.get("stat")}}</th>
+                                    <th class="mat-header-cell">{{langService.get("value")}}</th>
+                                </tr>
+                                <tr class="mat-row">
+                                    <td class="mat-cell">
+                                        {{langService.get("num-games")}}
+                                    </td>
+                                    <td class="mat-cell center_td">{{friend.numPartidas}}</td>
+                                </tr>
+                                <tr class="mat-row">
+                                    <td class="mat-cell">
+                                        {{langService.get("num-wins")}}
+                                    </td>
+                                    <td class="mat-cell center_td">{{friend.totalVictorias}}</td>
+                                </tr>
+                                <tr class="mat-row">
+                                    <td class="mat-cell">
+                                        {{langService.get("winning-rate")}}
+                                    </td>
+                                    <td class="mat-cell center_td">{{friend.porcentajeVictorias}}</td>
+                                </tr>
+                                <tr class="mat-row">
+                                    <td class="mat-cell">
+                                        {{langService.get("actual-streak")}}
+                                    </td>
+                                    <td class="mat-cell center_td">{{friend.rachaActual}}</td>
+                                </tr>
+                                <tr class="mat-row">
+                                    <td class="mat-cell">
+                                        {{langService.get("best-streak")}}
+                                    </td>
+                                    <td class="mat-cell center_td">{{friend.mayorRacha}}</td>
+                                </tr>
+                            </table>
+                        </mat-tab>
+                    </mat-tab-group>
+                </mat-expansion-panel>
+            </mat-accordion>
+                </div>
     </mat-tab>
+
+    <!--BUSQUEDA DE USUARIOS-->
     <mat-tab [label]="langService.get('search')">
         <div class="tabContent">
             <mat-form-field class="example-form-field">
@@ -36,8 +169,10 @@
                         {{this.lastSearchedUser.username}}
                     </mat-panel-description>
                     </mat-expansion-panel-header>
-                    <button mat-raised-button class="in-button">
-                        Solicitud Amistad
+                    <button mat-raised-button class="in-button"
+                    [disabled]="lastSearchedUser.username == userService.username || sent"
+                    (click)="enviarPeticion()">
+                        {{langService.get("friend-request")}}
                     </button>
                     <mat-tab-group mat-align-tabs="center">
                         <mat-tab [label]="'sats'">

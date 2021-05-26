@@ -1,10 +1,23 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { GameService } from '../game/game.service';
 import { UserService } from '../user/user.service';
 import { Connectable, WsService } from '../ws/ws.service';
+
+enum ChatMsgKeys {
+  FROM = "from", 
+  BODY = "body", 
+  TIME = "time"
+}
+
+enum PeticionStatus {
+  ACCEPT  = "ACCEPT", 
+  DECLINE = "DECLINE", 
+  REQUEST = "REQUEST"
+}
 
 export enum StatKeys {
   MAYOR_RACHA          = "mayorRachaDeVictorias", 
@@ -24,12 +37,32 @@ export interface Usuario {
   totalVictorias:      number
 }
 
+export interface PeticionAmistad {
+  emisor: String
+  ts:     String
+}
+
+export interface MsgPrivado {
+  emisor: String,
+  body:   String,
+  ts:     String
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class SocialService implements Connectable{
 
-  private static readonly baseUrl:  String = environment.baseUrl   + "/usuario"
+  private static readonly baseUrl:  String = environment.baseUrl   + "/amigo"
+
+  public amigos: Array<Usuario> = []
+  public peticionesAmistad : Array<PeticionAmistad> = []
+  public chats: Map<String, Array<MsgPrivado>> = new Map<String, Array<MsgPrivado>>()
+
+  private myChatTopic_id:   any
+  private peticionTopic_id: any
+  private stompClient:   any
+
 
   /**
    * Constructor. Se suscribe a los topics necesarios para poder gestionar
@@ -44,8 +77,189 @@ export class SocialService implements Connectable{
     }
   }
 
-  onConnect(): void {
+  public lazyReload(): void {
+    let that = this
+    setTimeout( () => {
+      this.cargarListaAmigos()
+      this.cargarPeticiones()
+    }, 200)
   }
+
+  public onConnect(): void {
+    this.stompClient = this.wsService.getStompClient() 
+    let that = this
+
+    this.cargarListaAmigos()
+    this.cargarPeticiones()
+
+    //Suscripción a las invitaciones
+    this.myChatTopic_id = this.stompClient.subscribe(WsService.chat_topic + this.userService.getUsername(),
+    function (message) {
+      if (message.body){
+        that.procesarMensajeChat(JSON.parse(message.body))
+      }else{
+        console.log("Error crítico")
+      }
+    });
+
+    this.peticionTopic_id = this.stompClient.subscribe(WsService.peticion_topic + this.userService.getUsername(),
+    function (message) {
+      if (message.body){
+        that.procesarMensajePeticion(JSON.parse(message.body))
+      }else{
+        console.log("Error crítico")
+      }
+    });
+  }
+
+  public pushMensaje(nuevoMensaje: MsgPrivado): void {
+    let listaMensajes = this.chats.get(nuevoMensaje.emisor)
+    if ( listaMensajes != null ){
+      listaMensajes.push(nuevoMensaje)
+
+    }else{
+      this.chats.set(nuevoMensaje.emisor, [nuevoMensaje]) 
+    }
+  }
+
+  public pushMensajePropio(destino: String, body: String){
+    let nuevoMensaje: MsgPrivado = {
+      emisor: this.userService.username, 
+      body: body, 
+      ts: null 
+    }
+    let listaMensajes = this.chats.get(destino)
+    if ( listaMensajes != null ){
+      listaMensajes.push(nuevoMensaje)
+
+    }else{
+      this.chats.set(destino, [nuevoMensaje]) 
+    }
+  }
+
+  public procesarMensajeChat(msg: Object): void{
+    let nuevoMensaje: MsgPrivado = {
+      emisor: msg[ChatMsgKeys.FROM],
+      body:   msg[ChatMsgKeys.BODY],
+      ts:     msg[ChatMsgKeys.TIME]
+    }
+    this.pushMensaje(nuevoMensaje)
+  }
+
+
+  public procesarMensajePeticion(msg: Object): void{
+    console.log(msg)
+    switch (msg["type"]){
+      case PeticionStatus.ACCEPT:
+        //Recargar lista de amigos
+        this.cargarListaAmigos()
+        break
+
+      case PeticionStatus.DECLINE:
+        //No pasa nada
+        this.cargarPeticiones()
+        break
+
+      case PeticionStatus.REQUEST:
+        this.peticionesAmistad.push({
+          emisor: msg[ChatMsgKeys.FROM],
+          ts:     msg[ChatMsgKeys.TIME]
+        })
+        break
+
+      default: 
+        console.log("mensaje desconocido")
+    }
+  }
+
+
+  public aceptarPeticionAmistad(user: String): void {
+      let msg = {
+        from: this.userService.username,
+        to:   user
+      }
+      this.stompClient.send(WsService.aceptarPeticion, {}, JSON.stringify(msg) )
+      this.lazyReload()
+  }
+
+
+  public rechazarPeticionAmistad(user: String): void {
+      let msg = {
+        from: this.userService.username,
+        to:   user
+      }
+      this.stompClient.send(WsService.rechazarPeticion, {}, JSON.stringify(msg) )
+      this.lazyReload()
+  }
+
+
+  public enviarPeticionAmistad(user: String): void {
+      let msg = {
+        from: this.userService.username,
+        to:   user
+      }
+      console.log(msg)
+      this.stompClient.send(WsService.enviarPeticion, {}, JSON.stringify(msg) )
+  }
+
+
+  public enviarMensajePrivado(user: String, body: String): void{
+      let msg = {
+        from: this.userService.username,
+        to:   user,
+        body: body
+      }
+      console.log(msg)
+      this.stompClient.send(WsService.enviarMensajePrivado, {}, JSON.stringify(msg) )
+      this.pushMensajePropio(user, body)
+  }
+
+  public cargarListaAmigos(): void {
+
+    let that = this
+    this.amigos = []
+    this.http.get(SocialService.baseUrl + "/list/" + this.userService.username).subscribe( (response) => {
+      for ( var index in response ){
+        let friend: Usuario = {
+          username: response[index]["usuario2_id"],
+          avatar: null, 
+          mayorRacha: 0, 
+          rachaActual: 0, 
+          porcentajeVictorias: 0, 
+          numPartidas: 0, 
+          totalVictorias: 0
+        }
+
+        this.userService.findUserObservable(friend.username).subscribe( (resp) => {
+          friend.username = resp["nombre"]
+          friend.avatar   = resp["avatar"]
+          that.userService.getUserStatsObservable(friend.username).subscribe (
+            (stats) => {
+              that.updateUserStats(stats, friend)
+              that.amigos.push(friend)
+            }
+          )
+        }, (e) => { })
+      }
+    })
+  }
+
+
+  public cargarPeticiones(): void {
+
+    let that = this
+    this.peticionesAmistad = []
+    this.http.get(SocialService.baseUrl + "/pending-r/" + this.userService.username).subscribe( (response) => {
+      for ( var index in response ){
+        let peticion: PeticionAmistad = {
+          emisor: response[index]["from"],
+          ts: null 
+        }
+        that.peticionesAmistad.push(peticion)
+      }
+    })
+  }
+
 
   /**
    * Actualiza la información del usuario con respecto al 

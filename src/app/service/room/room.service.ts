@@ -11,7 +11,7 @@ enum RoomMsgStatus {
   FOUND           = "FOUND",
   SEARCHING       = "SEARCHING",
   FAILED          = "FAILED",
-  UPDATED_PLAYERS = "UPDATED_PLAYERS",
+  UPDATED_PLAYERS = "UPDATED-PLAYERS",
   UPDATED_INVITES = "UPDATED_INVITES",
   CLOSED          = "CLOSED",
   CREATED         = "CREATED",
@@ -194,36 +194,21 @@ export class RoomService implements Connectable{
    */
   private updatePlayers(updated_players: Array<String>): void{
     if ( this.room != null){
-      let old_players: Array<UserCardInfo> = this.room.players
       this.room.players = []
       for (let i = 0; i < updated_players.length; i++){
-        let found: boolean = false
-        for (let j = 0; j < this.room.players.length; j++){
-          if ( old_players[j].username == updated_players[i]){
-            found = true
-            this.room.players.push(old_players[j])
-            break
-          }
-        }
-        if ( !found ){
-          //El jugador no estaba en la sala, se añade y 
-          //se busca su avatar
-          this.room.players.push({username: updated_players[i], avatar: null})
-          this.userService.findUserObservable(updated_players[i]).toPromise().then( response => {
-            let body = response["body"]
-            console.log(body)
-            if ( body ){
-              let avatar = body["avatar"]
-              let username = body["nombre"]
-              for (let k = 0; k < this.room.players.length; i++){
-                if (this.room.players[k].username == username){
-                  this.room.players[k].avatar = avatar
-                  break
-                }
-              }
+        //se busca su avatar
+        this.room.players.push({username: updated_players[i], avatar: null})
+        this.userService.findUserObservable(updated_players[i]).toPromise().then( response => {
+          console.log(response)
+          let avatar = response["avatar"]
+          let username = response["nombre"]
+          for (let k = 0; k < this.room.players.length; k++){
+            if (this.room.players[k].username == username){
+              this.room.players[k].avatar = avatar
+              break
             }
-          })
-        }
+          }
+        })
       }
     }
 
@@ -304,7 +289,7 @@ export class RoomService implements Connectable{
    */
   private procesarMensajeInvitacion(msg: Object){
     let invitacion: invite; 
-
+    console.log(msg)
     switch (msg["status"]){
       case InviteMsgstatus.INVITED: 
         //Llega una nueva invitación
@@ -410,8 +395,8 @@ export class RoomService implements Connectable{
         leader: this.room.leader, 
         room: this.room.id
       }
-      this.stompClient.send(WsService.salaCerrar, {}, JSON.stringify(msg) )
       this.sala_act_topic_id.unsubscribe()
+      this.stompClient.send(WsService.salaCerrar, {}, JSON.stringify(msg) )
       this.buscandoPartida = false
       this.uniendoseASala = false
       this.room = null
@@ -436,8 +421,8 @@ export class RoomService implements Connectable{
         room: this.room.id,
         player: this.userService.getUsername()
       }
-      this.stompClient.send(WsService.salaAbandonar, {}, JSON.stringify(msg) )
       this.sala_act_topic_id.unsubscribe()
+      this.stompClient.send(WsService.salaAbandonar, {}, JSON.stringify(msg) )
       this.buscandoPartida = false
       this.uniendoseASala = false
       this.room = null
@@ -500,20 +485,26 @@ export class RoomService implements Connectable{
   public aceptarInvitacion(leader: string, roomId: string): void {
     if ( leader != null && roomId != null && !this.creandoSala && !this.uniendoseASala){
       let msg = {
-        leader: this.room.leader, 
-        room: this.room.id, 
+        leader: leader, 
+        room:   roomId, 
         invite: this.userService.getUsername()
       }
-      this.stompClient.send(WsService.invitacionAceptar, {}, JSON.stringify(msg) )
       if ( this.soyLider() ){
         this.cerrarSala(false)
       }else if ( this.room != null){
         this.abandonarSala(false)
       }
+      this.stompClient.send(WsService.invitacionAceptar, {}, JSON.stringify(msg) )
       this.uniendoseASala = true
     }
   }
 
+  public eliminarInvitacion(invite: invite): void{
+    let index = this.invites.indexOf(invite);
+    if (index > -1) {
+      this.invites.splice(index, 1);
+    }
+  }
 
   /**
    * Inicia la búsqueda de partida para todos los integrantes de la sala actual. 

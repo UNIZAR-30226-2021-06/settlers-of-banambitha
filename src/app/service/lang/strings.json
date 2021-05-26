@@ -833,6 +833,36 @@
     "num-wins": {
         "ESP": "Total de victorias", 
         "ENG": "Number of wins"
+    }, 
+
+    "friend-request": {
+        "ESP": "Petición de amistad", 
+        "ENG": "Friendship request"
+    }, 
+
+    "invite": {
+        "ESP": "Invitar", 
+        "ENG": "Invite"
+    },
+
+    "accept-request": {
+        "ESP": "Aceptar invitación", 
+        "ENG": "Accept request"
+    }, 
+
+    "enter": {
+        "ESP": "Entrar", 
+        "ENG": "Enter"
+    }, 
+
+    "add-friend": {
+        "ESP": "Agregar", 
+        "ENG": "Add friend"
+    }, 
+
+    "join": {
+        "ESP": "Unirse", 
+        "ENG": "Join"
     }
 
 

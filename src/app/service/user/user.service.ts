@@ -169,6 +169,7 @@ export class UserService {
     console.log("logout")
     this.http.get(UserService.baseUrl + "/logout", UserService.httpOptions).subscribe((data: any) => {
       router.navigate(["/login"])
+      window.location.reload()
     })
   }
 
