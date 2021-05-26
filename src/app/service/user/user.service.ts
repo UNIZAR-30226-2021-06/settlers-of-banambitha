@@ -26,11 +26,8 @@ export enum BoardSkin {
 export class UserService {
 
   private static readonly baseUrl:  String = environment.baseUrl + "/usuario"
-  private static readonly addUrl:   String = UserService.baseUrl + "/add"
-  private static readonly validate: String = UserService.baseUrl + "/validate"
-  private static readonly logout:   String = UserService.baseUrl + "/logout"
 
-  private static readonly httpOptions = {
+  public static readonly httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
     withCredentials: true,
     observe: 'response' as 'response'
@@ -182,6 +179,16 @@ export class UserService {
    */
   public findUserObservable(name: String){
     return this.http.get(UserService.baseUrl + "/find/" + name)
+  }
+
+
+  /**
+   * Devuelve la promise de una petición que solicita las
+   * estadísticas de un usuario
+   * @param name 
+   */
+  public getUserStatsObservable(name: String){
+    return this.http.get(UserService.baseUrl + "/stats/" + name)
   }
 
 

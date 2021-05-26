@@ -1,4 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
+import { catchError } from 'rxjs/operators';
+import { LangService } from 'src/app/service/lang/lang.service';
+import { SocialService, Usuario } from 'src/app/service/social/social.service';
+import { UserService } from 'src/app/service/user/user.service';
 import {FriendCardComponent} from './friend-card/friend-card.component';
 
 @Component({
@@ -8,50 +13,41 @@ import {FriendCardComponent} from './friend-card/friend-card.component';
 })
 export class SocialBarComponent implements OnInit {
 
-  public friends: Friend[];
-  public filterFriends: Friend[];
+  public value: String = "" 
+  public errorBusqueda: boolean = false
+  public lastSearchedUser : Usuario = null
  
-  constructor() { 
-
-    this.friends = [
-      new Friend("adrian_1424", "456", "../../../../assets/images/shop/user/user_profile_image_1.png"),
-      new Friend("fer8902", "234", "../../../../assets/images/shop/user/user_profile_image_2.png"),
-      new Friend("javi__2000", "345", "../../../../assets/images/shop/user/user_profile_image_11.png"),
-      new Friend("78_manuel", "123", "../../../../assets/images/shop/user/user_profile_image_10.png"),
-      new Friend("alba_4090", "554", "../../../../assets/images/shop/user/user_profile_image_5.png"),
-      new Friend("maria_player", "865", "../../../../assets/images/shop/user/user_profile_image_2.png"),
-      new Friend("best_player12", "665", "../../../../assets/images/shop/user/user_profile_image_1.png"),
-      new Friend("jaime_2020", "352", "../../../../assets/images/shop/user/user_profile_image_5.png"),
-      new Friend("catan_player32", "544", "../../../../assets/images/shop/user/user_profile_image_1.png"),
-      new Friend("8040_dani", "79", "../../../../assets/images/shop/user/user_profile_image_2.png"),
-      new Friend("davidgarcia20", "45", "../../../../assets/images/shop/user/user_profile_image_11.png"),
-      new Friend("jugador_catan10", "233", "../../../../assets/images/shop/user/user_profile_image_1.png"),
-      new Friend("abcd_10", "546", "../../../../assets/images/shop/user/user_profile_image_10.png")
-    ]
-
-    this.filterFriends = this.friends;
-
+  constructor(public langService: LangService, public userService: UserService, public socialService: SocialService) {
+    this.lastSearchedUser = {
+      username: null, 
+      avatar: null, 
+      rachaActual: 0, 
+      mayorRacha: 0, 
+      numPartidas: 0, 
+      porcentajeVictorias: 0, 
+      totalVictorias: 0
+    }
   }
+
   
   ngOnInit(): void {
-
-    
   }
 
-  findFriends(): void{
-    
+  findPlayer(): void {
+    console.log(this.value);
+    let that = this
+    this.userService.findUserObservable(this.value).subscribe( (resp) => {
+      this.errorBusqueda = false
+      that.lastSearchedUser.username = resp["nombre"]
+      that.lastSearchedUser.avatar   = resp["avatar"]
+      that.userService.getUserStatsObservable(this.lastSearchedUser.username).subscribe (
+        (stats) => {
+          that.socialService.updateUserStats(stats, that.lastSearchedUser)
+        }
+      )
+    }, (e) => {
+      this.errorBusqueda = true
+    })
   }
 
-}
-
-export class Friend{
-  name: string;
-  elo: string;
-  profilePic: string;
-  
-  constructor(nombre:string, eloNum:string, picture:string){
-    this.name = nombre;
-    this.elo = eloNum;
-    this.profilePic = picture;
-  }
 }

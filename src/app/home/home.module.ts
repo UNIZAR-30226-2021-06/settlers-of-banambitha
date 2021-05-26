@@ -35,6 +35,9 @@ import { StadisticCardComponent } from './profile/stadistic-card/stadistic-card.
 import { MainHomeComponent } from './main-home/main-home.component';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner'; 
 import { MatMenuModule} from '@angular/material/menu';
+import { MatInputModule } from '@angular/material/input';
+import { FormsModule } from '@angular/forms';
+import {MatExpansionModule} from '@angular/material/expansion'; 
 
 
 @NgModule({
@@ -61,7 +64,11 @@ import { MatMenuModule} from '@angular/material/menu';
     MatListModule,
     MatIconModule, 
     MatProgressSpinnerModule, 
-    MatMenuModule
+    MatMenuModule,
+    MatDividerModule, 
+    MatInputModule,
+    FormsModule, 
+    MatExpansionModule
   ],
   exports: [
     NavBarComponent, SocialBarComponent, PlayComponent, ShopComponent, ProfileComponent ,RulesComponent

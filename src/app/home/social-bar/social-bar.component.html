@@ -1,11 +1,89 @@
 <div class= "sidebar">
-    <div class = "browser">
-        <app-friend-browser (myEvent)="findFriends()"></app-friend-browser>
-    </div>
-    <div class= "friend-list">
-        <div class = "friend-card" *ngFor="let card of friends">
-            <app-friend-card [name]=card.name [elo]=card.elo [profilePic]=card.profilePic ></app-friend-card>
-        </div>
-    </div>
+    <mat-tab-group mat-align-tabs="center">
+    <mat-tab [label]="langService.get('friends')">
+        Content 1
+    </mat-tab>
+    <mat-tab [label]="langService.get('search')">
+        <div class="tabContent">
+            <mat-form-field class="example-form-field">
+                <mat-label>
+                    {{langService.get("search-player")}}
+                </mat-label>
+                <input matInput type="text"  autocomplete="off" [(ngModel)]="value"
+                #uname="ngModel"
+                pattern="^(?=.*[0-9]*)(?=.*[a-z]*)(?=.*[A-Z]*)(?=.*[-_]*).{5,32}$">
+                <button mat-button *ngIf="value" matSuffix mat-icon-button aria-label="Clear" (click)="value=''">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </mat-form-field>
+            <button mat-button [disabled]="uname.errors?.pattern || value == userService.username"
+            (click)="findPlayer()">
+                <mat-icon >
+                    search
+                </mat-icon>
+            </button>
+            <div *ngIf="errorBusqueda">
+                {{langService.get("search-error")}}
+            </div>
+            <div *ngIf="!errorBusqueda && lastSearchedUser.username != null">
+                <mat-accordion>
+                <mat-expansion-panel >
+                    <mat-expansion-panel-header [collapsedHeight]="'80px'">
+                    <mat-panel-title>
+                        <img mat-card-image class="user-image" src="../../../assets/images/shop/user/{{lastSearchedUser.avatar}}">
+                    </mat-panel-title>
+                    <mat-panel-description>
+                        {{this.lastSearchedUser.username}}
+                    </mat-panel-description>
+                    </mat-expansion-panel-header>
+                    <button mat-raised-button class="in-button">
+                        Solicitud Amistad
+                    </button>
+                    <mat-tab-group mat-align-tabs="center">
+                        <mat-tab [label]="'sats'">
+                            <table class="mat-table center" >
+                                <tr class="mat-header-row">
+                                    <th class="mat-header-cell">{{langService.get("stat")}}</th>
+                                    <th class="mat-header-cell">{{langService.get("value")}}</th>
+                                </tr>
+                                <tr class="mat-row">
+                                    <td class="mat-cell">
+                                        {{langService.get("num-games")}}
+                                    </td>
+                                    <td class="mat-cell center_td">{{lastSearchedUser.numPartidas}}</td>
+                                </tr>
+                                <tr class="mat-row">
+                                    <td class="mat-cell">
+                                        {{langService.get("num-wins")}}
+                                    </td>
+                                    <td class="mat-cell center_td">{{lastSearchedUser.totalVictorias}}</td>
+                                </tr>
+                                <tr class="mat-row">
+                                    <td class="mat-cell">
+                                        {{langService.get("winning-rate")}}
+                                    </td>
+                                    <td class="mat-cell center_td">{{lastSearchedUser.porcentajeVictorias}}</td>
+                                </tr>
+                                <tr class="mat-row">
+                                    <td class="mat-cell">
+                                        {{langService.get("actual-streak")}}
+                                    </td>
+                                    <td class="mat-cell center_td">{{lastSearchedUser.rachaActual}}</td>
+                                </tr>
+                                <tr class="mat-row">
+                                    <td class="mat-cell">
+                                        {{langService.get("best-streak")}}
+                                    </td>
+                                    <td class="mat-cell center_td">{{lastSearchedUser.mayorRacha}}</td>
+                                </tr>
+                            </table>
+                        </mat-tab>
+                    </mat-tab-group>
+                </mat-expansion-panel>
+                </mat-accordion>
 
+            </div>
+        </div>
+    </mat-tab>
+    </mat-tab-group>
 </div>

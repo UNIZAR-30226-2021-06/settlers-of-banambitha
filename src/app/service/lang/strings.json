@@ -773,6 +773,67 @@
     "unknown": {
         "ESP": "Desconocido", 
         "ENG": "Unknown"
+    }, 
+
+    "search": {
+        "ESP": "Buscar", 
+        "ENG": "Search"
+    }, 
+
+    "friends": {
+        "ESP": "Amigos",
+        "ENG": "Friends"
+    }, 
+
+    "search-player": {
+        "ESP": "Buscar jugador", 
+        "ENG": "Find player"
+    }, 
+
+    "search-error": {
+        "ESP": "El usuario no existe", 
+        "ENG": "This user does not exist"
+    }, 
+
+    "stats": {
+        "ESP": "Stats", 
+        "ENG": "Stats"
+    },
+
+    "stat": {
+        "ESP": "stat", 
+        "ENG": "value"
+    }, 
+
+    "value": {
+        "ESP": "valor", 
+        "ENG": "value"
+    }, 
+
+    "best-streak": {
+        "ESP": "Mejor racha", 
+        "ENG": "Best streak"
+    }, 
+
+    "actual-streak": {
+        "ESP": "Racha acual", 
+        "ENG": "Current steak"
+    }, 
+
+    "num-games": {
+        "ESP": "Partidas jugadas", 
+        "ENG": "Played games"
+    }, 
+
+    "winning-rate": {
+        "ESP": "% victorias", 
+        "ENG": "winning rate"
+    }, 
+
+    "num-wins": {
+        "ESP": "Total de victorias", 
+        "ENG": "Number of wins"
     }
+
 
 }
