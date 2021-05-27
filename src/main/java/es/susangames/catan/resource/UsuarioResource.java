@@ -227,7 +227,7 @@ public class UsuarioResource {
 	 * Maps: 	Update a user's password @put
 	 * 
 	 * Expects: -New and Old Password in body
-	 * 			-Mapped point: 	/usuario/validate
+	 * 			-Mapped point: 	/usuario/new-password
 	 * 			-Format: 
 	 * 				{
 	 * 					"userId"	 : <usuarioId>,

@@ -593,9 +593,13 @@ public class SalaController {
 		
 		synchronized (salas) {
 			
-			Sala sala = salas.get(salaId);
+			Sala sala = salas.remove(salaId);
+			
+			if(sala==null) sala = cola.desencolar(salaId);
 			
 			if(sala!=null) {
+				
+				salas.put(sala.getId(), sala);
 				
 				String liderId = sala.getLeader();
 				mensaje.put("leader", liderId);
