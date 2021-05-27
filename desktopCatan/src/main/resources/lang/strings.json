@@ -395,24 +395,24 @@
     },
 
     "wool" : {
-        "eng": "Wool    ",
-        "esp": "Lana    "
+        "eng":  "Wool   ",
+        "esp":  "Lana   "
                
     },
 
     "wood": {
-        "eng": "Wood    ",
-        "esp": "Madera  "  
+        "eng":  "Wood   ",
+        "esp":  "Madera "  
     },
 
     "mineral": {
-        "eng": "Mineral ",
-        "esp": "Mineral "
+        "eng":  "Mineral",
+        "esp":  "Mineral"
     },
 
     "cereal": {
-        "eng": "Cereal  ",
-        "esp": "Cereal  "
+        "eng":  "Cereal ",
+        "esp":  "Cereal "
     },
 
     "send": {
