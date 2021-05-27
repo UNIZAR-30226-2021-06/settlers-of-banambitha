@@ -716,7 +716,9 @@ public class MainMenu {
  
          declineButton.setOnAction((ActionEvent event) -> {
             //ws.declineMatchRequest(username, room);
-            RoomServices.deleteInvite(room);
+            Boolean eliminada = RoomServices.deleteInvite(room);
+            System.out.println("Ha sido eliminada: " + eliminada);
+            getFriends();
           });
 
 
