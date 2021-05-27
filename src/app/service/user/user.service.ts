@@ -259,7 +259,7 @@ export class UserService {
         this.updateUserData(response.body)
         wsService._connect()
         if ( this.partida != null ){
-          console.log("recargar partida")
+          gameService.recargarPartida(this.partida)
           router.navigate(["/board"])
           return false
 
@@ -343,6 +343,7 @@ export class UserService {
           console.log("Partida no nula")
           console.log(this.partida)
           gameService.recargarPartida(this.partida)
+          router.navigate(["/board"])
           return false
 
         }else if ( this.bloqued != null ){
