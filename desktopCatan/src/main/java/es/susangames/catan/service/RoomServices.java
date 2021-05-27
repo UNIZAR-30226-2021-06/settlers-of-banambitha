@@ -299,6 +299,34 @@ public class RoomServices {
         }
     }
 
+    public static boolean duplicatedInvite (String roomId) {
+        for (Invite i : invites) {
+            if (roomId == i.getId()) {
+                System.out.println("Invitación duplicada");
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static void deleteInvite (String roomId) {
+        for (Invite i : invites) {
+            if (roomId == i.getId()) {
+                System.out.println("Invitación eliminada");
+                invites.remove(i);
+            }
+        }
+    }
+
+    public static void setEnabled (Boolean value, String inviteRoomId) {
+        for (Invite i : invites) {
+            if ( i.getId() == inviteRoomId) {
+                i.setEnable(value);
+                return;
+            }
+        }
+    }
+
     public static void procesarMensajeInvitacion (Object payload) {
         JSONObject jsObj = new JSONObject(payload.toString());
         System.out.println("Invitaciones: " + payload.toString());
@@ -306,8 +334,11 @@ public class RoomServices {
         switch (status) {
             case "INVITED":
                 String leader = jsObj.getString("leader");
+                String roomId = jsObj.getString("room");
                 System.out.println("Invitacion de " + leader);
-                anyadirInvitaciones(leader, jsObj.getString("room"));
+                if ( !duplicatedInvite(roomId) ) {
+                    anyadirInvitaciones(leader, roomId);
+                }
                 
                 break;
             case "ACCEPTED":
@@ -325,6 +356,8 @@ public class RoomServices {
                 room.setLeader(jsObj.getString("leader"));
                 room.setPlayers(players);
                 room.setInvites(invitesPL);
+
+                deleteInvite(room.getId());
 
                 JSONArray playersJSArray = jsObj.getJSONArray("players");
                 ArrayList<String> updated_players = new ArrayList<String> ();
@@ -355,28 +388,46 @@ public class RoomServices {
                 
                 break;
             case "OPEN":
-                uniendoseASala = false;
-                errorAlUnirseASala = true;
-                crearSala();
+                setEnabled(true, jsObj.getString("room"));
+                //uniendoseASala = false;
+                //errorAlUnirseASala = true;
+                //crearSala();
                 break;
             case "CANCELLED":
-                eliminarInvitaciones(jsObj.getString("leader"), jsObj.getString("id"));
+                roomId = jsObj.getString("room");
+                deleteInvite(roomId);
+
+                if ( uniendoseASala ) {
+                    uniendoseASala = false;
+                    crearSala();
+                }
+
+                //eliminarInvitaciones(jsObj.getString("leader"), jsObj.getString("id"));
                 break;
             case "CLOSED":
-                eliminarInvitaciones(jsObj.getString("leader"), jsObj.getString("id"));
+                //eliminarInvitaciones(jsObj.getString("leader"), jsObj.getString("id"));
                 uniendoseASala = false;
                 errorAlUnirseASala = true;
+                roomId = jsObj.getString("room");
+                deleteInvite(roomId);
                 crearSala();
                 break;
             case "FULL":
-                uniendoseASala = false;
-                errorAlUnirseASala = true;
-                crearSala();
+                setEnabled(false, jsObj.getString("room"));
+                if ( uniendoseASala ) {
+                    uniendoseASala = false;
+                    errorAlUnirseASala = true;
+                    crearSala();   
+                }
+                
                 break;
             case "QUEUING":
-                uniendoseASala = false;
-                errorAlUnirseASala = true;
-                crearSala();
+                setEnabled(false, jsObj.getString("room"));
+                if ( uniendoseASala ) {
+                    uniendoseASala = false;
+                    errorAlUnirseASala = true;
+                    crearSala();   
+                }
                 break;
             default:
         }
