@@ -301,7 +301,8 @@ public class RoomServices {
 
     public static boolean duplicatedInvite (String roomId) {
         for (Invite i : invites) {
-            if (roomId == i.getId()) {
+            System.out.println("Invitacion a la Sala: " + i.getId());
+            if ( i.getId().equals(roomId)) {
                 System.out.println("Invitación duplicada");
                 return true;
             }
@@ -311,7 +312,7 @@ public class RoomServices {
 
     public static void deleteInvite (String roomId) {
         for (Invite i : invites) {
-            if (roomId == i.getId()) {
+            if (i.getId().equals(roomId)) {
                 System.out.println("Invitación eliminada");
                 invites.remove(i);
             }
