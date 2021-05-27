@@ -482,16 +482,18 @@ export class GameService implements Connectable{
 
     let that = this
     //Topic de recargar parrida
-    this.partida_com_topic_id = this.stompClient.subscribe(WsService.partida_reload_topic + this.userService.getUsername(),
-    function (message) {
-      if (message.body){
-        that.procesarMensajeRecarga(JSON.parse(message.body))
-      }else{
-        console.log("Error crítico")
-      }
-    });
+    setTimeout( () => {
+      this.partida_com_topic_id = this.stompClient.subscribe(WsService.partida_reload_topic + this.userService.getUsername(),
+      function (message) {
+        if (message.body){
+          that.procesarMensajeRecarga(JSON.parse(message.body))
+        }else{
+          console.log("Error crítico")
+        }
+      });
+      this.stompClient.send(WsService.partidaRecargar, {}, JSON.stringify(msg) )
+    }, 1000)
 
-    this.stompClient.send(WsService.partidaRecargar, {}, JSON.stringify(msg) )
 
     this.cargandoPartida = true
   }
@@ -615,7 +617,6 @@ export class GameService implements Connectable{
         function (message) {
           if (message.body){
             that.procesarMensajeReporte(JSON.parse(message.body))
-            console.log("------------------Suscrito")
           }else{
             console.log("Error crítico")
           }

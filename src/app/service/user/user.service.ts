@@ -277,7 +277,10 @@ export class UserService {
           }
         }
       }
-    ), catchError(() => {
+    ), catchError((e) => {
+      console.log("EXCEPCION-------")
+      console.log(e)
+      console.log("No hay sesión")
       this.validUser = false
       if ( urlLogin ){
         return of(true)
@@ -303,8 +306,8 @@ export class UserService {
   public checkLastMatch(router: Router, gameService: GameService, wsService: WsService): Observable<boolean> {
     return this.http.get(UserService.baseUrl + "/session", UserService.httpOptions).pipe(
       map(response => {
-        this.updateUserData(response.body)
         wsService._connect()
+        this.updateUserData(response.body)
         if ( this.partida != null ){
           console.log("Partida no nula")
           console.log(this.partida)
@@ -321,7 +324,10 @@ export class UserService {
           return false
         }
       }
-    ), catchError(() => {
+    ), catchError((e) => {
+        console.log("EXCEPCION-------")
+        console.log(e)
+        console.log("No hay sesión")
         router.navigate(["/login"])
         return of(false)
     }))
@@ -356,7 +362,10 @@ export class UserService {
           return false
         }
       }
-    ), catchError(() => {
+    ), catchError((e) => {
+        console.log("EXCEPCION-------")
+        console.log(e)
+        console.log("No hay sesión")
         router.navigate(["/login"])
         return of(false)
     }))

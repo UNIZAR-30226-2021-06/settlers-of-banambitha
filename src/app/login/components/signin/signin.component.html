@@ -32,9 +32,6 @@
             <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
             </button>
                     </mat-form-field>
-                    <a class="nav-link" [routerLink]="['/login/reset-password']" routerLinkActive="active">
-                        {{langService.get("forgot-password")}}
-                    </a>
                 </mat-card-content>
                 <div class="boton">
                     <button mat-stroked-button color="accent" [disabled]="f.invalid || usernameForm.invalid" class="btn-block">
