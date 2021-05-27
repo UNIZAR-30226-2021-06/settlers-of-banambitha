@@ -232,8 +232,8 @@
     },
 
     "username-min-char": {
-        "ESP": "El nombre de usuario debe tener al menos 4 caracteres", 
-        "ENG": "Username must be at least 4 characters long"
+        "ESP": "El nombre de usuario debe tener al menos 4 caracteres y máximo 8", 
+        "ENG": "Username must be at least 4 characters long and 8 max"
     }, 
 
     "password-min-char": {
@@ -1075,5 +1075,135 @@
     "r-password": {
         "ESP": "La contraseña es obligatoria", 
         "ENG": "Password is required"
+    }, 
+
+    "instructions_development_paragraph1": {
+        "ENG": "In Colonos de Catán there are two different ways of trading, these are maritime trade or with ports and domestic trade or trade with players.",
+        "ESP": "En Colonos de Catán existen dos formas diferentes de comerciar, estas son el comercio marítimo o con puertos y el comercio de interior o el comercio con jugadores."
+    },
+
+    "instructions_development_paragraph2": {
+        "ENG": "Internal trade or trade with players is the trade that the player who owns the turn makes with any other player. The player proposes an exchange of raw materials to another player defining the material that he offers, how much he offers, what material he wants and how much he wants. Trades are allowed where a player exchanges 0 units of a material. It is only considered internal trade if the player to whom the trade is proposed accepts the trade.",
+        "ESP": "El comercio interno o comercio con jugadores es el comercio que hace el jugador a quien le pertenece el turno con cualquier otro de los jugadores. El jugador propone un intercambio de materias primas a otro jugador definiendo el material que ofrece, cuanto ofrece, que material quiere y cuanto quiere. Se permiten comercios donde un jugador intercambie 0 unidades de un material. Sólamente se considera comercio interno si el jugador al que se le propone el comercio acepta el intercambio."
+    },
+
+    "instructions_development_paragraph3": {
+        "ENG": "Maritime trade takes place through ports and can only be done by the player on his turn. These ports are divided into two groups: basic ports and special ports, depending on the port with which you want to trade, you can carry out one type of maritime trade or another:",
+        "ESP": "El comercio marítimo se realiza a través de los puertos y solo lo puede realizar el jugador en su turno. Estos puertos se dividen en dos grupos: puertos básicos y puertos especiales, dependiendo del puerto con el que se quiera comerciar se podrá realizar un tipo de comercio marítimo u otro:"
+    },
+
+    "instructions_development_paragraph4": {
+        "ENG": " - Trade without a port. This type of port trading occurs when you try to trade with a port and there is no road in the port or settlement at an adjacent vertex. This trade has a penalty, to obtain a raw material (chosen by the player) you need to give four raw materials.",
+        "ESP": " - Comercio sin puerto.  Este tipo de comercio con puerto se produce cuando se intenta comerciar con un puerto y no existe ningún camino en el puerto o asentamiento en un vértice adyacente. Este comercio tiene una penalización, para obtener una materia prima (a elección por el jugador) se necesita dar cuatro materias primas."
+    },
+
+    "instructions_development_paragraph5": {
+        "ENG": " - Trade with basic port. Basic port trade occurs when the player who is going to trade sea has a settlement built on an adjacent vertex or road built in the port and the port is basic. The penalty for trading is 3 to 1 instead of 4 to 1 as above.",
+        "ESP": " - Comercio con puerto básico. El comercio con puerto básico se da cuando el jugador que va a realizar el comercio marítimo tiene un asentamiento construido en un vértice adyacente o camino construido en el puerto y el puerto es básico. La penalización por comerciar es de relación 3 a 1 en vez de 4 a 1 como en el anterior."
+    },
+
+    "instructions_development_paragraph6": {
+        "ENG": " - Trade with special port. To trade with a special port you need to have a settlement built on an adjacent vertex or road built in the port and a special port. A special port is a port specialized in a specific raw material and there is one for each material, it is penalized with a 2 to 1 ratio in the case of wanting to trade with that material with which it is specialized, in the case of not trade with specialized equipment, the basic port penalty is applied.",
+        "ESP": " - Comercio con puerto especial. Para realizar un comercio con un puerto especial se necesita tener un asentamiento construido en un vértice adyacente o camino construido en el puerto y un puerto especial. Un puerto especial es un puerto especializado en una materia prima en concreto y existe uno por cada material, en él se penaliza con una relación 2 a 1 en el caso de querer comerciar con ese material con el que está especializado, en el caso de no comerciar con el material especializado se aplica la penalización del puerto básico."
+    },
+
+    "instructions_development_paragraph7": {
+        "ENG": "In the desktop version they can be located since they are edges highlighted with colors that indicate the type of port, while in the web application you need to click on the bar of the sea hexagon (which represents the port) to obtain the information of the port.",
+        "ESP": "En la versión de escritorio se pueden localizar ya que son aristas resaltadas con colores que indican el tipo de puerto, mientras que en la aplicación web se necesita hacer click sobre la barra del hexágono de mar (que representa el puerto) para obtener la información del puerto."
+    },
+
+    "instructions_development_paragraph8": {
+        "ENG": "Important: Only one maritime trade and one internal trade can be carried out per shift.",
+        "ESP": "Importante: Solo se puede realizar un comercio marítimo y un comercio interno por turno."
+    },
+
+    "instructions_basics_info_paragraph1": {
+        "ENG": "The Settlers of Catan game is a turn-based board game for 4 players.",
+        "ESP": "El juego Colonos de Catán se trata de un juego de mesa por turnos para 4 jugadores."
+    },
+
+    "instructions_basics_info_paragraph2": {
+        "ENG": "The objective of this game is to gather resources to be able to build settlements and roads, with which to earn victory points. In Los Colonos de Catán there are two types of settlements that are Towns and Cities, each of these give different numbers of points, giving 1 point and 2 points respectively.",
+        "ESP": "El objetivo de este juego es reunir recursos para poder construir asentamientos y carreteras, con los que ganar puntos de victoria. En Los Colonos de Catán existen dos tipos de asentamientos que son Poblados y Ciudades, cada uno de estos dan diferentes números de puntos, dando 1 punto y 2 puntos respectivamente."
+    },
+
+    "instructions_basics_info_paragraph3": {
+        "ENG": "The board is divided into 19 land hexes and 18 sea hexes. Each of the terrain hexes has an associated biome, these are: Forest, Pasture, Sown, Hill, Mountain, Desert. The number of terrain hexes for each biome varies according to the biome, the Forest, Meadow and Sown have 4 hexes, the Hill and the Mountain have 3 and the Desert 1. The biome marks the resource to be produced in that area: The Forest produces wood, the Meadow produces wool, the Sown fields produce cereals, the Hill produces clay, the Mountain produces minerals and the desert is the only land that does not produce any raw material. Hexagons will only produce materia as long as all players have built their first settlements and roads.The biome corresponding to each hexagon will be randomly generated at the start of the game.",
+        "ESP": "El tablero se encuentra dividido en 19 hexágonos de terreno y 18 hexágonos de mar. Cada uno de los hexágonos de terreno tiene asociados un bioma, estos son: Bosque, Pasto, Sembrado, Cerro, Montaña, Desierto. El número de hexágonos de terreno por cada bioma varía según el bioma, el Bosque, Prado y Sembrado tienen 4 hexágonos, el Cerro y la Montaña tienen 3 y el Desierto 1. El bioma marca cuál va a ser el recurso que se va a producir en esa zona: El Bosque produce madera, el Prado produce lana, el Sembrado produce cereales, el Cerro produce arcilla, la Montaña produce mineral y  el desierto es el único terreno que no produce ninguna materia prima. Los hexágonos sólamente producirán materias siempre y cuando todos los jugadores hayan construido sus primeros asentamientos y caminos. El bioma que corresponde a cada hexágono será generado aleatoriamente al iniciar la partida."
+    },
+
+    "instructions_basics_info_paragraph4": {
+        "ENG": "The thief lives in the desert and the game begins placed in it and he can move to an adjacent hexagon at the choice of the player who has rolled a 7. As a result of this, players who have built settlements where the thief has moved, if they have more than 7 raw materials, they will lose half of their raw materials. Also, in that hex, you cannot produce until the thief in the hex moves. It should be noted that even if the thief moves from the Desert, he will never produce raw material.",
+        "ESP": "En el desierto vive el ladrón y empieza la partida colocado en él y este se podrá mover a un hexágono adyacente a elección del jugador que haya sacado un 7 en la tirada. Como resultado a esto, los jugadores que tengan construidos asentamientos donde se ha movido el ladrón, si tienen más de 7 materias primas, perderán la mitad de sus materias primas. Además, en ese hexágono no podrá producir hasta que no se mueva el ladrón del hexágono. Cabe destacar que aunque el ladrón se mueva del Desierto éste nunca producirá materia prima."
+    },
+
+    "instructions_basics_info_paragraph5": {
+        "ENG": "A numbered counter is placed on each of the hexes (except the desert hex). This token indicates the result of the roll that must be rolled for a hex to produce resources. Depending on the version, these numbers are colored, this refers to the frequency with which that number appears on the roll of the dice.",
+        "ESP": "Sobre cada uno de los hexágonos (excepto el hexágono del desierto) se coloca una ficha numerada. Esta ficha indica el resultado de la tirada que debe de salir en los dados para que un hexágono produzca recursos. Dependiendo de la versión estos números se encuentran coloreados, esto hace referencia a la frecuencia con la que ese número aparece en la tirada de los dados."
+    },
+
+    "instructions_basics_info_paragraph6": {
+        "ENG": "Ports are located in each sea hexagon. There are different ports, and they are classified into two types, basic ports and special ports, of the first type there are four ports and of the second type there is a special port for each port. they offer these ports. To be able to trade in the ports, just right click on the highlighted edge or bar in the sea hexagon (For more information, go to the \"Trade\" section of the left bar). The layout and type of port will be randomly generated before starting the game.",
+        "ESP": "En cada hexágono de mar se encuentran ubicados los puertos. Existen diferentes puertos, y se encuentran clasificados en dos tipos, puertos básicos y puertos especiales, del primer tipo hay cuatro puertos y del segundo tipo existe un puerto especial para cada puerto, en el apartado “Comercio” se detalla más acerca de las posibilidades que ofrecen estos puertos. Para poder comerciar en los puertos basta con hacer click derecho sobre la arista resaltada o barra en el hexágono del mar (Para más información entre al apartado “Comercio” de la barra de la izquierda). La disposición y el tipo de puerto será generado de manera aleatoria antes de empezar la partida."
+    },
+
+    "instructions_basics_info_paragraph7": {
+        "ENG": "As mentioned above, the game is divided into turns and if a turn belongs to a player, he or she can perform any of the following actions:",
+        "ESP": "Como se ha mencionado anteriormente, el juego se divide en turnos y si un turno pertenece a un jugador este podrá realizar cualquiera de las siguientes acciones:"
+    },
+
+    "instructions_basics_info_paragraph8": {
+        "ENG": " - Build the first two villages and the first two roads. When starting a game, a turn order is established for each of the players. In these first turns, the players are allowed to build two towns and two roads wherever they want without having to pay with resources, as long as they pay they respect the rest of the restrictions for the construction of towns and roads set out in the \"Figures and resources\" section. Once these are built, the hexagons can already produce.",
+        "ESP": " - Construir los dos primeros poblados y los dos primeros caminos. Al iniciar una partida, se establecen un orden de turnos para cada uno de los jugadores. En estos primeros turnos a los jugadores se les permite construir dos poblados y dos caminos donde quieran sin necesidad de pagar con recursos, siempre y cuando paguen respeten el resto de restricciones para la construcción de poblados y caminos expuestos en el apartado “Figuras y recursos”. Una vez construidos estos los hexágonos ya pueden producir."
+    },
+
+    "instructions_basics_info_paragraph9": {
+        "ENG": " - Build a village. To build a town in a vertex it is necessary to have among the user's raw materials: one of wood, one of wool, one of cereal and one of clay. In the case of fulfilling this condition, it is also necessary to have a player's path built on one of the adjacent edges and a town or city of the player at a distance of one vertex.",
+        "ESP": " - Construir un poblado. Para construir un poblado en una vértice se necesita tener entre las materias primas del usuario: uno de madera, uno de lana, uno de cereal y uno de arcilla. En el caso de cumplir con esta condición es necesario también tener una camino del jugador construido en una de las aristas adyacentes y un poblado o ciudad del jugador a una distancia de un vértice."
+    },
+
+    "instructions_basics_info_paragraph10": {
+        "ENG": " - Improve a town and turn it into a city. To upgrade a town to a city, all you need is to have 3 units of ore and 2 of cereal.",
+        "ESP": " - Mejorar un poblado y convertirlo en ciudad. Para mejorar a un poblado a una ciudad lo único que hace falta es tener 3 unidades de mineral y 2 de cereal."
+    },
+
+    "instructions_basics_info_paragraph11": {
+        "ENG": " - Build a path. To be able to build a path on an edge you need to have a wooden unit and a clay unit. In addition, to be able to build a road you need to have a player's road on an adjacent ridge or a player's town or city on an adjacent vertex.",
+        "ESP": " - Construir un camino. Para poder construir un camino en una arista se necesita tener una unidad de madera y una de arcilla. Además, para que sea posible construir un camino se necesita tener un camino del jugador en una arista adyacente o un poblado o ciudad del jugador en un vértice adyacente."
+    },
+
+    "instructions_basics_info_paragraph12": {
+        "ENG": " - Move the thief. At the start of a game the thief is located in the Desert. The player who rolls a value of 7 can make one move to an adjacent hex. If the players who have settlements in that hex have more than 7 raw materials, the thief will steal half of those materials. In subsequent turns, as long as the thief does not move, that hex will stop producing.",
+        "ESP": " - Mover al ladrón. Al inicio de una partida el ladrón se encuentra ubicado en el Desierto. El jugador que obtenga una tirada de valor 7, puede realizar una movimiento de este a un hexágono adyacente. Si los jugadores que tienen asentamientos en ese hexágono tiene más de 7 materias primas, el ladrón robara la mitad de esas materias. En los siguientes turnos, mientras el ladrón no se mueva, ese hexágono dejará de producir."
+    },
+
+    "instructions_basics_info_paragraph13": {
+        "ENG": " - Trade with other players (Internal Trade) and trade with a port (Sea Trade). For more details on these actions, see the \"Trades\" section.",
+        "ESP": " - Comerciar con otros jugadores (Comercio interno) y comerciar con un puerto (Comercio marítimo). Para más detalle sobre estas acciones consultar el apartado “Comerciar”."
+    },
+
+    "instructions_basics_info_paragraph14": {
+        "ENG": " - End shift. The player who has the current turn ends his turn thus canceling all pending indoor businesses and passing to the next player. At the end of each shift, raw materials are produced as long as the first settlements and roads have already been laid.",
+        "ESP": " - Finalizar turno. El jugador que tiene el turno actual termina su turno cancelando con esto todas las comercios de interior pendientes y pasando al siguiente jugador. Al final de cada "
+    },
+
+    "instructions_figures_info_paragraph1": {
+        "ENG": "In the Settlers of Catán there are 3 types of constructions:",
+        "ESP": "En el Colonos de Catán existen 3 tipos de construcciones:"
+    },
+
+    "instructions_figures_info_paragraph2": {
+        "ENG": " - Populated. A town is worth 1 victory point, and its owner can receive raw material production from all adjacent terrain hexes. Important: When building a town the distance rule must be taken into account: at none of the three adjacent crossroads can there already be a town (it does not matter from which player). If a player has already built all 5 of his towns, before he can build more towns, he must first expand one of them to a city. With this, he regains his town, which is replaced by a city. Now the player can build a new village.",
+        "ESP": " - Poblado. Un poblado vale 1 punto de victoria, y su propietario puede recibir la producción de materia prima de todos los hexágonos de terreno adyacentes. Importante: Al construir un poblado se debe tener en cuenta la regla de la distancia: en ninguna de las tres  encrucijadas adyacentes puede haber ya un poblado (no importa de qué jugador). Si un jugador ya ha construido sus 5 poblados, antes de poder construir más poblados primero debe ampliar a ciudad alguno de ellos. Con ello, recupera su poblado, que queda sustituido por una ciudad. Ahora el jugador puede construir un nuevo poblado."
+    },
+
+    "instructions_figures_info_paragraph3": {
+        "ENG": " - Town. A city can be built on a vertex where the player has a town built. When building a city, a victory point is added to the player's total, in addition, in the hexes where that city is built, they will produce 2 raw materials.",
+        "ESP": " - Ciudad. Una ciudad se puede construir sobre un vértice donde el jugador tenga construido un poblado. Al construir una ciudad se suma un punto de victoria sobre el total del jugador, además en los hexágono donde esté construido esa ciudad pasarán a producir 2 materias primas."
+    },
+    
+    "instructions_figures_info_paragraph4": {
+        "ENG": " - Road. Roads are the connections between towns and cities. The roads are built on the edges. On each edge, only one path can be built. Paths can be built as long as there is an adjacent player path or settlement. If you don't build new roads, you won't be able to build new towns either. The roads, by themselves, only give victory points. To build a road you need a wooden unit and a clay unit.",
+        "ESP": " - Camino. Los caminos son las conexiones entre los poblados y ciudades. Los caminos se construyen sobre las aristas. En cada arista, sólo se puede construir un camino. Los caminos se pueden construir siempre que exista un camino del jugador adyacente o asentamiento. Si no se construyen nuevos caminos, tampoco se podrán construir nuevos poblados. Las carreteras, por sí solas, tan sólo dan puntos de victoria. Para construir un camino se necesita una unidad de madera y una de arcilla."
     }
 }

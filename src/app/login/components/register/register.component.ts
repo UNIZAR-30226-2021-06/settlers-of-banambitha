@@ -32,7 +32,7 @@ export class RegisterComponent implements OnInit {
   usernameForm: FormGroup
   usernameSyncValidators = [
     Validators.required,
-    Validators.pattern("^(?=.*[0-9]*)(?=.*[a-z]*)(?=.*[A-Z]*)(?=.*[-_]*).{5,32}$")
+    Validators.pattern("^(?=.*[0-9]*)(?=.*[a-z]*)(?=.*[A-Z]*)(?=.*[-_]*).{4,8}$")
   ]
 
   constructor(public dialog: MatDialog, private userService: UserService,

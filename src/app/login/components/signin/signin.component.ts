@@ -36,7 +36,7 @@ export class SigninComponent implements OnInit {
   usernameForm: FormGroup
   usernameSyncValidators = [
     Validators.required,
-    Validators.pattern("^(?=.*[0-9]*)(?=.*[a-z]*)(?=.*[A-Z]*)(?=.*[-_]*).{5,32}$")
+    Validators.pattern("^(?=.*[0-9]*)(?=.*[a-z]*)(?=.*[A-Z]*)(?=.*[-_]*).{4,8}$")
   ]
 
   constructor(private userService: UserService, private router: Router, public langService: LangService) {
