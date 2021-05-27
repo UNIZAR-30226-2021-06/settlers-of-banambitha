@@ -75,7 +75,7 @@ export class SocialService implements Connectable{
    * @param userService servicio de usuario a utilizar (singleton)
    */
   constructor(private wsService: WsService, private router: Router, private userService: UserService,
-              private gameService: GameService, private http: HttpClient, private snackBar: MatSnackBar,
+              private http: HttpClient, private snackBar: MatSnackBar,
               private langService: LangService) {
     if ( ! wsService.atatchConnectable(this)){
       this.onConnect();
