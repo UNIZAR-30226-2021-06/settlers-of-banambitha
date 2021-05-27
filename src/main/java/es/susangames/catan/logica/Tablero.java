@@ -24,7 +24,7 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class Tablero {
 //Campos de la clase
-	private static int maxPuntos = 2; 
+	private static int maxPuntos = 6; 
 
 	// Mapa con las coordenadas de los centros de los 19 hexagonos del tablero. 
 	private Map<Integer, Hexagonos> hexagonos;
@@ -868,35 +868,35 @@ public class Tablero {
 	public void comercioEnPuertoEspecial (Aristas puerto, Jugadores j1, String materialRecibe, int madera, 
 			int lana, int cereales, int arcilla, int mineral) {
 		if (puerto.getTipoPuerto().esPuertoMadera()) {
-			if (materialRecibe == "madera") {
+			if (materialRecibe.equals("madera")) {
 				this.comercioMaritimo(2, j1, materialRecibe, madera, lana, cereales, arcilla, mineral);
 			} else {
 				this.comercioMaritimo(3, j1, materialRecibe, madera, lana, cereales, arcilla, mineral);
 			}
 		}
 		else if (puerto.getTipoPuerto().esPuertoLana()) {
-			if (materialRecibe == "lana") {
+			if (materialRecibe.equals("lana")) {
 				this.comercioMaritimo(2, j1, materialRecibe, madera, lana, cereales, arcilla, mineral);
 			} else {
 				this.comercioMaritimo(3, j1, materialRecibe, madera, lana, cereales, arcilla, mineral);
 			}
 		}
 		else if (puerto.getTipoPuerto().esPuertoCereales()) {
-			if (materialRecibe == "cereales") {
+			if (materialRecibe.equals("cereales")) {
 				this.comercioMaritimo(2, j1, materialRecibe, madera, lana, cereales, arcilla, mineral);
 			} else {
 				this.comercioMaritimo(3, j1, materialRecibe, madera, lana, cereales, arcilla, mineral);
 			}
 		}
 		else if (puerto.getTipoPuerto().esPuertoArcilla()) {
-			if (materialRecibe == "arcilla") {
+			if (materialRecibe.equals("arcilla")) {
 				this.comercioMaritimo(2, j1, materialRecibe, madera, lana, cereales, arcilla, mineral);
 			} else {
 				this.comercioMaritimo(3, j1, materialRecibe, madera, lana, cereales, arcilla, mineral);
 			}
 		} else {
 			// Puerto mineral
-			if (materialRecibe == "mineral") {
+			if (materialRecibe.equals("mineral")) {
 				this.comercioMaritimo(2, j1, materialRecibe, madera, lana, cereales, arcilla, mineral);
 			} else {
 				this.comercioMaritimo(3, j1, materialRecibe, madera, lana, cereales, arcilla, mineral);
