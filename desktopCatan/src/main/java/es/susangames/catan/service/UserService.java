@@ -49,7 +49,7 @@ public class UserService {
     // Regex comprobaciones register
     private static String regexPassword = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,32}$";
     private static String regexEmail = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$";
-    private static String regexName = "^[a-zA-Z0-9_-]{5,16}$";
+    private static String regexName = "^[a-zA-Z0-9_-]{5,8}$";
     
     public UserService() {
         netService = new HttpService();
