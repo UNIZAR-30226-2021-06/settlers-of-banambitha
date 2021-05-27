@@ -58,7 +58,7 @@
                     </mat-panel-description>
                     </mat-expansion-panel-header>
                     <button mat-raised-button class="in-button"
-                    [disabled]="roomService.room == null || !roomService.soyLider() || roomService.buscandoPartida"
+                    [disabled]="roomService.room == null || !roomService.soyLider() || roomService.buscandoPartida || roomService.estaEnSala(friend.username)"
                     (click)="roomService.enviarInvitacion(friend.username)">
                         {{langService.get("invite")}}
                     </button>

@@ -293,6 +293,16 @@ export class RoomService implements Connectable{
     }
   }
 
+  public estaEnSala(user: String): boolean{
+    if ( this.room != null ){
+      for ( let i = 0; i < this.room.players.length; i++ ){
+        if ( this.room.players[i].username == user ){
+          return true
+        }
+      }
+    }
+    return false
+  }
 
   public duplicatedInvite(invite: invite): boolean{
     for ( let i = 0; i < this.invites.length; i++ ){
@@ -337,7 +347,7 @@ export class RoomService implements Connectable{
           id: msg["room"], 
           enabled: true
         }
-        if ( ! this.duplicatedInvite(invitacion)){
+        if ( ! this.duplicatedInvite(invitacion) ){
           this.invites.push(invitacion)
         }
         this.openSnackBar(msg["leader"] + " "  + this.langService.get("has-invited-you"), "OK")
