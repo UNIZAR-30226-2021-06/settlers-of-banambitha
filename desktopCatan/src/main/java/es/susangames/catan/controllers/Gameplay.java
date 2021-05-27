@@ -1641,9 +1641,9 @@ public class Gameplay {
                 
             }  // Cerro
             else if (Partida.tablero.hexagonos.tipo[i].equals(TipoTerreno.CERRO)) {
-                Image imgCerro;
+                Image imgCerro; 
                 if(UserService.getApariencia().equals(UserService.aparienciaClasica)) {
-                    Partida.tablero.hexagonos.hexagons[i].setFill(Color.web("636363"));
+                    Partida.tablero.hexagonos.hexagons[i].setFill(Color.web("97593c"));
 
                 } else if(UserService.getApariencia().equals(UserService.aparienciaEspacial)) {
                     imgCerro = new Image("/img/board/Espacial/Cerro.jpg");
@@ -1671,7 +1671,7 @@ public class Gameplay {
             else if (Partida.tablero.hexagonos.tipo[i].equals(TipoTerreno.MONTANYA)) {
                 Image imgMontanya;
                 if(UserService.getApariencia().equals(UserService.aparienciaClasica)) {
-                    Partida.tablero.hexagonos.hexagons[i].setFill(Color.web("97593c"));
+                    Partida.tablero.hexagonos.hexagons[i].setFill(Color.web("636363"));
 
                 } else if(UserService.getApariencia().equals(UserService.aparienciaEspacial)) {
                     imgMontanya = new Image("/img/board/Espacial/Montanya.jpg");
@@ -1796,7 +1796,7 @@ public class Gameplay {
             }
             if(Partida.tablero.aristas.puertos.arcilla == i) {
                 Partida.tablero.aristas.roads[i].setStyle(
-                    "-fx-border-color:#636363;-fx-border-width: 3;");
+                    "-fx-border-color:#97593c;-fx-border-width: 3;");
 
             } else if (Partida.tablero.aristas.puertos.madera == i) {
                 Partida.tablero.aristas.roads[i].setStyle(
@@ -1804,8 +1804,8 @@ public class Gameplay {
 
             } else if (Partida.tablero.aristas.puertos.mineral == i) {
                 Partida.tablero.aristas.roads[i].setStyle(
-                    "-fx-border-color:#97593c;-fx-border-width: 3;");
-
+                    "-fx-border-color:#636363;-fx-border-width: 3;");
+                   
             } else if (Partida.tablero.aristas.puertos.lana == i ) {
                 Partida.tablero.aristas.roads[i].setStyle(
                     "-fx-border-color:#93b248;-fx-border-width: 3;");
@@ -2228,8 +2228,8 @@ public class Gameplay {
         Integer _lana = Partida.jugadores[_offerPlayer].recursos.lana;
         
         // Arcilla
-        Text arcilla = new Text(10, 50, formatearString(LangService.getMapping("clay"), 35) 
-                                            + _arcilla.toString());
+        Text arcilla = new Text(10, 50, LangService.getMapping("clay")
+                                           + "\t\t\t " + _arcilla.toString());
         arcilla.setFont(new Font(20));
         arcilla.setLayoutX(anchorPane.getLayoutX()+ 10);
         arcilla.setLayoutY(anchorPane.getLayoutY() + 105);
@@ -2237,8 +2237,8 @@ public class Gameplay {
         anchorPane.getChildren().add(arcilla);
         
         // Madera
-        Text madera = new Text(10, 50, formatearString(LangService.getMapping("wood"), 35) 
-                                            + _madera.toString());
+        Text madera = new Text(10, 50, LangService.getMapping("wood")
+                                        + "\t\t\t "   + _madera.toString());
         madera.setFont(new Font(20));
         madera.setLayoutX(anchorPane.getLayoutX()+ 10);
         madera.setLayoutY(anchorPane.getLayoutY() + 145);
@@ -2246,8 +2246,8 @@ public class Gameplay {
         anchorPane.getChildren().add(madera);
  
         // Cereal
-        Text cereal = new Text(10, 50, formatearString(LangService.getMapping("cereal"), 35) 
-                                            + _cereal.toString());
+        Text cereal = new Text(10, 50, LangService.getMapping("cereal")
+                                 + "\t\t\t "  + _cereal.toString());
         cereal.setFont(new Font(20));
         cereal.setLayoutX(anchorPane.getLayoutX()+ 10);
         cereal.setLayoutY(anchorPane.getLayoutY() + 185);
@@ -2255,8 +2255,8 @@ public class Gameplay {
         anchorPane.getChildren().add(cereal);
         
         // Mineral
-        Text mineral = new Text(10, 50, formatearString(LangService.getMapping("mineral"), 35) 
-                                            + _mineral.toString());
+        Text mineral = new Text(10, 50, LangService.getMapping("mineral")
+                                    + "\t\t\t "   + _mineral.toString());
         mineral.setFont(new Font(20));
         mineral.setLayoutX(anchorPane.getLayoutX()+ 10);
         mineral.setLayoutY(anchorPane.getLayoutY() + 225);
@@ -2264,8 +2264,8 @@ public class Gameplay {
         anchorPane.getChildren().add(mineral);
 
         // Lana
-        Text lana = new Text(10, 50, formatearString(LangService.getMapping("wool"), 35)
-                                        + _lana.toString());
+        Text lana = new Text(10, 50, LangService.getMapping("wool") + "\t\t\t " +
+                                         _lana.toString());
         lana.setFont(new Font(20));
         lana.setLayoutX(anchorPane.getLayoutX()+ 10);
         lana.setLayoutY(anchorPane.getLayoutY() + 265);
@@ -2295,16 +2295,16 @@ public class Gameplay {
 
                Platform.runLater(new Runnable() {
                    @Override public void run() {
-                       arcilla.setText( formatearString(LangService.getMapping("clay"), 35) 
-                                       + arcilla_aux.toString());
-                       madera.setText(formatearString(LangService.getMapping("wood"), 35)  
-                                       + madera_aux.toString());
-                       mineral.setText(formatearString(LangService.getMapping("mineral"), 35) 
-                                       + mineral_aux.toString());
-                       cereal.setText(formatearString(LangService.getMapping("cereal"), 35) 
-                                       + cereal_aux.toString());
-                       lana.setText(formatearString(LangService.getMapping("wool"), 35) 
-                                       + lana_aux.toString());
+                       arcilla.setText( LangService.getMapping("clay") 
+                                            + "\t\t\t "   + arcilla_aux.toString());
+                       madera.setText(LangService.getMapping("wood")
+                                            + "\t\t\t "   + madera_aux.toString());
+                       mineral.setText(LangService.getMapping("mineral")
+                                            + "\t\t\t "   + mineral_aux.toString());
+                       cereal.setText(LangService.getMapping("cereal")
+                                            + "\t\t\t "   + cereal_aux.toString());
+                       lana.setText(LangService.getMapping("wool") 
+                                            + "\t\t\t "   + lana_aux.toString());
                    }
                });
                offerPlayerResources.setValue(newValue);    
