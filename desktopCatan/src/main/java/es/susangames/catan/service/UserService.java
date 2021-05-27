@@ -44,7 +44,7 @@ public class UserService {
     private static Integer partidasJugadas;
     private static Integer rachaDeVictoriasActual;
     private static Integer mayorRachaDeVictorias;
-    //private static Double  porcentajeVictorias;
+    private static Double  porcentajeVictorias;
     
     // Regex comprobaciones register
     private static String regexPassword = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,32}$";
@@ -98,6 +98,10 @@ public class UserService {
 
     public static String getBloqueado() {
         return bloqueado;
+    }
+
+    public static Double getPorcentajeVictorias() {
+        return porcentajeVictorias;
     }
 
     public static Boolean validate(String name, String pass) {
@@ -222,10 +226,11 @@ public class UserService {
         JSONObject myObject;
         try {
             myObject = netService.get(findUrl + "/" + name);
+            return "/img/users/" + myObject.getString("avatar").toString();
         } catch(Exception e) {
             return null;
         }
-        return "/img/users/" + myObject.getString("avatar").toString();
+        
     }
 
 
@@ -264,6 +269,7 @@ public class UserService {
         partidasJugadas = stats.getInt("partidasJugadas");
         rachaDeVictoriasActual = stats.getInt("rachaDeVictoriasActual");
         mayorRachaDeVictorias = stats.getInt("mayorRachaDeVictorias");
+        porcentajeVictorias = stats.getDouble("porcentajeDeVictorias");
     }
 
     public static Boolean passwordMatches(String password) {

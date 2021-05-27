@@ -87,6 +87,14 @@ public class Options {
     @FXML
     private ToggleButton lang;
 
+    @FXML
+    private Text porcentaje;
+
+    @FXML
+    private Text numberPorcentaje;
+
+    private static Text _numberPorcentaje = null;
+
     private Popup popupChangeMail, popupChangePsw;
 
     private Popup popupChangeUserImg;
@@ -330,6 +338,10 @@ public class Options {
             _historic_streak.setText(LangService.getMapping("historic_strike") + " " + 
                                 UserService.getMayorRachaDeVictorias().toString());
         }
+        if(_numberPorcentaje != null) {
+            _numberPorcentaje.setText(UserService.getPorcentajeVictorias().toString() +
+                                      " %");
+        }
     }
 
     @FXML
@@ -341,6 +353,7 @@ public class Options {
         _numberVictory = numberVictory;
         _actual_streak = actual_streak;
         _historic_streak = historic_streak;
+        _numberPorcentaje = numberPorcentaje;
         
         numberVictory.setText(UserService.getTotalDeVictorias().toString());
         Integer derrotas = (UserService.getPartidasJugadas() - UserService.getTotalDeVictorias());
@@ -353,6 +366,9 @@ public class Options {
                                 UserService.getRachaDeVictoriasActual().toString());
         historic_streak.setText(LangService.getMapping("historic_strike") + " " + 
                                 UserService.getMayorRachaDeVictorias().toString());
+        porcentaje.setText(LangService.getMapping("per_victory"));
+        numberPorcentaje.setText(UserService.getPorcentajeVictorias().toString() + 
+                                " %");
 
         deleteAccountPopUp();
         changePasswordPopUp();
@@ -381,6 +397,7 @@ public class Options {
                                     UserService.getMayorRachaDeVictorias().toString());
             buttonChangeMail.setText((LangService.getMapping("delete")));
             buttonChangePsw.setText((LangService.getMapping("new_psw")));
+            porcentaje.setText(LangService.getMapping("per_victory"));
             MainMenu.updateStrings();
             if(!MainMenu.chatOpenned) {
                 MainMenu.getFriends();

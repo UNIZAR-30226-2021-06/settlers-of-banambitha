@@ -592,8 +592,10 @@ public class MainMenu {
         for (int i = 0; i < friends.length(); i++) {
             JSONObject object = friends.getJSONObject(i);
             String nombreAmigo = object.getString("usuario2_id").toString();
-            String urlAvatar = UserService.getUserImg(nombreAmigo);
-            loadFriend(nombreAmigo, urlAvatar);
+            if(nombreAmigo.length() > 4) {
+                String urlAvatar = UserService.getUserImg(nombreAmigo);
+                loadFriend(nombreAmigo, urlAvatar);
+            }
         }
 
     }

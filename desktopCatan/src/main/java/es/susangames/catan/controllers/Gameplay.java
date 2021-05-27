@@ -1,6 +1,7 @@
 package es.susangames.catan.controllers;
 
 import es.susangames.catan.service.LangService;
+import es.susangames.catan.controllers.Options;
 import javafx.fxml.FXML;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.*;
@@ -8,9 +9,7 @@ import es.susangames.catan.App;
 import javafx.event.ActionEvent;
 import java.io.IOException;
 import java.util.Random;
-
 import javax.security.auth.callback.ChoiceCallback;
-
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -833,9 +832,10 @@ public class Gameplay {
             try {
                 _chatContent.appendText("! La partida ha terminado,"  +
                                         " revisa tus puntos!" +  "\n");
-                Thread.sleep(1000); // Esperamos a que se procese 
+                Thread.sleep(2000); // Esperamos a que se procese 
                 JSONObject object = UserService.getUserInfo(UserService.getUsername());
                 UserService.fillData(object);
+                Options.updateStats();
                 if(UserService.getBloqueado() != null) {
                     App.nuevaPantalla("/view/Login.fxml");
                 } else {

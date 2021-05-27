@@ -125,6 +125,23 @@
                                     <Insets top="10.0" />
                                  </VBox.margin>
                               </HBox>
+                              <Region />
+                              <HBox prefHeight="100.0" prefWidth="200.0">
+                                 <children>
+                                    <Region HBox.hgrow="ALWAYS" />
+                                    <Text fx:id="porcentaje" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Porcentaje victorias:" textAlignment="CENTER" wrappingWidth="185.7294921875" HBox.hgrow="ALWAYS">
+                                       <font>
+                                          <Font name="System Bold Italic" size="22.0" />
+                                       </font>
+                                    </Text>
+                                    <Text fx:id="numberPorcentaje" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="185.7294921875" HBox.hgrow="ALWAYS">
+                                       <font>
+                                          <Font name="System Bold Italic" size="22.0" />
+                                       </font>
+                                    </Text>
+                                    <Region HBox.hgrow="ALWAYS" />
+                                 </children>
+                              </HBox>
                            </children>
                         </VBox>
                      </children>
