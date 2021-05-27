@@ -1,0 +1,52 @@
+<div class = "card-div">
+    <mat-card id="change-password-card">
+        <div class="title">
+            <div class="back-icon">
+                <img routerLink="/home/profile/" routerLinkActive="active" src= "../../../../assets/images/icons/back.png">
+            </div>
+            <div class="change-title">
+                {{langService.get("delete-account")}}
+            </div>
+        </div>
+        <mat-divider></mat-divider>
+        <div class="body">
+            <div class= "form-password">
+                <form id="updatePasswordForm" [formGroup]="updatePasswordForm" (ngSubmit)="onSubmit()">
+                    <div class="div-form-password">
+                    <div class="form-fields">
+                        <div class="pass-field-form">
+                            <div class="field-label">
+                                {{langService.get("enter-password")}}
+                            </div>
+                            <div class="div-danger-form">
+                                <div class="div-form">
+                                    <input class="form-control" id="oldPassword" placeholder={{phNewPassword}} value="" type="password" formControlName="oldPassword"/>
+                                </div>
+                                <div class="space-form-danger"></div>
+                                <div *ngIf="oldPassword.touched && oldPassword.errors" class="text-danger">
+                                    <span *ngIf="oldPassword.hasError('required')">{{langService.get("r-password")}}</span>
+                                </div>
+                                <div *ngIf="gameService.errorEliminar">
+                                    {{langService.get("invalid-password")}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="update-button">
+                        <div class="div-button">
+                            <button mat-button class="button-update-action"
+                                type="submit"
+                                [disabled]="updatePasswordForm.invalid"
+                                id="btnMdUpdatePassword">
+                                <span class="btn-text"><i class="fas fa-pen mr-2"></i>{{langService.get("change")}}</span>
+                            </button>
+                        </div>
+                    </div>
+                    </div>
+                    
+                </form>
+            </div>
+
+        </div>
+    </mat-card>
+</div>

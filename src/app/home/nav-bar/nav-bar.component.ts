@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { LangService } from 'src/app/service/lang/lang.service';
 import { UserService } from 'src/app/service/user/user.service';
 
 @Component({
@@ -8,7 +9,7 @@ import { UserService } from 'src/app/service/user/user.service';
 })
 export class NavBarComponent implements OnInit {
 
-  constructor(public userService: UserService) { }
+  constructor(public userService: UserService, public langService : LangService) { }
 
 
   ngOnInit(): void {

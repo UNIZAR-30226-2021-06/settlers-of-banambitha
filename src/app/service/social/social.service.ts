@@ -18,7 +18,8 @@ enum ChatMsgKeys {
 enum PeticionStatus {
   ACCEPT  = "ACCEPT", 
   DECLINE = "DECLINE", 
-  REQUEST = "REQUEST"
+  REQUEST = "REQUEST",
+  TERMINATED = "TERMINATED"
 }
 
 export enum StatKeys {
@@ -201,6 +202,10 @@ export class SocialService implements Connectable{
         })
         this.openSnackBar(msg[ChatMsgKeys.FROM] + " "  + this.langService.get("wants-friendship"), "OK")
         break
+
+      case PeticionStatus.TERMINATED: 
+        this.lazyReload()
+        break;
 
       default: 
         console.log("mensaje desconocido")

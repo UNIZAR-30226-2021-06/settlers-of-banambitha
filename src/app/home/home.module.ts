@@ -36,8 +36,14 @@ import { MainHomeComponent } from './main-home/main-home.component';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner'; 
 import { MatMenuModule} from '@angular/material/menu';
 import { MatInputModule } from '@angular/material/input';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {MatExpansionModule} from '@angular/material/expansion'; 
+import { MainProfileComponent } from './profile/main-profile/main-profile.component';
+import { ChangeAvatarComponent } from './profile/change-avatar/change-avatar.component';
+import { ChangePasswordComponent} from './profile/change-password/change-password.component'
+import { ChangeLanguageComponent } from './profile/change-language/change-language.component';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
+import { DeleteAccountComponent } from './profile/delete-account/delete-account.component';
 
 
 @NgModule({
@@ -46,7 +52,12 @@ import {MatExpansionModule} from '@angular/material/expansion';
     RulesComponent, ProfilePicturesComponent, BoardSkinsComponent, TerrainComponent,
     ResourcesComponent, DevelopmentCardComponent, ActionsComponent, IngameComponent,
     ProfileCardComponent, FriendBrowserComponent, FriendCardComponent, MainHomeComponent,
-    StadisticCardComponent],
+    StadisticCardComponent,
+    MainProfileComponent,
+    ChangeAvatarComponent,
+    ChangePasswordComponent,
+    ChangeLanguageComponent,
+    DeleteAccountComponent],
     
   imports: [
     CommonModule, 
@@ -68,7 +79,8 @@ import {MatExpansionModule} from '@angular/material/expansion';
     MatDividerModule, 
     MatInputModule,
     FormsModule, 
-    MatExpansionModule
+    MatExpansionModule,
+    ReactiveFormsModule
   ],
   exports: [
     NavBarComponent, SocialBarComponent, PlayComponent, ShopComponent, ProfileComponent ,RulesComponent

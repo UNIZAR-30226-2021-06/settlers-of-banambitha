@@ -69,7 +69,9 @@ enum MsgComercioStatus {
 enum MsgReporteStatus {
   REPORT_SENT     = "REPORT_SENT", 
   REPORT_REJECTED = "REPORT_REJECTED",
-  REPORT_RECEIVED = "REPORT_RECEIVED"
+  REPORT_RECEIVED = "REPORT_RECEIVED",
+  DELETED         = "DELETED", 
+  FAILED          = "FAILED"
 }
 
 
@@ -369,6 +371,8 @@ export class GameService implements Connectable{
 
   private roomService: RoomService; 
 
+  public errorEliminar: boolean = false
+
   //Identificadores de los topics a los que se suscribe 
   //el jugador
   private test_partida_topic_id:   any
@@ -397,21 +401,6 @@ export class GameService implements Connectable{
 
     this.cargandoPartida = false
     this.initData()
-
-    // this.initPartidaPrueba()
-    // this.ultimaSolicitudComercio = {
-    //   from: 1, 
-    //   res1: {
-    //     type: Recurso.MADERA,
-    //     cuan: 10
-    //   },
-    //   res2: {
-    //     type: Recurso.LANA,
-    //     cuan: 5
-    //   },
-    //   timeStamp: "12:12"
-    // }
-    // this.openWinnerSnackBar(2)
 
   }
 
@@ -470,6 +459,7 @@ export class GameService implements Connectable{
   public onConnect(): void {
 
     this.stompClient = this.wsService.getStompClient() 
+    this.subscribeUserAct()
   }
 
 
@@ -612,17 +602,25 @@ export class GameService implements Connectable{
         }
       });
 
-      //Suscripción a las respuestas de reporte
-      this.usuario_act_topic_id = this.stompClient.subscribe(WsService.usuario_act + this.userService.getUsername(),
-      function (message) {
-        if (message.body){
-          that.procesarMensajeReporte(JSON.parse(message.body))
-        }else{
-          console.log("Error crítico")
-        }
-      });
-
+      this.subscribeUserAct()
     }
+  }
+
+
+  public subscribeUserAct(): void {
+      //Suscripción a las respuestas de reporte
+      if ( this.usuario_act_topic_id == null ){
+        let that = this
+        this.usuario_act_topic_id = this.stompClient.subscribe(WsService.usuario_act + this.userService.getUsername(),
+        function (message) {
+          if (message.body){
+            that.procesarMensajeReporte(JSON.parse(message.body))
+            console.log("------------------Suscrito")
+          }else{
+            console.log("Error crítico")
+          }
+        });
+      }
   }
 
   /**
@@ -644,6 +642,14 @@ export class GameService implements Connectable{
 
       case MsgReporteStatus.REPORT_SENT:
         this.generarMensajePartida("¡Has reportado a " + msg["player"] + "!" )
+        break;
+      
+      case MsgReporteStatus.DELETED: 
+        this.userService.logout(this.router)
+        break;
+
+      case MsgReporteStatus.FAILED: 
+        this.errorEliminar = true
         break;
 
       default: 
@@ -1117,6 +1123,15 @@ export class GameService implements Connectable{
       this.stompClient.send(WsService.usuarioReportar, {}, JSON.stringify(msg) )
       this.partida.reported[playerId - 1] = true
     }
+  }
+
+  public eliminarCuenta(password: String): void {
+      this.errorEliminar = false
+      let msg = {
+        nombre: this.userService.username,
+        contrasenya: password
+      }
+      this.stompClient.send(WsService.usuarioEliminar, {}, JSON.stringify(msg) )
   }
 
 

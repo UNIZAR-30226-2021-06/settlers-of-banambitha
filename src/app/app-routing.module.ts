@@ -16,6 +16,11 @@ import { MainLoginComponent } from './login/components/main-login/main-login.com
 import { RegisterComponent } from './login/components/register/register.component';
 import { ResetPasswordComponent } from './login/components/reset-password/reset-password.component';
 import { SigninComponent } from './login/components/signin/signin.component';
+import { ChangeAvatarComponent } from './home/profile/change-avatar/change-avatar.component';
+import { ChangePasswordComponent } from './home/profile/change-password/change-password.component';
+import { MainProfileComponent } from './home/profile/main-profile/main-profile.component';
+import { ChangeLanguageComponent} from './home/profile/change-language/change-language.component';
+import { DeleteAccountComponent } from './home/profile/delete-account/delete-account.component';
 
 const routes: Routes = [ 
 
@@ -36,7 +41,14 @@ const routes: Routes = [
    canActivate: [AuthHomeGuard],
    children: [
     {path: 'play', component: PlayComponent },
-    {path: 'profile', component: ProfileComponent},
+    {path: 'profile', component: MainProfileComponent,
+    children: [
+      {path: 'change-avatar', component: ChangeAvatarComponent},
+      {path: 'change-password', component: ChangePasswordComponent},
+      {path: 'change-language', component: ChangeLanguageComponent},
+      {path: 'delete-account', component: DeleteAccountComponent},
+      {path: '', component: ProfileComponent}
+    ]},
     {path: 'rules', component: RulesComponent},
     {path: 'shop', component: ShopComponent},
     ]
