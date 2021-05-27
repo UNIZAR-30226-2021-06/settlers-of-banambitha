@@ -183,6 +183,8 @@ public class RoomServices {
     public static Boolean liderCerroSala = false;
     public static Boolean errorAlUnirseASala = false;
 
+    public static String lastAcceptedInvite;
+
     public RoomServices () {
         
     }
@@ -310,13 +312,14 @@ public class RoomServices {
         return false;
     }
 
-    public static void deleteInvite (String roomId) {
+    public static Boolean deleteInvite (String roomId) {
         for (Invite i : invites) {
             if (i.getId().equals(roomId)) {
                 System.out.println("Invitación eliminada");
-                invites.remove(i);
+                return invites.remove(i);
             }
         }
+        return false;
     }
 
     public static void setEnabled (Boolean value, String inviteRoomId) {
@@ -328,9 +331,42 @@ public class RoomServices {
         }
     }
 
+    public static void acceptedInvite (JSONObject jsObj) {
+        uniendoseASala = false;
+
+        System.out.println("Update invites");
+        ArrayList<UserCardInfo> players = new ArrayList<UserCardInfo> ();
+        //players.add( new UserCardInfo(UserService.getUsername(), UserService.getAvatar()));
+        ArrayList<String> invitesPL = new ArrayList<String> ();
+        JSONArray invitesJSArray = jsObj.getJSONArray("invites");
+        for (int i = 0; i < invitesJSArray.length(); ++i) {
+            invitesPL.add(invitesJSArray.getString(i));
+        }
+
+        System.out.println("New room " + jsObj.getString("room"));
+        // public Room (String leader, String id, ArrayList<String> invites, ArrayList<UserCardInfo> players, String status)
+        room = new Room(jsObj.getString("leader"), jsObj.getString("room"),invitesPL, players, "CREATED");
+
+        System.out.println("Eliminar invitacion");
+        Boolean eliminada = deleteInvite(room.getId());
+        System.out.println("¿Ha sido eliminada? " + eliminada);
+
+        System.out.println("Update players");
+        JSONArray playersJSArray = jsObj.getJSONArray("players");
+        ArrayList<String> updated_players = new ArrayList<String> ();
+        for (int i = 0; i < playersJSArray.length(); ++i) {
+            System.out.println("Player: " + playersJSArray.getString(i));
+            updated_players.add(playersJSArray.getString(i));
+        }
+        RoomServices.updatePlayers(updated_players);
+
+        ws.SubscribeSalaAct();
+
+    }
+
     public static void procesarMensajeInvitacion (Object payload) {
         JSONObject jsObj = new JSONObject(payload.toString());
-        System.out.println("Invitaciones: " + payload.toString());
+        System.out.println("Invitaciones: " + jsObj.toString(4));
         String status = jsObj.getString("status");
         switch (status) {
             case "INVITED":
@@ -343,49 +379,26 @@ public class RoomServices {
                 
                 break;
             case "ACCEPTED":
-                uniendoseASala = false;
+                System.out.println("ACCEPTED");
+                acceptedInvite(jsObj);
 
-                ArrayList<UserCardInfo> players = new ArrayList<UserCardInfo> ();
-                players.add( new UserCardInfo(UserService.getUsername(), UserService.getAvatar()));
-                ArrayList<String> invitesPL = new ArrayList<String> ();
-                JSONArray invitesJSArray = jsObj.getJSONArray("invites");
-                for (int i = 0; i < invitesJSArray.length(); ++i) {
-                    invitesPL.add(invitesJSArray.getString(i));
-                }
-                room.setStatus("CREATED");
-                room.setId(jsObj.getString("room"));
-                room.setLeader(jsObj.getString("leader"));
-                room.setPlayers(players);
-                room.setInvites(invitesPL);
-
-                deleteInvite(room.getId());
-
-                JSONArray playersJSArray = jsObj.getJSONArray("players");
-                ArrayList<String> updated_players = new ArrayList<String> ();
-                for (int i = 0; i < playersJSArray.length(); ++i) {
-                    System.out.println("Player: " + playersJSArray.getString(i));
-                    updated_players.add(playersJSArray.getString(i));
-                }
-                RoomServices.updatePlayers(updated_players);
-
-                ws.SubscribeSalaAct();
-
-                System.out.println("creando sala... " + "Recargar sala? " + MainMenu.playOpenned);
-                cancelarBusqueda();
-                if(MainMenu.playOpenned) {
-                    Play.recargarSalaPartida();
-                    try{
-                        Platform.runLater(new Runnable() {
-                            @Override public void run() {
+                try{
+                    Thread.sleep(500); // Esperamos a que se procese 
+                    Platform.runLater(new Runnable() {
+                        @Override public void run() {
+                            MainMenu.getFriends();
+                            cancelarBusqueda();
+                            System.out.println("creando sala... " + "Recargar sala? " + MainMenu.playOpenned);
+                            if(MainMenu.playOpenned) {
+                                Play.recargarSalaPartida();
                                 Play.salirSala();
                             }
-                          });
-                    } catch(Exception e){
-                        System.out.println(e.toString());
-                        e.printStackTrace();
-                    }
+                        }
+                    });
+                } catch(Exception e){
+                    System.out.println(e.toString());
+                    e.printStackTrace();
                 }
-
                 
                 break;
             case "OPEN":

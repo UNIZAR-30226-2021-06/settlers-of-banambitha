@@ -485,7 +485,7 @@ public class MainMenu {
 
         inviteButton.setOnAction((ActionEvent event) -> {
            // invitacionEnviar
-           ws.sendInvitation(username);
+           ws.enviarInvitacion(username);
          });
 
         anchorPane.getChildren().add(chatButton);
@@ -702,7 +702,7 @@ public class MainMenu {
         chatButton.setEffect(shadow);
 
         chatButton.setOnAction((ActionEvent event) -> {
-           ws.acceptMatchRequest(username, room);
+           ws.aceptarInvitacion(username, room);
          });
 
 
@@ -715,7 +715,8 @@ public class MainMenu {
          declineButton.setEffect(shadow);
  
          declineButton.setOnAction((ActionEvent event) -> {
-            ws.declineMatchRequest(username, room);
+            //ws.declineMatchRequest(username, room);
+            RoomServices.deleteInvite(room);
           });
 
 

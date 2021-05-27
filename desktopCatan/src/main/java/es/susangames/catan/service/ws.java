@@ -327,6 +327,7 @@ public class ws {
                     RoomServices.liderCerroSala = true;
                     sala_act_topic_id.unsubscribe();
                     RoomServices.room = null;
+                    RoomServices.buscandoPartida = false;
                     RoomServices.crearSala();
                     
                     break;
@@ -370,12 +371,14 @@ public class ws {
                     for (int i = 0; i < players.length(); ++i) {
                         stringPlayers[i] = players.getString(i);
                     }
-                    String a[] = new String[4];
-                    a[0] = "1"; a[1] = "2"; a[2] = "3"; a[3] = "4";
+
                     System.out.println(jsObj.getString("game"));
                     System.out.println(stringPlayers);
                     Gameplay.comenzarPartida(jsObj.getString("game"), 
                         stringPlayers);
+                    RoomServices.room = null;
+                    RoomServices.buscandoPartida = false;
+                    sala_act_topic_id.unsubscribe();
                     System.out.println("break");
                     break;
                 case "FAILED":
@@ -430,6 +433,7 @@ public class ws {
             myObject.put("room", RoomServices.room.getId());
             myObject.put("player", UserService.getUsername());
             System.out.println(myObject.toString(4));
+            
             session.send(salaAbandonar, myObject.toString());
             sala_act_topic_id.unsubscribe();
             RoomServices.buscandoPartida = false;
@@ -442,7 +446,7 @@ public class ws {
             cerrarSala(crearSala);
         }
     }
-    
+    /*
     public static void sendInvitation (String friend) {
         Boolean esJugador = false;
         String jugadores[] = RoomServices.room.toArrayStrings();
@@ -463,57 +467,84 @@ public class ws {
 
             session.send(invitacionEnviar, js.toString());
         }
-        
+    }*/
+
+    /**
+   * Envía una invitación al usuario con el identificador dado.
+   * 
+   * @param friend nombre del usuario al que se envía la invitación. El usuario debe existir
+   * o la operación no tendrá efecto. 
+   * @return true si el usuario es el líder de la sala y se ha podido enviar la invitación, false 
+   * en caso contrario. 
+   */
+    public static Boolean enviarInvitacion(String friend) {
+        if ( RoomServices.soyLider() ){
+            JSONObject js = new JSONObject();
+            js.put("leader", RoomServices.room.getLeader());
+            js.put("room", RoomServices.room.getId());
+            js.put("invite", friend);
+            session.send(invitacionEnviar, js.toString());
+            return true;
+        }
+        return false;
     }
 
-    public static void acceptMatchRequest(String friend, String room) {
+    /**
+   * Acepta la invitación a una sala y espera para cargar los datos de la misma.
+   * Si el usuario ya estaba en una sala, entonces sale de la sala y 
+   * se une a la sala de invitación aceptada. Hasta que lleguen los datos de 
+   * la nueva sala el usuario no estará en ninguna sala. 
+   * 
+   * @param leader líder de la sala a la que el usuario fue invitado
+   * @param roomId identificador de la sala a la que el usuario fue invitado
+   */
+  public static void aceptarInvitacion(String leader, String roomId) {
+    if ( leader != null && roomId != null && !RoomServices.creandoSala && !RoomServices.uniendoseASala){
         JSONObject js = new JSONObject();
-        js.put("leader", friend);
-        js.put("room", room);
+        js.put("leader", leader);
+        js.put("room", roomId);
         js.put("invite", UserService.getUsername());
+
+        if ( RoomServices.soyLider() ){
+            cerrarSala(false);
+        } else if ( RoomServices.room != null){
+            abandonarSala(false);
+        }
 
         session.send(invitacionAceptar, js.toString());
         System.out.println("Enviar invitacion aceptar.");
-        for (RoomServices.Invite i : RoomServices.invites) {
-            if (i.getLeader().equals(friend)) {
-                RoomServices.invites.remove(i);
-                break;
-            }
+        RoomServices.uniendoseASala = true;
+        RoomServices.lastAcceptedInvite = roomId;
+
         }
-        try{
-            Thread.sleep(500); // Esperamos a que se procese 
-            Platform.runLater(new Runnable() {
-                @Override public void run() {
-                    MainMenu.getFriends();
-                }
-              });
-        } catch(Exception e){}
-        // Entrar a la pantalla play
-    }
+  }
 
     public static void declineMatchRequest(String friend, String room) {
-        JSONObject js = new JSONObject();
-        js.put("leader", friend);
-        js.put("room", room);
-        js.put("invite", UserService.getUsername());
+        if (RoomServices.soyLider()) {
+            JSONObject js = new JSONObject();
+            js.put("leader", friend);
+            js.put("room", room);
+            js.put("invite", UserService.getUsername());
 
-        session.send(invitacionCancelar, js.toString());
-        for (RoomServices.Invite i : RoomServices.invites) {
-            if (i.getLeader().equals(friend)) {
-                RoomServices.invites.remove(i);
-                break;
-            }
-        }
-        try{
-            Thread.sleep(500); // Esperamos a que se procese 
-            Platform.runLater(new Runnable() {
-                @Override public void run() {
-                    // Invitaciones
-                    MainMenu.getFriends();
+            session.send(invitacionCancelar, js.toString());
+            for (RoomServices.Invite i : RoomServices.invites) {
+                if (i.getLeader().equals(friend)) {
+                    RoomServices.invites.remove(i);
+                    break;
                 }
-              });
-        } catch(Exception e){}
+            }
+            try{
+                Thread.sleep(500); // Esperamos a que se procese 
+                Platform.runLater(new Runnable() {
+                    @Override public void run() {
+                        // Invitaciones
+                        MainMenu.getFriends();
+                    }
+                });
+            } catch(Exception e){}
+        }
     }
+
 
     public static void borrarCuenta(String password) {
         JSONObject object = new JSONObject();
