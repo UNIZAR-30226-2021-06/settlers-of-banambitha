@@ -264,7 +264,7 @@ public class UserService {
         return myObject;
     }
 
-    private static void fillStatsData( JSONObject stats) {
+    public static void fillStatsData( JSONObject stats) {
         totalDeVictorias = stats.getInt("totalDeVictorias");
         partidasJugadas = stats.getInt("partidasJugadas");
         rachaDeVictoriasActual = stats.getInt("rachaDeVictoriasActual");

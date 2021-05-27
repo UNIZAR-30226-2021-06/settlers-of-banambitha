@@ -323,6 +323,10 @@ public class Options {
 
 
     public static void updateStats() {
+        JSONObject object = UserService.getUserStats();
+        System.out.println(object);
+        UserService.fillStatsData(object);
+        System.out.println("holaaa");
         if(_numberDefeat != null) {
             Integer derrotas = (UserService.getPartidasJugadas() - UserService.getTotalDeVictorias());
             _numberDefeat.setText(derrotas.toString());
