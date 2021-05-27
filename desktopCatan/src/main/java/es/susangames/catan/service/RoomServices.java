@@ -169,7 +169,7 @@ public class RoomServices {
             this._enabled = enabled;
         }
 
-        public String getEnable () {
+        public Boolean getEnable () {
             return this._enabled;
         }
     }
