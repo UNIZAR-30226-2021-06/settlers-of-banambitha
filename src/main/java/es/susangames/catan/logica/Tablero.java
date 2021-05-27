@@ -279,10 +279,10 @@ public class Tablero {
 
 	private Map<Coordenadas, Vertices> vertices = new HashMap<Coordenadas, Vertices>();
 	private Map<Integer, Vertices> verticesPorID = new HashMap<Integer, Vertices>();
-	private int next_id_vertice = 0;
+	// TODO Usar esto private int next_id_vertice = 0;
 	private Map<CoordenadasAristas, Aristas> aristas = new HashMap<CoordenadasAristas, Aristas>();
 	private Map<Integer, Aristas> aristasPorID = new HashMap<Integer, Aristas>();
-	private int next_id_arista = 0;
+	// TODO Usar esto private int next_id_arista = 0;
 	private Map<CoordenadasAristas, Aristas> puertos = new HashMap<CoordenadasAristas, Aristas>();
 
 	private int NUM_VERTICES_ARISTAS = 6;
@@ -374,14 +374,15 @@ public class Tablero {
 	public Boolean existeArista (int id) {
 		return this.aristasPorID.containsKey(id);
 	}
-
-	private Boolean existeCoordenada (Coordenadas c) {
-		return vertices.containsKey(c);
-	}
-
-	private Boolean existeCoordenadaArista (CoordenadasAristas c) {
-		return aristas.containsKey(c);
-	}
+	
+	//TODO Usar esto
+	//	private Boolean existeCoordenada (Coordenadas c) {
+	//		return vertices.containsKey(c);
+	//	}
+	//
+	//	private Boolean existeCoordenadaArista (CoordenadasAristas c) {
+	//		return aristas.containsKey(c);
+	//	}
 
 	public Vertices[] getVerticesAdyacentes (int id_vertice) {
 		CoordenadasAristas coordAristas;
@@ -609,9 +610,9 @@ public class Tablero {
 			Boolean asentamientoJugadorV1 = v1.tieneAsentamiento() && v1.getPropietario().equals(j);
 			Boolean asentamientoJugadorV2 = v2.tieneAsentamiento() && v2.getPropietario().equals(j);
 			if ( asentamientoJugadorV1  || asentamientoJugadorV2 ) {
-				// No podemos marcar ningun vertice como posible asentamiento ya que no cumplir�a 
+				// No podemos marcar ningun vertice como posible asentamiento ya que no cumplirá 
 				// la regla de la distancia
-				Boolean resul = a.setCamino(j);
+				a.setCamino(j);
 				//System.out.println(resul);
 				// Solo podemos marcar aristas adyacentes como camino
 				for (int i = 0; i < aristasAdyacentesAv1.length; ++i) {
@@ -926,7 +927,6 @@ public class Tablero {
      * @return los valores de los hexagonos
      */
 	private JSONArray valorHexagonosToJSONArray () {
-		JSONArray jsArray = new JSONArray ();
 		
 		Integer valorHexagono[] = new Integer [19];
 
@@ -939,15 +939,15 @@ public class Tablero {
 		return new JSONArray(valorHexagono);
 	}
 	
-	/**
+	/** TODO Usar esto
      * Método que tranforma el JSONObject a jsObject
      * @return jsObject
      */
-	private JSONObject generarTablero () {
-		JSONObject jsObject = new JSONObject();
-		// Generar respuesta.
-		return jsObject;
-	}
+	//	private JSONObject generarTablero () {
+	//		JSONObject jsObject = new JSONObject();
+	//		// Generar respuesta.
+	//		return jsObject;
+	//	}
 
 	/*
 	 * Genera un JSONObject con informacion de los hexagonos

@@ -1,15 +1,5 @@
 package es.susangames.catan.logica;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 public class Hexagonos {
 	private int tam = 1;

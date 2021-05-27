@@ -1,8 +1,8 @@
 package es.susangames.catan.logica;
 
 import org.json.JSONArray;
+
 import org.json.JSONException;
-import org.json.JSONObject;
 
 /**
  * Esta clase define a los jugadores de la partida, sus cartas y acciones que puede realizar
@@ -32,10 +32,10 @@ public class Jugadores {
 	private Boolean granRutaComercial;
 	private Boolean granEjecitoCaballeria;
 	
-	// ASENTAMIENTO
-	private int MAX_NUM_POBLADOS = 5;
-	private int MAX_NUM_CIUDADES = 4;
-	private int MAX_NUM_CARRETERAS = 15;
+	// ASENTAMIENTO TODO Utilizar esto
+	//	private int MAX_NUM_POBLADOS = 5;
+	//	private int MAX_NUM_CIUDADES = 4;
+	//	private int MAX_NUM_CARRETERAS = 15;
 	
 	private int numPobladosConstruidos;
 	private int numCiudadesConstruidos;
