@@ -34,6 +34,12 @@ import { IngameComponent } from './rules/ingame/ingame.component';
 import { StadisticCardComponent } from './profile/stadistic-card/stadistic-card.component';
 import { MainHomeComponent } from './main-home/main-home.component';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import { MainProfileComponent } from './profile/main-profile/main-profile.component';
+import { ChangeAvatarComponent } from './profile/change-avatar/change-avatar.component';
+import { ChangePasswordComponent} from './profile/change-password/change-password.component'
+import { ChangeLanguageComponent } from './profile/change-language/change-language.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
 
 
 @NgModule({
@@ -42,7 +48,11 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
     RulesComponent, ProfilePicturesComponent, BoardSkinsComponent, TerrainComponent,
     ResourcesComponent, DevelopmentCardComponent, ActionsComponent, IngameComponent,
     ProfileCardComponent, FriendBrowserComponent, FriendCardComponent, MainHomeComponent,
-    StadisticCardComponent],
+    StadisticCardComponent,
+    MainProfileComponent,
+    ChangeAvatarComponent,
+    ChangePasswordComponent,
+    ChangeLanguageComponent],
     
   imports: [
     CommonModule, 
@@ -60,6 +70,8 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
     MatListModule,
     MatIconModule, 
     MatProgressSpinnerModule, 
+    FormsModule,
+    ReactiveFormsModule
   ],
   exports: [
     NavBarComponent, SocialBarComponent, PlayComponent, ShopComponent, ProfileComponent ,RulesComponent

@@ -7,7 +7,7 @@
                 </div>
                 <mat-divider></mat-divider>
                 <div class="avatar-button">
-                        <button class="button-change" >Cambiar mi avatar</button>
+                        <button class="button-change" routerLink="/home/profile/change-avatar" routerLinkActive="active">{{langService.get("change-avatar")}}</button>
 
                 </div>
             </mat-card>
@@ -22,9 +22,8 @@
                 <mat-divider></mat-divider>
                 <mat-card-content id="ajustes">
                     <div class="settings-buttons">
-                        <button class="button-settings">Cambie su contraseña</button>
-                        <button class="button-settings">Cambie su correo</button>
-                        <button class="button-settings">Cambie su idioma</button>
+                        <button class="button-settings" routerLink="/home/profile/change-password" routerLinkActive="active">{{langService.get("change-password")}}</button>
+                        <button class="button-settings" routerLink="/home/profile/change-language" routerLinkActive="active">{{langService.get("change-language")}}</button>
                     </div>
                 </mat-card-content>
             </mat-card>
@@ -46,21 +45,21 @@
         </div>
         <div class = "stadistics">
             <div class = "st-card1">
-                <app-stadistic-card Text="Porcentaje de Victorias" Number ={{stats[0]}}></app-stadistic-card>
+                <app-stadistic-card Text= {{percentageVictory}} Number ={{stats[0]}}% ></app-stadistic-card>
             </div>
             <div class = "st-card2">
                 <div class = "st-card21">
-                    <app-stadistic-card Text="Partidas" Number ={{stats[1]}}></app-stadistic-card>
+                    <app-stadistic-card Text= {{games}} Number ={{stats[1]}}></app-stadistic-card>
                 </div>
                 <div class = "st-card22">
-                    <app-stadistic-card Text="Victorias" Number ={{stats[2]}}></app-stadistic-card>
+                    <app-stadistic-card Text= {{victories}} Number ={{stats[2]}}></app-stadistic-card>
                 </div>
             </div>
             <div class = "st-card3">
-                <app-stadistic-card Text= "Racha actual" Number = {{stats[3]}}></app-stadistic-card>
+                <app-stadistic-card Text= {{currentStreak}} Number = {{stats[3]}}></app-stadistic-card>
             </div>
             <div class = "st-card4">
-                <app-stadistic-card Text= "Mayor racha de Victorias" Number ={{stats[4]}}></app-stadistic-card>
+                <app-stadistic-card Text= {{bestStreak}} Number ={{stats[4]}}></app-stadistic-card>
             </div>
 
         </div>

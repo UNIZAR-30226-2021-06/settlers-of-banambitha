@@ -1,4 +1,25 @@
 {
+    "play": {
+        "ESP": "Jugar",
+        "ENG": "Play"
+    },
+
+    "shop": {
+        "ESP": "Tienda",
+        "ENG": "Shop"
+    },
+
+    "profile": {
+        "ESP": "Perfil",
+        "ENG": "Profile"
+    },
+
+    "rules": {
+        "ESP": "Reglas",
+        "ENG": "Rules"
+    },
+
+
     "signin": {
         "ESP": "Iniciar sesión",
         "ENG": "sign in"
@@ -67,7 +88,128 @@
     "register": {
         "ESP": "Registrarse", 
         "ENG": "Sign up"
+    },
+
+    "victory-percentage": {
+        "ESP": "Porcentaje de victorias",
+        "ENG": "Victory percentage"
+    },
+
+    "games": {
+        "ESP": "Partidas",
+        "ENG": "Games"
+    },
+
+    "victories": {
+        "ESP": "Victorias",
+        "ENG": "Victories"
+    },
+
+    "current-streak": {
+        "ESP": "Racha actual",
+        "ENG": "Current streak"
+    },
+
+    "best-streak": {
+        "ESP": "Mejor racha de victorias",
+        "ENG": "Best victory streak"
+    },
+
+    "change-avatar": {
+        "ESP": "Cambiar mi avatar",
+        "ENG": "Change my avatar"
+    },
+
+    "selected": {
+        "ESP": "Seleccionado",
+        "ENG": "Selected"
+    },
+
+    "settings": {
+        "ESP": "Ajustes",
+        "ENG": "Settings"
     }, 
+
+    "choose": {
+        "ESP": "Elegir",
+        "ENG": "Choose"
+    },
+
+    "old-password": {
+        "ESP": "Introduzca su antigua contraseña: ",
+        "ENG": "Type your old password: "
+    },
+
+    "new-password": {
+        "ESP": "Introduzca su nueva contraseña: ",
+        "ENG": "Type your new password: "
+    },
+
+    "c-new-password": {
+        "ESP": "Vuelva a introducir su nueva contraseña: ",
+        "ENG": "Type again your new password: "
+    },
+
+    "old-password-f": {
+        "ESP": "Antigua Contraseña",
+        "ENG": "Old Password"
+    },
+
+    "new-password-f": {
+        "ESP": "Nueva Contraseña",
+        "ENG": "New Password"
+    },
+
+    "c-new-password-f": {
+        "ESP": "Confirmación de nueva contraseña",
+        "ENG": "Confirm new password"
+    },
+
+    "change": {
+        "ESP": "Cambiar",
+        "ENG": "Change"
+    },
+
+    "change-password": {
+        "ESP": "Cambie su contraseña",
+        "ENG": "Change your password"
+    },
+
+    "change-language": {
+        "ESP": "Cambie su idioma",
+        "ENG": "Change your language"
+    },
+
+    "r-old-password": {
+        "ESP": "La antigua contraseña es obligatoria.",
+        "ENG": "Old password is required."
+    },
+
+    "r-new-password": {
+        "ESP": "La nueva contraseña es obligatoria.",
+        "ENG": "New password is required"
+    },
+
+    "r-c-new-password": {
+        "ESP": "La confirmación de contraseña es obligatoria.",
+        "ENG": "Confirmation of new password is required."
+    },
+
+    "do-not-match-regex": {
+        "ESP": "La contraseña debe contener un minimo de 8 caracteres, una mayuscula, un numero y no caracteres especiales.",
+        "ENG": "Must contain at least 8 characters, one uppercase letter, a number and no special characters."
+    },
+
+    "do-not-match-password": {
+        "ESP": "Las contraseñas no coinciden.",
+        "ENG": "Passwords do not match."
+    },
+
+    "pick-a-language": {
+        "ESP": "Elija al idioma al que quiere cambiar: ",
+        "ENG": "Choose the languague you want to pick: "
+    },
+    
 
     "username-in-use": {
         "ESP": "Este nombre está siendo usado por otro usuario", 

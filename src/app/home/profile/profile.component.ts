@@ -16,6 +16,12 @@ export class ProfileComponent implements OnInit {
   public mail: String
   public avatar: String
 
+
+  public percentageVictory : String;
+  public games : String;
+  public victories : String;
+  public currentStreak : String;
+  public bestStreak : String;
   constructor(private userService: UserService, private shopService: ShopService, public langService: LangService) { }
 
   public updateView(){
@@ -37,6 +43,11 @@ export class ProfileComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.percentageVictory = this.langService.get("victory-percentage");
+    this.games = this.langService.get("games");
+    this.victories = this.langService.get("victories");
+    this.currentStreak = this.langService.get("current-streak");
+    this.bestStreak = this.langService.get("best-streak");
     this.updateView();
   }
 

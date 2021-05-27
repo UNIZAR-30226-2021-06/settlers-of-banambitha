@@ -6,6 +6,8 @@ import { catchError, retry, map } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { GameService } from '../game/game.service';
 import { WsService } from '../ws/ws.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { LangService } from '../lang/lang.service';
 
 
 @Injectable({
@@ -20,8 +22,10 @@ export class UserService {
 
   private static readonly baseUrl = environment.baseUrl + "/usuario"
   private static readonly addUrl = UserService.baseUrl + "/add"
-  private static readonly validae = UserService.baseUrl + "/validate"
+  private static readonly validate = UserService.baseUrl + "/validate"
   private static readonly stats =  UserService.baseUrl + "/stats"
+  private static readonly update =  UserService.baseUrl + "/update"
+  private static readonly changePass = UserService.baseUrl + "/new-password";
   private static readonly httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
     withCredentials: true,
@@ -40,8 +44,9 @@ export class UserService {
   public saldo:      Number
   public partida:    string
   public validUser:  boolean = false
+  public changePass: boolean = false
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, public snackBar: MatSnackBar, private langService: LangService) {}
 
   //Getters
   public getUsername(): String {
@@ -78,6 +83,10 @@ export class UserService {
 
   public setAvatar(avatar_url: String){
     this.avatar = avatar_url
+  }
+
+  public getChangePass(){
+    return this.changePass
   }
 
   public updateUserData(userData: Object){
@@ -215,6 +224,55 @@ export class UserService {
 
   public ObtenerEstadisticasJugador(){
     return this.http.get(UserService.stats + "/" + this.getUsername(), UserService.httpOptions)
+  }
+
+  public async CambiarContraseña(oldPassword: String, newPassword: String){
+    let msg = {
+      userId: this.getUsername(),
+      oldPassw: oldPassword,
+      newPassw: newPassword
+    }
+    console.log(msg)
+    let response = await this.http.put(UserService.changePass, msg, UserService.httpOptions).toPromise()
+    console.log(response)
+
+    if(this.langService.selectedLang == "ESP"){
+      if(response["body"]["nombre"] != null){
+        this.snackBar.open("Contraseña cambiada correctamente" , "OK");
+      }else{
+        this.snackBar.open("La contraseña anterior no es correcta" , "OK");
+      }
+    }else{
+      if(response["body"]["nombre"] != null){
+        this.snackBar.open("Password changed correctly" , "OK");
+      }else{
+        this.snackBar.open("Incorrect password" , "OK");
+      }
+    }
+  }
+
+  public async updateUserAvatar(nuevoAvatar: String){
+    let msg = {
+      nombre: this.getUsername(),
+      avatar: nuevoAvatar
+    }
+    let response = await this.http.put(UserService.update, msg, UserService.httpOptions).toPromise()
+    console.log(response)
+  }
+
+  public async changeUserLanguage(){
+    var language;
+    if(this.langService.selectedLang == "ESP"){
+      language = "Español";
+    }else{
+      language = "English";
+    }
+    let msg = {
+      nombre: this.getUsername(),
+      idioma: language
+    }
+    let response = await this.http.put(UserService.update, msg, UserService.httpOptions).toPromise()
+    console.log(response)
   }
 }
 
