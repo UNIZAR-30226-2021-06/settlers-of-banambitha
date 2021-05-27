@@ -24,9 +24,9 @@ export class LangService {
   }
 
   public setSelectedLang(lang: string) {
-    if(lang == "ESP"){
+    if(lang == "Español"){
       this.selectedLang = Language.ESP;
-    }else if(lang == "ENG"){
+    }else if(lang == "English"){
       this.selectedLang = Language.ENG;
     }
   }

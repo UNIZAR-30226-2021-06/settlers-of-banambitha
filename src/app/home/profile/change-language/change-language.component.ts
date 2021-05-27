@@ -35,12 +35,12 @@ export class ChangeLanguageComponent implements OnInit {
       this.espanyolLanguage = "Spanish";
       this.inglesLanguage = "English";
       this.langService.setSelectedLang("ENG");
-      this.userService.changeUserLanguage();
+      this.userService.updateIdioma("English");
     }else{
       this.espanyolLanguage = "Español";
       this.inglesLanguage = "Inglés";
       this.langService.setSelectedLang("ESP");
-      this.userService.changeUserLanguage();
+      this.userService.updateIdioma("Español");
     }
   }
 }

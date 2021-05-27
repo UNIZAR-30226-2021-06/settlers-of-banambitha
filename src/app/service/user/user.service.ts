@@ -107,8 +107,10 @@ export class UserService {
     this.partida    = userData["partida"]
     this.bloqued    = userData["bloqueado"]
     this.reports    = userData["informes"]
+    this.langService.setSelectedLang(userData["idioma"])
     this.apariencia = this.getSkinFromUrl(userData["apariencia"])
   }
+
 
   public getSkinFromUrl(url: String): BoardSkin{
     switch (url){
@@ -153,6 +155,23 @@ export class UserService {
       that.updateUserData(response.body)
     })
   }
+
+
+  public updateIdioma(nuevoIdioma: String): void {
+    let msg = {
+      nombre : this.username,
+      idioma : nuevoIdioma
+    }
+
+    let that = this
+
+    this.http.put<any>(UserService.baseUrl + "/update", JSON.stringify(msg),
+                                             UserService.httpOptions).subscribe( (response) => {
+
+      that.updateUserData(response.body)
+    })
+  }
+
 
   /**
    * Trata de registrar un nuevo usuario en el sistema. Si se produce
