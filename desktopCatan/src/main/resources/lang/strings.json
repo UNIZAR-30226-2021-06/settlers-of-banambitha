@@ -301,13 +301,13 @@
     },
 
     "accept_friend": {
-        "eng": "Add friend",
-        "esp": "Añadir amigo"
+        "eng": "Add",
+        "esp": "Añadir"
     },
 
     "decline_friend": {
-        "eng": "Decline friend",
-        "esp": "Denegar amigo"
+        "eng": "Decline",
+        "esp": "Denegar"
     },
 
     "new_psw": {

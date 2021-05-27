@@ -141,10 +141,12 @@ public class RoomServices {
     public static class Invite {
         private String _leader;
         private String _id;
+        private Boolean _enabled;
 
         public Invite (String leader, String id) {
             this._leader = leader;
             this._id = id;
+            this._enabled = true;
         }
 
         public void setLeader (String leader) {
@@ -161,6 +163,14 @@ public class RoomServices {
 
         public String getId () {
             return this._id;
+        }
+
+        public void setEnable (Boolean enabled) {
+            this._enabled = enabled;
+        }
+
+        public String getEnable () {
+            return this._enabled;
         }
     }
 
@@ -353,6 +363,7 @@ public class RoomServices {
                 eliminarInvitaciones(jsObj.getString("leader"), jsObj.getString("id"));
                 break;
             case "CLOSED":
+                eliminarInvitaciones(jsObj.getString("leader"), jsObj.getString("id"));
                 uniendoseASala = false;
                 errorAlUnirseASala = true;
                 crearSala();
