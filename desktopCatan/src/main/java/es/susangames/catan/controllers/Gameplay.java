@@ -827,11 +827,13 @@ public class Gameplay {
         }
         mostrarCambiosTablero();
         if(existeGanador(mensaje)) { 
-            // TODO: Fin partida
             // Desubscripcion peticiones partida.
             unsubscribeToTopic();
             RoomServices.crearSala();
             try {
+                _chatContent.appendText("! La partida ha terminado,"  +
+                                        " revisa tus puntos!" +  "\n");
+                Thread.sleep(1000); // Esperamos a que se procese 
                 JSONObject object = UserService.getUserInfo(UserService.getUsername());
                 UserService.fillData(object);
                 if(UserService.getBloqueado() != null) {
@@ -840,7 +842,7 @@ public class Gameplay {
                     App.nuevaPantalla("/view/mainMenu.fxml");
                 }
                 
-            } catch (IOException e) {
+            } catch (Exception e) {
                 System.err.println("Exception e: " + e.toString());
             }
         }    
@@ -2672,16 +2674,16 @@ public class Gameplay {
                 Platform.runLater(new Runnable() {
                     @Override public void run() {
                         anchorPane.getChildren().remove(spinnerReceive);
-                        if(materialSeleccionado.equals("Lana")) {
+                        if(materialSeleccionado.equals(LangService.getMapping("wool"))) {
                             spinnerReceive = 
                                         new Spinner(0, lana_aux, 1);
-                        } else if(materialSeleccionado.equals("Madera")) {
+                        } else if(materialSeleccionado.equals(LangService.getMapping("wood"))) {
                             spinnerReceive = 
                                         new Spinner(0, madera_aux, 1);
-                        } else if(materialSeleccionado.equals("Mineral")) {
+                        } else if(materialSeleccionado.equals(LangService.getMapping("mineral"))) {
                             spinnerReceive = 
                                         new Spinner(0, mineral_aux, 1);
-                        } else if(materialSeleccionado.equals("Cereal")) {
+                        } else if(materialSeleccionado.equals(LangService.getMapping("cereal"))) {
                             spinnerReceive = 
                                         new Spinner(0, cereal_aux, 1);
                         } else {
@@ -2732,26 +2734,26 @@ public class Gameplay {
     
         JSONObject mensaje = new JSONObject();
         JSONObject res1 = new JSONObject();
-        if(materialOfrece.equals("Lana")) {
+        if(materialOfrece.equals(LangService.getMapping("wool"))) {
             res1.put("type","lana");
-        } else if(materialOfrece.equals("Mineral")) {
+        } else if(materialOfrece.equals(LangService.getMapping("mineral"))) {
             res1.put("type","mineral");
-        } else if(materialOfrece.equals("Cereal")) {
+        } else if(materialOfrece.equals(LangService.getMapping("cereal"))) {
             res1.put("type","cereales");
-        } else if(materialOfrece.equals("Madera")) {
+        } else if(materialOfrece.equals(LangService.getMapping("wood"))) {
             res1.put("type","madera");
         } else {
             res1.put("type","arcilla");
         }
         res1.put("cuan",cantidadOfrece);
         JSONObject res2 = new JSONObject();
-        if(materialSolicita.equals("Lana")) {
+        if(materialSolicita.equals(LangService.getMapping("wool"))) {
             res2.put("type","lana");
-        } else if(materialSolicita.equals("Mineral")) {
+        } else if(materialSolicita.equals(LangService.getMapping("mineral"))) {
             res2.put("type","mineral");
-        } else if(materialSolicita.equals("Cereal")) {
+        } else if(materialSolicita.equals(LangService.getMapping("cereal"))) {
             res2.put("type","cereales");
-        } else if(materialSolicita.equals("Madera")) {
+        } else if(materialSolicita.equals(LangService.getMapping("wood"))) {
             res2.put("type","madera");
         } else {
             res2.put("type","arcilla");
@@ -2906,7 +2908,6 @@ public class Gameplay {
        );
 
         // Lana
-        System.out.println("Lana");
         Text lanaText = new Text(10, 50,LangService.getMapping("wool") );
         lanaText.setFont(new Font(20));
         lanaText.setLayoutX(anchorPane.getLayoutX() + 10 );
@@ -2924,7 +2925,6 @@ public class Gameplay {
 
 
          // Madera
-         System.out.println("Madera");
          Text maderaText = new Text(10, 50,LangService.getMapping("wood") );
          maderaText.setFont(new Font(20));
          maderaText.setLayoutX(anchorPane.getLayoutX() + 10 );
@@ -2942,7 +2942,6 @@ public class Gameplay {
 
       
         // Cereal
-        System.out.println("Cereal");
         Text cerealText = new Text(10, 50,LangService.getMapping("cereal") );
         cerealText.setFont(new Font(20));
         cerealText.setLayoutX(anchorPane.getLayoutX() + 10 );
@@ -2960,7 +2959,6 @@ public class Gameplay {
 
 
         // Mineral
-        System.out.println("Mineral");
         Text mineralText = new Text(10, 50,LangService.getMapping("mineral") );
         mineralText.setFont(new Font(20));
         mineralText.setLayoutX(anchorPane.getLayoutX() + 10 );
@@ -2978,7 +2976,6 @@ public class Gameplay {
         anchorPane.getChildren().add(spinnerMineral);
 
         // Arcilla
-        System.out.println("Arcilla");
         Text arcillaText = new Text(10, 50,LangService.getMapping("clay") );
         arcillaText.setFont(new Font(20));
         arcillaText.setLayoutX(anchorPane.getLayoutX() + 10 );
@@ -3035,13 +3032,13 @@ public class Gameplay {
         mensaje.put("materiales",materiales);
 
         //TODO: Añadir en ingles
-        if(recursoSolicitado.equals("Lana")) {
+        if(recursoSolicitado.equals(LangService.getMapping("wool"))) {
             mensaje.put("material_que_recibe","lana");
-        } else if(recursoSolicitado.equals("Mineral")) {
+        } else if(recursoSolicitado.equals(LangService.getMapping("mineral"))) {
             mensaje.put("material_que_recibe","mineral");
-        } else if(recursoSolicitado.equals("Cereal")) {
+        } else if(recursoSolicitado.equals(LangService.getMapping("cereal"))) {
             mensaje.put("material_que_recibe","cereales");
-        } else if(recursoSolicitado.equals("Madera")) {
+        } else if(recursoSolicitado.equals(LangService.getMapping("wood"))) {
             mensaje.put("material_que_recibe","madera");
         } else {
             mensaje.put("material_que_recibe","arcilla");

@@ -390,7 +390,7 @@
     },
 
     "clay": {
-        "eng" : "Clay",
+        "eng" : "Clay   ",
         "esp" : "Arcilla"
     },
 
@@ -400,7 +400,7 @@
     },
 
     "wood": {
-        "eng": "Wood",
+        "eng": "Wood  ",
         "esp": "Madera"
     },
 

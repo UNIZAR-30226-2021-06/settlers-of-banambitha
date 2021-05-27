@@ -44,11 +44,12 @@ public class UserService {
     private static Integer partidasJugadas;
     private static Integer rachaDeVictoriasActual;
     private static Integer mayorRachaDeVictorias;
+    //private static Double  porcentajeVictorias;
     
     // Regex comprobaciones register
     private static String regexPassword = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,32}$";
     private static String regexEmail = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$";
-    private static String regexName = "^[a-zA-Z0-9_-]{5,}$";
+    private static String regexName = "^[a-zA-Z0-9_-]{5,16}$";
     
     public UserService() {
         netService = new HttpService();
@@ -279,6 +280,7 @@ public class UserService {
         try {
             response = netService.put(newPasswordUrl, myObject.toString());
             myObjectResponse = new JSONObject(response);
+            System.out.println(myObjectResponse);
         } catch(Exception e) {
             return false;
         }

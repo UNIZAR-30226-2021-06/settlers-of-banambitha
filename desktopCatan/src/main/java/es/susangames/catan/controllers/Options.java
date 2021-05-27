@@ -46,8 +46,12 @@ public class Options {
     @FXML
     private Text numberVictory;
 
+    private static Text _numberVictory = null;
+
     @FXML
     private Text numberDefeat;
+
+    private static Text _numberDefeat = null;
 
     @FXML
     private ImageView imgWin;
@@ -73,8 +77,12 @@ public class Options {
     @FXML
     private Text actual_streak;
 
+    private static Text _actual_streak = null;
+
     @FXML
     private Text historic_streak;
+
+    private static Text _historic_streak = null;
 
     @FXML
     private ToggleButton lang;
@@ -306,12 +314,33 @@ public class Options {
     }
 
 
+    public static void updateStats() {
+        if(_numberDefeat != null) {
+            Integer derrotas = (UserService.getPartidasJugadas() - UserService.getTotalDeVictorias());
+            _numberDefeat.setText(derrotas.toString());
+        } 
+        if(_numberVictory != null) {
+            _numberVictory.setText(UserService.getTotalDeVictorias().toString());
+        } 
+        if(_actual_streak != null) {
+            _actual_streak.setText(LangService.getMapping("win_strike") + " " + 
+                    UserService.getRachaDeVictoriasActual().toString());
+        } 
+        if(_historic_streak != null) {
+            _historic_streak.setText(LangService.getMapping("historic_strike") + " " + 
+                                UserService.getMayorRachaDeVictorias().toString());
+        }
+    }
+
     @FXML
     public void initialize()  {
         userImage.setFill(new ImagePattern(new Image(UserService.getUserImg(UserService.getUsername()))));
         userName.setText(UserService.getUsername());
         userEmail.setText(UserService.getMail());
-        
+        _numberDefeat = numberDefeat;
+        _numberVictory = numberVictory;
+        _actual_streak = actual_streak;
+        _historic_streak = historic_streak;
         
         numberVictory.setText(UserService.getTotalDeVictorias().toString());
         Integer derrotas = (UserService.getPartidasJugadas() - UserService.getTotalDeVictorias());
