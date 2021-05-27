@@ -403,9 +403,9 @@ public class RoomServices {
                 break;
             case "OPEN":
                 setEnabled(true, jsObj.getString("room"));
-                //uniendoseASala = false;
-                //errorAlUnirseASala = true;
-                //crearSala();
+                uniendoseASala = false;
+                errorAlUnirseASala = true;
+                crearSala();
                 break;
             case "CANCELLED":
                 roomId = jsObj.getString("room");
@@ -431,7 +431,7 @@ public class RoomServices {
                 if ( uniendoseASala ) {
                     uniendoseASala = false;
                     errorAlUnirseASala = true;
-                    crearSala();   
+                    crearSala(); 
                 }
                 
                 break;
