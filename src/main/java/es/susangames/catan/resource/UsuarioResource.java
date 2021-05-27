@@ -169,7 +169,7 @@ public class UsuarioResource {
 			if(fechaBloqueo!=null) System.out.println(fechaBloqueo.toString());
 			else System.out.println("null");
 			System.out.println(fechaActual.toString());	
-			System.out.println(fechaActual.after(fechaBloqueo));	
+			if(fechaBloqueo!=null) System.out.println(fechaActual.after(fechaBloqueo));	
 			
 			if(fechaBloqueo!=null && fechaActual.after(fechaBloqueo)) {
 				usuarioService.pardonJugador(valid_usuario);
